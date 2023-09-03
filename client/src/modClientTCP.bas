@@ -101,12 +101,12 @@ End Sub
 ' ** Outgoing Client Packets **
 ' *****************************
 
-Public Sub SendLogin(ByVal name As String)
+Public Sub SendLogin(ByVal name As String, ByVal password As String)
     Dim Buffer As clsBuffer
     Set Buffer = New clsBuffer
     Buffer.WriteLong clogin
     Buffer.WriteString name
-  '  Buffer.WriteString loginToken
+    Buffer.WriteString password
     Buffer.WriteLong CLIENT_MAJOR
     Buffer.WriteLong CLIENT_MINOR
     Buffer.WriteLong CLIENT_REVISION
@@ -117,23 +117,10 @@ Public Sub SendNewAccount(ByVal AName As String, ByVal APass As String, ByVal AC
 Dim Buffer As clsBuffer
 
     Set Buffer = New clsBuffer
-    Buffer.WriteLong CAccount
+    Buffer.WriteLong CNewAccount
     Buffer.WriteString AName
     Buffer.WriteString APass
     Buffer.WriteString ACode
-    SendData Buffer.ToArray()
-    Set Buffer = Nothing
-End Sub
-
-Public Sub SendAuthLogin(ByVal name As String, ByVal password As String)
-    Dim Buffer As clsBuffer
-    Set Buffer = New clsBuffer
-    Buffer.WriteLong clogin
-    Buffer.WriteString name
-    Buffer.WriteString password
-    Buffer.WriteLong CLIENT_MAJOR
-    Buffer.WriteLong CLIENT_MINOR
-    Buffer.WriteLong CLIENT_REVISION
     SendData Buffer.ToArray()
     Set Buffer = Nothing
 End Sub

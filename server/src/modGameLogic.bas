@@ -1136,26 +1136,6 @@ Dim ClassNum As Long, i As Long
     End Select
 End Sub
 
-Public Function loginTokenOk(ByVal user As String, ByVal tLoginToken As String) As Boolean
-Dim i As Long
-    loginTokenOk = False
-    For i = 1 To MAX_PLAYERS
-        If LoginToken(i).Active Then
-            If LoginToken(i).user = user And LoginToken(i).Token = tLoginToken Then
-                ' return true
-                loginTokenOk = True
-                ' clear the token
-                LoginToken(i).Active = False
-                LoginToken(i).user = vbNullString
-                LoginToken(i).Token = vbNullString
-                LoginToken(i).TimeCreated = 0
-                ' exit out
-                Exit Function
-            End If
-        End If
-    Next
-End Function
-
 Public Function hasProficiency(ByVal index As Long, ByVal proficiency As Long) As Boolean
     Select Case proficiency
         Case 0 ' None

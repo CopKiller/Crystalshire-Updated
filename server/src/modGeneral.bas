@@ -20,7 +20,6 @@ Public Sub InitServer()
     
     ' cache packet pointers
     Call InitMessages
-    Call Auth_InitMessages
     
     ' time the load
     time1 = GetTickCount
@@ -59,10 +58,6 @@ Public Sub InitServer()
     frmServer.Socket(0).RemoteHost = frmServer.Socket(0).LocalIP
     frmServer.Socket(0).LocalPort = GAME_SERVER_PORT
     
-    ' Get the authentication socket going
-    frmServer.AuthSocket.RemoteHost = AUTH_SERVER_IP
-    frmServer.AuthSocket.LocalPort = SERVER_AUTH_PORT
-    
     ' Init all the player sockets
     Call SetStatus("Initializing player array...")
 
@@ -98,7 +93,6 @@ Public Sub InitServer()
     
     ' Start listening
     frmServer.Socket(0).Listen
-    frmServer.AuthSocket.Listen
     Call UpdateCaption
     time2 = GetTickCount
     Call SetStatus("Initialization complete. Server loaded in " & time2 - time1 & "ms.")

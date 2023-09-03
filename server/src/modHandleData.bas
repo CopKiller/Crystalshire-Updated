@@ -97,7 +97,6 @@ Public Sub InitMessages()
     HandleDataSub(CSaveConv) = GetAddress(AddressOf HandleSaveConv)
     HandleDataSub(CRequestConvs) = GetAddress(AddressOf HandleRequestConvs)
     HandleDataSub(CFinishTutorial) = GetAddress(AddressOf HandleFinishTutorial)
-    HandleDataSub(CAccount) = GetAddress(AddressOf HandleRegisterAccount)
 End Sub
 
 Sub HandleData(ByVal index As Long, ByRef Data() As Byte)
@@ -121,18 +120,6 @@ Dim MsgType As Long
 End Sub
 
 Private Sub HandleNewAccount(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-End Sub
-
-' :::::::::::::::::::::::::::
-' :: Delete account packet ::
-' :::::::::::::::::::::::::::
-Private Sub HandleDelAccount(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    ' No deleting accounts lOL
-End Sub
-':::::::::::::::::::::
-' :: Register Packet
-':::::::::::::::::::::
-Public Sub HandleRegisterAccount(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 Dim Name As String, Pass As String, Code As String
   '  MsgBox "ok"
@@ -161,6 +148,13 @@ If Not IsPlaying(index) Then
         Set Buffer = Nothing
     Exit Sub
 End If
+End Sub
+
+' :::::::::::::::::::::::::::
+' :: Delete account packet ::
+' :::::::::::::::::::::::::::
+Private Sub HandleDelAccount(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+    ' No deleting accounts lOL
 End Sub
 
 ' ::::::::::::::::::

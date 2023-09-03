@@ -54,7 +54,7 @@ Dim i As Long
     ' randomize rnd's seed
     Randomize
     Call SetStatus("Initializing TCP settings.")
-    Call TcpInit(AUTH_SERVER_IP, AUTH_SERVER_PORT)
+    Call TcpInit(GAME_SERVER_IP, GAME_SERVER_PORT)
     Call InitMessages
     ' Reset values
     Ping = -1
@@ -115,11 +115,11 @@ Public Sub AddChar(name As String, sex As Long, Class As Long, sprite As Long)
 End Sub
 
 Public Sub Login(name As String, password As String)
-    TcpInit AUTH_SERVER_IP, AUTH_SERVER_PORT
+    'TcpInit GAME_SERVER_IP, GAME_SERVER_PORT
 
     If ConnectToServer Then
         Call SetStatus("Sending login information.")
-        Call SendAuthLogin(name, password)
+        Call SendLogin(name, password)
         ' save details
         If Options.SaveUser Then Options.Username = name Else Options.Username = vbNullString
         SaveOptions
@@ -131,7 +131,7 @@ Public Sub Login(name As String, password As String)
 
 End Sub
 Public Sub SendRegister(name As String, password As String, codigo As String)
-    TcpInit GAME_SERVER_IP, GAME_SERVER_PORT
+    'TcpInit GAME_SERVER_IP, GAME_SERVER_PORT
 
     If ConnectToServer Then
         Call SetStatus("Sending Register information.")

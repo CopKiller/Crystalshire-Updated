@@ -1,6 +1,6 @@
 VERSION 5.00
-Object = "{248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0"; "Mswinsck.ocx"
-Object = "{BDC217C8-ED16-11CD-956C-0000C04E4C0A}#1.1#0"; "Tabctl32.ocx"
+Object = "{248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0"; "mswinsck.ocx"
+Object = "{BDC217C8-ED16-11CD-956C-0000C04E4C0A}#1.1#0"; "tabctl32.ocx"
 Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Begin VB.Form frmServer 
    BorderStyle     =   1  'Fixed Single
@@ -24,13 +24,6 @@ Begin VB.Form frmServer
    ScaleHeight     =   3615
    ScaleWidth      =   6720
    StartUpPosition =   2  'CenterScreen
-   Begin MSWinsockLib.Winsock AuthSocket 
-      Left            =   480
-      Top             =   0
-      _ExtentX        =   741
-      _ExtentY        =   741
-      _Version        =   393216
-   End
    Begin MSWinsockLib.Winsock Socket 
       Index           =   0
       Left            =   0
@@ -334,24 +327,6 @@ End Sub
 
 Private Sub Socket_Close(index As Integer)
     Call CloseSocket(index)
-End Sub
-
-' auth socket
-Private Sub AuthSocket_ConnectionRequest(ByVal requestID As Long)
-    Call Auth_AcceptConnection(requestID)
-End Sub
-
-Private Sub AuthSocket_Accept(SocketId As Integer)
-    Call Auth_AcceptConnection(SocketId)
-End Sub
-
-Private Sub AuthSocket_DataArrival(ByVal bytesTotal As Long)
-    Auth_IncomingData bytesTotal
-End Sub
-
-Private Sub AuthSocket_Close()
-    frmServer.AuthSocket.Close
-    frmServer.AuthSocket.Listen
 End Sub
 
 ' ********************

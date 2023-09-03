@@ -410,7 +410,6 @@ Dim filename As String, i As Long, charHeader As String
     ' Banned
     PutVar filename, "ACCOUNT", "isBanned", Val(Player(index).isBanned)
     PutVar filename, "ACCOUNT", "isMuted", Val(Player(index).isMuted)
-    PutVar filename, "ACCOUNT", "Usergroup", Val(Player(index).Usergroup)
     
     ' exit out early if invalid char
     If Player(index).charNum < 1 Or Player(index).charNum > MAX_CHARS Then Exit Sub
@@ -503,7 +502,6 @@ Dim filename As String, i As Long, charHeader As String
     ' Banned
     Player(index).isBanned = Val(GetVar(filename, "ACCOUNT", "isBanned"))
     Player(index).isMuted = Val(GetVar(filename, "ACCOUNT", "isMuted"))
-    Player(index).Usergroup = Val(GetVar(filename, "ACCOUNT", "Usergroup"))
     
     ' exit out early if not a valid char num
     If charNum < 1 Or charNum > MAX_CHARS Then Exit Sub

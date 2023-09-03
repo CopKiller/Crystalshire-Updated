@@ -86,7 +86,6 @@ Public Enum ServerPackets
     SUpdateConv
     SStartTutorial
     SChatBubble
-    SSetPlayerLoginToken
     SPlayerChars
     SCancelAnimation
     SPlayerVariables
@@ -188,8 +187,6 @@ Public Enum ClientPackets
     CSaveConv
     CRequestConvs
     CFinishTutorial
-    CAuthLogin
-    CAccount
     ' Make sure CMsgCOUNT is below everything else
     CMsgCOUNT
 End Enum

@@ -2679,21 +2679,6 @@ Public Sub SetBarWidth(ByRef MaxWidth As Long, ByRef width As Long)
 
 End Sub
 
-Public Sub AttemptLogin()
-    TcpInit GAME_SERVER_IP, GAME_SERVER_PORT
-
-    ' send login packet
-    If ConnectToServer Then
-        SendLogin Windows(GetWindowIndex("winLogin")).Controls(GetControlIndex("winLogin", "txtUser")).text
-        Exit Sub
-    End If
-
-    If Not IsConnected Then
-        ShowWindow GetWindowIndex("winLogin")
-        Dialogue "Connection Problem", "Cannot connect to game server.", "Please try again later.", TypeALERT
-    End If
-End Sub
-
 Public Sub DialogueAlert(ByVal index As Long)
     Dim header As String, body As String, body2 As String
 

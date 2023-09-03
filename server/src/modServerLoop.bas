@@ -88,17 +88,7 @@ Sub ServerLoop()
             If isShuttingDown Then
                 Call HandleShutdown
             End If
-            ' disable login tokens
-            For i = 1 To MAX_PLAYERS
-                If LoginToken(i).Active Then
-                    If LoginToken(i).TimeCreated + LoginTimer < GetTickCount Then
-                        LoginToken(i).Active = False
-                        LoginToken(i).user = vbNullString
-                        LoginToken(i).Token = vbNullString
-                        LoginToken(i).TimeCreated = 0
-                    End If
-                End If
-            Next
+
             ' reset timer
             tmr1000 = GetTickCount + 1000
         End If

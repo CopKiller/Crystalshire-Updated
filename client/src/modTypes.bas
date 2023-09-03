@@ -98,7 +98,6 @@ Private Type PlayerRec
     Step As Byte
     Anim As Long
     AnimTimer As Long
-    usergroup As Long
 End Type
 
 Private Type EventCommandRec

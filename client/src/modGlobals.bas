@@ -14,9 +14,6 @@ Public CharSprite(1 To MAX_CHARS) As Long
 Public CharAccess(1 To MAX_CHARS) As Long
 Public CharClass(1 To MAX_CHARS) As Long
 Public CharNum As Long
-Public usergroup As Long
-' login
-Public loginToken As String
 'elastic bars
 Public BarWidth_NpcHP(1 To MAX_MAP_NPCS) As Long
 Public BarWidth_PlayerHP(1 To MAX_PLAYERS) As Long

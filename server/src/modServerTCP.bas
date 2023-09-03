@@ -495,7 +495,6 @@ Function PlayerData(ByVal index As Long) As Byte()
     Buffer.WriteLong SPlayerData
     Buffer.WriteLong index
     Buffer.WriteString GetPlayerName(index)
-    Buffer.WriteLong Player(index).Usergroup
     Buffer.WriteLong GetPlayerLevel(index)
     Buffer.WriteLong GetPlayerPOINTS(index)
     Buffer.WriteLong GetPlayerSprite(index)
@@ -1412,7 +1411,6 @@ Sub SayMsg_Map(ByVal mapnum As Long, ByVal index As Long, ByVal message As Strin
     Buffer.WriteLong SSayMsg
     Buffer.WriteString GetPlayerName(index)
     Buffer.WriteLong GetPlayerAccess(index)
-    Buffer.WriteLong Player(index).Usergroup
     Buffer.WriteLong GetPlayerPK(index)
     Buffer.WriteString message
     Buffer.WriteString "[Map] "
@@ -1430,7 +1428,6 @@ Sub SayMsg_Global(ByVal index As Long, ByVal message As String, ByVal saycolour 
     Buffer.WriteLong SSayMsg
     Buffer.WriteString GetPlayerName(index)
     Buffer.WriteLong GetPlayerAccess(index)
-    Buffer.WriteLong Player(index).Usergroup
     Buffer.WriteLong GetPlayerPK(index)
     Buffer.WriteString message
     Buffer.WriteString "[Global] "
@@ -1941,13 +1938,10 @@ Dim i As Long, tmpString As String
 End Function
 
 Sub SendPlayerChars(ByVal index As Long)
-Dim Buffer As clsBuffer, tmpName As String, i As Long, tmpSprite As Long, tmpAccess As Long, tmpClass As Long, tmpUsergroup As Long
+Dim Buffer As clsBuffer, tmpName As String, i As Long, tmpSprite As Long, tmpAccess As Long, tmpClass As Long
 
     Set Buffer = New clsBuffer
     Buffer.WriteLong SPlayerChars
-    
-    tmpUsergroup = GetVar(App.Path & "\data\accounts\" & SanitiseString(Trim$(Player(index).Login)) & ".ini", "ACCOUNT", "Usergroup")
-    Buffer.WriteLong tmpUsergroup
     
     ' loop through each character. clear, load, add. repeat.
     For i = 1 To MAX_CHARS

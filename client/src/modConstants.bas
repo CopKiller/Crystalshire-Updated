@@ -8,10 +8,7 @@ Public Const CLIENT_MINOR As Byte = 8
 Public Const CLIENT_REVISION As Byte = 0
 ' Connection details
 Public Const GAME_SERVER_IP As String = "127.0.0.1" ' "46.23.70.66"
-Public Const AUTH_SERVER_IP As String = "127.0.0.1" ' "46.23.70.66"
 Public Const GAME_SERVER_PORT As Long = 7001 ' the port used by the main game server
-Public Const AUTH_SERVER_PORT As Long = 7001 ' the port used for people to connect to auth server
-Public Const SERVER_AUTH_PORT As Long = 7003 ' the portal used for server to talk to auth server
 ' Resolution count
 Public Const RES_COUNT As Long = 16
 ' Music

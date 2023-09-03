@@ -110,9 +110,6 @@ Public Type PlayerRec
     
     ' character selection
     charNum As Long
-    
-    ' usergroup
-    Usergroup As Long
 End Type
 
 Public Type SpellBufferRec

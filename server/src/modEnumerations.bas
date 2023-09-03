@@ -87,7 +87,6 @@ Public Enum ServerPackets
     SUpdateConv
     SStartTutorial
     SChatBubble
-    SSetPlayerLoginToken
     SPlayerChars
     SCancelAnimation
     SPlayerVariables
@@ -189,22 +188,11 @@ Public Enum ClientPackets
     CSaveConv
     CRequestConvs
     CFinishTutorial
-    CAuthLogin
-    CAccount
     ' Make sure CMSG_COUNT is below everything else
     CMSG_COUNT
 End Enum
 
-' Packets sent by authentication server to game server
-Public Enum AuthPackets
-    ASetPlayerLoginToken
-    ASetUsergroup
-    ' Make sure AMSG_COUNT is below everything else
-    AMSG_COUNT
-End Enum
-
 Public HandleDataSub(CMSG_COUNT) As Long
-Public Auth_HandleDataSub(AMSG_COUNT) As Long
 
 ' Stats used by Players, Npcs and Classes
 Public Enum Stats
