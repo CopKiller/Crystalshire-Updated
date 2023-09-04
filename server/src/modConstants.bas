@@ -93,6 +93,7 @@ Public Const YES As Byte = 1
 ' String constants
 Public Const NAME_LENGTH As Byte = 20
 Public Const ACCOUNT_LENGTH As Byte = 12
+Public Const EMAIL_LENGTH As Byte = 25
 
 ' Sex constants
 Public Const SEX_MALE As Byte = 0

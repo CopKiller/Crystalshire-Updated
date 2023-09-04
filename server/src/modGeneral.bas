@@ -47,7 +47,7 @@ Public Sub InitServer()
     vbQuote = ChrW$(34) ' "
     
     ' load options, set if they dont exist
-    If Not FileExist(App.Path & "\data\options.ini", True) Then
+    If Not FileExist(App.Path & "\data\options.ini") Then
         Options.MOTD = "Welcome to Crystalshire."
         SaveOptions
     Else
@@ -79,7 +79,7 @@ Public Sub InitServer()
     Call LoadSystemTray
 
     ' Check if the master charlist file exists for checking duplicate names, and if it doesnt make it
-    If Not FileExist("data\accounts\_charlist.txt") Then
+    If Not FileExist(App.Path & "data\accounts\_charlist.txt") Then
         f = FreeFile
         Open App.Path & "\data\accounts\_charlist.txt" For Output As #f
         Close #f

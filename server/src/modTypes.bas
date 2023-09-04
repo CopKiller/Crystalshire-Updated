@@ -59,11 +59,6 @@ Public Type HotbarRec
 End Type
 
 Public Type PlayerRec
-    ' Account
-    Login As String
-    Password As String
-    Mail As String
-    
     ' General
     Name As String * ACCOUNT_LENGTH
     Sex As Byte
@@ -107,9 +102,6 @@ Public Type PlayerRec
     ' Banned
     isBanned As Byte
     isMuted As Byte
-    
-    ' character selection
-    charNum As Long
 End Type
 
 Public Type SpellBufferRec
@@ -172,6 +164,9 @@ Public Type TempPlayerRec
     foodItem(1 To Vitals.Vital_Count - 1) As Long
     foodTick(1 To Vitals.Vital_Count - 1) As Long
     foodTimer(1 To Vitals.Vital_Count - 1) As Long
+    
+    ' character selection
+    charNum As Long
 End Type
 
 Private Type TempEventRec

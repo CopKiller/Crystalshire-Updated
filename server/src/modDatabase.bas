@@ -11,7 +11,7 @@ Private Declare Sub ZeroMemory Lib "Kernel32.dll" Alias "RtlZeroMemory" (Destina
 Private crcTable(0 To 255) As Long
 
 Public Sub InitCRC32()
-Dim i As Long, n As Long, CRC As Long
+    Dim i As Long, n As Long, CRC As Long
 
     For i = 0 To 255
         CRC = i
@@ -27,26 +27,26 @@ Dim i As Long, n As Long, CRC As Long
 End Sub
 
 Public Function CRC32(ByRef Data() As Byte) As Long
-Dim lCurPos As Long
-Dim lLen As Long
+    Dim lCurPos As Long
+    Dim lLen As Long
 
     lLen = AryCount(Data) - 1
     CRC32 = &HFFFFFFFF
-    
+
     For lCurPos = 0 To lLen
         CRC32 = (((CRC32 And &HFFFFFF00) \ &H100) And &HFFFFFF) Xor (crcTable((CRC32 And 255) Xor Data(lCurPos)))
     Next
-    
+
     CRC32 = CRC32 Xor &HFFFFFFFF
 End Function
 
 Public Sub HandleError(ByVal procName As String, ByVal contName As String, ByVal erNumber, ByVal erDesc, ByVal erSource, ByVal erHelpContext)
-Dim filename As String
+    Dim filename As String
     filename = App.Path & "\data files\logs\errors.txt"
     Open filename For Append As #1
-        Print #1, "The following error occured at '" & procName & "' in '" & contName & "'."
-        Print #1, "Run-time error '" & erNumber & "': " & erDesc & "."
-        Print #1, ""
+    Print #1, "The following error occured at '" & procName & "' in '" & contName & "'."
+    Print #1, "Run-time error '" & erNumber & "': " & erDesc & "."
+    Print #1, ""
     Close #1
 End Sub
 
@@ -62,7 +62,7 @@ Sub AddLog(ByVal Text As String, ByVal FN As String)
     If ServerLog Then
         filename = App.Path & "\data\logs\" & FN
 
-        If Not FileExist(filename, True) Then
+        If Not FileExist(filename) Then
             f = FreeFile
             Open filename For Output As #f
             Close #f
@@ -92,20 +92,10 @@ Public Sub PutVar(File As String, Header As String, Var As String, Value As Stri
     Call WritePrivateProfileString$(Header, Var, Value, File)
 End Sub
 
-Public Function FileExist(ByVal filename As String, Optional RAW As Boolean = False) As Boolean
-
-    If Not RAW Then
-        If LenB(dir(App.Path & "\" & filename)) > 0 Then
-            FileExist = True
-        End If
-
-    Else
-
-        If LenB(dir(filename)) > 0 Then
-            FileExist = True
-        End If
-    End If
-
+'//This check if the file exist
+Public Function FileExist(ByVal filename As String) As Boolean
+' Checking if File Exist
+    If LenB(dir(filename)) > 0 Then FileExist = True
 End Function
 
 Public Sub SaveOptions()
@@ -117,7 +107,7 @@ Public Sub LoadOptions()
 End Sub
 
 Public Sub ToggleMute(ByVal index As Long)
-    ' exit out for rte9
+' exit out for rte9
     If index <= 0 Or index > MAX_PLAYERS Then Exit Sub
 
     ' toggle the player's mute
@@ -132,13 +122,13 @@ Public Sub ToggleMute(ByVal index As Long)
         PlayerMsg index, "You have been muted and can no longer talk in global.", BrightRed
         TextAdd GetPlayerName(index) & " has been muted."
     End If
-    
+
     ' save the player
     SavePlayer index
 End Sub
 
 Public Sub BanIndex(ByVal BanPlayerIndex As Long)
-Dim filename As String, IP As String, f As Long, i As Long
+    Dim filename As String, IP As String, f As Long, i As Long
 
     ' Add banned to the player's index
     Player(BanPlayerIndex).isBanned = 1
@@ -148,7 +138,7 @@ Dim filename As String, IP As String, f As Long, i As Long
     filename = App.Path & "\data\banlist_ip.txt"
 
     ' Make sure the file exists
-    If Not FileExist(filename, True) Then
+    If Not FileExist(filename) Then
         f = FreeFile
         Open filename For Output As #f
         Close #f
@@ -158,9 +148,9 @@ Dim filename As String, IP As String, f As Long, i As Long
     IP = GetPlayerIP(BanPlayerIndex)
     f = FreeFile
     Open filename For Append As #f
-        Print #f, IP
+    Print #f, IP
     Close #f
-    
+
     ' Tell them they're banned
     Call GlobalMsg(GetPlayerName(BanPlayerIndex) & " has been banned from " & GAME_NAME & ".", White)
     Call AddLog(GetPlayerName(BanPlayerIndex) & " has been banned.", ADMIN_LOG)
@@ -168,12 +158,12 @@ Dim filename As String, IP As String, f As Long, i As Long
 End Sub
 
 Public Function isBanned_IP(ByVal IP As String) As Boolean
-Dim filename As String, fIP As String, f As Long
-    
+    Dim filename As String, fIP As String, f As Long
+
     filename = App.Path & "\data\banlist_ip.txt"
 
     ' Check if file exists
-    If Not FileExist(filename, True) Then
+    If Not FileExist(filename) Then
         f = FreeFile
         Open filename For Output As #f
         Close #f
@@ -204,83 +194,12 @@ Public Function isBanned_Account(ByVal index As Long) As Boolean
     End If
 End Function
 
-' **************
-' ** Accounts **
-' **************
-Function AccountExist(ByVal Name As String) As Boolean
-    Dim filename As String
-    filename = App.Path & "\data\accounts\" & SanitiseString(Trim(Name)) & ".ini"
-
-    If FileExist(filename, True) Then
-        AccountExist = True
-    End If
-
-End Function
-
-Function PasswordOK(ByVal Name As String, ByVal Password As String) As Boolean
-Dim filename As String
-Dim RightPassword As String
-
-    If AccountExist(Name) Then
-        filename = App.Path & "\data\accounts\" & SanitiseString(Trim$(Name)) & ".ini"
-        
-        RightPassword = GetVar(filename, "ACCOUNT", "Password")
-
-        If UCase$(Trim$(Password)) = UCase$(Trim$(RightPassword)) Then
-            PasswordOK = True
-        End If
-    End If
-
-End Function
-
-Sub AddAccount(ByVal index As Long, ByVal Name As String, ByVal Password As String, ByVal Code As String)
-    Dim i As Long
-    
-    ClearPlayer index
-    
-    Player(index).Login = Name
-    Player(index).Password = Password
-    Player(index).Mail = Code
-    
-    For i = 1 To MAX_CHARS
-        Player(index).charNum = i
-        Call SavePlayer(index)
-    Next
-
-
-End Sub
-
-Sub DeleteName(ByVal Name As String)
-    Dim f1 As Long
-    Dim f2 As Long
-    Dim s As String
-    Call FileCopy(App.Path & "\data\accounts\_charlist.txt", App.Path & "\data\accounts\_chartemp.txt")
-    ' Destroy name from charlist
-    f1 = FreeFile
-    Open App.Path & "\data\accounts\_chartemp.txt" For Input As #f1
-    f2 = FreeFile
-    Open App.Path & "\data\accounts\_charlist.txt" For Output As #f2
-
-    Do While Not EOF(f1)
-        Input #f1, s
-
-        If Trim$(LCase$(s)) <> Trim$(LCase$(Name)) Then
-            Print #f2, s
-        End If
-
-    Loop
-
-    Close #f1
-    Close #f2
-    Call Kill(App.Path & "\data\accounts\_chartemp.txt")
-End Sub
-
 ' ****************
 ' ** Characters **
 ' ****************
 Function CharExist(ByVal index As Long, ByVal charNum As Long) As Boolean
-Dim theName As String
-    theName = GetVar(App.Path & "\data\accounts\" & SanitiseString(Trim$(Player(index).Login)) & ".ini", "CHAR" & charNum, "Name")
+    Dim theName As String
+    theName = GetVar(App.Path & "\data\accounts\CharNum_" & charNum & ".bin", "CHAR" & charNum, "Name")
     'If LenB(Trim$(Player(index).Name)) > 0 Then
     If LenB(theName) > 0 Then
         CharExist = True
@@ -293,16 +212,16 @@ Sub AddChar(ByVal index As Long, ByVal Name As String, ByVal Sex As Byte, ByVal 
     Dim spritecheck As Boolean
 
     If LenB(Trim$(Player(index).Name)) = 0 Then
-        
+
         spritecheck = False
-        
+
         If charNum < 1 Or charNum > MAX_CHARS Then Exit Sub
-        Player(index).charNum = charNum
-        
+        TempPlayer(index).charNum = charNum
+
         Player(index).Name = Name
         Player(index).Sex = Sex
         Player(index).Class = ClassNum
-        
+
         If Player(index).Sex = SEX_MALE Then
             Player(index).Sprite = Class(ClassNum).MaleSprite(Sprite)
         Else
@@ -322,7 +241,7 @@ Sub AddChar(ByVal index As Long, ByVal Name As String, ByVal Sex As Byte, ByVal 
         Player(index).dir = DIR_DOWN
         Player(index).Vital(Vitals.HP) = GetPlayerMaxVital(index, Vitals.HP)
         Player(index).Vital(Vitals.MP) = GetPlayerMaxVital(index, Vitals.MP)
-        
+
         ' set starter equipment
         If Class(ClassNum).startItemCount > 0 Then
             For n = 1 To Class(ClassNum).startItemCount
@@ -335,7 +254,7 @@ Sub AddChar(ByVal index As Long, ByVal Name As String, ByVal Sex As Byte, ByVal 
                 End If
             Next
         End If
-        
+
         ' set start spells
         If Class(ClassNum).startSpellCount > 0 Then
             For n = 1 To Class(ClassNum).startSpellCount
@@ -344,12 +263,12 @@ Sub AddChar(ByVal index As Long, ByVal Name As String, ByVal Sex As Byte, ByVal 
                     If Len(Trim$(Spell(Class(ClassNum).StartItem(n)).Name)) > 0 Then
                         Player(index).Spell(n).Spell = Class(ClassNum).StartSpell(n)
                         Player(index).Hotbar(n).Slot = Class(ClassNum).StartSpell(n)
-                        Player(index).Hotbar(n).sType = 2 ' spells
+                        Player(index).Hotbar(n).sType = 2    ' spells
                     End If
                 End If
             Next
         End If
-        
+
         ' Append name to file
         f = FreeFile
         Open App.Path & "\data\accounts\_charlist.txt" For Append As #f
@@ -396,205 +315,53 @@ Sub SaveAllPlayersOnline()
 End Sub
 
 Sub SavePlayer(ByVal index As Long)
-Dim filename As String, i As Long, charHeader As String
+    Dim filename As String, i As Long, charHeader As String, f As Long
 
     If index <= 0 Or index > MAX_PLAYERS Then Exit Sub
-    
-    ' the file
-    filename = App.Path & "\data\accounts\" & SanitiseString(Trim$(Player(index).Login)) & ".ini"
-    
-    ' General
-    PutVar filename, "ACCOUNT", "Login", Trim$(Player(index).Login)
-    PutVar filename, "ACCOUNT", "Password", Trim$(Player(index).Password)
-    PutVar filename, "ACCOUNT", "Mail", Trim$(Player(index).Mail)
-    ' Banned
-    PutVar filename, "ACCOUNT", "isBanned", Val(Player(index).isBanned)
-    PutVar filename, "ACCOUNT", "isMuted", Val(Player(index).isMuted)
-    
-    ' exit out early if invalid char
-    If Player(index).charNum < 1 Or Player(index).charNum > MAX_CHARS Then Exit Sub
-    
-    ' the char header
-    charHeader = "CHAR" & Player(index).charNum
-    
-    ' character
-    PutVar filename, charHeader, "Name", Trim$(Player(index).Name)
-    PutVar filename, charHeader, "Sex", Val(Player(index).Sex)
-    PutVar filename, charHeader, "Class", Val(Player(index).Class)
-    PutVar filename, charHeader, "Sprite", Val(Player(index).Sprite)
-    PutVar filename, charHeader, "Level", Val(Player(index).Level)
-    PutVar filename, charHeader, "exp", Val(Player(index).exp)
-    PutVar filename, charHeader, "Access", Val(Player(index).Access)
-    PutVar filename, charHeader, "PK", Val(Player(index).PK)
-    
-    ' Vitals
-    For i = 1 To Vitals.Vital_Count - 1
-        PutVar filename, charHeader, "Vital" & i, Val(Player(index).Vital(i))
-    Next
-    
-    ' Stats
-    For i = 1 To Stats.Stat_Count - 1
-        PutVar filename, charHeader, "Stat" & i, Val(Player(index).Stat(i))
-    Next
-    PutVar filename, charHeader, "Points", Val(Player(index).POINTS)
+    If TempPlayer(index).charNum <= 0 Or TempPlayer(index).charNum > MAX_CHARS Then Exit Sub
 
-    ' Equipment
-    For i = 1 To Equipment.Equipment_Count - 1
-        PutVar filename, charHeader, "Equipment" & i, Val(Player(index).Equipment(i))
-    Next
-    
-    ' Inventory
-    For i = 1 To MAX_INV
-        PutVar filename, charHeader, "InvNum" & i, Val(Player(index).Inv(i).Num)
-        PutVar filename, charHeader, "InvValue" & i, Val(Player(index).Inv(i).Value)
-        PutVar filename, charHeader, "InvBound" & i, Val(Player(index).Inv(i).Bound)
-    Next
-    
-    ' Spells
-    For i = 1 To MAX_PLAYER_SPELLS
-        PutVar filename, charHeader, "Spell" & i, Val(Player(index).Spell(i).Spell)
-        PutVar filename, charHeader, "SpellUses" & i, Val(Player(index).Spell(i).Uses)
-    Next
-    
-    ' Hotbar
-    For i = 1 To MAX_HOTBAR
-        PutVar filename, charHeader, "HotbarSlot" & i, Val(Player(index).Hotbar(i).Slot)
-        PutVar filename, charHeader, "HotbarType" & i, Val(Player(index).Hotbar(i).sType)
-    Next
-    
-    ' Position
-    PutVar filename, charHeader, "Map", Val(Player(index).Map)
-    PutVar filename, charHeader, "X", Val(Player(index).x)
-    PutVar filename, charHeader, "Y", Val(Player(index).y)
-    PutVar filename, charHeader, "Dir", Val(Player(index).dir)
-    
-    ' Tutorial
-    PutVar filename, charHeader, "TutorialState", Val(Player(index).TutorialState)
-    
-    ' Bank
-    For i = 1 To MAX_BANK
-        PutVar filename, charHeader, "BankNum" & i, Val(Player(index).Bank(i).Num)
-        PutVar filename, charHeader, "BankValue" & i, Val(Player(index).Bank(i).Value)
-        PutVar filename, charHeader, "BankBound" & i, Val(Player(index).Bank(i).Bound)
-    Next
-    
-    ' variables
-    For i = 1 To MAX_BYTE
-        PutVar filename, charHeader, "Var" & i, Val(Player(index).Variable(i))
-    Next
+    ' the file
+    filename = App.Path & "\data\accounts\" & Trim$(Account(index).Login) & "\CharNum_" & TempPlayer(index).charNum & ".bin"
+
+    ' Save Player archive
+    f = FreeFile
+    Open filename For Binary As #f
+    Put #f, , Player(index)
+    Close #f
 End Sub
 
-Sub LoadPlayer(ByVal index As Long, ByVal Name As String, ByVal charNum As Long)
-Dim filename As String, i As Long, charHeader As String
+Sub LoadPlayer(ByVal index As Long, ByVal charNum As Long)
+    Dim filename As String, i As Long, charHeader As String, f As Long
 
-    If Trim$(Name) = vbNullString Then Exit Sub
+    '//Verify player have account
+    If Trim$(Account(index).Login) = vbNullString Then Exit Sub
     ' clear player
     Call ClearPlayer(index)
-    
+
     ' the file
-    filename = App.Path & "\data\accounts\" & SanitiseString(Trim$(Name)) & ".ini"
+    filename = App.Path & "\data\accounts\" & Trim$(Account(index).Login) & "\CharNum_" & charNum & ".bin"
 
-    ' General
-    Player(index).Login = Name
-    Player(index).Password = GetVar(filename, "ACCOUNT", "Password")
-    Player(index).Mail = GetVar(filename, "ACCOUNT", "Mail")
-    
-    ' Banned
-    Player(index).isBanned = Val(GetVar(filename, "ACCOUNT", "isBanned"))
-    Player(index).isMuted = Val(GetVar(filename, "ACCOUNT", "isMuted"))
-    
-    ' exit out early if not a valid char num
-    If charNum < 1 Or charNum > MAX_CHARS Then Exit Sub
-    
-    ' the char header
-    charNum = charNum
-    charHeader = "CHAR" & charNum
-    
-    ' character
-    Player(index).Name = GetVar(filename, charHeader, "Name")
-    Player(index).Sex = Val(GetVar(filename, charHeader, "Sex"))
-    Player(index).Class = Val(GetVar(filename, charHeader, "Class"))
-    Player(index).Sprite = Val(GetVar(filename, charHeader, "Sprite"))
-    Player(index).Level = Val(GetVar(filename, charHeader, "Level"))
-    Player(index).exp = Val(GetVar(filename, charHeader, "Exp"))
-    Player(index).Access = Val(GetVar(filename, charHeader, "Access"))
-    Player(index).PK = Val(GetVar(filename, charHeader, "PK"))
-    
-    ' Vitals
-    For i = 1 To Vitals.Vital_Count - 1
-        Player(index).Vital(i) = Val(GetVar(filename, charHeader, "Vital" & i))
-    Next
-    
-    ' Stats
-    For i = 1 To Stats.Stat_Count - 1
-        Player(index).Stat(i) = Val(GetVar(filename, charHeader, "Stat" & i))
-    Next
-    Player(index).POINTS = Val(GetVar(filename, charHeader, "Points"))
-
-    ' Equipment
-    For i = 1 To Equipment.Equipment_Count - 1
-        Player(index).Equipment(i) = Val(GetVar(filename, charHeader, "Equipment" & i))
-    Next
-    
-    ' Inventory
-    For i = 1 To MAX_INV
-        Player(index).Inv(i).Num = Val(GetVar(filename, charHeader, "InvNum" & i))
-        Player(index).Inv(i).Value = Val(GetVar(filename, charHeader, "InvValue" & i))
-        Player(index).Inv(i).Bound = Val(GetVar(filename, charHeader, "InvBound" & i))
-    Next
-    
-    ' Spells
-    For i = 1 To MAX_PLAYER_SPELLS
-        Player(index).Spell(i).Spell = Val(GetVar(filename, charHeader, "Spell" & i))
-        Player(index).Spell(i).Uses = Val(GetVar(filename, charHeader, "SpellUses" & i))
-    Next
-    
-    ' Hotbar
-    For i = 1 To MAX_HOTBAR
-        Player(index).Hotbar(i).Slot = Val(GetVar(filename, charHeader, "HotbarSlot" & i))
-        Player(index).Hotbar(i).sType = Val(GetVar(filename, charHeader, "HotbarType" & i))
-    Next
-    
-    ' Position
-    Player(index).Map = Val(GetVar(filename, charHeader, "Map"))
-    Player(index).x = Val(GetVar(filename, charHeader, "X"))
-    Player(index).y = Val(GetVar(filename, charHeader, "Y"))
-    Player(index).dir = Val(GetVar(filename, charHeader, "Dir"))
-    
-    ' Tutorial
-    Player(index).TutorialState = Val(GetVar(filename, charHeader, "TutorialState"))
-    
-    ' Bank
-    For i = 1 To MAX_BANK
-        Player(index).Bank(i).Num = Val(GetVar(filename, charHeader, "BankNum" & i))
-        Player(index).Bank(i).Value = Val(GetVar(filename, charHeader, "BankValue" & i))
-        Player(index).Bank(i).Bound = Val(GetVar(filename, charHeader, "BankBound" & i))
-    Next
-    
-    ' variables
-    For i = 1 To MAX_BYTE
-        Player(index).Variable(i) = Val(GetVar(filename, charHeader, "Var" & i))
-    Next
-    
-    ' set the character number
-    Player(index).charNum = charNum
+    f = FreeFile
+    Open filename For Binary As #f
+    Get #f, , Player(index)
+    Close #f
 End Sub
 
 Sub DeleteCharacter(Login As String, charNum As Long)
-Dim filename As String, charHeader As String, i As Long
+    Dim filename As String, charHeader As String, i As Long
 
     Login = Trim$(Login)
     If Login = vbNullString Then Exit Sub
-    
+
     ' the file
     filename = App.Path & "\data\accounts\" & SanitiseString(Login) & ".ini"
-    
+
     ' exit out early if invalid char
     If charNum < 1 Or charNum > MAX_CHARS Then Exit Sub
-    
+
     ' the char header
     charHeader = "CHAR" & charNum
-    
+
     ' character
     PutVar filename, charHeader, "Name", vbNullString
     PutVar filename, charHeader, "Sex", 0
@@ -604,12 +371,12 @@ Dim filename As String, charHeader As String, i As Long
     PutVar filename, charHeader, "exp", 0
     PutVar filename, charHeader, "Access", 0
     PutVar filename, charHeader, "PK", 0
-    
+
     ' Vitals
     For i = 1 To Vitals.Vital_Count - 1
         PutVar filename, charHeader, "Vital" & i, 0
     Next
-    
+
     ' Stats
     For i = 1 To Stats.Stat_Count - 1
         PutVar filename, charHeader, "Stat" & i, 0
@@ -620,35 +387,35 @@ Dim filename As String, charHeader As String, i As Long
     For i = 1 To Equipment.Equipment_Count - 1
         PutVar filename, charHeader, "Equipment" & i, 0
     Next
-    
+
     ' Inventory
     For i = 1 To MAX_INV
         PutVar filename, charHeader, "InvNum" & i, 0
         PutVar filename, charHeader, "InvValue" & i, 0
         PutVar filename, charHeader, "InvBound" & i, 0
     Next
-    
+
     ' Spells
     For i = 1 To MAX_PLAYER_SPELLS
         PutVar filename, charHeader, "Spell" & i, 0
         PutVar filename, charHeader, "SpellUses" & i, 0
     Next
-    
+
     ' Hotbar
     For i = 1 To MAX_HOTBAR
         PutVar filename, charHeader, "HotbarSlot" & i, 0
         PutVar filename, charHeader, "HotbarType" & i, 0
     Next
-    
+
     ' Position
     PutVar filename, charHeader, "Map", 0
     PutVar filename, charHeader, "X", 0
     PutVar filename, charHeader, "Y", 0
     PutVar filename, charHeader, "Dir", 0
-    
+
     ' Tutorial
     PutVar filename, charHeader, "TutorialState", 0
-    
+
     ' Bank
     For i = 1 To MAX_BANK
         PutVar filename, charHeader, "BankNum" & i, 0
@@ -659,12 +426,11 @@ End Sub
 
 Sub ClearPlayer(ByVal index As Long)
     Dim i As Long
-    
+
     Call ZeroMemory(ByVal VarPtr(TempPlayer(index)), LenB(TempPlayer(index)))
     Set TempPlayer(index).Buffer = New clsBuffer
-    
+
     Call ZeroMemory(ByVal VarPtr(Player(index)), LenB(Player(index)))
-    Player(index).Login = vbNullString
     Player(index).Name = vbNullString
     Player(index).Class = 1
 
@@ -674,13 +440,13 @@ Sub ClearPlayer(ByVal index As Long)
 End Sub
 
 Sub ClearChar(ByVal index As Long)
-Dim tmpName As String, tmpChar As Long
-    
+    Dim tmpName As String, tmpChar As Long
+
     tmpName = Player(index).Login
     tmpChar = Player(index).charNum
-    
+
     Call ZeroMemory(ByVal VarPtr(Player(index)), LenB(Player(index)))
-    
+
     Player(index).Login = tmpName
     Player(index).charNum = tmpChar
 End Sub
@@ -694,7 +460,7 @@ Public Sub CreateClassesINI()
     filename = App.Path & "\data\classes.ini"
     Max_Classes = 2
 
-    If Not FileExist(filename, True) Then
+    If Not FileExist(filename) Then
         File = FreeFile
         Open filename For Output As File
         Print #File, "[INIT]"
@@ -725,7 +491,7 @@ Sub LoadClasses()
 
     For i = 1 To Max_Classes
         Class(i).Name = GetVar(filename, "CLASS" & i, "Name")
-        
+
         ' read string of sprites
         tmpSprite = GetVar(filename, "CLASS" & i, "MaleSprite")
         ' split into an array of strings
@@ -736,7 +502,7 @@ Sub LoadClasses()
         For n = 0 To UBound(tmpArray)
             Class(i).MaleSprite(n) = Val(tmpArray(n))
         Next
-        
+
         ' read string of sprites
         tmpSprite = GetVar(filename, "CLASS" & i, "FemaleSprite")
         ' split into an array of strings
@@ -747,19 +513,19 @@ Sub LoadClasses()
         For n = 0 To UBound(tmpArray)
             Class(i).FemaleSprite(n) = Val(tmpArray(n))
         Next
-        
+
         ' continue
         Class(i).Stat(Stats.Strength) = Val(GetVar(filename, "CLASS" & i, "Strength"))
         Class(i).Stat(Stats.Endurance) = Val(GetVar(filename, "CLASS" & i, "Endurance"))
         Class(i).Stat(Stats.Intelligence) = Val(GetVar(filename, "CLASS" & i, "Intelligence"))
         Class(i).Stat(Stats.Agility) = Val(GetVar(filename, "CLASS" & i, "Agility"))
         Class(i).Stat(Stats.Willpower) = Val(GetVar(filename, "CLASS" & i, "Willpower"))
-        
+
         ' how many starting items?
         startItemCount = Val(GetVar(filename, "CLASS" & i, "StartItemCount"))
         If startItemCount > 0 Then ReDim Class(i).StartItem(1 To startItemCount)
         If startItemCount > 0 Then ReDim Class(i).StartValue(1 To startItemCount)
-        
+
         ' loop for items & values
         Class(i).startItemCount = startItemCount
         If startItemCount >= 1 And startItemCount <= MAX_INV Then
@@ -768,11 +534,11 @@ Sub LoadClasses()
                 Class(i).StartValue(x) = Val(GetVar(filename, "CLASS" & i, "StartValue" & x))
             Next
         End If
-        
+
         ' how many starting spells?
         startSpellCount = Val(GetVar(filename, "CLASS" & i, "StartSpellCount"))
         If startSpellCount > 0 Then ReDim Class(i).StartSpell(1 To startSpellCount)
-        
+
         ' loop for spells
         Class(i).startSpellCount = startSpellCount
         If startSpellCount >= 1 And startSpellCount <= MAX_INV Then
@@ -788,7 +554,7 @@ Sub SaveClasses()
     Dim filename As String
     Dim i As Long
     Dim x As Long
-    
+
     filename = App.Path & "\data\classes.ini"
 
     For i = 1 To Max_Classes
@@ -817,7 +583,7 @@ Function CheckClasses() As Boolean
     Dim filename As String
     filename = App.Path & "\data\classes.ini"
 
-    If Not FileExist(filename, True) Then
+    If Not FileExist(filename) Then
         Call CreateClassesINI
         CheckClasses = True
     End If
@@ -848,7 +614,7 @@ End Sub
 
 Sub SaveItem(ByVal itemNum As Long)
     Dim filename As String
-    Dim f  As Long
+    Dim f As Long
     filename = App.Path & "\data\items\item" & itemNum & ".dat"
     f = FreeFile
     Open filename For Binary As #f
@@ -877,7 +643,7 @@ Sub CheckItems()
 
     For i = 1 To MAX_ITEMS
 
-        If Not FileExist("\Data\Items\Item" & i & ".dat") Then
+        If Not FileExist(App.Path & "\Data\Items\Item" & i & ".dat") Then
             Call SaveItem(i)
         End If
 
@@ -944,7 +710,7 @@ Sub CheckShops()
 
     For i = 1 To MAX_SHOPS
 
-        If Not FileExist("\Data\shops\shop" & i & ".dat") Then
+        If Not FileExist(App.Path & "\Data\shops\shop" & i & ".dat") Then
             Call SaveShop(i)
         End If
 
@@ -1010,7 +776,7 @@ Sub CheckSpells()
 
     For i = 1 To MAX_SPELLS
 
-        If Not FileExist("\Data\spells\spells" & i & ".dat") Then
+        If Not FileExist(App.Path & "\Data\spells\spells" & i & ".dat") Then
             Call SaveSpell(i)
         End If
 
@@ -1021,7 +787,7 @@ End Sub
 Sub ClearSpell(ByVal index As Long)
     Call ZeroMemory(ByVal VarPtr(Spell(index)), LenB(Spell(index)))
     Spell(index).Name = vbNullString
-    Spell(index).LevelReq = 1 'Needs to be 1 for the spell editor
+    Spell(index).LevelReq = 1    'Needs to be 1 for the spell editor
     Spell(index).Desc = vbNullString
     Spell(index).Sound = "None."
 End Sub
@@ -1078,7 +844,7 @@ Sub CheckNpcs()
 
     For i = 1 To MAX_NPCS
 
-        If Not FileExist("\Data\npcs\npc" & i & ".dat") Then
+        If Not FileExist(App.Path & "\Data\npcs\npc" & i & ".dat") Then
             Call SaveNpc(i)
         End If
 
@@ -1120,7 +886,7 @@ Sub SaveResource(ByVal ResourceNum As Long)
     filename = App.Path & "\data\resources\resource" & ResourceNum & ".dat"
     f = FreeFile
     Open filename For Binary As #f
-        Put #f, , Resource(ResourceNum)
+    Put #f, , Resource(ResourceNum)
     Close #f
 End Sub
 
@@ -1129,14 +895,14 @@ Sub LoadResources()
     Dim i As Long
     Dim f As Long
     Dim sLen As Long
-    
+
     Call CheckResources
 
     For i = 1 To MAX_RESOURCES
         filename = App.Path & "\data\resources\resource" & i & ".dat"
         f = FreeFile
         Open filename For Binary As #f
-            Get #f, , Resource(i)
+        Get #f, , Resource(i)
         Close #f
     Next
 
@@ -1146,7 +912,7 @@ Sub CheckResources()
     Dim i As Long
 
     For i = 1 To MAX_RESOURCES
-        If Not FileExist("\Data\Resources\Resource" & i & ".dat") Then
+        If Not FileExist(App.Path & "\Data\Resources\Resource" & i & ".dat") Then
             Call SaveResource(i)
         End If
     Next
@@ -1187,7 +953,7 @@ Sub SaveAnimation(ByVal AnimationNum As Long)
     filename = App.Path & "\data\animations\animation" & AnimationNum & ".dat"
     f = FreeFile
     Open filename For Binary As #f
-        Put #f, , Animation(AnimationNum)
+    Put #f, , Animation(AnimationNum)
     Close #f
 End Sub
 
@@ -1196,14 +962,14 @@ Sub LoadAnimations()
     Dim i As Long
     Dim f As Long
     Dim sLen As Long
-    
+
     Call CheckAnimations
 
     For i = 1 To MAX_ANIMATIONS
         filename = App.Path & "\data\animations\animation" & i & ".dat"
         f = FreeFile
         Open filename For Binary As #f
-            Get #f, , Animation(i)
+        Get #f, , Animation(i)
         Close #f
     Next
 
@@ -1214,7 +980,7 @@ Sub CheckAnimations()
 
     For i = 1 To MAX_ANIMATIONS
 
-        If Not FileExist("\Data\animations\animation" & i & ".dat") Then
+        If Not FileExist(App.Path & "\Data\animations\animation" & i & ".dat") Then
             Call SaveAnimation(i)
         End If
 
@@ -1241,13 +1007,13 @@ End Sub
 ' **********
 Sub SaveMap(ByVal mapnum As Long)
     Dim filename As String, f As Long, x As Long, y As Long, i As Long
-    
+
     ' save map data
     filename = App.Path & "\data\maps\map" & mapnum & ".ini"
-    
+
     ' if it exists then kill the ini
-    If FileExist(filename, True) Then Kill filename
-    
+    If FileExist(filename) Then Kill filename
+
     ' General
     With Map(mapnum).MapData
         PutVar filename, "General", "Name", .Name
@@ -1267,10 +1033,10 @@ Sub SaveMap(ByVal mapnum As Long)
             PutVar filename, "General", "Npc" & i, Val(.Npc(i))
         Next
     End With
-    
+
     ' Events
     PutVar filename, "Events", "EventCount", Val(Map(mapnum).TileData.EventCount)
-    
+
     If Map(mapnum).TileData.EventCount > 0 Then
         For i = 1 To Map(mapnum).TileData.EventCount
             With Map(mapnum).TileData.Events(i)
@@ -1320,33 +1086,33 @@ Sub SaveMap(ByVal mapnum As Long)
             End If
         Next
     End If
-    
+
     ' dump tile data
     filename = App.Path & "\data\maps\map" & mapnum & ".dat"
     f = FreeFile
-    
+
     With Map(mapnum)
         Open filename For Binary As #f
-            For x = 0 To .MapData.MaxX
-                For y = 0 To .MapData.MaxY
-                    Put #f, , .TileData.Tile(x, y).Type
-                    Put #f, , .TileData.Tile(x, y).Data1
-                    Put #f, , .TileData.Tile(x, y).Data2
-                    Put #f, , .TileData.Tile(x, y).Data3
-                    Put #f, , .TileData.Tile(x, y).Data4
-                    Put #f, , .TileData.Tile(x, y).Data5
-                    Put #f, , .TileData.Tile(x, y).Autotile
-                    Put #f, , .TileData.Tile(x, y).DirBlock
-                    For i = 1 To MapLayer.Layer_Count - 1
-                        Put #f, , .TileData.Tile(x, y).Layer(i).Tileset
-                        Put #f, , .TileData.Tile(x, y).Layer(i).x
-                        Put #f, , .TileData.Tile(x, y).Layer(i).y
-                    Next
+        For x = 0 To .MapData.MaxX
+            For y = 0 To .MapData.MaxY
+                Put #f, , .TileData.Tile(x, y).Type
+                Put #f, , .TileData.Tile(x, y).Data1
+                Put #f, , .TileData.Tile(x, y).Data2
+                Put #f, , .TileData.Tile(x, y).Data3
+                Put #f, , .TileData.Tile(x, y).Data4
+                Put #f, , .TileData.Tile(x, y).Data5
+                Put #f, , .TileData.Tile(x, y).Autotile
+                Put #f, , .TileData.Tile(x, y).DirBlock
+                For i = 1 To MapLayer.Layer_Count - 1
+                    Put #f, , .TileData.Tile(x, y).Layer(i).Tileset
+                    Put #f, , .TileData.Tile(x, y).Layer(i).x
+                    Put #f, , .TileData.Tile(x, y).Layer(i).y
                 Next
             Next
+        Next
         Close #f
     End With
-    
+
     DoEvents
 End Sub
 
@@ -1361,7 +1127,7 @@ End Sub
 
 Sub LoadMaps()
     Dim filename As String, mapnum As Long
-    
+
     Call CheckMaps
 
     For mapnum = 1 To MAX_MAPS
@@ -1373,14 +1139,14 @@ Sub LoadMaps()
 End Sub
 
 Sub GetMapCRC32(mapnum As Long)
-Dim Data() As Byte, filename As String, f As Long
+    Dim Data() As Byte, filename As String, f As Long
     ' map data
     filename = App.Path & "\data\maps\map" & mapnum & ".ini"
-    If FileExist(filename, True) Then
+    If FileExist(filename) Then
         f = FreeFile
         Open filename For Binary As #f
-            Data = Space$(LOF(f))
-            Get #f, , Data
+        Data = Space$(LOF(f))
+        Get #f, , Data
         Close #f
         MapCRC32(mapnum).MapDataCRC = CRC32(Data)
     Else
@@ -1390,11 +1156,11 @@ Dim Data() As Byte, filename As String, f As Long
     Erase Data
     ' tile data
     filename = App.Path & "\data\maps\map" & mapnum & ".dat"
-    If FileExist(filename, True) Then
+    If FileExist(filename) Then
         f = FreeFile
         Open filename For Binary As #f
-            Data = Space$(LOF(f))
-            Get #f, , Data
+        Data = Space$(LOF(f))
+        Get #f, , Data
         Close #f
         MapCRC32(mapnum).MapTileCRC = CRC32(Data)
     Else
@@ -1404,10 +1170,10 @@ End Sub
 
 Sub LoadMap(mapnum As Long)
     Dim filename As String, i As Long, f As Long, x As Long, y As Long
-    
+
     ' load map data
     filename = App.Path & "\data\maps\map" & mapnum & ".ini"
-    
+
     ' General
     With Map(mapnum).MapData
         .Name = GetVar(filename, "General", "Name")
@@ -1427,10 +1193,10 @@ Sub LoadMap(mapnum As Long)
             .Npc(i) = Val(GetVar(filename, "General", "Npc" & i))
         Next
     End With
-    
+
     ' Events
     Map(mapnum).TileData.EventCount = Val(GetVar(filename, "Events", "EventCount"))
-    
+
     If Map(mapnum).TileData.EventCount > 0 Then
         ReDim Preserve Map(mapnum).TileData.Events(1 To Map(mapnum).TileData.EventCount)
         For i = 1 To Map(mapnum).TileData.EventCount
@@ -1483,33 +1249,33 @@ Sub LoadMap(mapnum As Long)
             End If
         Next
     End If
-    
+
     ' dump tile data
     filename = App.Path & "\data\maps\map" & mapnum & ".dat"
     f = FreeFile
-    
+
     ' redim the map
     ReDim Map(mapnum).TileData.Tile(0 To Map(mapnum).MapData.MaxX, 0 To Map(mapnum).MapData.MaxY) As TileRec
-    
+
     With Map(mapnum)
         Open filename For Binary As #f
-            For x = 0 To .MapData.MaxX
-                For y = 0 To .MapData.MaxY
-                    Get #f, , .TileData.Tile(x, y).Type
-                    Get #f, , .TileData.Tile(x, y).Data1
-                    Get #f, , .TileData.Tile(x, y).Data2
-                    Get #f, , .TileData.Tile(x, y).Data3
-                    Get #f, , .TileData.Tile(x, y).Data4
-                    Get #f, , .TileData.Tile(x, y).Data5
-                    Get #f, , .TileData.Tile(x, y).Autotile
-                    Get #f, , .TileData.Tile(x, y).DirBlock
-                    For i = 1 To MapLayer.Layer_Count - 1
-                        Get #f, , .TileData.Tile(x, y).Layer(i).Tileset
-                        Get #f, , .TileData.Tile(x, y).Layer(i).x
-                        Get #f, , .TileData.Tile(x, y).Layer(i).y
-                    Next
+        For x = 0 To .MapData.MaxX
+            For y = 0 To .MapData.MaxY
+                Get #f, , .TileData.Tile(x, y).Type
+                Get #f, , .TileData.Tile(x, y).Data1
+                Get #f, , .TileData.Tile(x, y).Data2
+                Get #f, , .TileData.Tile(x, y).Data3
+                Get #f, , .TileData.Tile(x, y).Data4
+                Get #f, , .TileData.Tile(x, y).Data5
+                Get #f, , .TileData.Tile(x, y).Autotile
+                Get #f, , .TileData.Tile(x, y).DirBlock
+                For i = 1 To MapLayer.Layer_Count - 1
+                    Get #f, , .TileData.Tile(x, y).Layer(i).Tileset
+                    Get #f, , .TileData.Tile(x, y).Layer(i).x
+                    Get #f, , .TileData.Tile(x, y).Layer(i).y
                 Next
             Next
+        Next
         Close #f
     End With
 End Sub
@@ -1519,7 +1285,7 @@ Sub CheckMaps()
 
     For i = 1 To MAX_MAPS
 
-        If Not FileExist("\Data\maps\map" & i & ".dat") Or Not FileExist("\Data\maps\map" & i & ".ini") Then
+        If Not FileExist(App.Path & "\Data\maps\map" & i & ".dat") Or Not FileExist(App.Path & "\Data\maps\map" & i & ".ini") Then
             Call SaveMap(i)
         End If
 
@@ -1545,7 +1311,7 @@ Sub ClearMapItems()
 End Sub
 
 Sub ClearMapNpc(ByVal index As Long, ByVal mapnum As Long)
-    'ReDim MapNpc(mapnum).Npc(1 To MAX_MAP_NPCS)
+'ReDim MapNpc(mapnum).Npc(1 To MAX_MAP_NPCS)
     Call ZeroMemory(ByVal VarPtr(MapNpc(mapnum).Npc(index)), LenB(MapNpc(mapnum).Npc(index)))
 End Sub
 
@@ -1588,14 +1354,14 @@ End Function
 
 Function GetClassMaxVital(ByVal ClassNum As Long, ByVal Vital As Vitals) As Long
     Select Case Vital
-        Case HP
-            With Class(ClassNum)
-                GetClassMaxVital = 100 + (.Stat(Endurance) * 5) + 2
-            End With
-        Case MP
-            With Class(ClassNum)
-                GetClassMaxVital = 30 + (.Stat(Intelligence) * 10) + 2
-            End With
+    Case HP
+        With Class(ClassNum)
+            GetClassMaxVital = 100 + (.Stat(Endurance) * 5) + 2
+        End With
+    Case MP
+        With Class(ClassNum)
+            GetClassMaxVital = 30 + (.Stat(Intelligence) * 10) + 2
+        End With
     End Select
 End Function
 
@@ -1611,7 +1377,7 @@ End Sub
 ' ** Convs **
 ' ***********
 Sub SaveConvs()
-Dim i As Long
+    Dim i As Long
 
     For i = 1 To MAX_CONVS
         Call SaveConv(i)
@@ -1619,73 +1385,73 @@ Dim i As Long
 End Sub
 
 Sub SaveConv(ByVal convNum As Long)
-Dim filename As String
-Dim i As Long, x As Long, f As Long
-    
+    Dim filename As String
+    Dim i As Long, x As Long, f As Long
+
     filename = App.Path & "\data\convs\conv" & convNum & ".dat"
     f = FreeFile
-    
+
     Open filename For Binary As #f
-        With Conv(convNum)
-            Put #f, , .Name
-            Put #f, , .chatCount
-            For i = 1 To .chatCount
-                Put #f, , CLng(Len(.Conv(i).Conv))
-                Put #f, , .Conv(i).Conv
-                For x = 1 To 4
-                    Put #f, , CLng(Len(.Conv(i).rText(x)))
-                    Put #f, , .Conv(i).rText(x)
-                    Put #f, , .Conv(i).rTarget(x)
-                Next
-                Put #f, , .Conv(i).Event
-                Put #f, , .Conv(i).Data1
-                Put #f, , .Conv(i).Data2
-                Put #f, , .Conv(i).Data3
+    With Conv(convNum)
+        Put #f, , .Name
+        Put #f, , .chatCount
+        For i = 1 To .chatCount
+            Put #f, , CLng(Len(.Conv(i).Conv))
+            Put #f, , .Conv(i).Conv
+            For x = 1 To 4
+                Put #f, , CLng(Len(.Conv(i).rText(x)))
+                Put #f, , .Conv(i).rText(x)
+                Put #f, , .Conv(i).rTarget(x)
             Next
-        End With
+            Put #f, , .Conv(i).Event
+            Put #f, , .Conv(i).Data1
+            Put #f, , .Conv(i).Data2
+            Put #f, , .Conv(i).Data3
+        Next
+    End With
     Close #f
 End Sub
 
 Sub LoadConvs()
-Dim filename As String
-Dim i As Long, n As Long, x As Long, f As Long
-Dim sLen As Long
-    
+    Dim filename As String
+    Dim i As Long, n As Long, x As Long, f As Long
+    Dim sLen As Long
+
     Call CheckConvs
 
     For i = 1 To MAX_CONVS
         filename = App.Path & "\data\convs\conv" & i & ".dat"
         f = FreeFile
         Open filename For Binary As #f
-            With Conv(i)
-                Get #f, , .Name
-                Get #f, , .chatCount
-                If .chatCount > 0 Then ReDim .Conv(1 To .chatCount)
-                For n = 1 To .chatCount
+        With Conv(i)
+            Get #f, , .Name
+            Get #f, , .chatCount
+            If .chatCount > 0 Then ReDim .Conv(1 To .chatCount)
+            For n = 1 To .chatCount
+                Get #f, , sLen
+                .Conv(n).Conv = Space$(sLen)
+                Get #f, , .Conv(n).Conv
+                For x = 1 To 4
                     Get #f, , sLen
-                    .Conv(n).Conv = Space$(sLen)
-                    Get #f, , .Conv(n).Conv
-                    For x = 1 To 4
-                        Get #f, , sLen
-                        .Conv(n).rText(x) = Space$(sLen)
-                        Get #f, , .Conv(n).rText(x)
-                        Get #f, , .Conv(n).rTarget(x)
-                    Next
-                    Get #f, , .Conv(n).Event
-                    Get #f, , .Conv(n).Data1
-                    Get #f, , .Conv(n).Data2
-                    Get #f, , .Conv(n).Data3
+                    .Conv(n).rText(x) = Space$(sLen)
+                    Get #f, , .Conv(n).rText(x)
+                    Get #f, , .Conv(n).rTarget(x)
                 Next
-            End With
+                Get #f, , .Conv(n).Event
+                Get #f, , .Conv(n).Data1
+                Get #f, , .Conv(n).Data2
+                Get #f, , .Conv(n).Data3
+            Next
+        End With
         Close #f
     Next
 End Sub
 
 Sub CheckConvs()
-Dim i As Long
+    Dim i As Long
 
     For i = 1 To MAX_CONVS
-        If Not FileExist("\data\convs\conv" & i & ".dat") Then
+        If Not FileExist(App.Path & "\data\convs\conv" & i & ".dat") Then
             Call SaveConv(i)
         End If
     Next
@@ -1698,154 +1464,10 @@ Sub ClearConv(ByVal index As Long)
 End Sub
 
 Sub ClearConvs()
-Dim i As Long
+    Dim i As Long
 
     For i = 1 To MAX_CONVS
         Call ClearConv(i)
     Next
 
-End Sub
-
-Function OldAccount_Exist(ByVal username As String) As Boolean
-Dim filename As String
-    
-    filename = App.Path & "\data\accounts\old\" & SanitiseString(username) & ".ini"
-    If FileExist(filename, True) Then
-        If LenB(Trim$(GetVar(filename, "ACCOUNT", "Name"))) > 0 Then
-            OldAccount_Exist = True
-        End If
-    End If
-End Function
-
-Public Sub MergeAccount(ByVal index As Long, ByVal charNum As Long, ByVal oldAccount As String)
-Dim tempChar As PlayerRec, charHeader As String, filename As String, i As Long
-
-    ' set the filename
-    filename = App.Path & "\data\accounts\old\" & SanitiseString(oldAccount) & ".ini"
-    charHeader = "ACCOUNT"
-    
-    ' load the old account shit
-    With tempChar
-        .Name = Trim$(GetVar(filename, charHeader, "Name"))
-        .Sex = Val(GetVar(filename, charHeader, "Sex"))
-        .Class = Val(GetVar(filename, charHeader, "Class"))
-        .Sprite = Val(GetVar(filename, charHeader, "Sprite"))
-        .Level = Val(GetVar(filename, charHeader, "Level"))
-        .exp = Val(GetVar(filename, charHeader, "Exp"))
-        .Access = Val(GetVar(filename, charHeader, "Access"))
-        .PK = Val(GetVar(filename, charHeader, "PK"))
-        
-        ' Vitals
-        For i = 1 To Vitals.Vital_Count - 1
-            .Vital(i) = Val(GetVar(filename, charHeader, "Vital" & i))
-        Next
-        
-        ' Stats
-        For i = 1 To Stats.Stat_Count - 1
-            .Stat(i) = Val(GetVar(filename, charHeader, "Stat" & i))
-        Next
-        .POINTS = Val(GetVar(filename, charHeader, "Points"))
-    
-        ' Equipment
-        For i = 1 To Equipment.Equipment_Count - 1
-            .Equipment(i) = Val(GetVar(filename, charHeader, "Equipment" & i))
-        Next
-        
-        ' Inventory
-        For i = 1 To MAX_INV
-            .Inv(i).Num = Val(GetVar(filename, charHeader, "InvNum" & i))
-            .Inv(i).Value = Val(GetVar(filename, charHeader, "InvValue" & i))
-            .Inv(i).Bound = Val(GetVar(filename, charHeader, "InvBound" & i))
-        Next
-        
-        ' Spells
-        For i = 1 To MAX_PLAYER_SPELLS
-            .Spell(i).Spell = Val(GetVar(filename, charHeader, "Spell" & i))
-            .Spell(i).Uses = Val(GetVar(filename, charHeader, "SpellUses" & i))
-        Next
-        
-        ' Hotbar
-        For i = 1 To MAX_HOTBAR
-            .Hotbar(i).Slot = Val(GetVar(filename, charHeader, "HotbarSlot" & i))
-            .Hotbar(i).sType = Val(GetVar(filename, charHeader, "HotbarType" & i))
-        Next
-        
-        ' Position
-        .Map = Val(GetVar(filename, charHeader, "Map"))
-        .x = Val(GetVar(filename, charHeader, "X"))
-        .y = Val(GetVar(filename, charHeader, "Y"))
-        .dir = Val(GetVar(filename, charHeader, "Dir"))
-        
-        ' Tutorial
-        .TutorialState = Val(GetVar(filename, charHeader, "TutorialState"))
-    End With
-    
-    ' set the filename
-    filename = App.Path & "\data\accounts\" & SanitiseString(Trim$(Player(index).Login)) & ".ini"
-    charHeader = "CHAR" & charNum
-    
-    ' save it in the new account's character slot
-    With tempChar
-        PutVar filename, charHeader, "Name", Trim$(.Name)
-        PutVar filename, charHeader, "Sex", Val(.Sex)
-        PutVar filename, charHeader, "Class", Val(.Class)
-        PutVar filename, charHeader, "Sprite", Val(.Sprite)
-        PutVar filename, charHeader, "Level", Val(.Level)
-        PutVar filename, charHeader, "exp", Val(.exp)
-        PutVar filename, charHeader, "Access", Val(.Access)
-        PutVar filename, charHeader, "PK", Val(.PK)
-        
-        ' Vitals
-        For i = 1 To Vitals.Vital_Count - 1
-            PutVar filename, charHeader, "Vital" & i, Val(.Vital(i))
-        Next
-        
-        ' Stats
-        For i = 1 To Stats.Stat_Count - 1
-            PutVar filename, charHeader, "Stat" & i, Val(.Stat(i))
-        Next
-        PutVar filename, charHeader, "Points", Val(.POINTS)
-    
-        ' Equipment
-        For i = 1 To Equipment.Equipment_Count - 1
-            PutVar filename, charHeader, "Equipment" & i, Val(.Equipment(i))
-        Next
-        
-        ' Inventory
-        For i = 1 To MAX_INV
-            PutVar filename, charHeader, "InvNum" & i, Val(.Inv(i).Num)
-            PutVar filename, charHeader, "InvValue" & i, Val(.Inv(i).Value)
-            PutVar filename, charHeader, "InvBound" & i, Val(.Inv(i).Bound)
-        Next
-        
-        ' Spells
-        For i = 1 To MAX_PLAYER_SPELLS
-            PutVar filename, charHeader, "Spell" & i, Val(.Spell(i).Spell)
-            PutVar filename, charHeader, "SpellUses" & i, Val(.Spell(i).Uses)
-        Next
-        
-        ' Hotbar
-        For i = 1 To MAX_HOTBAR
-            PutVar filename, charHeader, "HotbarSlot" & i, Val(.Hotbar(i).Slot)
-            PutVar filename, charHeader, "HotbarType" & i, Val(.Hotbar(i).sType)
-        Next
-        
-        ' Position
-        PutVar filename, charHeader, "Map", Val(.Map)
-        PutVar filename, charHeader, "X", Val(.x)
-        PutVar filename, charHeader, "Y", Val(.y)
-        PutVar filename, charHeader, "Dir", Val(.dir)
-        
-        ' Tutorial
-        PutVar filename, charHeader, "TutorialState", Val(.TutorialState)
-    End With
-    
-    ' kill the old account - permanently
-    Kill App.Path & "\data\accounts\old\" & SanitiseString(oldAccount) & ".ini"
-    
-    ' send to portal again
-    SendPlayerChars index
-    
-    ' confirmation message
-    AlertMsg index, DIALOGUE_MSG_MERGE, MENU_CHARS, False
 End Sub

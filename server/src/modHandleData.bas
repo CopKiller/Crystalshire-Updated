@@ -191,11 +191,6 @@ Dim Buffer As clsBuffer, Name As String, i As Long, n As Long, Password As Strin
                 Call AlertMsg(index, DIALOGUE_MSG_WRONGPASS, MENU_LOGIN)
                 Exit Sub
             End If
-            
-            If Not PasswordOK(Name, Password) Then
-                Call AlertMsg(index, DIALOGUE_MSG_WRONGPASS, MENU_LOGIN)
-                Exit Sub
-            End If
 
             If IsMultiAccounts(Name) Then
                 Call AlertMsg(index, DIALOGUE_MSG_CONNECTION, MENU_LOGIN)
@@ -206,9 +201,14 @@ Dim Buffer As clsBuffer, Name As String, i As Long, n As Long, Password As Strin
                 Call AlertMsg(index, DIALOGUE_MSG_WRONGPASS, MENU_LOGIN)
                 Exit Sub
             End If
+            
+            If Not PasswordOK(Name, Password) Then
+                Call AlertMsg(index, DIALOGUE_MSG_WRONGPASS, MENU_LOGIN)
+                Exit Sub
+            End If
 
-            ' Load the player
-            Call LoadPlayer(index, Name, 0)
+            ' Load the account
+            Call LoadAccount(index, Name)
             
             ' make sure they're not banned
             If isBanned_Account(index) Then
@@ -225,6 +225,10 @@ Dim Buffer As clsBuffer, Name As String, i As Long, n As Long, Password As Strin
             ' Show the player up on the socket status
             Call AddLog(GetPlayerLogin(index) & " has logged in from " & GetPlayerIP(index) & ".", PLAYER_LOG)
             Call TextAdd(GetPlayerLogin(index) & " has logged in from " & GetPlayerIP(index) & ".")
+            
+            ' Update list players from server
+            frmServer.lvwInfo.ListItems(index).SubItems(1) = GetPlayerIP(index)
+            frmServer.lvwInfo.ListItems(index).SubItems(2) = GetPlayerLogin(index)
             
             Set Buffer = Nothing
         End If
@@ -2690,7 +2694,7 @@ Dim filename As String, i As Long, charNum As Long
     ' check if the player has a slot free
     filename = App.Path & "\data\accounts\" & SanitiseString(Trim$(Player(index).Login)) & ".ini"
     ' exit out if we can't find the player's ACTUAL account
-    If Not FileExist(filename, True) Then
+    If Not FileExist(filename) Then
         AlertMsg index, DIALOGUE_MSG_CONNECTION
         Exit Sub
     End If

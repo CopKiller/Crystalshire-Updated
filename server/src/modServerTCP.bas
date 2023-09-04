@@ -48,7 +48,7 @@ Function IsMultiAccounts(ByVal Login As String) As Boolean
     For i = 1 To Player_HighIndex
 
         If IsConnected(i) Then
-            If LCase$(Trim$(Player(i).Login)) = LCase$(Login) Then
+            If LCase$(Trim$(Account(i).Login)) = LCase$(Login) Then
                 IsMultiAccounts = True
                 Exit Function
             End If
@@ -347,10 +347,9 @@ Sub CloseSocket(ByVal index As Long)
 
     If index > 0 Then
         Call LeftGame(index)
-        If GetPlayerIP(index) <> "69.163.139.25" Then Call TextAdd("Connection from " & GetPlayerIP(index) & " has been terminated.")
+        Call TextAdd("Connection from " & GetPlayerIP(index) & " has been terminated.")
         frmServer.Socket(index).Close
         Call UpdateCaption
-        Call ClearPlayer(index)
     End If
 
 End Sub
@@ -1945,14 +1944,15 @@ Dim Buffer As clsBuffer, tmpName As String, i As Long, tmpSprite As Long, tmpAcc
     
     ' loop through each character. clear, load, add. repeat.
     For i = 1 To MAX_CHARS
-        tmpName = GetVar(App.Path & "\data\accounts\" & SanitiseString(Trim$(Player(index).Login)) & ".ini", "CHAR" & i, "Name")
-        tmpSprite = Val(GetVar(App.Path & "\data\accounts\" & SanitiseString(Trim$(Player(index).Login)) & ".ini", "CHAR" & i, "Sprite"))
-        tmpAccess = Val(GetVar(App.Path & "\data\accounts\" & SanitiseString(Trim$(Player(index).Login)) & ".ini", "CHAR" & i, "Access"))
-        tmpClass = Val(GetVar(App.Path & "\data\accounts\" & SanitiseString(Trim$(Player(index).Login)) & ".ini", "CHAR" & i, "Class"))
-        Buffer.WriteString tmpName
-        Buffer.WriteLong tmpSprite
-        Buffer.WriteLong tmpAccess
-        Buffer.WriteLong tmpClass
+    
+        Call LoadPlayer(index, i)
+        
+        Buffer.WriteString Trim$(Player(index).Name)
+        Buffer.WriteLong Player(index).Sprite
+        Buffer.WriteLong Player(index).Access
+        Buffer.WriteLong Player(index).Class
+        
+        Call ClearPlayer(index)
     Next
     
     SendDataTo index, Buffer.ToArray()

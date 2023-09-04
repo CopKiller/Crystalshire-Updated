@@ -42,6 +42,7 @@ Begin VB.Form frmServer
       _ExtentY        =   5953
       _Version        =   393216
       Style           =   1
+      Tab             =   1
       TabHeight       =   503
       BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
          Name            =   "Verdana"
@@ -54,26 +55,23 @@ Begin VB.Form frmServer
       EndProperty
       TabCaption(0)   =   "Console"
       TabPicture(0)   =   "frmServer.frx":1708A
-      Tab(0).ControlEnabled=   -1  'True
-      Tab(0).Control(0)=   "lblCPS"
-      Tab(0).Control(0).Enabled=   0   'False
-      Tab(0).Control(1)=   "lblCpsLock"
-      Tab(0).Control(1).Enabled=   0   'False
-      Tab(0).Control(2)=   "txtText"
-      Tab(0).Control(2).Enabled=   0   'False
-      Tab(0).Control(3)=   "txtChat"
-      Tab(0).Control(3).Enabled=   0   'False
+      Tab(0).ControlEnabled=   0   'False
+      Tab(0).Control(0)=   "txtChat"
+      Tab(0).Control(1)=   "txtText"
+      Tab(0).Control(2)=   "lblCpsLock"
+      Tab(0).Control(3)=   "lblCPS"
       Tab(0).ControlCount=   4
       TabCaption(1)   =   "Players"
       TabPicture(1)   =   "frmServer.frx":170A6
-      Tab(1).ControlEnabled=   0   'False
+      Tab(1).ControlEnabled=   -1  'True
       Tab(1).Control(0)=   "lvwInfo"
+      Tab(1).Control(0).Enabled=   0   'False
       Tab(1).ControlCount=   1
       TabCaption(2)   =   "Control "
       TabPicture(2)   =   "frmServer.frx":170C2
       Tab(2).ControlEnabled=   0   'False
-      Tab(2).Control(0)=   "fraDatabase"
-      Tab(2).Control(1)=   "fraServer"
+      Tab(2).Control(0)=   "fraServer"
+      Tab(2).Control(1)=   "fraDatabase"
       Tab(2).ControlCount=   2
       Begin VB.Frame fraServer 
          Caption         =   "Server"
@@ -182,14 +180,14 @@ Begin VB.Form frmServer
       End
       Begin VB.TextBox txtChat 
          Height          =   375
-         Left            =   120
+         Left            =   -74880
          TabIndex        =   3
          Top             =   2880
          Width           =   6255
       End
       Begin VB.TextBox txtText 
          Height          =   2175
-         Left            =   120
+         Left            =   -74880
          MultiLine       =   -1  'True
          ScrollBars      =   2  'Vertical
          TabIndex        =   2
@@ -198,7 +196,7 @@ Begin VB.Form frmServer
       End
       Begin MSComctlLib.ListView lvwInfo 
          Height          =   2775
-         Left            =   -74880
+         Left            =   120
          TabIndex        =   4
          Top             =   480
          Width           =   6255
@@ -252,7 +250,7 @@ Begin VB.Form frmServer
          Caption         =   "[Unlock]"
          ForeColor       =   &H00FF0000&
          Height          =   195
-         Left            =   120
+         Left            =   -74880
          TabIndex        =   18
          Top             =   360
          Width           =   720
@@ -260,7 +258,7 @@ Begin VB.Form frmServer
       Begin VB.Label lblCPS 
          Caption         =   "CPS: 0"
          Height          =   255
-         Left            =   960
+         Left            =   -74040
          TabIndex        =   17
          Top             =   360
          Width           =   1815

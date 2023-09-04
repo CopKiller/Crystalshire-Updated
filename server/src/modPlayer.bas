@@ -196,8 +196,8 @@ End Sub
 
 Sub UseChar(ByVal index As Long, ByVal charNum As Long)
     If Not IsPlaying(index) Then
-        Player(index).charNum = charNum
-        Call LoadPlayer(index, Trim$(Player(index).Login), charNum)
+        TempPlayer(index).charNum = charNum
+        Call LoadPlayer(index, charNum)
         Call JoinGame(index)
         Call AddLog(GetPlayerLogin(index) & "/" & GetPlayerName(index) & " has began playing " & GAME_NAME & ".", PLAYER_LOG)
         Call TextAdd(GetPlayerLogin(index) & "/" & GetPlayerName(index) & " has began playing " & GAME_NAME & ".")
@@ -308,6 +308,7 @@ Sub LeftGame(ByVal index As Long)
     End If
 
     Call ClearPlayer(index)
+    Call ClearAccount(index)
 End Sub
 
 Function GetPlayerProtection(ByVal index As Long) As Long
@@ -1285,7 +1286,7 @@ End Sub
 ' // PLAYER FUNCTIONS //
 ' //////////////////////
 Function GetPlayerLogin(ByVal index As Long) As String
-    GetPlayerLogin = Trim$(Player(index).Login)
+    GetPlayerLogin = Trim$(Account(index).Login)
 End Function
 
 Sub SetPlayerLogin(ByVal index As Long, ByVal Login As String)
