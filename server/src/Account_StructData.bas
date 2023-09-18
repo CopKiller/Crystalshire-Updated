@@ -1,6 +1,8 @@
 Attribute VB_Name = "Account_UDT"
 Option Explicit
 
+Public Const MAX_CHARS As Byte = 3
+
 Public Account(1 To MAX_PLAYERS) As AccountRec
 
 Private Type AccountRec

@@ -96,27 +96,6 @@ Function PasswordOK(ByVal Name As String, ByVal Password As String) As Boolean
 
 End Function
 
-Sub AddAccount(ByVal index As Long, ByVal Name As String, ByVal Password As String, ByVal Code As String)
-    Dim i As Long
-
-    ClearAccount index
-
-    '//Create the file destination folder
-    ChkDir App.Path & "\data\accounts\", Trim$(Name)
-
-    Account(index).Login = Name
-    Account(index).Password = Password
-    Account(index).Mail = Code
-    
-    Call SaveAccount(index)
-
-    For i = 1 To MAX_CHARS
-        Call ClearPlayer(index)
-        TempPlayer(index).charNum = i
-        Call SavePlayer(index)
-    Next i
-End Sub
-
 Sub DeleteName(ByVal Name As String)
     Dim f1 As Long
     Dim f2 As Long
@@ -274,3 +253,35 @@ Public Sub MergeAccount(ByVal index As Long, ByVal charNum As Long, ByVal oldAcc
     ' confirmation message
     AlertMsg index, DIALOGUE_MSG_MERGE, MENU_CHARS, False
 End Sub
+
+' ****************
+' ** Characters **
+' ****************
+Function CharExist(ByVal index As Long, ByVal charNum As Long) As Boolean
+    Dim theName As String
+    theName = GetVar(App.Path & "\data\accounts\CharNum_" & charNum & ".bin", "CHAR" & charNum, "Name")
+    'If LenB(Trim$(Player(index).Name)) > 0 Then
+    If LenB(theName) > 0 Then
+        CharExist = True
+    End If
+End Function
+
+Function FindChar(ByVal Name As String) As Boolean
+    Dim f As Long
+    Dim s As String
+    f = FreeFile
+    Open App.Path & "\data\accounts\_charlist.txt" For Input As #f
+
+    Do While Not EOF(f)
+        Input #f, s
+
+        If Trim$(LCase$(s)) = Trim$(LCase$(Name)) Then
+            FindChar = True
+            Close #f
+            Exit Function
+        End If
+
+    Loop
+
+    Close #f
+End Function

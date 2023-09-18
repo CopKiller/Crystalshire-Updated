@@ -46,7 +46,6 @@ Public Const MAX_PARTY_MEMBERS As Long = 4
 Public Const MAX_CONVS As Byte = 255
 Public Const MAX_NPC_DROPS As Byte = 30
 Public Const MAX_NPC_SPELLS As Byte = 10
-Public Const MAX_CHARS As Byte = 3
 
 ' server-side stuff
 Public Const ITEM_SPAWN_TIME As Long = 30000 ' 30 seconds
