@@ -55,6 +55,7 @@ Public CurrentTexture As Long
 Public ScreenWidth As Long, ScreenHeight As Long
 Public TileWidth As Long, TileHeight As Long
 Public ScreenX As Long, ScreenY As Long
+Public EndX As Long, EndY As Long
 Public curResolution As Byte, isFullscreen As Boolean
 
 Public Sub InitDX8(ByVal hWnd As Long)
@@ -264,11 +265,11 @@ End Sub
 
 Public Sub ResetGFX()
 Dim Temp() As TextureDataStruct
-Dim i As Long, N As Long
+Dim i As Long, n As Long
 
-    N = mTextures
-    ReDim Temp(1 To N)
-    For i = 1 To N
+    n = mTextures
+    ReDim Temp(1 To n)
+    For i = 1 To n
         Set mTexture(i).Texture = Nothing
         Temp(i).data = mTexture(i).data
     Next
@@ -287,7 +288,7 @@ Dim i As Long, N As Long
     Call D3DDevice.SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT)
     Call D3DDevice.SetTextureStageState(0, D3DTSS_ALPHAARG1, 2)
     
-    For i = 1 To N
+    For i = 1 To n
         Call LoadTexture(Temp(i).data)
     Next
 End Sub

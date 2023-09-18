@@ -70,43 +70,58 @@ Private Sub Form_KeyPress(KeyAscii As Integer)
 End Sub
 
 Private Sub Form_KeyUp(KeyCode As Integer, Shift As Integer)
-    ' handles screenshot mode
-    If KeyCode = vbKeyF11 Then
-        If GetPlayerAccess(MyIndex) > 0 Then
-            screenshotMode = Not screenshotMode
-        End If
-    End If
+    If Not InGame Then Exit Sub
     
-    ' handles form
-    If KeyCode = vbKeyInsert Then
-        If frmMain.BorderStyle = 0 Then
-            frmMain.BorderStyle = 1
-        Else
-            frmMain.BorderStyle = 0
-        End If
-        frmMain.caption = frmMain.caption
-    End If
+    Select Case KeyCode
+        Case vbKeyF1
+            If MyIndex <= 0 Then Exit Sub
     
-    ' handles delete events
-    If KeyCode = vbKeyDelete Then
-        If InMapEditor Then DeleteEvent selTileX, selTileY
-    End If
-    
-    ' handles copy + pasting events
-    If KeyCode = vbKeyC Then
-        If ControlDown Then
-            If InMapEditor Then
-                CopyEvent_Map selTileX, selTileY
+            If GetPlayerAccess(MyIndex) >= ADMIN_DEVELOPER Then
+                frmAdmin.Show
             End If
-        End If
-    End If
-    If KeyCode = vbKeyV Then
-        If ControlDown Then
-            If InMapEditor Then
-                PasteEvent_Map selTileX, selTileY
+            Exit Sub
+            
+        ' handles screenshot mode
+        Case vbKeyF11
+            If MyIndex <= 0 Then Exit Sub
+    
+            If GetPlayerAccess(MyIndex) > 0 Then
+                screenshotMode = Not screenshotMode
             End If
-        End If
-    End If
+            Exit Sub
+            
+        ' handles form
+        Case vbKeyInsert
+            If frmMain.BorderStyle = 0 Then
+                frmMain.BorderStyle = 1
+            Else
+                frmMain.BorderStyle = 0
+            End If
+            frmMain.caption = frmMain.caption
+            Exit Sub
+        
+        ' handles delete events
+        Case vbKeyDelete
+            If InMapEditor Then DeleteEvent selTileX, selTileY
+            Exit Sub
+            
+        ' handles copy + pasting events
+        Case vbKeyC
+            If ControlDown Then
+                If InMapEditor Then
+                    CopyEvent_Map selTileX, selTileY
+                End If
+            End If
+            Exit Sub
+        
+        Case vbKeyV
+            If ControlDown Then
+                If InMapEditor Then
+                    PasteEvent_Map selTileX, selTileY
+                End If
+            End If
+            Exit Sub
+    End Select
 End Sub
 
 Private Sub Form_DblClick()

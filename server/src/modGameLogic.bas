@@ -246,7 +246,7 @@ Public Sub SpawnNpc(ByVal mapNpcNum As Long, ByVal mapnum As Long)
                 Buffer.WriteLong .y
                 Buffer.WriteLong .dir
                 SendDataToMap mapnum, Buffer.ToArray()
-                Set Buffer = Nothing
+                Buffer.Flush: Set Buffer = Nothing
             End If
             
             SendMapNpcVitals mapnum, mapNpcNum
@@ -513,7 +513,7 @@ Sub NpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal dir As Long, By
             Buffer.WriteLong MapNpc(mapnum).Npc(mapNpcNum).dir
             Buffer.WriteLong movement
             SendDataToMap mapnum, Buffer.ToArray()
-            Set Buffer = Nothing
+            Buffer.Flush: Set Buffer = Nothing
         Case DIR_DOWN
             MapNpc(mapnum).Npc(mapNpcNum).y = MapNpc(mapnum).Npc(mapNpcNum).y + 1
             Set Buffer = New clsBuffer
@@ -524,7 +524,7 @@ Sub NpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal dir As Long, By
             Buffer.WriteLong MapNpc(mapnum).Npc(mapNpcNum).dir
             Buffer.WriteLong movement
             SendDataToMap mapnum, Buffer.ToArray()
-            Set Buffer = Nothing
+            Buffer.Flush: Set Buffer = Nothing
         Case DIR_LEFT
             MapNpc(mapnum).Npc(mapNpcNum).x = MapNpc(mapnum).Npc(mapNpcNum).x - 1
             Set Buffer = New clsBuffer
@@ -535,7 +535,7 @@ Sub NpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal dir As Long, By
             Buffer.WriteLong MapNpc(mapnum).Npc(mapNpcNum).dir
             Buffer.WriteLong movement
             SendDataToMap mapnum, Buffer.ToArray()
-            Set Buffer = Nothing
+            Buffer.Flush: Set Buffer = Nothing
         Case DIR_RIGHT
             MapNpc(mapnum).Npc(mapNpcNum).x = MapNpc(mapnum).Npc(mapNpcNum).x + 1
             Set Buffer = New clsBuffer
@@ -546,7 +546,7 @@ Sub NpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal dir As Long, By
             Buffer.WriteLong MapNpc(mapnum).Npc(mapNpcNum).dir
             Buffer.WriteLong movement
             SendDataToMap mapnum, Buffer.ToArray()
-            Set Buffer = Nothing
+            Buffer.Flush: Set Buffer = Nothing
     End Select
 
 End Sub
@@ -566,7 +566,7 @@ Sub NpcDir(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal dir As Long)
     Buffer.WriteLong mapNpcNum
     Buffer.WriteLong dir
     SendDataToMap mapnum, Buffer.ToArray()
-    Set Buffer = Nothing
+    Buffer.Flush: Set Buffer = Nothing
 End Sub
 
 Function GetTotalMapPlayers(ByVal mapnum As Long) As Long

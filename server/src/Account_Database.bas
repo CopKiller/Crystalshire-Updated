@@ -12,7 +12,7 @@ Private Declare Sub ZeroMemory Lib "Kernel32.dll" Alias "RtlZeroMemory" (Destina
 ' ** Account **
 ' *************
 
-Sub SaveAccount(ByVal index As Long)
+Public Sub SaveAccount(ByVal index As Long)
     Dim filename As String, i As Long, charHeader As String, f As Long
 
     If index <= 0 Or index > MAX_PLAYERS Then Exit Sub
@@ -26,7 +26,8 @@ Sub SaveAccount(ByVal index As Long)
     Put #f, , Account(index)
     Close #f
 End Sub
-Sub LoadAccount(ByVal index As Long, ByVal Name As String)
+
+Public Sub LoadAccount(ByVal index As Long, ByVal Name As String)
     Dim filename As String, i As Long, charHeader As String, f As Long
 
     If Trim$(Name) = vbNullString Then Exit Sub
@@ -42,7 +43,7 @@ Sub LoadAccount(ByVal index As Long, ByVal Name As String)
     Close #f
 End Sub
 
-Sub ClearAccount(ByVal index As Long)
+Public Sub ClearAccount(ByVal index As Long)
     Dim i As Long
 
     Call ZeroMemory(ByVal VarPtr(Account(index)), LenB(Account(index)))
@@ -56,7 +57,7 @@ Sub ClearAccount(ByVal index As Long)
     frmServer.lvwInfo.ListItems(index).SubItems(3) = vbNullString
 End Sub
 
-Function OldAccount_Exist(ByVal username As String) As Boolean
+Public Function OldAccount_Exist(ByVal username As String) As Boolean
     Dim filename As String
 
     filename = App.Path & "\data\accounts\old\" & SanitiseString(username) & ".ini"
@@ -67,7 +68,7 @@ Function OldAccount_Exist(ByVal username As String) As Boolean
     End If
 End Function
 
-Function AccountExist(ByVal Name As String) As Boolean
+Public Function AccountExist(ByVal Name As String) As Boolean
     Dim filename As String
     filename = App.Path & "\data\accounts\" & SanitiseString(Trim(Name)) & "\" & "account.bin"
 
@@ -77,7 +78,7 @@ Function AccountExist(ByVal Name As String) As Boolean
 
 End Function
 
-Function PasswordOK(ByVal Name As String, ByVal Password As String) As Boolean
+Public Function PasswordOK(ByVal Name As String, ByVal Password As String) As Boolean
     Dim filename As String
     Dim RightPassword As String * ACCOUNT_LENGTH
     Dim nFileNum As Long
@@ -96,7 +97,7 @@ Function PasswordOK(ByVal Name As String, ByVal Password As String) As Boolean
 
 End Function
 
-Sub AddAccount(ByVal index As Long, ByVal Name As String, ByVal Password As String, ByVal Code As String)
+Public Sub AddAccount(ByVal index As Long, ByVal Name As String, ByVal Password As String, ByVal Code As String)
     Dim i As Long
 
     ClearAccount index
@@ -117,7 +118,7 @@ Sub AddAccount(ByVal index As Long, ByVal Name As String, ByVal Password As Stri
     Next i
 End Sub
 
-Sub DeleteName(ByVal Name As String)
+Public Sub DeleteName(ByVal Name As String)
     Dim f1 As Long
     Dim f2 As Long
     Dim s As String

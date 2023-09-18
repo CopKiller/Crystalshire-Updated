@@ -1,4 +1,5 @@
 [General]
+Music=None.
 Moral=0
 Up=0
 Down=0
@@ -7,8 +8,8 @@ Right=0
 BootMap=0
 BootX=0
 BootY=0
-MaxX=24
-MaxY=18
+MaxX=36
+MaxY=36
 BossNpc=0
 Npc1=0
 Npc2=0

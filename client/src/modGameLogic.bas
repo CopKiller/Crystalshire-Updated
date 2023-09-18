@@ -900,15 +900,15 @@ Public Function IsValidMapPoint(ByVal x As Long, ByVal y As Long) As Boolean
     IsValidMapPoint = True
 End Function
 
-Public Function IsItem(startX As Long, startY As Long) As Long
+Public Function IsItem(StartX As Long, StartY As Long) As Long
 Dim tempRec As RECT
 Dim i As Long
     For i = 1 To MAX_INV
         If GetPlayerInvItemNum(MyIndex, i) Then
             With tempRec
-                .top = startY + InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
+                .top = StartY + InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
                 .bottom = .top + PIC_Y
-                .left = startX + InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
+                .left = StartX + InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
                 .Right = .left + PIC_X
             End With
 
@@ -922,15 +922,15 @@ Dim i As Long
     Next
 End Function
 
-Public Function IsTrade(startX As Long, startY As Long) As Long
+Public Function IsTrade(StartX As Long, StartY As Long) As Long
 Dim tempRec As RECT
 Dim i As Long
 
     For i = 1 To MAX_INV
         With tempRec
-            .top = startY + TradeTop + ((TradeOffsetY + 32) * ((i - 1) \ TradeColumns))
+            .top = StartY + TradeTop + ((TradeOffsetY + 32) * ((i - 1) \ TradeColumns))
             .bottom = .top + PIC_Y
-            .left = startX + TradeLeft + ((TradeOffsetX + 32) * (((i - 1) Mod TradeColumns)))
+            .left = StartX + TradeLeft + ((TradeOffsetX + 32) * (((i - 1) Mod TradeColumns)))
             .Right = .left + PIC_X
         End With
 
@@ -943,15 +943,15 @@ Dim i As Long
     Next
 End Function
 
-Public Function IsEqItem(startX As Long, startY As Long) As Long
+Public Function IsEqItem(StartX As Long, StartY As Long) As Long
 Dim tempRec As RECT
 Dim i As Long
     For i = 1 To Equipment.Equipment_Count - 1
         If GetPlayerEquipment(MyIndex, i) Then
             With tempRec
-                .top = startY + EqTop + (32 * ((i - 1) \ EqColumns))
+                .top = StartY + EqTop + (32 * ((i - 1) \ EqColumns))
                 .bottom = .top + PIC_Y
-                .left = startX + EqLeft + ((EqOffsetX + 32) * (((i - 1) Mod EqColumns)))
+                .left = StartX + EqLeft + ((EqOffsetX + 32) * (((i - 1) Mod EqColumns)))
                 .Right = .left + PIC_X
             End With
 
@@ -965,16 +965,16 @@ Dim i As Long
     Next
 End Function
 
-Public Function IsSkill(startX As Long, startY As Long) As Long
+Public Function IsSkill(StartX As Long, StartY As Long) As Long
 Dim tempRec As RECT
 Dim i As Long
 
     For i = 1 To MAX_PLAYER_SPELLS
         If PlayerSpells(i).Spell Then
             With tempRec
-                .top = startY + SkillTop + ((SkillOffsetY + 32) * ((i - 1) \ SkillColumns))
+                .top = StartY + SkillTop + ((SkillOffsetY + 32) * ((i - 1) \ SkillColumns))
                 .bottom = .top + PIC_Y
-                .left = startX + SkillLeft + ((SkillOffsetX + 32) * (((i - 1) Mod SkillColumns)))
+                .left = StartX + SkillLeft + ((SkillOffsetX + 32) * (((i - 1) Mod SkillColumns)))
                 .Right = .left + PIC_X
             End With
 
@@ -988,16 +988,16 @@ Dim i As Long
     Next
 End Function
 
-Public Function IsHotbar(startX As Long, startY As Long) As Long
+Public Function IsHotbar(StartX As Long, StartY As Long) As Long
 Dim tempRec As RECT
 Dim i As Long
 
     For i = 1 To MAX_HOTBAR
         If Hotbar(i).Slot Then
             With tempRec
-                .top = startY + HotbarTop
+                .top = StartY + HotbarTop
                 .bottom = .top + PIC_Y
-                .left = startX + HotbarLeft + ((i - 1) * HotbarOffsetX)
+                .left = StartX + HotbarLeft + ((i - 1) * HotbarOffsetX)
                 .Right = .left + PIC_X
             End With
 
@@ -1512,90 +1512,131 @@ Public Function ConvertMapY(ByVal y As Long) As Long
 End Function
 
 Public Sub UpdateCamera()
-    Dim offsetX As Long, offsetY As Long, startX As Long, startY As Long, EndX As Long, EndY As Long
+    Dim offsetX As Long
+    Dim offsetY As Long
+    Dim StartX As Long
+    Dim StartY As Long
+    
+    If MyIndex = 0 Then Exit Sub
     
     offsetX = Player(MyIndex).xOffset + PIC_X
     offsetY = Player(MyIndex).yOffset + PIC_Y
-    startX = GetPlayerX(MyIndex) - ((TileWidth + 1) \ 2) - 1
-    startY = GetPlayerY(MyIndex) - ((TileHeight + 1) \ 2) - 1
+    StartX = GetPlayerX(MyIndex) - ((TileWidth + 1) \ 2) - 1
+    StartY = GetPlayerY(MyIndex) - ((TileHeight + 1) \ 2) - 1
 
-    If TileWidth + 1 <= map.MapData.MaxX Then
-        If startX < 0 Then
-            offsetX = 0
-    
-            If startX = -1 Then
-                If Player(MyIndex).xOffset > 0 Then
-                    offsetX = Player(MyIndex).xOffset
-                End If
+    If StartX < 0 Then
+        offsetX = 0
+
+        If StartX = -1 Then
+            If Player(MyIndex).xOffset > 0 Then
+                offsetX = Player(MyIndex).xOffset
             End If
-    
-            startX = 0
         End If
-        
-        EndX = startX + (TileWidth + 1) + 1
+
+        StartX = 0
+    End If
+
+    If StartY < 0 Then
+        offsetY = 0
+
+        If StartY = -1 Then
+            If Player(MyIndex).yOffset > 0 Then
+                offsetY = Player(MyIndex).yOffset
+            End If
+        End If
+
+        StartY = 0
+    End If
+
+    If Not map.MapData.MaxX = TileWidth Then
+        If Player(MyIndex).xOffset > 0 Then
+            EndX = StartX + (TileWidth + 1) + 1
+        Else
+            EndX = StartX + (TileWidth + 1)
+        End If
+    Else
+        EndX = StartX + (TileWidth + 1)
+    End If
+    
+    If Not map.MapData.MaxY = TileHeight Then
+        If Player(MyIndex).yOffset > 0 Then
+            EndY = StartY + (TileHeight + 1) + 1
+        Else
+            EndY = StartY + (TileHeight + 1)
+        End If
+    Else
+        EndY = StartY + (TileHeight + 1)
+    End If
+    
+    If EndX - 1 > map.MapData.MaxX Then
+        offsetX = 32
+        EndX = map.MapData.MaxX
         
         If EndX > map.MapData.MaxX Then
-            offsetX = 32
-    
-            If EndX = map.MapData.MaxX + 1 Then
-                If Player(MyIndex).xOffset < 0 Then
-                    offsetX = Player(MyIndex).xOffset + PIC_X
-                End If
+            If Player(MyIndex).xOffset < 0 Then
+                offsetX = Player(MyIndex).xOffset + PIC_X
             End If
-    
-            EndX = map.MapData.MaxX
-            startX = EndX - TileWidth - 1
-        End If
-    Else
-        EndX = startX + (TileWidth + 1) + 1
-    End If
-    
-    If TileHeight + 1 <= map.MapData.MaxY Then
-        If startY < 0 Then
-            offsetY = 0
-    
-            If startY = -1 Then
-                If Player(MyIndex).yOffset > 0 Then
-                    offsetY = Player(MyIndex).yOffset
-                End If
-            End If
-    
-            startY = 0
         End If
         
-        EndY = startY + (TileHeight + 1) + 1
-        
-        If EndY > map.MapData.MaxY Then
-            offsetY = 32
-    
-            If EndY = map.MapData.MaxY + 1 Then
-                If Player(MyIndex).yOffset < 0 Then
-                    offsetY = Player(MyIndex).yOffset + PIC_Y
-                End If
+        If map.MapData.MaxX = TileWidth Then
+            If offsetX <> 0 Then
+                StartX = EndX - TileWidth
+            Else
+                StartX = EndX - TileWidth - 1
             End If
-    
-            EndY = map.MapData.MaxY
-            startY = EndY - TileHeight - 1
+        Else
+            StartX = EndX - TileWidth
         End If
-    Else
-        EndY = startY + (TileHeight + 1) + 1
     End If
     
-    If TileWidth + 1 = map.MapData.MaxX Then
+    If EndY - 1 > map.MapData.MaxY Then
+        offsetY = 32
+        EndY = map.MapData.MaxY
+        
+         If EndY > map.MapData.MaxY Then
+            If Player(MyIndex).yOffset < 0 Then
+                offsetY = Player(MyIndex).yOffset + PIC_Y
+            End If
+        End If
+
+        If map.MapData.MaxY = TileHeight Then
+            If offsetY <> 0 Then
+                StartY = EndY - TileHeight
+            Else
+                StartY = EndY - TileHeight - 1
+            End If
+        Else
+            StartY = EndY - TileHeight
+        End If
+    End If
+    
+    If TileWidth > map.MapData.MaxX Then
+        If EndX + 1 < TileWidth Then
+            StartX = StartX + ((TileWidth - EndX) / 2)
+        End If
+    End If
+    
+    If TileHeight > map.MapData.MaxY Then
+        If EndY + 1 < TileHeight Then
+            StartY = StartY + ((TileHeight - EndY) / 2)
+        End If
+    End If
+    
+    If TileWidth = map.MapData.MaxX Then
         offsetX = 0
     End If
     
-    If TileHeight + 1 = map.MapData.MaxY Then
+    If TileHeight = map.MapData.MaxY Then
         offsetY = 0
     End If
-
+    
     With TileView
-        .top = startY
+        .top = StartY
         .bottom = EndY
-        .left = startX
+        .left = StartX
         .Right = EndX
     End With
-
+    
     With Camera
         .top = offsetY
         .bottom = .top + ScreenY
@@ -3341,15 +3382,15 @@ Dim i As Long, CostValue As Long
     End With
 End Sub
 
-Public Function IsShopSlot(startX As Long, startY As Long) As Long
+Public Function IsShopSlot(StartX As Long, StartY As Long) As Long
 Dim tempRec As RECT
 Dim i As Long
 
     For i = 1 To MAX_TRADES
         With tempRec
-            .top = startY + ShopTop + ((ShopOffsetY + 32) * ((i - 1) \ ShopColumns))
+            .top = StartY + ShopTop + ((ShopOffsetY + 32) * ((i - 1) \ ShopColumns))
             .bottom = .top + PIC_Y
-            .left = startX + ShopLeft + ((ShopOffsetX + 32) * (((i - 1) Mod ShopColumns)))
+            .left = StartX + ShopLeft + ((ShopOffsetX + 32) * (((i - 1) Mod ShopColumns)))
             .Right = .left + PIC_X
         End With
 
