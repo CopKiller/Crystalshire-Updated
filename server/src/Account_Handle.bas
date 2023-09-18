@@ -1,35 +1,33 @@
 Attribute VB_Name = "Account_Handle"
-Option Explicit
-
 Public Sub HandleNewAccount(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-Dim Buffer As clsBuffer
-Dim Name As String, Pass As String, Code As String
-  '  MsgBox "ok"
-If Not IsPlaying(index) Then
-    Set Buffer = New clsBuffer
-            Buffer.WriteBytes Data()
-            ' Get the data
-            Name = Buffer.ReadString
-            Pass = Buffer.ReadString
-            Code = Buffer.ReadString
-
+    Dim Buffer As clsBuffer
+    Dim Name As String, Pass As String, Code As String
+      '  MsgBox "ok"
+    If Not IsPlaying(index) Then
+        Set Buffer = New clsBuffer
+                Buffer.WriteBytes Data()
+                ' Get the data
+                Name = Buffer.ReadString
+                Pass = Buffer.ReadString
+                Code = Buffer.ReadString
     
-    If Len(Trim$(Name)) < 3 Or Len(Trim$(Pass)) < 3 Or Len(Trim$(Code)) < 3 Then
-        Call AlertMsg(index, DIALOGUE_MSG_NAMELENGTH, MENU_REGISTER)
+        
+        If Len(Trim$(Name)) < 3 Or Len(Trim$(Pass)) < 3 Or Len(Trim$(Code)) < 3 Then
+            Call AlertMsg(index, DIALOGUE_MSG_NAMELENGTH, MENU_REGISTER)
+            Exit Sub
+        End If
+        
+        If AccountExist(Name) Then
+            Call AlertMsg(index, DIALOGUE_MSG_NAMETAKEN, MENU_REGISTER)
+            Exit Sub
+        Else
+            Call AddAccount(index, Name, Pass, Code)
+            Call AlertMsg(index, DIALOGUE_ACCOUNT_CREATED, MENU_LOGIN)
+        End If
+        
+            Buffer.Flush: Set Buffer = Nothing
         Exit Sub
     End If
-    
-    If AccountExist(Name) Then
-        Call AlertMsg(index, DIALOGUE_MSG_NAMETAKEN, MENU_REGISTER)
-        Exit Sub
-    Else
-        Call AddAccount(index, Name, Pass, Code)
-        Call AlertMsg(index, DIALOGUE_ACCOUNT_CREATED, MENU_LOGIN)
-    End If
-    
-        Set Buffer = Nothing
-    Exit Sub
-End If
 End Sub
 
 ' :::::::::::::::::::::::::::
@@ -112,7 +110,7 @@ Dim Buffer As clsBuffer, Name As String, i As Long, n As Long, Password As Strin
             frmServer.lvwInfo.ListItems(index).SubItems(1) = GetPlayerIP(index)
             frmServer.lvwInfo.ListItems(index).SubItems(2) = GetPlayerLogin(index)
             
-            Set Buffer = Nothing
+            Buffer.Flush: Set Buffer = Nothing
         End If
     End If
 

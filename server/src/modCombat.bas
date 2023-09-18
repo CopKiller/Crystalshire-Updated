@@ -750,7 +750,7 @@ Sub NpcAttackPlayer(ByVal mapNpcNum As Long, ByVal victim As Long, ByVal damage 
     Buffer.WriteLong SNpcAttack
     Buffer.WriteLong mapNpcNum
     SendDataToMap mapnum, Buffer.ToArray()
-    Set Buffer = Nothing
+    Buffer.Flush: Set Buffer = Nothing
     
     If damage <= 0 Then
         Exit Sub

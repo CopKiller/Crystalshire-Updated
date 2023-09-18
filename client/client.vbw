@@ -1,19 +1,19 @@
-frmMain = 0, 0, 0, 0, C, 78, 78, 965, 520, C
-modText = 52, 52, 1056, 574, 
-modTypes = 78, 78, 1082, 600, 
+frmMain = 52, 52, 917, 504, , 78, 78, 965, 520, C
+modText = 52, 52, 1056, 574, C
+modTypes = 78, 78, 1082, 600, C
 modGameLogic = 52, 52, 939, 494, 
-modClientTCP = 78, 78, 965, 520, 
+modClientTCP = 78, 78, 965, 520, C
 frmEditor_MapProperties = 0, 0, 0, 0, C, 130, 130, 1017, 572, C
 frmEditor_Item = 0, 0, 0, 0, C, 156, 156, 1043, 598, C
-modDatabase = 26, 26, 1412, 608, 
+modDatabase = 26, 26, 1412, 608, C
 frmEditor_NPC = 0, 0, 0, 0, C, 182, 182, 1069, 624, C
 frmEditor_Shop = 0, 0, 0, 0, C, 208, 208, 1095, 650, C
 modConstants = 104, 104, 991, 546, 
-modGlobals = 26, 26, 1030, 548, 
-modGeneral = 130, 130, 1017, 572, 
+modGlobals = 26, 26, 1030, 548, C
+modGeneral = 130, 130, 1017, 572, C
 modGameEditors = 0, 0, 0, 0, C
-modEnumerations = 0, 0, 887, 442, 
-modHandleData = 156, 156, 1043, 598, 
+modEnumerations = 0, 0, 887, 442, C
+modHandleData = 156, 156, 1043, 598, C
 modInput = 0, 0, 0, 0, C
 clsBuffer = 0, 0, 0, 0, C
 frmEditor_Map = 0, 0, 0, 0, C, 0, 0, 887, 442, C
@@ -21,10 +21,15 @@ frmEditor_Resource = 0, 0, 0, 0, C, 26, 26, 913, 468, C
 frmEditor_Animation = 0, 0, 0, 0, C, 52, 52, 939, 494, C
 frmEditor_Spell = 0, 0, 0, 0, C, 78, 78, 965, 520, C
 modDirectX8 = 26, 26, 913, 468, Z
+<<<<<<< HEAD
 modMusic = 182, 182, 1305, 628, 
+=======
+modMusic = 182, 182, 1305, 628, C
+>>>>>>> fa13f3a124dd934ee5dcc2fbfc7bc77af20b04e9
 frmEditor_Conv = 0, 0, 0, 0, C, 104, 104, 991, 546, C
-modInterface = 182, 182, 1069, 624, 
-modInterfaceEvents = 208, 208, 1095, 650, 
+modInterface = 182, 182, 1069, 624, C
+modInterfaceEvents = 208, 208, 1095, 650, C
 modVideo = 0, 0, 0, 0, C
-frmEditor_Events = 52, 52, 939, 494, , 130, 130, 1017, 572, C
+frmEditor_Events = 52, 52, 939, 494, C, 130, 130, 1017, 572, C
 modEvents = 0, 0, 0, 0, C
+frmAdmin = 52, 52, 917, 504, C, 26, 26, 891, 478, C
