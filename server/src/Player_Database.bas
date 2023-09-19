@@ -21,7 +21,6 @@ Public Sub SavePlayer(ByVal index As Long)
 
     ' the file
     filename = App.Path & "\data\accounts\" & Trim$(Account(index).Login) & "\CharNum_" & TempPlayer(index).charNum & ".bin"
-
     ' Save Player archive
     f = FreeFile
     Open filename For Binary As #f
@@ -139,15 +138,7 @@ Public Sub ClearPlayer(ByVal index As Long)
 End Sub
 
 Public Sub ClearChar(ByVal index As Long)
-    Dim tmpName As String, tmpChar As Long
-
-    tmpName = Player(index).Login
-    tmpChar = Player(index).charNum
-
     Call ZeroMemory(ByVal VarPtr(Player(index)), LenB(Player(index)))
-
-    Player(index).Login = tmpName
-    Player(index).charNum = tmpChar
 End Sub
 
 ' *************

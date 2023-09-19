@@ -153,6 +153,48 @@ Public Sub SendMapNpcsToMap(ByVal mapnum As Long)
     Buffer.Flush: Set Buffer = Nothing
 End Sub
 
+Public Sub SendResourceCacheTo(ByVal index As Long, ByVal Resource_num As Long)
+    Dim Buffer As clsBuffer
+    Dim i As Long
+    Set Buffer = New clsBuffer
+    Buffer.WriteLong SResourceCache
+    Buffer.WriteLong ResourceCache(GetPlayerMap(index)).Resource_Count
+
+    If ResourceCache(GetPlayerMap(index)).Resource_Count > 0 Then
+
+        For i = 0 To ResourceCache(GetPlayerMap(index)).Resource_Count
+            Buffer.WriteByte ResourceCache(GetPlayerMap(index)).ResourceData(i).ResourceState
+            Buffer.WriteLong ResourceCache(GetPlayerMap(index)).ResourceData(i).x
+            Buffer.WriteLong ResourceCache(GetPlayerMap(index)).ResourceData(i).y
+        Next
+
+    End If
+
+    SendDataTo index, Buffer.ToArray()
+    Buffer.Flush: Set Buffer = Nothing
+End Sub
+
+Public Sub SendResourceCacheToMap(ByVal mapnum As Long, ByVal Resource_num As Long)
+    Dim Buffer As clsBuffer
+    Dim i As Long
+    Set Buffer = New clsBuffer
+    Buffer.WriteLong SResourceCache
+    Buffer.WriteLong ResourceCache(mapnum).Resource_Count
+
+    If ResourceCache(mapnum).Resource_Count > 0 Then
+
+        For i = 0 To ResourceCache(mapnum).Resource_Count
+            Buffer.WriteByte ResourceCache(mapnum).ResourceData(i).ResourceState
+            Buffer.WriteLong ResourceCache(mapnum).ResourceData(i).x
+            Buffer.WriteLong ResourceCache(mapnum).ResourceData(i).y
+        Next
+
+    End If
+
+    SendDataToMap mapnum, Buffer.ToArray()
+    Buffer.Flush: Set Buffer = Nothing
+End Sub
+
 Public Sub SendMapSound(ByVal index As Long, ByVal x As Long, ByVal y As Long, ByVal entityType As Long, ByVal entityNum As Long)
     Dim Buffer As clsBuffer
 

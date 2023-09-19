@@ -1,27 +1,6 @@
 Attribute VB_Name = "Account_Logic"
 Option Explicit
 
-Sub AddAccount(ByVal index As Long, ByVal Name As String, ByVal Password As String, ByVal Code As String)
-    Dim i As Long
-
-    ClearAccount index
-
-    '//Create the file destination folder
-    ChkDir App.Path & "\data\accounts\", Trim$(Name)
-
-    Account(index).Login = Name
-    Account(index).Password = Password
-    Account(index).Mail = Code
-    
-    Call SaveAccount(index)
-
-    For i = 1 To MAX_CHARS
-        Call ClearPlayer(index)
-        TempPlayer(index).charNum = i
-        Call SavePlayer(index)
-    Next i
-End Sub
-
 Sub AddChar(ByVal index As Long, ByVal Name As String, ByVal Sex As Byte, ByVal ClassNum As Long, ByVal Sprite As Long, ByVal charNum As Long)
     Dim f As Long
     Dim n As Long

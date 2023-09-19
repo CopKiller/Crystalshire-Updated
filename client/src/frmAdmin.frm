@@ -111,7 +111,7 @@ Begin VB.Form frmAdmin
       Top             =   120
       Width           =   4095
       Begin VB.CommandButton cmdAWarp 
-         Caption         =   "Teletransportar ao mapa"
+         Caption         =   "Warp to map"
          Height          =   255
          Left            =   240
          TabIndex        =   14
@@ -126,7 +126,7 @@ Begin VB.Form frmAdmin
          Width           =   2775
       End
       Begin VB.CommandButton cmdASprite 
-         Caption         =   "Mudar personagem"
+         Caption         =   "Set Sprite"
          Height          =   255
          Left            =   240
          TabIndex        =   12
@@ -141,7 +141,7 @@ Begin VB.Form frmAdmin
          Width           =   2775
       End
       Begin VB.CommandButton cmdAWarp2Me 
-         Caption         =   "Trazer"
+         Caption         =   "Warp to me"
          Height          =   375
          Left            =   240
          TabIndex        =   10
@@ -149,7 +149,7 @@ Begin VB.Form frmAdmin
          Width           =   1695
       End
       Begin VB.CommandButton cmdABan 
-         Caption         =   "Banir"
+         Caption         =   "Ban"
          Height          =   375
          Left            =   2040
          TabIndex        =   9
@@ -172,7 +172,7 @@ Begin VB.Form frmAdmin
          Width           =   2775
       End
       Begin VB.CommandButton cmdAWarpMe2 
-         Caption         =   "Ir Para"
+         Caption         =   "Warp me to"
          Height          =   375
          Left            =   2040
          TabIndex        =   6
@@ -180,7 +180,7 @@ Begin VB.Form frmAdmin
          Width           =   1695
       End
       Begin VB.CommandButton cmdAtt 
-         Caption         =   "Atualizar"
+         Caption         =   "Refresh"
          Height          =   375
          Left            =   2400
          TabIndex        =   5
@@ -188,7 +188,7 @@ Begin VB.Form frmAdmin
          Width           =   1335
       End
       Begin VB.CommandButton cmdLevel 
-         Caption         =   "Evoluir de Lv."
+         Caption         =   "Level UP"
          Height          =   375
          Left            =   240
          TabIndex        =   4
@@ -213,7 +213,7 @@ Begin VB.Form frmAdmin
          Width           =   2055
       End
       Begin VB.CommandButton cmdASpawn 
-         Caption         =   "Dropar"
+         Caption         =   "Drop"
          Height          =   375
          Left            =   2400
          TabIndex        =   2
@@ -258,7 +258,7 @@ Begin VB.Form frmAdmin
       End
       Begin VB.Label Label5 
          BackStyle       =   0  'Transparent
-         Caption         =   "Quantidade:"
+         Caption         =   "Amount:"
          Height          =   255
          Left            =   840
          TabIndex        =   16

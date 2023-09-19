@@ -1,4 +1,4 @@
-Attribute VB_Name = "modEnumerations"
+Attribute VB_Name = "Server_Enum"
 Option Explicit
 
 ' The order of the packets must match with the client's packet enumeration

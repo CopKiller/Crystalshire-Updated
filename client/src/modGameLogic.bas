@@ -336,72 +336,57 @@ Public Sub MenuLoop()
 
 End Sub
 
-Sub ProcessMovement(ByVal index As Long)
+Public Sub ProcessMovement(ByVal Index As Long)
     Dim MovementSpeed As Long
-
+    
     ' Check if player is walking, and if so process moving them over
-    Select Case Player(index).Moving
-
-        Case MOVING_WALKING: MovementSpeed = RUN_SPEED
-
-        Case MOVING_RUNNING: MovementSpeed = WALK_SPEED
-
+    Select Case Player(Index).Moving
+            Case MOVING_RUNNING: MovementSpeed = ((ElapsedTime / 1000) * (RUN_SPEED * PIC_X))
+            Case MOVING_WALKING: MovementSpeed = ((ElapsedTime / 1000) * (WALK_SPEED * PIC_X))
         Case Else: Exit Sub
     End Select
-
-    Select Case GetPlayerDir(index)
-
+    
+    Select Case GetPlayerDir(Index)
         Case DIR_UP
-            Player(index).yOffset = Player(index).yOffset - MovementSpeed
-
-            If Player(index).yOffset < 0 Then Player(index).yOffset = 0
-
+            Player(Index).yOffset = Player(Index).yOffset - MovementSpeed
+            If Player(Index).yOffset < 0 Then Player(Index).yOffset = 0
         Case DIR_DOWN
-            Player(index).yOffset = Player(index).yOffset + MovementSpeed
-
-            If Player(index).yOffset > 0 Then Player(index).yOffset = 0
-
+            Player(Index).yOffset = Player(Index).yOffset + MovementSpeed
+            If Player(Index).yOffset > 0 Then Player(Index).yOffset = 0
         Case DIR_LEFT
-            Player(index).xOffset = Player(index).xOffset - MovementSpeed
-
-            If Player(index).xOffset < 0 Then Player(index).xOffset = 0
-
+            Player(Index).xOffset = Player(Index).xOffset - MovementSpeed
+            If Player(Index).xOffset < 0 Then Player(Index).xOffset = 0
         Case DIR_RIGHT
-            Player(index).xOffset = Player(index).xOffset + MovementSpeed
-
-            If Player(index).xOffset > 0 Then Player(index).xOffset = 0
+            Player(Index).xOffset = Player(Index).xOffset + MovementSpeed
+            If Player(Index).xOffset > 0 Then Player(Index).xOffset = 0
     End Select
 
     ' Check if completed walking over to the next tile
-    If Player(index).Moving > 0 Then
-        If GetPlayerDir(index) = DIR_RIGHT Or GetPlayerDir(index) = DIR_DOWN Then
-            If (Player(index).xOffset >= 0) And (Player(index).yOffset >= 0) Then
-                Player(index).Moving = 0
-
-                If Player(index).Step = 0 Then
-                    Player(index).Step = 2
+    If Player(Index).Moving > 0 Then
+        If GetPlayerDir(Index) = DIR_RIGHT Or GetPlayerDir(Index) = DIR_DOWN Then
+            If (Player(Index).xOffset >= 0) And (Player(Index).yOffset >= 0) Then
+                Player(Index).Moving = 0
+                If Player(Index).Step = 0 Then
+                    Player(Index).Step = 2
                 Else
-                    Player(index).Step = 0
+                    Player(Index).Step = 0
                 End If
             End If
-
         Else
-
-            If (Player(index).xOffset <= 0) And (Player(index).yOffset <= 0) Then
-                Player(index).Moving = 0
-
-                If Player(index).Step = 0 Then
-                    Player(index).Step = 2
+            If (Player(Index).xOffset <= 0) And (Player(Index).yOffset <= 0) Then
+                Player(Index).Moving = 0
+                If Player(Index).Step = 0 Then
+                    Player(Index).Step = 2
                 Else
-                    Player(index).Step = 0
+                    Player(Index).Step = 0
                 End If
             End If
         End If
     End If
-
+    
 End Sub
 
-Sub ProcessNpcMovement(ByVal MapNpcNum As Long)
+Public Sub ProcessNpcMovement(ByVal MapNpcNum As Long)
     Dim MovementSpeed As Long
 
     ' Check if NPC is walking, and if so process moving them over
@@ -1219,15 +1204,15 @@ Public Sub CreateActionMsg(ByVal message As String, ByVal Color As Integer, ByVa
     If Action_HighIndex > MAX_BYTE Then Action_HighIndex = MAX_BYTE
 End Sub
 
-Public Sub ClearActionMsg(ByVal index As Byte)
+Public Sub ClearActionMsg(ByVal Index As Byte)
     Dim i As Long
-    ActionMsg(index).message = vbNullString
-    ActionMsg(index).Created = 0
-    ActionMsg(index).Type = 0
-    ActionMsg(index).Color = 0
-    ActionMsg(index).Scroll = 0
-    ActionMsg(index).x = 0
-    ActionMsg(index).y = 0
+    ActionMsg(Index).message = vbNullString
+    ActionMsg(Index).Created = 0
+    ActionMsg(Index).Type = 0
+    ActionMsg(Index).Color = 0
+    ActionMsg(Index).Scroll = 0
+    ActionMsg(Index).x = 0
+    ActionMsg(Index).y = 0
 
     ' find the new high index
     For i = MAX_BYTE To 1 Step -1
@@ -1243,51 +1228,51 @@ Public Sub ClearActionMsg(ByVal index As Byte)
     If Action_HighIndex > MAX_BYTE Then Action_HighIndex = MAX_BYTE
 End Sub
 
-Public Sub CheckAnimInstance(ByVal index As Long)
+Public Sub CheckAnimInstance(ByVal Index As Long)
     Dim looptime As Long
     Dim Layer As Long
     Dim FrameCount As Long
 
     ' if doesn't exist then exit sub
-    If AnimInstance(index).Animation <= 0 Then Exit Sub
-    If AnimInstance(index).Animation >= MAX_ANIMATIONS Then Exit Sub
+    If AnimInstance(Index).Animation <= 0 Then Exit Sub
+    If AnimInstance(Index).Animation >= MAX_ANIMATIONS Then Exit Sub
 
     For Layer = 0 To 1
 
-        If AnimInstance(index).Used(Layer) Then
-            looptime = Animation(AnimInstance(index).Animation).looptime(Layer)
+        If AnimInstance(Index).Used(Layer) Then
+            looptime = Animation(AnimInstance(Index).Animation).looptime(Layer)
 
-            FrameCount = Animation(AnimInstance(index).Animation).Frames(Layer)
+            FrameCount = Animation(AnimInstance(Index).Animation).Frames(Layer)
 
             ' if zero'd then set so we don't have extra loop and/or frame
-            If AnimInstance(index).FrameIndex(Layer) = 0 Then AnimInstance(index).FrameIndex(Layer) = 1
-            If AnimInstance(index).LoopIndex(Layer) = 0 Then AnimInstance(index).LoopIndex(Layer) = 1
+            If AnimInstance(Index).FrameIndex(Layer) = 0 Then AnimInstance(Index).FrameIndex(Layer) = 1
+            If AnimInstance(Index).LoopIndex(Layer) = 0 Then AnimInstance(Index).LoopIndex(Layer) = 1
 
             ' check if frame timer is set, and needs to have a frame change
-            If AnimInstance(index).timer(Layer) + looptime <= GetTickCount Then
+            If AnimInstance(Index).timer(Layer) + looptime <= GetTickCount Then
 
                 ' check if out of range
-                If AnimInstance(index).FrameIndex(Layer) >= FrameCount Then
-                    AnimInstance(index).LoopIndex(Layer) = AnimInstance(index).LoopIndex(Layer) + 1
+                If AnimInstance(Index).FrameIndex(Layer) >= FrameCount Then
+                    AnimInstance(Index).LoopIndex(Layer) = AnimInstance(Index).LoopIndex(Layer) + 1
 
-                    If AnimInstance(index).LoopIndex(Layer) > Animation(AnimInstance(index).Animation).LoopCount(Layer) Then
-                        AnimInstance(index).Used(Layer) = False
+                    If AnimInstance(Index).LoopIndex(Layer) > Animation(AnimInstance(Index).Animation).LoopCount(Layer) Then
+                        AnimInstance(Index).Used(Layer) = False
                     Else
-                        AnimInstance(index).FrameIndex(Layer) = 1
+                        AnimInstance(Index).FrameIndex(Layer) = 1
                     End If
 
                 Else
-                    AnimInstance(index).FrameIndex(Layer) = AnimInstance(index).FrameIndex(Layer) + 1
+                    AnimInstance(Index).FrameIndex(Layer) = AnimInstance(Index).FrameIndex(Layer) + 1
                 End If
 
-                AnimInstance(index).timer(Layer) = GetTickCount
+                AnimInstance(Index).timer(Layer) = GetTickCount
             End If
         End If
 
     Next
 
     ' if neither layer is used, clear
-    If AnimInstance(index).Used(0) = False And AnimInstance(index).Used(1) = False Then ClearAnimInstance (index)
+    If AnimInstance(Index).Used(0) = False And AnimInstance(Index).Used(1) = False Then ClearAnimInstance (Index)
 End Sub
 
 Public Function GetBankItemNum(ByVal bankslot As Long) As Long
@@ -1394,7 +1379,7 @@ Public Sub CloseDialogue()
     HideWindow GetWindowIndex("winDialogue")
 End Sub
 
-Public Sub Dialogue(ByVal header As String, ByVal body As String, ByVal body2 As String, ByVal index As Long, Optional ByVal style As Byte = 1, Optional ByVal Data1 As Long = 0)
+Public Sub Dialogue(ByVal header As String, ByVal body As String, ByVal body2 As String, ByVal Index As Long, Optional ByVal style As Byte = 1, Optional ByVal Data1 As Long = 0)
 
     ' exit out if we've already got a dialogue open
     If diaIndex > 0 Then Exit Sub
@@ -1429,7 +1414,7 @@ Public Sub Dialogue(ByVal header As String, ByVal body As String, ByVal body2 As
     End With
     
     ' set it all up
-    diaIndex = index
+    diaIndex = Index
     diaData1 = Data1
     diaStyle = style
     
@@ -1438,7 +1423,7 @@ Public Sub Dialogue(ByVal header As String, ByVal body As String, ByVal body2 As
     ShowWindow GetWindowIndex("winDialogue"), True
 End Sub
 
-Public Sub dialogueHandler(ByVal index As Long)
+Public Sub dialogueHandler(ByVal Index As Long)
 Dim value As Long, diaInput As String
 
     Dim Buffer As New clsBuffer
@@ -1447,7 +1432,7 @@ Dim value As Long, diaInput As String
     diaInput = Trim$(Windows(GetWindowIndex("winDialogue")).Controls(GetControlIndex("winDialogue", "txtInput")).text)
 
     ' find out which button
-    If index = 1 Then ' okay button
+    If Index = 1 Then ' okay button
 
         ' dialogue index
         Select Case diaIndex
@@ -1459,7 +1444,7 @@ Dim value As Long, diaInput As String
                     SendDropItem diaData1, value
         End Select
 
-    ElseIf index = 2 Then ' yes button
+    ElseIf Index = 2 Then ' yes button
 
         ' dialogue index
         Select Case diaIndex
@@ -1485,7 +1470,7 @@ Dim value As Long, diaInput As String
                 SendDelChar diaData1
         End Select
 
-    ElseIf index = 3 Then ' no button
+    ElseIf Index = 3 Then ' no button
 
         ' dialogue index
         Select Case diaIndex
@@ -2572,7 +2557,7 @@ Public Sub ClearMapCache()
 End Sub
 
 Public Sub AddChatBubble(ByVal target As Long, ByVal TargetType As Byte, ByVal Msg As String, ByVal Colour As Long)
-    Dim i As Long, index As Long
+    Dim i As Long, Index As Long
     ' set the global index
     chatBubbleIndex = chatBubbleIndex + 1
     
@@ -2584,7 +2569,7 @@ Public Sub AddChatBubble(ByVal target As Long, ByVal TargetType As Byte, ByVal M
 
     If chatBubbleIndex < 1 Or chatBubbleIndex > MAX_BYTE Then chatBubbleIndex = 1
     ' default to new bubble
-    index = chatBubbleIndex
+    Index = chatBubbleIndex
 
     ' loop through and see if that player/npc already has a chat bubble
     For i = 1 To MAX_BYTE
@@ -2593,14 +2578,14 @@ Public Sub AddChatBubble(ByVal target As Long, ByVal TargetType As Byte, ByVal M
                 ' reset master index
                 If chatBubbleIndex > 1 Then chatBubbleIndex = chatBubbleIndex - 1
                 ' we use this one now, yes?
-                index = i
+                Index = i
                 Exit For
             End If
         End If
     Next
 
     ' set the bubble up
-    With chatBubble(index)
+    With chatBubble(Index)
         .target = target
         .TargetType = TargetType
         .Msg = Msg
@@ -2720,11 +2705,11 @@ Public Sub SetBarWidth(ByRef MaxWidth As Long, ByRef width As Long)
 
 End Sub
 
-Public Sub DialogueAlert(ByVal index As Long)
+Public Sub DialogueAlert(ByVal Index As Long)
     Dim header As String, body As String, body2 As String
 
     ' find the body/header
-    Select Case index
+    Select Case Index
 
         Case MsgCONNECTION
             header = "Connection Problem"
@@ -2820,7 +2805,7 @@ Public Sub DialogueAlert(ByVal index As Long)
     Dialogue header, body, body2, TypeALERT
 End Sub
 
-Public Function hasProficiency(ByVal index As Long, ByVal proficiency As Long) As Boolean
+Public Function hasProficiency(ByVal Index As Long, ByVal proficiency As Long) As Boolean
 
     Select Case proficiency
 
@@ -2830,14 +2815,14 @@ Public Function hasProficiency(ByVal index As Long, ByVal proficiency As Long) A
 
         Case 1 ' Heavy
 
-            If GetPlayerClass(index) = 1 Then
+            If GetPlayerClass(Index) = 1 Then
                 hasProficiency = True
                 Exit Function
             End If
 
         Case 2 ' Light
 
-            If GetPlayerClass(index) = 2 Or GetPlayerClass(index) = 3 Then
+            If GetPlayerClass(Index) = 2 Or GetPlayerClass(Index) = 3 Then
                 hasProficiency = True
                 Exit Function
             End If
@@ -3403,8 +3388,8 @@ Dim i As Long
     Next
 End Function
 
-Sub ShowPlayerMenu(index As Long, x As Long, y As Long)
-    PlayerMenuIndex = index
+Sub ShowPlayerMenu(Index As Long, x As Long, y As Long)
+    PlayerMenuIndex = Index
     If PlayerMenuIndex = 0 Then Exit Sub
     Windows(GetWindowIndex("winPlayerMenu")).Window.left = x - 5
     Windows(GetWindowIndex("winPlayerMenu")).Window.top = y - 5

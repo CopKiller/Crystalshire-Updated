@@ -6,7 +6,7 @@ Private Declare Function WritePrivateProfileString Lib "kernel32" Alias "WritePr
 Private Declare Function GetPrivateProfileString Lib "kernel32" Alias "GetPrivateProfileStringA" (ByVal lpApplicationname As String, ByVal lpKeyname As Any, ByVal lpdefault As String, ByVal lpreturnedstring As String, ByVal nsize As Long, ByVal lpfilename As String) As Long
 
 'For Clear functions
-Private Declare Sub ZeroMemory Lib "Kernel32.dll" Alias "RtlZeroMemory" (Destination As Any, ByVal Length As Long)
+Public Declare Sub ZeroMemory Lib "Kernel32.dll" Alias "RtlZeroMemory" (Destination As Any, ByVal Length As Long)
 
 Private crcTable(0 To 255) As Long
 
@@ -51,7 +51,7 @@ Public Sub HandleError(ByVal procName As String, ByVal contName As String, ByVal
 End Sub
 
 Public Sub ChkDir(ByVal tDir As String, ByVal tName As String)
-    If LCase$(Dir(tDir & tName, vbDirectory)) <> tName Then Call MkDir(tDir & tName)
+    If LCase$(dir(tDir & tName, vbDirectory)) <> tName Then Call MkDir(tDir & tName)
 End Sub
 
 ' Outputs string to text file
@@ -84,7 +84,7 @@ Public Function GetVar(File As String, Header As String, Var As String) As Strin
     sSpaces = Space$(5000)
     Call GetPrivateProfileString$(Header, Var, szReturn, sSpaces, Len(sSpaces), File)
     GetVar = RTrim$(sSpaces)
-    GetVar = Left$(GetVar, Len(GetVar) - 1)
+    GetVar = left$(GetVar, Len(GetVar) - 1)
 End Function
 
 ' writes a variable to a text file
@@ -95,7 +95,7 @@ End Sub
 '//This check if the file exist
 Public Function FileExist(ByVal filename As String) As Boolean
 ' Checking if File Exist
-    If LenB(Dir(filename)) > 0 Then FileExist = True
+    If LenB(dir(filename)) > 0 Then FileExist = True
 End Function
 
 Public Sub SaveOptions()
@@ -194,228 +194,6 @@ Public Function isBanned_Account(ByVal index As Long) As Boolean
     End If
 End Function
 
-' ***********
-' ** Shops **
-' ***********
-Sub SaveShops()
-    Dim i As Long
-
-    For i = 1 To MAX_SHOPS
-        Call SaveShop(i)
-    Next
-
-End Sub
-
-Sub SaveShop(ByVal shopNum As Long)
-    Dim filename As String
-    Dim f As Long
-    filename = App.Path & "\data\shops\shop" & shopNum & ".dat"
-    f = FreeFile
-    Open filename For Binary As #f
-    Put #f, , Shop(shopNum)
-    Close #f
-End Sub
-
-Sub LoadShops()
-    Dim filename As String
-    Dim i As Long
-    Dim f As Long
-    Call CheckShops
-
-    For i = 1 To MAX_SHOPS
-        filename = App.Path & "\data\shops\shop" & i & ".dat"
-        f = FreeFile
-        Open filename For Binary As #f
-        Get #f, , Shop(i)
-        Close #f
-    Next
-
-End Sub
-
-Sub CheckShops()
-    Dim i As Long
-
-    For i = 1 To MAX_SHOPS
-
-        If Not FileExist(App.Path & "\Data\shops\shop" & i & ".dat") Then
-            Call SaveShop(i)
-        End If
-
-    Next
-
-End Sub
-
-Sub ClearShop(ByVal index As Long)
-    Call ZeroMemory(ByVal VarPtr(Shop(index)), LenB(Shop(index)))
-    Shop(index).Name = vbNullString
-End Sub
-
-Sub ClearShops()
-    Dim i As Long
-
-    For i = 1 To MAX_SHOPS
-        Call ClearShop(i)
-    Next
-
-End Sub
-
-' ************
-' ** Spells **
-' ************
-Sub SaveSpell(ByVal spellNum As Long)
-    Dim filename As String
-    Dim f As Long
-    filename = App.Path & "\data\spells\spells" & spellNum & ".dat"
-    f = FreeFile
-    Open filename For Binary As #f
-    Put #f, , Spell(spellNum)
-    Close #f
-End Sub
-
-Sub SaveSpells()
-    Dim i As Long
-    Call SetStatus("Saving spells... ")
-
-    For i = 1 To MAX_SPELLS
-        Call SaveSpell(i)
-    Next
-
-End Sub
-
-Sub LoadSpells()
-    Dim filename As String
-    Dim i As Long
-    Dim f As Long
-    Call CheckSpells
-
-    For i = 1 To MAX_SPELLS
-        filename = App.Path & "\data\spells\spells" & i & ".dat"
-        f = FreeFile
-        Open filename For Binary As #f
-        Get #f, , Spell(i)
-        Close #f
-    Next
-
-End Sub
-
-Sub CheckSpells()
-    Dim i As Long
-
-    For i = 1 To MAX_SPELLS
-
-        If Not FileExist(App.Path & "\Data\spells\spells" & i & ".dat") Then
-            Call SaveSpell(i)
-        End If
-
-    Next
-
-End Sub
-
-Sub ClearSpell(ByVal index As Long)
-    Call ZeroMemory(ByVal VarPtr(Spell(index)), LenB(Spell(index)))
-    Spell(index).Name = vbNullString
-    Spell(index).LevelReq = 1    'Needs to be 1 for the spell editor
-    Spell(index).Desc = vbNullString
-    Spell(index).Sound = "None."
-End Sub
-
-Sub ClearSpells()
-    Dim i As Long
-
-    For i = 1 To MAX_SPELLS
-        Call ClearSpell(i)
-    Next
-
-End Sub
-
-' **********
-' ** Resources **
-' **********
-Sub SaveResources()
-    Dim i As Long
-
-    For i = 1 To MAX_RESOURCES
-        Call SaveResource(i)
-    Next
-
-End Sub
-
-Sub SaveResource(ByVal ResourceNum As Long)
-    Dim filename As String
-    Dim f As Long
-    filename = App.Path & "\data\resources\resource" & ResourceNum & ".dat"
-    f = FreeFile
-    Open filename For Binary As #f
-    Put #f, , Resource(ResourceNum)
-    Close #f
-End Sub
-
-Sub LoadResources()
-    Dim filename As String
-    Dim i As Long
-    Dim f As Long
-    Dim sLen As Long
-
-    Call CheckResources
-
-    For i = 1 To MAX_RESOURCES
-        filename = App.Path & "\data\resources\resource" & i & ".dat"
-        f = FreeFile
-        Open filename For Binary As #f
-        Get #f, , Resource(i)
-        Close #f
-    Next
-
-End Sub
-
-Sub CheckResources()
-    Dim i As Long
-
-    For i = 1 To MAX_RESOURCES
-        If Not FileExist(App.Path & "\Data\Resources\Resource" & i & ".dat") Then
-            Call SaveResource(i)
-        End If
-    Next
-
-End Sub
-
-Sub ClearResource(ByVal index As Long)
-    Call ZeroMemory(ByVal VarPtr(Resource(index)), LenB(Resource(index)))
-    Resource(index).Name = vbNullString
-    Resource(index).SuccessMessage = vbNullString
-    Resource(index).EmptyMessage = vbNullString
-    Resource(index).Sound = "None."
-End Sub
-
-Sub ClearResources()
-    Dim i As Long
-
-    For i = 1 To MAX_RESOURCES
-        Call ClearResource(i)
-    Next
-End Sub
-
-Function GetClassName(ByVal ClassNum As Long) As String
-    GetClassName = Trim$(Class(ClassNum).Name)
-End Function
-
-Function GetClassMaxVital(ByVal ClassNum As Long, ByVal Vital As Vitals) As Long
-    Select Case Vital
-    Case HP
-        With Class(ClassNum)
-            GetClassMaxVital = 100 + (.Stat(Endurance) * 5) + 2
-        End With
-    Case MP
-        With Class(ClassNum)
-            GetClassMaxVital = 30 + (.Stat(Intelligence) * 10) + 2
-        End With
-    End Select
-End Function
-
-Function GetClassStat(ByVal ClassNum As Long, ByVal Stat As Stats) As Long
-    GetClassStat = Class(ClassNum).Stat(Stat)
-End Function
-
-Sub ClearParty(ByVal partynum As Long)
+Public Sub ClearParty(ByVal partynum As Long)
     Call ZeroMemory(ByVal VarPtr(Party(partynum)), LenB(Party(partynum)))
 End Sub

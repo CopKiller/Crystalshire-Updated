@@ -2,6 +2,7 @@ Attribute VB_Name = "Map_UDT"
 Public Map(1 To MAX_MAPS) As MapRec
 Public MapCRC32(1 To MAX_MAPS) As MapCRCStruct
 Public MapCache(1 To MAX_MAPS) As Cache
+Public ResourceCache(1 To MAX_MAPS) As ResourceCacheRec
 Public TempTile(1 To MAX_MAPS) As TempTileRec
 
 Public MapItem(1 To MAX_MAPS, 1 To MAX_MAP_ITEMS) As MapItemRec
@@ -10,6 +11,65 @@ Public MapNpc(1 To MAX_MAPS) As MapNpcDataRec
 Public Type MapCRCStruct
     MapDataCRC As Long
     MapTileCRC As Long
+End Type
+
+Private Type Cache
+    Data() As Byte
+End Type
+
+Private Type TempEventRec
+    x As Long
+    y As Long
+    SelfSwitch As Byte
+End Type
+
+Private Type EventCommandRec
+    Type As Byte
+    Text As String
+    colour As Long
+    Channel As Byte
+    targetType As Byte
+    target As Long
+End Type
+
+Private Type EventPageRec
+    chkPlayerVar As Byte
+    chkSelfSwitch As Byte
+    chkHasItem As Byte
+    
+    PlayerVarNum As Long
+    SelfSwitchNum As Long
+    HasItemNum As Long
+    
+    PlayerVariable As Long
+    
+    GraphicType As Byte
+    Graphic As Long
+    GraphicX As Long
+    GraphicY As Long
+    
+    MoveType As Byte
+    MoveSpeed As Byte
+    MoveFreq As Byte
+    
+    WalkAnim As Byte
+    StepAnim As Byte
+    DirFix As Byte
+    WalkThrough As Byte
+    
+    Priority As Byte
+    Trigger As Byte
+    
+    CommandCount As Long
+    Commands() As EventCommandRec
+End Type
+
+Private Type EventRec
+    Name As String
+    x As Long
+    y As Long
+    PageCount As Long
+    EventPage() As EventPageRec
 End Type
 
 Private Type MapDataRec
@@ -118,6 +178,11 @@ Private Type MapResourceRec
     x As Long
     y As Long
     cur_health As Long
+End Type
+
+Private Type ResourceCacheRec
+    Resource_Count As Long
+    ResourceData() As MapResourceRec
 End Type
 
 Private Type TempTileRec

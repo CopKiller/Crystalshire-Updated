@@ -1,5 +1,6 @@
 Attribute VB_Name = "Player_UDT"
 Public Player(1 To MAX_PLAYERS) As PlayerRec
+Public Party(1 To MAX_PARTYS) As PartyRec
 Public TempPlayer(1 To MAX_PLAYERS) As TempPlayerRec
 Public Class() As ClassRec
 
@@ -71,6 +72,12 @@ Public Type PlayerRec
     ' Banned
     isBanned As Byte
     isMuted As Byte
+End Type
+
+Public Type PartyRec
+    Leader As Long
+    Member(1 To MAX_PARTY_MEMBERS) As Long
+    MemberCount As Long
 End Type
 
 Public Type TempPlayerRec

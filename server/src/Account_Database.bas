@@ -158,7 +158,7 @@ Public Sub MergeAccount(ByVal index As Long, ByVal charNum As Long, ByVal oldAcc
         .Class = Val(GetVar(filename, charHeader, "Class"))
         .Sprite = Val(GetVar(filename, charHeader, "Sprite"))
         .Level = Val(GetVar(filename, charHeader, "Level"))
-        .Exp = Val(GetVar(filename, charHeader, "Exp"))
+        .exp = Val(GetVar(filename, charHeader, "Exp"))
         .Access = Val(GetVar(filename, charHeader, "Access"))
         .PK = Val(GetVar(filename, charHeader, "PK"))
 
@@ -201,14 +201,14 @@ Public Sub MergeAccount(ByVal index As Long, ByVal charNum As Long, ByVal oldAcc
         .Map = Val(GetVar(filename, charHeader, "Map"))
         .x = Val(GetVar(filename, charHeader, "X"))
         .y = Val(GetVar(filename, charHeader, "Y"))
-        .Dir = Val(GetVar(filename, charHeader, "Dir"))
+        .dir = Val(GetVar(filename, charHeader, "Dir"))
 
         ' Tutorial
         .TutorialState = Val(GetVar(filename, charHeader, "TutorialState"))
     End With
 
     ' set the filename
-    filename = App.Path & "\data\accounts\" & SanitiseString(Trim$(Player(index).Login)) & ".ini"
+    filename = App.Path & "\data\accounts\" & SanitiseString(Trim$(Account(index).Login)) & ".ini"
     charHeader = "CHAR" & charNum
 
     ' save it in the new account's character slot
@@ -218,7 +218,7 @@ Public Sub MergeAccount(ByVal index As Long, ByVal charNum As Long, ByVal oldAcc
         PutVar filename, charHeader, "Class", Val(.Class)
         PutVar filename, charHeader, "Sprite", Val(.Sprite)
         PutVar filename, charHeader, "Level", Val(.Level)
-        PutVar filename, charHeader, "exp", Val(.Exp)
+        PutVar filename, charHeader, "exp", Val(.exp)
         PutVar filename, charHeader, "Access", Val(.Access)
         PutVar filename, charHeader, "PK", Val(.PK)
 
@@ -261,7 +261,7 @@ Public Sub MergeAccount(ByVal index As Long, ByVal charNum As Long, ByVal oldAcc
         PutVar filename, charHeader, "Map", Val(.Map)
         PutVar filename, charHeader, "X", Val(.x)
         PutVar filename, charHeader, "Y", Val(.y)
-        PutVar filename, charHeader, "Dir", Val(.Dir)
+        PutVar filename, charHeader, "Dir", Val(.dir)
 
         ' Tutorial
         PutVar filename, charHeader, "TutorialState", Val(.TutorialState)

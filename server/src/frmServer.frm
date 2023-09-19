@@ -1,7 +1,7 @@
 VERSION 5.00
-Object = "{248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0"; "mswinsck.ocx"
-Object = "{BDC217C8-ED16-11CD-956C-0000C04E4C0A}#1.1#0"; "tabctl32.ocx"
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0"; "MSWINSCK.OCX"
+Object = "{BDC217C8-ED16-11CD-956C-0000C04E4C0A}#1.1#0"; "TABCTL32.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "mscomctl.ocx"
 Begin VB.Form frmServer 
    BorderStyle     =   1  'Fixed Single
    Caption         =   "Loading..."
@@ -42,7 +42,6 @@ Begin VB.Form frmServer
       _ExtentY        =   5953
       _Version        =   393216
       Style           =   1
-      Tab             =   1
       TabHeight       =   503
       BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
          Name            =   "Verdana"
@@ -55,15 +54,19 @@ Begin VB.Form frmServer
       EndProperty
       TabCaption(0)   =   "Console"
       TabPicture(0)   =   "frmServer.frx":1708A
-      Tab(0).ControlEnabled=   0   'False
-      Tab(0).Control(0)=   "txtChat"
-      Tab(0).Control(1)=   "txtText"
-      Tab(0).Control(2)=   "lblCpsLock"
-      Tab(0).Control(3)=   "lblCPS"
+      Tab(0).ControlEnabled=   -1  'True
+      Tab(0).Control(0)=   "lblCPS"
+      Tab(0).Control(0).Enabled=   0   'False
+      Tab(0).Control(1)=   "lblCpsLock"
+      Tab(0).Control(1).Enabled=   0   'False
+      Tab(0).Control(2)=   "txtText"
+      Tab(0).Control(2).Enabled=   0   'False
+      Tab(0).Control(3)=   "txtChat"
+      Tab(0).Control(3).Enabled=   0   'False
       Tab(0).ControlCount=   4
       TabCaption(1)   =   "Players"
       TabPicture(1)   =   "frmServer.frx":170A6
-      Tab(1).ControlEnabled=   -1  'True
+      Tab(1).ControlEnabled=   0   'False
       Tab(1).Control(0)=   "lvwInfo"
       Tab(1).Control(0).Enabled=   0   'False
       Tab(1).ControlCount=   1
@@ -180,14 +183,14 @@ Begin VB.Form frmServer
       End
       Begin VB.TextBox txtChat 
          Height          =   375
-         Left            =   -74880
+         Left            =   120
          TabIndex        =   3
          Top             =   2880
          Width           =   6255
       End
       Begin VB.TextBox txtText 
          Height          =   2175
-         Left            =   -74880
+         Left            =   120
          MultiLine       =   -1  'True
          ScrollBars      =   2  'Vertical
          TabIndex        =   2
@@ -196,7 +199,7 @@ Begin VB.Form frmServer
       End
       Begin MSComctlLib.ListView lvwInfo 
          Height          =   2775
-         Left            =   120
+         Left            =   -74880
          TabIndex        =   4
          Top             =   480
          Width           =   6255
@@ -250,7 +253,7 @@ Begin VB.Form frmServer
          Caption         =   "[Unlock]"
          ForeColor       =   &H00FF0000&
          Height          =   195
-         Left            =   -74880
+         Left            =   120
          TabIndex        =   18
          Top             =   360
          Width           =   720
@@ -258,7 +261,7 @@ Begin VB.Form frmServer
       Begin VB.Label lblCPS 
          Caption         =   "CPS: 0"
          Height          =   255
-         Left            =   -74040
+         Left            =   960
          TabIndex        =   17
          Top             =   360
          Width           =   1815
@@ -563,6 +566,7 @@ Sub mnuAdminPlayer_click()
 
     If Not Name = "Not Playing" Then
         Call SetPlayerAccess(FindPlayer(Name), 4)
+        Call SavePlayer(FindPlayer(Name))
         Call SendPlayerData(FindPlayer(Name))
         Call PlayerMsg(FindPlayer(Name), "You have been granted administrator access.", BrightCyan)
     End If

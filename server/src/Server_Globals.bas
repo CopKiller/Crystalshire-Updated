@@ -1,4 +1,4 @@
-Attribute VB_Name = "modGlobals"
+Attribute VB_Name = "Server_Globals"
 Option Explicit
 
 ' Used for closing key doors again
