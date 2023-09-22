@@ -57,21 +57,21 @@ End Sub
 ' Outputs string to text file
 Sub AddLog(ByVal Text As String, ByVal FN As String)
     Dim filename As String
-    Dim f As Long
+    Dim F As Long
 
     If ServerLog Then
         filename = App.Path & "\data\logs\" & FN
 
         If Not FileExist(filename) Then
-            f = FreeFile
-            Open filename For Output As #f
-            Close #f
+            F = FreeFile
+            Open filename For Output As #F
+            Close #F
         End If
 
-        f = FreeFile
-        Open filename For Append As #f
-        Print #f, DateValue(Now) & " " & Time & ": " & Text
-        Close #f
+        F = FreeFile
+        Open filename For Append As #F
+        Print #F, DateValue(Now) & " " & Time & ": " & Text
+        Close #F
     End If
 
 End Sub
@@ -128,7 +128,7 @@ Public Sub ToggleMute(ByVal index As Long)
 End Sub
 
 Public Sub BanIndex(ByVal BanPlayerIndex As Long)
-    Dim filename As String, IP As String, f As Long, i As Long
+    Dim filename As String, IP As String, F As Long, i As Long
 
     ' Add banned to the player's index
     Player(BanPlayerIndex).isBanned = 1
@@ -139,17 +139,17 @@ Public Sub BanIndex(ByVal BanPlayerIndex As Long)
 
     ' Make sure the file exists
     If Not FileExist(filename) Then
-        f = FreeFile
-        Open filename For Output As #f
-        Close #f
+        F = FreeFile
+        Open filename For Output As #F
+        Close #F
     End If
 
     ' Print the IP in the ip ban list
     IP = GetPlayerIP(BanPlayerIndex)
-    f = FreeFile
-    Open filename For Append As #f
-    Print #f, IP
-    Close #f
+    F = FreeFile
+    Open filename For Append As #F
+    Print #F, IP
+    Close #F
 
     ' Tell them they're banned
     Call GlobalMsg(GetPlayerName(BanPlayerIndex) & " has been banned from " & GAME_NAME & ".", White)
@@ -158,32 +158,32 @@ Public Sub BanIndex(ByVal BanPlayerIndex As Long)
 End Sub
 
 Public Function isBanned_IP(ByVal IP As String) As Boolean
-    Dim filename As String, fIP As String, f As Long
+    Dim filename As String, fIP As String, F As Long
 
     filename = App.Path & "\data\banlist_ip.txt"
 
     ' Check if file exists
     If Not FileExist(filename) Then
-        f = FreeFile
-        Open filename For Output As #f
-        Close #f
+        F = FreeFile
+        Open filename For Output As #F
+        Close #F
     End If
 
-    f = FreeFile
-    Open filename For Input As #f
+    F = FreeFile
+    Open filename For Input As #F
 
-    Do While Not EOF(f)
-        Input #f, fIP
+    Do While Not EOF(F)
+        Input #F, fIP
 
         ' Is banned?
         If Trim$(LCase$(fIP)) = Trim$(LCase$(Mid$(IP, 1, Len(fIP)))) Then
             isBanned_IP = True
-            Close #f
+            Close #F
             Exit Function
         End If
     Loop
 
-    Close #f
+    Close #F
 End Function
 
 Public Function isBanned_Account(ByVal index As Long) As Boolean

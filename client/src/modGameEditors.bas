@@ -16,9 +16,9 @@ Public GraphicSelY As Long
 ' // Map Editor //
 ' ////////////////
 Public Sub MapEditorInit()
-    Dim i As Long
+    Dim I As Long
     ' set the width
-    frmEditor_Map.width = 9585
+    frmEditor_Map.Width = 9585
     ' we're in the map editor
     InMapEditor = True
     ' show the form
@@ -28,16 +28,16 @@ Public Sub MapEditorInit()
     frmEditor_Map.fraTileSet.caption = "Tileset: " & 1
     frmEditor_Map.scrlTileSet.value = 1
     ' set the scrollbars
-    frmEditor_Map.scrlPictureY.Max = (frmEditor_Map.picBackSelect.height \ PIC_Y) - (frmEditor_Map.picBack.height \ PIC_Y)
-    frmEditor_Map.scrlPictureX.Max = (frmEditor_Map.picBackSelect.width \ PIC_X) - (frmEditor_Map.picBack.width \ PIC_X)
+    frmEditor_Map.scrlPictureY.Max = (frmEditor_Map.picBackSelect.Height \ PIC_Y) - (frmEditor_Map.picBack.Height \ PIC_Y)
+    frmEditor_Map.scrlPictureX.Max = (frmEditor_Map.picBackSelect.Width \ PIC_X) - (frmEditor_Map.picBack.Width \ PIC_X)
     shpSelectedWidth = 32
     shpSelectedHeight = 32
     MapEditorTileScroll
     ' set shops for the shop attribute
     frmEditor_Map.cmbShop.AddItem "None"
 
-    For i = 1 To MAX_SHOPS
-        frmEditor_Map.cmbShop.AddItem i & ": " & Shop(i).name
+    For I = 1 To MAX_SHOPS
+        frmEditor_Map.cmbShop.AddItem I & ": " & Shop(I).name
     Next
 
     ' we're not in a shop
@@ -45,7 +45,7 @@ Public Sub MapEditorInit()
 End Sub
 
 Public Sub MapEditorProperties()
-    Dim x As Long, i As Long, tmpNum As Long
+    Dim X As Long, I As Long, tmpNum As Long
 
     ' populate the cache if we need to
     If Not hasPopulated Then
@@ -57,8 +57,8 @@ Public Sub MapEditorProperties()
     frmEditor_MapProperties.lstMusic.AddItem "None."
     tmpNum = UBound(musicCache)
 
-    For i = 1 To tmpNum
-        frmEditor_MapProperties.lstMusic.AddItem musicCache(i)
+    For I = 1 To tmpNum
+        frmEditor_MapProperties.lstMusic.AddItem musicCache(I)
     Next
 
     ' finished populating
@@ -71,10 +71,10 @@ Public Sub MapEditorProperties()
             .lstMusic.ListIndex = 0
             tmpNum = .lstMusic.ListCount
 
-            For i = 0 To tmpNum - 1
+            For I = 0 To tmpNum - 1
 
-                If .lstMusic.list(i) = Trim$(map.MapData.Music) Then
-                    .lstMusic.ListIndex = i
+                If .lstMusic.list(I) = Trim$(map.MapData.Music) Then
+                    .lstMusic.ListIndex = I
                 End If
 
             Next
@@ -84,22 +84,33 @@ Public Sub MapEditorProperties()
         ' rest of it
         .txtUp.text = CStr(map.MapData.Up)
         .txtDown.text = CStr(map.MapData.Down)
-        .txtLeft.text = CStr(map.MapData.left)
+        .txtLeft.text = CStr(map.MapData.Left)
         .txtRight.text = CStr(map.MapData.Right)
         .cmbMoral.ListIndex = map.MapData.Moral
         .txtBootMap.text = CStr(map.MapData.BootMap)
         .txtBootX.text = CStr(map.MapData.BootX)
         .txtBootY.text = CStr(map.MapData.BootY)
+        .CmbWeather.ListIndex = map.MapData.Weather
+        .scrlWeatherIntensity.value = map.MapData.WeatherIntensity
+        
+        .ScrlFog.value = map.MapData.Fog
+        .ScrlFogSpeed.value = map.MapData.FogSpeed
+        .scrlFogOpacity.value = map.MapData.FogOpacity
+        
+        .scrlRed.value = map.MapData.Red
+        .scrlGreen.value = map.MapData.Green
+        .scrlBlue.value = map.MapData.Blue
+        .scrlAlpha.value = map.MapData.Alpha
         .scrlBoss = map.MapData.BossNpc
         ' show the map npcs
         .lstNpcs.Clear
 
-        For x = 1 To MAX_MAP_NPCS
+        For X = 1 To MAX_MAP_NPCS
 
-            If map.MapData.Npc(x) > 0 Then
-                .lstNpcs.AddItem x & ": " & Trim$(Npc(map.MapData.Npc(x)).name)
+            If map.MapData.Npc(X) > 0 Then
+                .lstNpcs.AddItem X & ": " & Trim$(Npc(map.MapData.Npc(X)).name)
             Else
-                .lstNpcs.AddItem x & ": No NPC"
+                .lstNpcs.AddItem X & ": No NPC"
             End If
 
         Next
@@ -109,16 +120,16 @@ Public Sub MapEditorProperties()
         .cmbNpc.Clear
         .cmbNpc.AddItem "No NPC"
 
-        For x = 1 To MAX_NPCS
-            .cmbNpc.AddItem x & ": " & Trim$(Npc(x).name)
+        For X = 1 To MAX_NPCS
+            .cmbNpc.AddItem X & ": " & Trim$(Npc(X).name)
         Next
 
         ' set the combo box properly
         Dim tmpString() As String
-        Dim npcNum As Long
+        Dim NpcNum As Long
         tmpString = Split(.lstNpcs.list(.lstNpcs.ListIndex))
-        npcNum = CLng(left$(tmpString(0), Len(tmpString(0)) - 1))
-        .cmbNpc.ListIndex = map.MapData.Npc(npcNum)
+        NpcNum = CLng(Left$(tmpString(0), Len(tmpString(0)) - 1))
+        .cmbNpc.ListIndex = map.MapData.Npc(NpcNum)
         ' show the current map
         .lblMap.caption = "Current map: " & GetPlayerMap(MyIndex)
         .txtMaxX.text = map.MapData.MaxX
@@ -127,77 +138,65 @@ Public Sub MapEditorProperties()
 
 End Sub
 
-Public Sub MapEditorSetTile(ByVal x As Long, ByVal y As Long, ByVal CurLayer As Long, Optional ByVal multitile As Boolean = False, Optional ByVal theAutotile As Byte = 0)
-    Dim x2 As Long, y2 As Long
+Public Sub MapEditorSetTile(ByVal X As Long, ByVal Y As Long, ByVal CurLayer As Long, Optional ByVal multitile As Boolean = False, Optional ByVal theAutotile As Byte = 0)
+    Dim X2 As Long, Y2 As Long
 
     If theAutotile > 0 Then
-
-        With map.TileData.Tile(x, y)
+        With map.TileData.Tile(X, Y)
             ' set layer
-            .Layer(CurLayer).x = EditorTileX
-            .Layer(CurLayer).y = EditorTileY
+            .Layer(CurLayer).X = EditorTileX
+            .Layer(CurLayer).Y = EditorTileY
             .Layer(CurLayer).tileSet = frmEditor_Map.scrlTileSet.value
             .Autotile(CurLayer) = theAutotile
-            cacheRenderState x, y, CurLayer
+            cacheRenderState X, Y, CurLayer
         End With
-
         ' do a re-init so we can see our changes
         initAutotiles
         Exit Sub
     End If
 
     If Not multitile Then ' single
-
-        With map.TileData.Tile(x, y)
+        With map.TileData.Tile(X, Y)
             ' set layer
-            .Layer(CurLayer).x = EditorTileX
-            .Layer(CurLayer).y = EditorTileY
+            .Layer(CurLayer).X = EditorTileX
+            .Layer(CurLayer).Y = EditorTileY
             .Layer(CurLayer).tileSet = frmEditor_Map.scrlTileSet.value
             .Autotile(CurLayer) = 0
-            cacheRenderState x, y, CurLayer
+            cacheRenderState X, Y, CurLayer
         End With
-
     Else ' multitile
-        y2 = 0 ' starting tile for y axis
-
-        For y = CurY To CurY + EditorTileHeight - 1
-            x2 = 0 ' re-set x count every y loop
-
-            For x = CurX To CurX + EditorTileWidth - 1
-
-                If x >= 0 And x <= map.MapData.MaxX Then
-                    If y >= 0 And y <= map.MapData.MaxY Then
-
-                        With map.TileData.Tile(x, y)
-                            .Layer(CurLayer).x = EditorTileX + x2
-                            .Layer(CurLayer).y = EditorTileY + y2
+        Y2 = 0 ' starting tile for y axis
+        For Y = CurY To CurY + EditorTileHeight - 1
+            X2 = 0 ' re-set x count every y loop
+            For X = CurX To CurX + EditorTileWidth - 1
+                If X >= 0 And X <= map.MapData.MaxX Then
+                    If Y >= 0 And Y <= map.MapData.MaxY Then
+                        With map.TileData.Tile(X, Y)
+                            .Layer(CurLayer).X = EditorTileX + X2
+                            .Layer(CurLayer).Y = EditorTileY + Y2
                             .Layer(CurLayer).tileSet = frmEditor_Map.scrlTileSet.value
                             .Autotile(CurLayer) = 0
-                            cacheRenderState x, y, CurLayer
+                            cacheRenderState X, Y, CurLayer
                         End With
-
                     End If
                 End If
-
-                x2 = x2 + 1
+                X2 = X2 + 1
             Next
-
-            y2 = y2 + 1
+            Y2 = Y2 + 1
         Next
-
     End If
 
 End Sub
 
-Public Sub MapEditorMouseDown(ByVal Button As Integer, ByVal x As Long, ByVal y As Long, Optional ByVal movedMouse As Boolean = True)
-    Dim i As Long
+Public Sub MapEditorMouseDown(ByVal Button As Integer, ByVal X As Long, ByVal Y As Long, Optional ByVal movedMouse As Boolean = True)
+    Dim I As Long
     Dim CurLayer As Long
 
     ' find which layer we're on
-    For i = 1 To MapLayer.Layer_Count - 1
+    For I = 1 To MapLayer.Layer_Count - 1
 
-        If frmEditor_Map.optLayer(i).value Then
-            CurLayer = i
+        If frmEditor_Map.optLayer(I).value Then
+            CurLayer = I
             Exit For
         End If
 
@@ -381,15 +380,15 @@ Public Sub MapEditorMouseDown(ByVal Button As Integer, ByVal x As Long, ByVal y 
 
             If movedMouse Then Exit Sub
             ' find what tile it is
-            x = x - ((x \ 32) * 32)
-            y = y - ((y \ 32) * 32)
+            X = X - ((X \ 32) * 32)
+            Y = Y - ((Y \ 32) * 32)
 
             ' see if it hits an arrow
-            For i = 1 To 4
-                If x >= DirArrowX(i) And x <= DirArrowX(i) + 8 Then
-                    If y >= DirArrowY(i) And y <= DirArrowY(i) + 8 Then
+            For I = 1 To 4
+                If X >= DirArrowX(I) And X <= DirArrowX(I) + 8 Then
+                    If Y >= DirArrowY(I) And Y <= DirArrowY(I) + 8 Then
                         ' flip the value.
-                        setDirBlock map.TileData.Tile(CurX, CurY).DirBlock, CByte(i), Not isDirBlocked(map.TileData.Tile(CurX, CurY).DirBlock, CByte(i))
+                        setDirBlock map.TileData.Tile(CurX, CurY).DirBlock, CByte(I), Not isDirBlocked(map.TileData.Tile(CurX, CurY).DirBlock, CByte(I))
                         Exit Sub
                     End If
                 End If
@@ -402,8 +401,8 @@ Public Sub MapEditorMouseDown(ByVal Button As Integer, ByVal x As Long, ByVal y 
 
             With map.TileData.Tile(CurX, CurY)
                 ' clear layer
-                .Layer(CurLayer).x = 0
-                .Layer(CurLayer).y = 0
+                .Layer(CurLayer).X = 0
+                .Layer(CurLayer).Y = 0
                 .Layer(CurLayer).tileSet = 0
 
                 If .Autotile(CurLayer) > 0 Then
@@ -412,7 +411,7 @@ Public Sub MapEditorMouseDown(ByVal Button As Integer, ByVal x As Long, ByVal y 
                     initAutotiles
                 End If
 
-                cacheRenderState x, y, CurLayer
+                cacheRenderState X, Y, CurLayer
             End With
 
         ElseIf frmEditor_Map.optAttribs.value Then
@@ -433,13 +432,13 @@ Public Sub MapEditorMouseDown(ByVal Button As Integer, ByVal x As Long, ByVal y 
     CacheResources
 End Sub
 
-Public Sub MapEditorChooseTile(Button As Integer, x As Single, y As Single)
+Public Sub MapEditorChooseTile(Button As Integer, X As Single, Y As Single)
 
     If Button = vbLeftButton Then
         EditorTileWidth = 1
         EditorTileHeight = 1
-        EditorTileX = x \ PIC_X
-        EditorTileY = y \ PIC_Y
+        EditorTileX = X \ PIC_X
+        EditorTileY = Y \ PIC_Y
         shpSelectedTop = EditorTileY * PIC_Y
         shpSelectedLeft = EditorTileX * PIC_X
         shpSelectedWidth = PIC_X
@@ -448,28 +447,28 @@ Public Sub MapEditorChooseTile(Button As Integer, x As Single, y As Single)
 
 End Sub
 
-Public Sub MapEditorDrag(Button As Integer, x As Single, y As Single)
+Public Sub MapEditorDrag(Button As Integer, X As Single, Y As Single)
 
     If Button = vbLeftButton Then
         ' convert the pixel number to tile number
-        x = (x \ PIC_X) + 1
-        y = (y \ PIC_Y) + 1
+        X = (X \ PIC_X) + 1
+        Y = (Y \ PIC_Y) + 1
 
         ' check it's not out of bounds
-        If x < 0 Then x = 0
-        If x > frmEditor_Map.picBackSelect.width / PIC_X Then x = frmEditor_Map.picBackSelect.width / PIC_X
-        If y < 0 Then y = 0
-        If y > frmEditor_Map.picBackSelect.height / PIC_Y Then y = frmEditor_Map.picBackSelect.height / PIC_Y
+        If X < 0 Then X = 0
+        If X > frmEditor_Map.picBackSelect.Width / PIC_X Then X = frmEditor_Map.picBackSelect.Width / PIC_X
+        If Y < 0 Then Y = 0
+        If Y > frmEditor_Map.picBackSelect.Height / PIC_Y Then Y = frmEditor_Map.picBackSelect.Height / PIC_Y
 
         ' find out what to set the width + height of map editor to
-        If x > EditorTileX Then ' drag right
-            EditorTileWidth = x - EditorTileX
+        If X > EditorTileX Then ' drag right
+            EditorTileWidth = X - EditorTileX
         Else ' drag left
             ' TO DO
         End If
 
-        If y > EditorTileY Then ' drag down
-            EditorTileHeight = y - EditorTileY
+        If Y > EditorTileY Then ' drag down
+            EditorTileHeight = Y - EditorTileY
         Else ' drag up
             ' TO DO
         End If
@@ -481,32 +480,32 @@ Public Sub MapEditorDrag(Button As Integer, x As Single, y As Single)
 End Sub
 
 Public Sub NudgeMap(ByVal theDir As Byte)
-Dim x As Long, y As Long, i As Long
+Dim X As Long, Y As Long, I As Long
     
     ' if left or right
     If theDir = DIR_UP Or theDir = DIR_LEFT Then
-        For y = 0 To map.MapData.MaxY
-            For x = 0 To map.MapData.MaxX
+        For Y = 0 To map.MapData.MaxY
+            For X = 0 To map.MapData.MaxX
                 Select Case theDir
                     Case DIR_UP
                         ' move up all one
-                        If y > 0 Then CopyTile map.TileData.Tile(x, y), map.TileData.Tile(x, y - 1)
+                        If Y > 0 Then CopyTile map.TileData.Tile(X, Y), map.TileData.Tile(X, Y - 1)
                     Case DIR_LEFT
                         ' move left all one
-                        If x > 0 Then CopyTile map.TileData.Tile(x, y), map.TileData.Tile(x - 1, y)
+                        If X > 0 Then CopyTile map.TileData.Tile(X, Y), map.TileData.Tile(X - 1, Y)
                 End Select
             Next
         Next
     Else
-        For y = map.MapData.MaxY To 0 Step -1
-            For x = map.MapData.MaxX To 0 Step -1
+        For Y = map.MapData.MaxY To 0 Step -1
+            For X = map.MapData.MaxX To 0 Step -1
                 Select Case theDir
                     Case DIR_DOWN
                         ' move down all one
-                        If y < map.MapData.MaxY Then CopyTile map.TileData.Tile(x, y), map.TileData.Tile(x, y + 1)
+                        If Y < map.MapData.MaxY Then CopyTile map.TileData.Tile(X, Y), map.TileData.Tile(X, Y + 1)
                     Case DIR_RIGHT
                         ' move right all one
-                        If x < map.MapData.MaxX Then CopyTile map.TileData.Tile(x, y), map.TileData.Tile(x + 1, y)
+                        If X < map.MapData.MaxX Then CopyTile map.TileData.Tile(X, Y), map.TileData.Tile(X + 1, Y)
                 End Select
             Next
         Next
@@ -514,16 +513,16 @@ Dim x As Long, y As Long, i As Long
     
     ' do events
     If map.TileData.EventCount > 0 Then
-        For i = 1 To map.TileData.EventCount
+        For I = 1 To map.TileData.EventCount
             Select Case theDir
                 Case DIR_UP
-                    map.TileData.Events(i).y = map.TileData.Events(i).y - 1
+                    map.TileData.Events(I).Y = map.TileData.Events(I).Y - 1
                 Case DIR_LEFT
-                    map.TileData.Events(i).x = map.TileData.Events(i).x - 1
+                    map.TileData.Events(I).X = map.TileData.Events(I).X - 1
                 Case DIR_RIGHT
-                    map.TileData.Events(i).x = map.TileData.Events(i).x + 1
+                    map.TileData.Events(I).X = map.TileData.Events(I).X + 1
                 Case DIR_DOWN
-                    map.TileData.Events(i).y = map.TileData.Events(i).y + 1
+                    map.TileData.Events(I).Y = map.TileData.Events(I).Y + 1
             End Select
         Next
     End If
@@ -541,19 +540,19 @@ End Sub
 Public Sub MapEditorTileScroll()
 
     ' horizontal scrolling
-    If frmEditor_Map.picBackSelect.width < frmEditor_Map.picBack.width Then
+    If frmEditor_Map.picBackSelect.Width < frmEditor_Map.picBack.Width Then
         frmEditor_Map.scrlPictureX.enabled = False
     Else
         frmEditor_Map.scrlPictureX.enabled = True
-        frmEditor_Map.picBackSelect.left = (frmEditor_Map.scrlPictureX.value * PIC_X) * -1
+        frmEditor_Map.picBackSelect.Left = (frmEditor_Map.scrlPictureX.value * PIC_X) * -1
     End If
 
     ' vertical scrolling
-    If frmEditor_Map.picBackSelect.height < frmEditor_Map.picBack.height Then
+    If frmEditor_Map.picBackSelect.Height < frmEditor_Map.picBack.Height Then
         frmEditor_Map.scrlPictureY.enabled = False
     Else
         frmEditor_Map.scrlPictureY.enabled = True
-        frmEditor_Map.picBackSelect.top = (frmEditor_Map.scrlPictureY.value * PIC_Y) * -1
+        frmEditor_Map.picBackSelect.Top = (frmEditor_Map.scrlPictureY.value * PIC_Y) * -1
     End If
 
 End Sub
@@ -574,16 +573,16 @@ Public Sub MapEditorCancel()
 End Sub
 
 Public Sub MapEditorClearLayer()
-    Dim i As Long
-    Dim x As Long
-    Dim y As Long
+    Dim I As Long
+    Dim X As Long
+    Dim Y As Long
     Dim CurLayer As Long
 
     ' find which layer we're on
-    For i = 1 To MapLayer.Layer_Count - 1
+    For I = 1 To MapLayer.Layer_Count - 1
 
-        If frmEditor_Map.optLayer(i).value Then
-            CurLayer = i
+        If frmEditor_Map.optLayer(I).value Then
+            CurLayer = I
             Exit For
         End If
 
@@ -594,12 +593,12 @@ Public Sub MapEditorClearLayer()
     ' ask to clear layer
     If MsgBox("Are you sure you wish to clear this layer?", vbYesNo, GAME_NAME) = vbYes Then
 
-        For x = 0 To map.MapData.MaxX
-            For y = 0 To map.MapData.MaxY
-                map.TileData.Tile(x, y).Layer(CurLayer).x = 0
-                map.TileData.Tile(x, y).Layer(CurLayer).y = 0
-                map.TileData.Tile(x, y).Layer(CurLayer).tileSet = 0
-                cacheRenderState x, y, CurLayer
+        For X = 0 To map.MapData.MaxX
+            For Y = 0 To map.MapData.MaxY
+                map.TileData.Tile(X, Y).Layer(CurLayer).X = 0
+                map.TileData.Tile(X, Y).Layer(CurLayer).Y = 0
+                map.TileData.Tile(X, Y).Layer(CurLayer).tileSet = 0
+                cacheRenderState X, Y, CurLayer
             Next
         Next
 
@@ -610,16 +609,16 @@ Public Sub MapEditorClearLayer()
 End Sub
 
 Public Sub MapEditorFillLayer()
-    Dim i As Long
-    Dim x As Long
-    Dim y As Long
+    Dim I As Long
+    Dim X As Long
+    Dim Y As Long
     Dim CurLayer As Long
 
     ' find which layer we're on
-    For i = 1 To MapLayer.Layer_Count - 1
+    For I = 1 To MapLayer.Layer_Count - 1
 
-        If frmEditor_Map.optLayer(i).value Then
-            CurLayer = i
+        If frmEditor_Map.optLayer(I).value Then
+            CurLayer = I
             Exit For
         End If
 
@@ -628,13 +627,13 @@ Public Sub MapEditorFillLayer()
     ' Ground layer
     If MsgBox("Are you sure you wish to fill this layer?", vbYesNo, GAME_NAME) = vbYes Then
 
-        For x = 0 To map.MapData.MaxX
-            For y = 0 To map.MapData.MaxY
-                map.TileData.Tile(x, y).Layer(CurLayer).x = EditorTileX
-                map.TileData.Tile(x, y).Layer(CurLayer).y = EditorTileY
-                map.TileData.Tile(x, y).Layer(CurLayer).tileSet = frmEditor_Map.scrlTileSet.value
-                map.TileData.Tile(x, y).Autotile(CurLayer) = frmEditor_Map.scrlAutotile.value
-                cacheRenderState x, y, CurLayer
+        For X = 0 To map.MapData.MaxX
+            For Y = 0 To map.MapData.MaxY
+                map.TileData.Tile(X, Y).Layer(CurLayer).X = EditorTileX
+                map.TileData.Tile(X, Y).Layer(CurLayer).Y = EditorTileY
+                map.TileData.Tile(X, Y).Layer(CurLayer).tileSet = frmEditor_Map.scrlTileSet.value
+                map.TileData.Tile(X, Y).Autotile(CurLayer) = frmEditor_Map.scrlAutotile.value
+                cacheRenderState X, Y, CurLayer
             Next
         Next
 
@@ -645,14 +644,14 @@ Public Sub MapEditorFillLayer()
 End Sub
 
 Public Sub MapEditorClearAttribs()
-    Dim x As Long
-    Dim y As Long
+    Dim X As Long
+    Dim Y As Long
 
     If MsgBox("Are you sure you wish to clear the attributes on this map?", vbYesNo, GAME_NAME) = vbYes Then
 
-        For x = 0 To map.MapData.MaxX
-            For y = 0 To map.MapData.MaxY
-                map.TileData.Tile(x, y).Type = 0
+        For X = 0 To map.MapData.MaxX
+            For Y = 0 To map.MapData.MaxY
+                map.TileData.Tile(X, Y).Type = 0
             Next
         Next
 
@@ -676,7 +675,7 @@ End Sub
 ' // Item Editor //
 ' /////////////////
 Public Sub ItemEditorInit()
-    Dim i As Long, SoundSet As Boolean, tmpNum As Long
+    Dim I As Long, SoundSet As Boolean, tmpNum As Long
 
     If frmEditor_Item.visible = False Then Exit Sub
     EditorIndex = frmEditor_Item.lstIndex.ListIndex + 1
@@ -691,8 +690,8 @@ Public Sub ItemEditorInit()
     frmEditor_Item.cmbSound.AddItem "None."
     tmpNum = UBound(soundCache)
 
-    For i = 1 To tmpNum
-        frmEditor_Item.cmbSound.AddItem soundCache(i)
+    For I = 1 To tmpNum
+        frmEditor_Item.cmbSound.AddItem soundCache(I)
     Next
 
     ' finished populating
@@ -709,10 +708,10 @@ Public Sub ItemEditorInit()
         If frmEditor_Item.cmbSound.ListCount >= 0 Then
             tmpNum = frmEditor_Item.cmbSound.ListCount
 
-            For i = 0 To tmpNum
+            For I = 0 To tmpNum
 
-                If frmEditor_Item.cmbSound.list(i) = Trim$(.sound) Then
-                    frmEditor_Item.cmbSound.ListIndex = i
+                If frmEditor_Item.cmbSound.list(I) = Trim$(.sound) Then
+                    frmEditor_Item.cmbSound.ListIndex = I
                     SoundSet = True
                 End If
 
@@ -731,8 +730,8 @@ Public Sub ItemEditorInit()
             frmEditor_Item.scrlSpeed.value = .speed
 
             ' loop for stats
-            For i = 1 To Stats.Stat_Count - 1
-                frmEditor_Item.scrlStatBonus(i).value = .Add_Stat(i)
+            For I = 1 To Stats.Stat_Count - 1
+                frmEditor_Item.scrlStatBonus(I).value = .Add_Stat(I)
             Next
 
             If Not .Paperdoll > Count_Paperdoll Then frmEditor_Item.scrlPaperdoll = .Paperdoll
@@ -779,16 +778,16 @@ Public Sub ItemEditorInit()
         frmEditor_Item.scrlLevelReq.value = .LevelReq
 
         ' loop for stats
-        For i = 1 To Stats.Stat_Count - 1
-            frmEditor_Item.scrlStatReq(i).value = .Stat_Req(i)
+        For I = 1 To Stats.Stat_Count - 1
+            frmEditor_Item.scrlStatReq(I).value = .Stat_Req(I)
         Next
 
         ' Build cmbClassReq
         frmEditor_Item.cmbClassReq.Clear
         frmEditor_Item.cmbClassReq.AddItem "None"
 
-        For i = 1 To Max_Classes
-            frmEditor_Item.cmbClassReq.AddItem Class(i).name
+        For I = 1 To Max_Classes
+            frmEditor_Item.cmbClassReq.AddItem Class(I).name
         Next
 
         frmEditor_Item.cmbClassReq.ListIndex = .ClassReq
@@ -803,12 +802,12 @@ Public Sub ItemEditorInit()
 End Sub
 
 Public Sub ItemEditorOk()
-    Dim i As Long
+    Dim I As Long
 
-    For i = 1 To MAX_ITEMS
+    For I = 1 To MAX_ITEMS
 
-        If Item_Changed(i) Then
-            Call SendSaveItem(i)
+        If Item_Changed(I) Then
+            Call SendSaveItem(I)
         End If
 
     Next
@@ -844,7 +843,7 @@ End Sub
 ' // Animation Editor //
 ' /////////////////
 Public Sub AnimationEditorInit()
-    Dim i As Long
+    Dim I As Long
     Dim SoundSet As Boolean, tmpNum As Long
 
     If frmEditor_Animation.visible = False Then Exit Sub
@@ -860,8 +859,8 @@ Public Sub AnimationEditorInit()
     frmEditor_Animation.cmbSound.AddItem "None."
     tmpNum = UBound(soundCache)
 
-    For i = 1 To tmpNum
-        frmEditor_Animation.cmbSound.AddItem soundCache(i)
+    For I = 1 To tmpNum
+        frmEditor_Animation.cmbSound.AddItem soundCache(I)
     Next
 
     ' finished populating
@@ -872,10 +871,10 @@ Public Sub AnimationEditorInit()
         If frmEditor_Animation.cmbSound.ListCount >= 0 Then
             tmpNum = frmEditor_Animation.cmbSound.ListCount
 
-            For i = 0 To tmpNum
+            For I = 0 To tmpNum
 
-                If frmEditor_Animation.cmbSound.list(i) = Trim$(.sound) Then
-                    frmEditor_Animation.cmbSound.ListIndex = i
+                If frmEditor_Animation.cmbSound.list(I) = Trim$(.sound) Then
+                    frmEditor_Animation.cmbSound.ListIndex = I
                     SoundSet = True
                 End If
 
@@ -884,15 +883,15 @@ Public Sub AnimationEditorInit()
             If Not SoundSet Or frmEditor_Animation.cmbSound.ListIndex = -1 Then frmEditor_Animation.cmbSound.ListIndex = 0
         End If
 
-        For i = 0 To 1
-            frmEditor_Animation.scrlSprite(i).value = .sprite(i)
-            frmEditor_Animation.scrlFrameCount(i).value = .Frames(i)
-            frmEditor_Animation.scrlLoopCount(i).value = .LoopCount(i)
+        For I = 0 To 1
+            frmEditor_Animation.scrlSprite(I).value = .sprite(I)
+            frmEditor_Animation.scrlFrameCount(I).value = .Frames(I)
+            frmEditor_Animation.scrlLoopCount(I).value = .LoopCount(I)
 
-            If .looptime(i) > 0 Then
-                frmEditor_Animation.scrlLoopTime(i).value = .looptime(i)
+            If .looptime(I) > 0 Then
+                frmEditor_Animation.scrlLoopTime(I).value = .looptime(I)
             Else
-                frmEditor_Animation.scrlLoopTime(i).value = 45
+                frmEditor_Animation.scrlLoopTime(I).value = 45
             End If
 
         Next
@@ -904,12 +903,12 @@ Public Sub AnimationEditorInit()
 End Sub
 
 Public Sub AnimationEditorOk()
-    Dim i As Long
+    Dim I As Long
 
-    For i = 1 To MAX_ANIMATIONS
+    For I = 1 To MAX_ANIMATIONS
 
-        If Animation_Changed(i) Then
-            Call SendSaveAnimation(i)
+        If Animation_Changed(I) Then
+            Call SendSaveAnimation(I)
         End If
 
     Next
@@ -935,7 +934,7 @@ End Sub
 ' // Npc Editor //
 ' ////////////////
 Public Sub NpcEditorInit()
-    Dim i As Long
+    Dim I As Long
     Dim SoundSet As Boolean
 
     If frmEditor_NPC.visible = False Then Exit Sub
@@ -950,8 +949,8 @@ Public Sub NpcEditorInit()
     frmEditor_NPC.cmbSound.Clear
     frmEditor_NPC.cmbSound.AddItem "None."
 
-    For i = 1 To UBound(soundCache)
-        frmEditor_NPC.cmbSound.AddItem soundCache(i)
+    For I = 1 To UBound(soundCache)
+        frmEditor_NPC.cmbSound.AddItem soundCache(I)
     Next
 
     ' finished populating
@@ -976,10 +975,10 @@ Public Sub NpcEditorInit()
         ' find the sound we have set
         If .cmbSound.ListCount >= 0 Then
 
-            For i = 0 To .cmbSound.ListCount
+            For I = 0 To .cmbSound.ListCount
 
-                If .cmbSound.list(i) = Trim$(Npc(EditorIndex).sound) Then
-                    .cmbSound.ListIndex = i
+                If .cmbSound.list(I) = Trim$(Npc(EditorIndex).sound) Then
+                    .cmbSound.ListIndex = I
                     SoundSet = True
                 End If
 
@@ -988,8 +987,8 @@ Public Sub NpcEditorInit()
             If Not SoundSet Or .cmbSound.ListIndex = -1 Then .cmbSound.ListIndex = 0
         End If
 
-        For i = 1 To Stats.Stat_Count - 1
-            .scrlStat(i).value = Npc(EditorIndex).Stat(i)
+        For I = 1 To Stats.Stat_Count - 1
+            .scrlStat(I).value = Npc(EditorIndex).Stat(I)
         Next
 
         ' show 1 data
@@ -1001,12 +1000,12 @@ Public Sub NpcEditorInit()
 End Sub
 
 Public Sub NpcEditorOk()
-    Dim i As Long
+    Dim I As Long
 
-    For i = 1 To MAX_NPCS
+    For I = 1 To MAX_NPCS
 
-        If NPC_Changed(i) Then
-            Call SendSaveNpc(i)
+        If NPC_Changed(I) Then
+            Call SendSaveNpc(I)
         End If
 
     Next
@@ -1042,7 +1041,7 @@ End Sub
 ' // Conv Editor //
 ' /////////////////
 Public Sub ConvEditorInit()
-    Dim i As Long, n As Long
+    Dim I As Long, n As Long
 
     If frmEditor_Conv.visible = False Then Exit Sub
     EditorIndex = frmEditor_Conv.lstIndex.ListIndex + 1
@@ -1059,8 +1058,8 @@ Public Sub ConvEditorInit()
             .cmbReply(n).Clear
             .cmbReply(n).AddItem "None"
 
-            For i = 1 To Conv(EditorIndex).chatCount
-                .cmbReply(n).AddItem i
+            For I = 1 To Conv(EditorIndex).chatCount
+                .cmbReply(n).AddItem I
             Next
         Next
 
@@ -1069,9 +1068,9 @@ Public Sub ConvEditorInit()
         .scrlConv.value = 1
         .txtConv = Conv(EditorIndex).Conv(.scrlConv.value).Conv
 
-        For i = 1 To 4
-            .txtReply(i).text = Conv(EditorIndex).Conv(.scrlConv.value).rText(i)
-            .cmbReply(i).ListIndex = Conv(EditorIndex).Conv(.scrlConv.value).rTarget(i)
+        For I = 1 To 4
+            .txtReply(I).text = Conv(EditorIndex).Conv(.scrlConv.value).rText(I)
+            .cmbReply(I).ListIndex = Conv(EditorIndex).Conv(.scrlConv.value).rTarget(I)
         Next
 
         .cmbEvent.ListIndex = Conv(EditorIndex).Conv(.scrlConv.value).Event
@@ -1084,12 +1083,12 @@ Public Sub ConvEditorInit()
 End Sub
 
 Public Sub ConvEditorOk()
-    Dim i As Long
+    Dim I As Long
 
-    For i = 1 To MAX_CONVS
+    For I = 1 To MAX_CONVS
 
-        If Conv_Changed(i) Then
-            Call SendSaveConv(i)
+        If Conv_Changed(I) Then
+            Call SendSaveConv(I)
         End If
 
     Next
@@ -1115,7 +1114,7 @@ End Sub
 ' // Resource Editor //
 ' ////////////////
 Public Sub ResourceEditorInit()
-    Dim i As Long
+    Dim I As Long
     Dim SoundSet As Boolean
 
     If frmEditor_Resource.visible = False Then Exit Sub
@@ -1130,8 +1129,8 @@ Public Sub ResourceEditorInit()
     frmEditor_Resource.cmbSound.Clear
     frmEditor_Resource.cmbSound.AddItem "None."
 
-    For i = 1 To UBound(soundCache)
-        frmEditor_Resource.cmbSound.AddItem soundCache(i)
+    For I = 1 To UBound(soundCache)
+        frmEditor_Resource.cmbSound.AddItem soundCache(I)
     Next
 
     ' finished populating
@@ -1154,10 +1153,10 @@ Public Sub ResourceEditorInit()
         ' find the sound we have set
         If .cmbSound.ListCount >= 0 Then
 
-            For i = 0 To .cmbSound.ListCount
+            For I = 0 To .cmbSound.ListCount
 
-                If .cmbSound.list(i) = Trim$(Resource(EditorIndex).sound) Then
-                    .cmbSound.ListIndex = i
+                If .cmbSound.list(I) = Trim$(Resource(EditorIndex).sound) Then
+                    .cmbSound.ListIndex = I
                     SoundSet = True
                 End If
 
@@ -1172,12 +1171,12 @@ Public Sub ResourceEditorInit()
 End Sub
 
 Public Sub ResourceEditorOk()
-    Dim i As Long
+    Dim I As Long
 
-    For i = 1 To MAX_RESOURCES
+    For I = 1 To MAX_RESOURCES
 
-        If Resource_Changed(i) Then
-            Call SendSaveResource(i)
+        If Resource_Changed(I) Then
+            Call SendSaveResource(I)
         End If
 
     Next
@@ -1203,7 +1202,7 @@ End Sub
 ' // Shop Editor //
 ' /////////////////
 Public Sub ShopEditorInit()
-    Dim i As Long
+    Dim I As Long
 
     If frmEditor_Shop.visible = False Then Exit Sub
     EditorIndex = frmEditor_Shop.lstIndex.ListIndex + 1
@@ -1220,9 +1219,9 @@ Public Sub ShopEditorInit()
     frmEditor_Shop.cmbCostItem.Clear
     frmEditor_Shop.cmbCostItem.AddItem "None"
 
-    For i = 1 To MAX_ITEMS
-        frmEditor_Shop.cmbItem.AddItem i & ": " & Trim$(Item(i).name)
-        frmEditor_Shop.cmbCostItem.AddItem i & ": " & Trim$(Item(i).name)
+    For I = 1 To MAX_ITEMS
+        frmEditor_Shop.cmbItem.AddItem I & ": " & Trim$(Item(I).name)
+        frmEditor_Shop.cmbCostItem.AddItem I & ": " & Trim$(Item(I).name)
     Next
 
     frmEditor_Shop.cmbItem.ListIndex = 0
@@ -1232,18 +1231,18 @@ Public Sub ShopEditorInit()
 End Sub
 
 Public Sub UpdateShopTrade(Optional ByVal tmpPos As Long = 0)
-    Dim i As Long
+    Dim I As Long
     frmEditor_Shop.lstTradeItem.Clear
 
-    For i = 1 To MAX_TRADES
+    For I = 1 To MAX_TRADES
 
-        With Shop(EditorIndex).TradeItem(i)
+        With Shop(EditorIndex).TradeItem(I)
 
             ' if none, show as none
             If .Item = 0 And .CostItem = 0 Then
                 frmEditor_Shop.lstTradeItem.AddItem "Empty Trade Slot"
             Else
-                frmEditor_Shop.lstTradeItem.AddItem i & ": " & .ItemValue & "x " & Trim$(Item(.Item).name) & " for " & .CostValue & "x " & Trim$(Item(.CostItem).name)
+                frmEditor_Shop.lstTradeItem.AddItem I & ": " & .ItemValue & "x " & Trim$(Item(.Item).name) & " for " & .CostValue & "x " & Trim$(Item(.CostItem).name)
             End If
 
         End With
@@ -1254,12 +1253,12 @@ Public Sub UpdateShopTrade(Optional ByVal tmpPos As Long = 0)
 End Sub
 
 Public Sub ShopEditorOk()
-    Dim i As Long
+    Dim I As Long
 
-    For i = 1 To MAX_SHOPS
+    For I = 1 To MAX_SHOPS
 
-        If Shop_Changed(i) Then
-            Call SendSaveShop(i)
+        If Shop_Changed(I) Then
+            Call SendSaveShop(I)
         End If
 
     Next
@@ -1295,7 +1294,7 @@ Sub SpellEditorPaste()
 End Sub
 
 Public Sub SpellEditorInit()
-    Dim i As Long
+    Dim I As Long
     Dim SoundSet As Boolean
 
     If frmEditor_Spell.visible = False Then Exit Sub
@@ -1310,8 +1309,8 @@ Public Sub SpellEditorInit()
     frmEditor_Spell.cmbSound.Clear
     frmEditor_Spell.cmbSound.AddItem "None."
 
-    For i = 1 To UBound(soundCache)
-        frmEditor_Spell.cmbSound.AddItem soundCache(i)
+    For I = 1 To UBound(soundCache)
+        frmEditor_Spell.cmbSound.AddItem soundCache(I)
     Next
 
     ' finished populating
@@ -1327,8 +1326,8 @@ Public Sub SpellEditorInit()
         .cmbClass.Clear
         .cmbClass.AddItem "None"
 
-        For i = 1 To Max_Classes
-            .cmbClass.AddItem Trim$(Class(i).name)
+        For I = 1 To Max_Classes
+            .cmbClass.AddItem Trim$(Class(I).name)
         Next
 
         .cmbClass.ListIndex = 0
@@ -1344,9 +1343,9 @@ Public Sub SpellEditorInit()
         .scrlCool.value = Spell(EditorIndex).CDTime
         .scrlIcon.value = Spell(EditorIndex).icon
         .scrlMap.value = Spell(EditorIndex).map
-        .scrlX.value = Spell(EditorIndex).x
-        .scrlY.value = Spell(EditorIndex).y
-        .scrlDir.value = Spell(EditorIndex).dir
+        .scrlX.value = Spell(EditorIndex).X
+        .scrlY.value = Spell(EditorIndex).Y
+        .scrlDir.value = Spell(EditorIndex).Dir
         .scrlVital.value = Spell(EditorIndex).Vital
         .scrlDuration.value = Spell(EditorIndex).Duration
         .scrlInterval.value = Spell(EditorIndex).Interval
@@ -1369,10 +1368,10 @@ Public Sub SpellEditorInit()
         ' find the sound we have set
         If .cmbSound.ListCount >= 0 Then
 
-            For i = 0 To .cmbSound.ListCount
+            For I = 0 To .cmbSound.ListCount
 
-                If .cmbSound.list(i) = Trim$(Spell(EditorIndex).sound) Then
-                    .cmbSound.ListIndex = i
+                If .cmbSound.list(I) = Trim$(Spell(EditorIndex).sound) Then
+                    .cmbSound.ListIndex = I
                     SoundSet = True
                 End If
 
@@ -1387,12 +1386,12 @@ Public Sub SpellEditorInit()
 End Sub
 
 Public Sub SpellEditorOk()
-    Dim i As Long
+    Dim I As Long
 
-    For i = 1 To MAX_SPELLS
+    For I = 1 To MAX_SPELLS
 
-        If Spell_Changed(i) Then
-            Call SendSaveSpell(i)
+        If Spell_Changed(I) Then
+            Call SendSaveSpell(I)
         End If
 
     Next

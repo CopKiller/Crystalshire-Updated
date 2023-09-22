@@ -65,7 +65,7 @@ Private Type EventPageRec
 End Type
 
 Private Type EventRec
-    Name As String
+    name As String
     x As Long
     y As Long
     PageCount As Long
@@ -73,7 +73,7 @@ Private Type EventRec
 End Type
 
 Private Type MapDataRec
-    Name As String
+    name As String
     Music As String
     Moral As Byte
     
@@ -88,6 +88,18 @@ Private Type MapDataRec
     
     MaxX As Byte
     MaxY As Byte
+    
+    Weather As Long
+    WeatherIntensity As Long
+    
+    Fog As Long
+    FogSpeed As Long
+    FogOpacity As Long
+    
+    Red As Long
+    Green As Long
+    Blue As Long
+    Alpha As Long
     
     BossNpc As Long
     

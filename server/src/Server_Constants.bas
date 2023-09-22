@@ -124,6 +124,8 @@ Public Const TILE_TYPE_HEAL As Byte = 12
 Public Const TILE_TYPE_TRAP As Byte = 13
 Public Const TILE_TYPE_SLIDE As Byte = 14
 Public Const TILE_TYPE_CHAT As Byte = 15
+Public Const TILE_TYPE_APPEAR As Byte = 16
+Public Const TILE_TYPE_SOUND As Byte = 17
 
 ' Item constants
 Public Const ITEM_TYPE_NONE As Byte = 0

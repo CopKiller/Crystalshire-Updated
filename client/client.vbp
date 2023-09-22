@@ -36,6 +36,7 @@ Object={831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0; MSCOMCTL32.OCX
 Module=modEvents; src\modEvents.bas
 Form=src\frmAdmin.frm
 Reference=*\G{6B263850-900B-11D0-9484-00A0C91110ED}#1.0#0#..\..\..\..\..\..\Program Files (x86)\Pokemon Land\Library\MSSTDFMT.DLL#Microsoft Data Formatting Object Library 6.0 (SP6)
+Module=modFmod; src\modFMod.bas
 IconForm="frmMain"
 Startup="Sub Main"
 HelpFile=""

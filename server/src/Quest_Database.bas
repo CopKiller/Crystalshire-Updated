@@ -53,7 +53,6 @@ End Sub
 Public Sub ClearQuest(ByVal index As Long)
     Call ZeroMemory(ByVal VarPtr(Quest(index)), LenB(Quest(index)))
     Quest(index).name = vbNullString
-    Quest(index).Sound = "None."
 End Sub
 
 Public Sub ClearQuests()

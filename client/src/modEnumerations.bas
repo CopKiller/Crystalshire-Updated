@@ -299,7 +299,10 @@ Public Enum DialogueType
     TypeALERT
     TypeDELCHAR
     TypeDROPITEM
+    TypeDEPOSITITEM
+    TypeWITHDRAWITEM
     TypeTRADEAMOUNT
+    TypeUNTRADEAMOUNT
 End Enum
 
 Public Enum DialogueStyle

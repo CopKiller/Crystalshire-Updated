@@ -16,6 +16,12 @@ Public Const MenuMusic = "_menu.mid"
 ' GUI
 Public Const ChatBubbleWidth As Long = 200
 Public Const CHAT_TIMER As Long = 20000
+' Bank constants
+Public Const BankTop As Long = 28
+Public Const BankLeft As Long = 9
+Public Const BankOffsetY As Long = 6
+Public Const BankOffsetX As Long = 6
+Public Const BankColumns As Long = 10
 ' Inventory constants
 Public Const InvTop As Long = 28
 Public Const InvLeft As Long = 9
@@ -51,7 +57,7 @@ Public Const TradeOffsetX As Long = 6
 Public Const TradeColumns As Long = 5
 ' API Declares
 Public Declare Sub CopyMemory Lib "kernel32.dll" Alias "RtlMoveMemory" (Destination As Any, Source As Any, ByVal length As Long)
-Public Declare Function CallWindowProc Lib "user32" Alias "CallWindowProcA" (ByVal lpPrevWndFunc As Long, ByVal hWnd As Long, ByRef Msg() As Byte, ByVal wParam As Long, ByVal lParam As Long) As Long
+Public Declare Function CallWindowProc Lib "user32" Alias "CallWindowProcA" (ByVal lpPrevWndFunc As Long, ByVal hwnd As Long, ByRef Msg() As Byte, ByVal wParam As Long, ByVal lParam As Long) As Long
 Public Declare Function GetForegroundWindow Lib "user32" () As Long
 ' Animation
 Public Const AnimColumns As Long = 5
@@ -119,6 +125,7 @@ Public Const MAX_CONVS As Byte = 255
 Public Const MAX_NPC_DROPS As Byte = 30
 Public Const MAX_NPC_SPELLS As Byte = 10
 Public Const MAX_CHARS As Byte = 3
+Public Const MAX_WEATHER_PARTICLES As Byte = 250
 ' Website
 Public Const GAME_NAME As String = "Crystalshire"
 Public Const GAME_WEBSITE As String = "http://www.crystalshire.com"
@@ -152,6 +159,7 @@ Public Const TILE_TYPE_TRAP As Byte = 13
 Public Const TILE_TYPE_SLIDE As Byte = 14
 Public Const TILE_TYPE_CHAT As Byte = 15
 Public Const TILE_TYPE_APPEAR As Byte = 16
+Public Const TILE_TYPE_SOUND As Byte = 17
 ' Item constants
 Public Const ITEM_TYPE_NONE As Byte = 0
 Public Const ITEM_TYPE_WEAPON As Byte = 1
@@ -275,3 +283,21 @@ Public Const JoinLeftColor As Byte = DarkGrey
 Public Const NpcColor As Byte = Brown
 Public Const AlertColor As Byte = Red
 Public Const NewMapColor As Byte = BrightBlue
+'Weather Type Constants
+Public Const WEATHER_TYPE_NONE As Byte = 0
+Public Const WEATHER_TYPE_RAIN As Byte = 1
+Public Const WEATHER_TYPE_SNOW As Byte = 2
+Public Const WEATHER_TYPE_HAIL As Byte = 3
+Public Const WEATHER_TYPE_SANDSTORM As Byte = 4
+Public Const WEATHER_TYPE_STORM As Byte = 5
+'Weather Stuff... events take precedent OVER map settings so we will keep temp map weather settings here.
+Public CurrentWeather As Long
+Public CurrentWeatherIntensity As Long
+Public CurrentFog As Long
+Public CurrentFogSpeed As Long
+Public CurrentFogOpacity As Long
+Public CurrentTintR As Long
+Public CurrentTintG As Long
+Public CurrentTintB As Long
+Public CurrentTintA As Long
+Public DrawThunder As Long

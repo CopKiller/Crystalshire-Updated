@@ -93,9 +93,9 @@ Begin VB.Form frmEditor_Resource
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         Height          =   1680
+         Height          =   2280
          Left            =   2640
-         ScaleHeight     =   112
+         ScaleHeight     =   152
          ScaleMode       =   3  'Pixel
          ScaleWidth      =   152
          TabIndex        =   23
@@ -130,7 +130,7 @@ Begin VB.Form frmEditor_Resource
          Height          =   255
          Left            =   120
          TabIndex        =   10
-         Top             =   4320
+         Top             =   4800
          Width           =   4815
       End
       Begin VB.HScrollBar scrlTool 
@@ -138,7 +138,7 @@ Begin VB.Form frmEditor_Resource
          Left            =   120
          Max             =   3
          TabIndex        =   9
-         Top             =   4920
+         Top             =   5280
          Width           =   4815
       End
       Begin VB.HScrollBar scrlHealth 
@@ -146,7 +146,7 @@ Begin VB.Form frmEditor_Resource
          Left            =   120
          Max             =   255
          TabIndex        =   8
-         Top             =   5520
+         Top             =   5760
          Width           =   4815
       End
       Begin VB.PictureBox picNormalPic 
@@ -163,9 +163,9 @@ Begin VB.Form frmEditor_Resource
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         Height          =   1680
+         Height          =   2280
          Left            =   120
-         ScaleHeight     =   112
+         ScaleHeight     =   152
          ScaleMode       =   3  'Pixel
          ScaleWidth      =   152
          TabIndex        =   7
@@ -177,7 +177,7 @@ Begin VB.Form frmEditor_Resource
          Left            =   120
          Max             =   6000
          TabIndex        =   6
-         Top             =   6120
+         Top             =   6240
          Width           =   4815
       End
       Begin VB.TextBox txtMessage 
@@ -262,7 +262,7 @@ Begin VB.Form frmEditor_Resource
          Height          =   180
          Left            =   120
          TabIndex        =   19
-         Top             =   4080
+         Top             =   4560
          Width           =   1440
       End
       Begin VB.Label lblTool 
@@ -271,7 +271,7 @@ Begin VB.Form frmEditor_Resource
          Height          =   180
          Left            =   120
          TabIndex        =   18
-         Top             =   4680
+         Top             =   5040
          Width           =   1530
       End
       Begin VB.Label lblHealth 
@@ -280,7 +280,7 @@ Begin VB.Form frmEditor_Resource
          Height          =   180
          Left            =   120
          TabIndex        =   17
-         Top             =   5280
+         Top             =   5520
          Width           =   705
       End
       Begin VB.Label lblRespawn 
@@ -289,7 +289,7 @@ Begin VB.Form frmEditor_Resource
          Height          =   180
          Left            =   120
          TabIndex        =   16
-         Top             =   5880
+         Top             =   6000
          Width           =   2100
       End
       Begin VB.Label Label3 
@@ -457,7 +457,7 @@ End Sub
 Private Sub cmbSound_Click()
 
     If cmbSound.ListIndex >= 0 Then
-        Resource(EditorIndex).sound = cmbSound.List(cmbSound.ListIndex)
+        Resource(EditorIndex).sound = cmbSound.list(cmbSound.ListIndex)
     Else
         Resource(EditorIndex).sound = "None."
     End If

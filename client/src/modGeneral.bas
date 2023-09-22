@@ -8,7 +8,7 @@ Public Declare Function GetTickCount Lib "kernel32" () As Long
 Public Declare Sub ZeroMemory Lib "kernel32.dll" Alias "RtlZeroMemory" (Destination As Any, ByVal length As Long)
 
 Public Sub Main()
-Dim i As Long
+Dim I As Long
     InitCRC32
     ' Check if the directory is there, if its not make it
     ChkDir App.path & "\data files\", "graphics"
@@ -36,7 +36,7 @@ Dim i As Long
         frmMain.caption = frmMain.caption
     End If
     frmMain.Show
-    InitDX8 frmMain.hWnd
+    InitDX8 frmMain.hwnd
     DoEvents
     LoadTextures
     LoadFonts
@@ -45,7 +45,7 @@ Dim i As Long
     ' Resize the GUI to screen size
     ResizeGUI
     ' initialise sound & music engines
-    Init_Music
+    InitFmod
     ' load the main game (and by extension, pre-load DD7)
     GettingMap = True
     vbQuote = ChrW$(34)
@@ -61,8 +61,8 @@ Dim i As Long
     ' cache the buttons then reset & render them
     Call SetStatus("Caching map CRC32 checksums...")
     ' cache map crc32s
-    For i = 1 To MAX_MAPS
-        GetMapCRC32 i
+    For I = 1 To MAX_MAPS
+        GetMapCRC32 I
     Next
     ' set values for directional blocking arrows
     DirArrowX(1) = 12 ' up
@@ -143,15 +143,15 @@ Public Sub SendRegister(name As String, password As String, codigo As String)
 
 End Sub
 Public Sub logoutGame()
-    Dim i As Long
+    Dim I As Long
     isLogging = True
     InGame = False
     
     DestroyTCP
 
     ' destroy the animations loaded
-    For i = 1 To MAX_BYTE
-        ClearAnimInstance (i)
+    For I = 1 To MAX_BYTE
+        ClearAnimInstance (I)
     Next
 
     ' destroy temp values
@@ -172,8 +172,8 @@ Public Sub logoutGame()
     Unload frmEditor_Shop
     Unload frmEditor_Spell
     ' clear chat
-    For i = 1 To ChatLines
-        Chat(i).text = vbNullString
+    For I = 1 To ChatLines
+        Chat(I).text = vbNullString
     Next
 
     inMenu = True
@@ -256,13 +256,13 @@ Public Function isLoginLegal(ByVal Username As String, ByVal password As String)
 End Function
 
 Public Function isStringLegal(ByVal sInput As String) As Boolean
-    Dim i As Long, tmpNum As Long
+    Dim I As Long, tmpNum As Long
     ' Prevent high ascii chars
     tmpNum = Len(sInput)
 
-    For i = 1 To tmpNum
+    For I = 1 To tmpNum
 
-        If Asc(Mid$(sInput, i, 1)) < vbKeySpace Or Asc(Mid$(sInput, i, 1)) > vbKeyF15 Then
+        If Asc(Mid$(sInput, I, 1)) < vbKeySpace Or Asc(Mid$(sInput, I, 1)) > vbKeyF15 Then
             Dialogue "Illegal Characters", "This string contains illegal characters.", "", TypeALERT
             Exit Function
         End If
@@ -273,27 +273,27 @@ Public Function isStringLegal(ByVal sInput As String) As Boolean
 End Function
 
 Public Sub PopulateLists()
-    Dim strLoad As String, i As Long
+    Dim strLoad As String, I As Long
     ' Cache music list
-    strLoad = dir$(App.path & MUSIC_PATH & "*.*")
-    i = 1
+    strLoad = Dir$(App.path & MUSIC_PATH & "*.*")
+    I = 1
 
     Do While strLoad > vbNullString
-        ReDim Preserve musicCache(1 To i) As String
-        musicCache(i) = strLoad
-        strLoad = dir
-        i = i + 1
+        ReDim Preserve musicCache(1 To I) As String
+        musicCache(I) = strLoad
+        strLoad = Dir
+        I = I + 1
     Loop
 
     ' Cache sound list
-    strLoad = dir$(App.path & SOUND_PATH & "*.*")
-    i = 1
+    strLoad = Dir$(App.path & SOUND_PATH & "*.*")
+    I = 1
 
     Do While strLoad > vbNullString
-        ReDim Preserve soundCache(1 To i) As String
-        soundCache(i) = strLoad
-        strLoad = dir
-        i = i + 1
+        ReDim Preserve soundCache(1 To I) As String
+        soundCache(I) = strLoad
+        strLoad = Dir
+        I = I + 1
     Loop
 
 End Sub

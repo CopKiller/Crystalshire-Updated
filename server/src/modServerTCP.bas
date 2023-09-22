@@ -15,18 +15,18 @@ Sub CreateFullMapCache()
 End Sub
 
 Public Sub SendDataTo(ByVal index As Long, ByRef Data() As Byte)
-    Dim Buffer As clsBuffer
+    Dim buffer As clsBuffer
     Dim TempData() As Byte
 
     If IsConnected(index) Then
-        Set Buffer = New clsBuffer
+        Set buffer = New clsBuffer
         TempData = Data
         
-        Buffer.PreAllocate 4 + (UBound(TempData) - LBound(TempData)) + 1
-        Buffer.WriteLong (UBound(TempData) - LBound(TempData)) + 1
-        Buffer.WriteBytes TempData()
+        buffer.PreAllocate 4 + (UBound(TempData) - LBound(TempData)) + 1
+        buffer.WriteLong (UBound(TempData) - LBound(TempData)) + 1
+        buffer.WriteBytes TempData()
               
-        frmServer.Socket(index).SendData Buffer.ToArray()
+        frmServer.Socket(index).SendData buffer.ToArray()
     End If
 End Sub
 
@@ -58,13 +58,13 @@ Public Sub SendDataToAllBut(ByVal index As Long, ByRef Data() As Byte)
 
 End Sub
 
-Sub SendDataToMap(ByVal mapnum As Long, ByRef Data() As Byte)
+Sub SendDataToMap(ByVal MapNum As Long, ByRef Data() As Byte)
     Dim i As Long
 
     For i = 1 To Player_HighIndex
 
         If IsPlaying(i) Then
-            If GetPlayerMap(i) = mapnum Then
+            If GetPlayerMap(i) = MapNum Then
                 Call SendDataTo(i, Data)
             End If
         End If
@@ -73,13 +73,13 @@ Sub SendDataToMap(ByVal mapnum As Long, ByRef Data() As Byte)
 
 End Sub
 
-Sub SendDataToMapBut(ByVal index As Long, ByVal mapnum As Long, ByRef Data() As Byte)
+Sub SendDataToMapBut(ByVal index As Long, ByVal MapNum As Long, ByRef Data() As Byte)
     Dim i As Long
 
     For i = 1 To Player_HighIndex
 
         If IsPlaying(i) Then
-            If GetPlayerMap(i) = mapnum Then
+            If GetPlayerMap(i) = MapNum Then
                 If i <> index Then
                     Call SendDataTo(i, Data)
                 End If
@@ -91,76 +91,76 @@ Sub SendDataToMapBut(ByVal index As Long, ByVal mapnum As Long, ByRef Data() As 
 End Sub
 
 Public Sub GlobalMsg(ByVal Msg As String, ByVal color As Byte)
-    Dim Buffer As clsBuffer
-    Set Buffer = New clsBuffer
+    Dim buffer As clsBuffer
+    Set buffer = New clsBuffer
     
-    Buffer.WriteLong SGlobalMsg
-    Buffer.WriteString Msg
-    Buffer.WriteLong color
-    SendDataToAll Buffer.ToArray
+    buffer.WriteLong SGlobalMsg
+    buffer.WriteString Msg
+    buffer.WriteLong color
+    SendDataToAll buffer.ToArray
     
-    Buffer.Flush: Set Buffer = Nothing
+    buffer.Flush: Set buffer = Nothing
 End Sub
 
 Public Sub AdminMsg(ByVal Msg As String, ByVal color As Byte)
-    Dim Buffer As clsBuffer
+    Dim buffer As clsBuffer
     Dim i As Long
-    Set Buffer = New clsBuffer
+    Set buffer = New clsBuffer
     
-    Buffer.WriteLong SAdminMsg
-    Buffer.WriteString Msg
-    Buffer.WriteLong color
+    buffer.WriteLong SAdminMsg
+    buffer.WriteString Msg
+    buffer.WriteLong color
 
     For i = 1 To Player_HighIndex
         If IsPlaying(i) And GetPlayerAccess(i) > 0 Then
-            SendDataTo i, Buffer.ToArray
+            SendDataTo i, buffer.ToArray
         End If
     Next
     
-    Buffer.Flush: Set Buffer = Nothing
+    buffer.Flush: Set buffer = Nothing
 End Sub
 
 Public Sub PlayerMsg(ByVal index As Long, ByVal Msg As String, ByVal color As Byte)
-    Dim Buffer As clsBuffer
-    Set Buffer = New clsBuffer
+    Dim buffer As clsBuffer
+    Set buffer = New clsBuffer
     
-    Buffer.WriteLong SPlayerMsg
-    Buffer.WriteString Msg
-    Buffer.WriteLong color
-    SendDataTo index, Buffer.ToArray
+    buffer.WriteLong SPlayerMsg
+    buffer.WriteString Msg
+    buffer.WriteLong color
+    SendDataTo index, buffer.ToArray
     
-    Buffer.Flush: Set Buffer = Nothing
+    buffer.Flush: Set buffer = Nothing
 End Sub
 
-Public Sub MapMsg(ByVal mapnum As Long, ByVal Msg As String, ByVal color As Byte)
-    Dim Buffer As clsBuffer
-    Set Buffer = New clsBuffer
+Public Sub MapMsg(ByVal MapNum As Long, ByVal Msg As String, ByVal color As Byte)
+    Dim buffer As clsBuffer
+    Set buffer = New clsBuffer
 
-    Buffer.WriteLong SMapMsg
-    Buffer.WriteString Msg
-    Buffer.WriteLong color
-    SendDataToMap mapnum, Buffer.ToArray
+    buffer.WriteLong SMapMsg
+    buffer.WriteString Msg
+    buffer.WriteLong color
+    SendDataToMap MapNum, buffer.ToArray
     
-    Buffer.Flush: Set Buffer = Nothing
+    buffer.Flush: Set buffer = Nothing
 End Sub
 
 Public Sub AlertMsg(ByVal index As Long, ByVal MessageNo As Long, Optional ByVal MenuReset As Long = 0, Optional ByVal kick As Boolean = True)
-Dim Buffer As clsBuffer
+Dim buffer As clsBuffer
 
-    Set Buffer = New clsBuffer
+    Set buffer = New clsBuffer
 
-    Buffer.WriteLong SAlertMsg
-    Buffer.WriteLong MessageNo
-    Buffer.WriteLong MenuReset
-    If kick Then Buffer.WriteLong 1 Else Buffer.WriteLong 0
-    SendDataTo index, Buffer.ToArray
+    buffer.WriteLong SAlertMsg
+    buffer.WriteLong MessageNo
+    buffer.WriteLong MenuReset
+    If kick Then buffer.WriteLong 1 Else buffer.WriteLong 0
+    SendDataTo index, buffer.ToArray
     
     If kick Then
         DoEvents
         Call CloseSocket(index)
     End If
     
-    Buffer.Flush: Set Buffer = Nothing
+    buffer.Flush: Set buffer = Nothing
 End Sub
 
 Public Sub PartyMsg(ByVal partynum As Long, ByVal Msg As String, ByVal color As Byte)
@@ -213,7 +213,7 @@ Dim i As Long
 End Sub
 
 Sub IncomingData(ByVal index As Long, ByVal DataLength As Long)
-Dim Buffer() As Byte
+Dim buffer() As Byte
 Dim pLength As Long
 
     If GetPlayerAccess(index) <= 0 Then
@@ -237,27 +237,27 @@ Dim pLength As Long
     End If
     
     ' Get the data from the socket now
-    frmServer.Socket(index).GetData Buffer(), vbUnicode, DataLength
-    TempPlayer(index).Buffer.WriteBytes Buffer()
+    frmServer.Socket(index).GetData buffer(), vbUnicode, DataLength
+    TempPlayer(index).buffer.WriteBytes buffer()
     
-    If TempPlayer(index).Buffer.Length >= 4 Then
-        pLength = TempPlayer(index).Buffer.ReadLong(False)
+    If TempPlayer(index).buffer.Length >= 4 Then
+        pLength = TempPlayer(index).buffer.ReadLong(False)
     
         If pLength < 0 Then
             Exit Sub
         End If
     End If
     
-    Do While pLength > 0 And pLength <= TempPlayer(index).Buffer.Length - 4
-        If pLength <= TempPlayer(index).Buffer.Length - 4 Then
+    Do While pLength > 0 And pLength <= TempPlayer(index).buffer.Length - 4
+        If pLength <= TempPlayer(index).buffer.Length - 4 Then
             TempPlayer(index).DataPackets = TempPlayer(index).DataPackets + 1
-            TempPlayer(index).Buffer.ReadLong
-            HandleData index, TempPlayer(index).Buffer.ReadBytes(pLength)
+            TempPlayer(index).buffer.ReadLong
+            HandleData index, TempPlayer(index).buffer.ReadBytes(pLength)
         End If
         
         pLength = 0
-        If TempPlayer(index).Buffer.Length >= 4 Then
-            pLength = TempPlayer(index).Buffer.ReadLong(False)
+        If TempPlayer(index).buffer.Length >= 4 Then
+            pLength = TempPlayer(index).buffer.ReadLong(False)
         
             If pLength < 0 Then
                 Exit Sub
@@ -265,7 +265,7 @@ Dim pLength As Long
         End If
     Loop
             
-    TempPlayer(index).Buffer.Trim
+    TempPlayer(index).buffer.Trim
 End Sub
 
 Sub CloseSocket(ByVal index As Long)
@@ -279,106 +279,68 @@ Sub CloseSocket(ByVal index As Long)
 
 End Sub
 
-Public Sub MapCache_Create(ByVal mapnum As Long)
+Public Sub MapCache_Create(ByVal MapNum As Long)
     Dim MapData As String
     Dim x As Long
     Dim y As Long
     Dim i As Long
-    Dim Buffer As clsBuffer
-    Set Buffer = New clsBuffer
+    Dim buffer As clsBuffer
+    Set buffer = New clsBuffer
     
-    Buffer.WriteLong mapnum
-    Buffer.WriteString Trim$(Map(mapnum).MapData.Name)
-    Buffer.WriteString Trim$(Map(mapnum).MapData.Music)
-    Buffer.WriteByte Map(mapnum).MapData.Moral
-    Buffer.WriteLong Map(mapnum).MapData.Up
-    Buffer.WriteLong Map(mapnum).MapData.Down
-    Buffer.WriteLong Map(mapnum).MapData.left
-    Buffer.WriteLong Map(mapnum).MapData.Right
-    Buffer.WriteLong Map(mapnum).MapData.BootMap
-    Buffer.WriteByte Map(mapnum).MapData.BootX
-    Buffer.WriteByte Map(mapnum).MapData.BootY
-    Buffer.WriteByte Map(mapnum).MapData.MaxX
-    Buffer.WriteByte Map(mapnum).MapData.MaxY
-    Buffer.WriteLong Map(mapnum).MapData.BossNpc
+    buffer.WriteLong MapNum
+    buffer.WriteString Trim$(Map(MapNum).MapData.name)
+    buffer.WriteString Trim$(Map(MapNum).MapData.Music)
+    buffer.WriteByte Map(MapNum).MapData.Moral
+    buffer.WriteLong Map(MapNum).MapData.Up
+    buffer.WriteLong Map(MapNum).MapData.Down
+    buffer.WriteLong Map(MapNum).MapData.left
+    buffer.WriteLong Map(MapNum).MapData.Right
+    buffer.WriteLong Map(MapNum).MapData.BootMap
+    buffer.WriteByte Map(MapNum).MapData.BootX
+    buffer.WriteByte Map(MapNum).MapData.BootY
+    buffer.WriteByte Map(MapNum).MapData.MaxX
+    buffer.WriteByte Map(MapNum).MapData.MaxY
+    
+    buffer.WriteLong Map(MapNum).MapData.Weather
+    buffer.WriteLong Map(MapNum).MapData.WeatherIntensity
+    
+    buffer.WriteLong Map(MapNum).MapData.Fog
+    buffer.WriteLong Map(MapNum).MapData.FogSpeed
+    buffer.WriteLong Map(MapNum).MapData.FogOpacity
+    
+    buffer.WriteLong Map(MapNum).MapData.Red
+    buffer.WriteLong Map(MapNum).MapData.Green
+    buffer.WriteLong Map(MapNum).MapData.Blue
+    buffer.WriteLong Map(MapNum).MapData.Alpha
+    
+    buffer.WriteLong Map(MapNum).MapData.BossNpc
     For i = 1 To MAX_MAP_NPCS
-        Buffer.WriteLong Map(mapnum).MapData.Npc(i)
+        buffer.WriteLong Map(MapNum).MapData.Npc(i)
     Next
     
-    Buffer.WriteLong Map(mapnum).TileData.EventCount
-    If Map(mapnum).TileData.EventCount > 0 Then
-        For i = 1 To Map(mapnum).TileData.EventCount
-            With Map(mapnum).TileData.Events(i)
-                Buffer.WriteString .Name
-                Buffer.WriteLong .x
-                Buffer.WriteLong .y
-                Buffer.WriteLong .PageCount
-            End With
-            If Map(mapnum).TileData.Events(i).PageCount > 0 Then
-                For x = 1 To Map(mapnum).TileData.Events(i).PageCount
-                    With Map(mapnum).TileData.Events(i).EventPage(x)
-                        Buffer.WriteByte .chkPlayerVar
-                        Buffer.WriteByte .chkSelfSwitch
-                        Buffer.WriteByte .chkHasItem
-                        Buffer.WriteLong .PlayerVarNum
-                        Buffer.WriteLong .SelfSwitchNum
-                        Buffer.WriteLong .HasItemNum
-                        Buffer.WriteLong .PlayerVariable
-                        Buffer.WriteByte .GraphicType
-                        Buffer.WriteLong .Graphic
-                        Buffer.WriteLong .GraphicX
-                        Buffer.WriteLong .GraphicY
-                        Buffer.WriteByte .MoveType
-                        Buffer.WriteByte .MoveSpeed
-                        Buffer.WriteByte .MoveFreq
-                        Buffer.WriteByte .WalkAnim
-                        Buffer.WriteByte .StepAnim
-                        Buffer.WriteByte .DirFix
-                        Buffer.WriteByte .WalkThrough
-                        Buffer.WriteByte .Priority
-                        Buffer.WriteByte .Trigger
-                        Buffer.WriteLong .CommandCount
-                    End With
-                    If Map(mapnum).TileData.Events(i).EventPage(x).CommandCount > 0 Then
-                        For y = 1 To Map(mapnum).TileData.Events(i).EventPage(x).CommandCount
-                            With Map(mapnum).TileData.Events(i).EventPage(x).Commands(y)
-                                Buffer.WriteByte .Type
-                                Buffer.WriteString .Text
-                                Buffer.WriteLong .colour
-                                Buffer.WriteByte .Channel
-                                Buffer.WriteByte .targetType
-                                Buffer.WriteLong .target
-                            End With
-                        Next
-                    End If
-                Next
-            End If
-        Next
-    End If
-
-    For x = 0 To Map(mapnum).MapData.MaxX
-        For y = 0 To Map(mapnum).MapData.MaxY
-            With Map(mapnum).TileData.Tile(x, y)
+    For x = 0 To Map(MapNum).MapData.MaxX
+        For y = 0 To Map(MapNum).MapData.MaxY
+            With Map(MapNum).TileData.Tile(x, y)
                 For i = 1 To MapLayer.Layer_Count - 1
-                    Buffer.WriteLong .Layer(i).x
-                    Buffer.WriteLong .Layer(i).y
-                    Buffer.WriteLong .Layer(i).Tileset
-                    Buffer.WriteByte .Autotile(i)
+                    buffer.WriteLong .Layer(i).x
+                    buffer.WriteLong .Layer(i).y
+                    buffer.WriteLong .Layer(i).Tileset
+                    buffer.WriteByte .Autotile(i)
                 Next
-                Buffer.WriteByte .Type
-                Buffer.WriteLong .Data1
-                Buffer.WriteLong .Data2
-                Buffer.WriteLong .Data3
-                Buffer.WriteLong .Data4
-                Buffer.WriteLong .Data5
-                Buffer.WriteByte .DirBlock
+                buffer.WriteByte .Type
+                buffer.WriteLong .Data1
+                buffer.WriteLong .Data2
+                buffer.WriteLong .Data3
+                buffer.WriteLong .Data4
+                buffer.WriteLong .Data5
+                buffer.WriteByte .DirBlock
             End With
         Next
     Next
 
-    MapCache(mapnum).Data = Buffer.ToArray()
+    MapCache(MapNum).Data = buffer.ToArray()
     
-    Buffer.Flush: Set Buffer = Nothing
+    buffer.Flush: Set buffer = Nothing
 End Sub
 
 ' *****************************
@@ -413,8 +375,8 @@ End Sub
 Sub SendJoinMap(ByVal index As Long)
     Dim packet As String
     Dim i As Long
-    Dim Buffer As clsBuffer
-    Set Buffer = New clsBuffer
+    Dim buffer As clsBuffer
+    Set buffer = New clsBuffer
 
     ' Send all players on current map to index
     For i = 1 To Player_HighIndex
@@ -430,273 +392,273 @@ Sub SendJoinMap(ByVal index As Long)
     ' Send index's player data to everyone on the map including himself
     SendDataToMap GetPlayerMap(index), PlayerData(index)
     
-    Buffer.Flush: Set Buffer = Nothing
+    buffer.Flush: Set buffer = Nothing
 End Sub
 
-Sub SendLeaveMap(ByVal index As Long, ByVal mapnum As Long)
+Sub SendLeaveMap(ByVal index As Long, ByVal MapNum As Long)
     Dim packet As String
-    Dim Buffer As clsBuffer
-    Set Buffer = New clsBuffer
+    Dim buffer As clsBuffer
+    Set buffer = New clsBuffer
     
-    Buffer.WriteLong SLeft
-    Buffer.WriteLong index
-    SendDataToMapBut index, mapnum, Buffer.ToArray()
+    buffer.WriteLong SLeft
+    buffer.WriteLong index
+    SendDataToMapBut index, MapNum, buffer.ToArray()
     
-    Buffer.Flush: Set Buffer = Nothing
+    buffer.Flush: Set buffer = Nothing
 End Sub
 
 Public Sub SendClasses(ByVal index As Long)
     Dim packet As String
     Dim i As Long, n As Long, q As Long
-    Dim Buffer As clsBuffer
-    Set Buffer = New clsBuffer
-    Buffer.WriteLong SClassesData
-    Buffer.WriteLong Max_Classes
+    Dim buffer As clsBuffer
+    Set buffer = New clsBuffer
+    buffer.WriteLong SClassesData
+    buffer.WriteLong Max_Classes
 
     For i = 1 To Max_Classes
-        Buffer.WriteString GetClassName(i)
-        Buffer.WriteLong GetClassMaxVital(i, Vitals.HP)
-        Buffer.WriteLong GetClassMaxVital(i, Vitals.MP)
+        buffer.WriteString GetClassName(i)
+        buffer.WriteLong GetClassMaxVital(i, Vitals.HP)
+        buffer.WriteLong GetClassMaxVital(i, Vitals.MP)
         
         ' set sprite array size
         n = UBound(Class(i).MaleSprite)
         
         ' send array size
-        Buffer.WriteLong n
+        buffer.WriteLong n
         
         ' loop around sending each sprite
         For q = 0 To n
-            Buffer.WriteLong Class(i).MaleSprite(q)
+            buffer.WriteLong Class(i).MaleSprite(q)
         Next
         
         ' set sprite array size
         n = UBound(Class(i).FemaleSprite)
         
         ' send array size
-        Buffer.WriteLong n
+        buffer.WriteLong n
         
         ' loop around sending each sprite
         For q = 0 To n
-            Buffer.WriteLong Class(i).FemaleSprite(q)
+            buffer.WriteLong Class(i).FemaleSprite(q)
         Next
         
         For q = 1 To Stats.Stat_Count - 1
-            Buffer.WriteLong Class(i).Stat(q)
+            buffer.WriteLong Class(i).Stat(q)
         Next
     Next
 
-    SendDataTo index, Buffer.ToArray()
-    Buffer.Flush: Set Buffer = Nothing
+    SendDataTo index, buffer.ToArray()
+    buffer.Flush: Set buffer = Nothing
 End Sub
 
 Public Sub SendLeftGame(ByVal index As Long)
     Dim packet As String
-    Dim Buffer As clsBuffer
-    Set Buffer = New clsBuffer
-    Buffer.WriteLong SPlayerData
-    Buffer.WriteLong index
-    Buffer.WriteString vbNullString
-    Buffer.WriteLong 0
-    Buffer.WriteLong 0
-    Buffer.WriteLong 0
-    Buffer.WriteLong 0
-    Buffer.WriteLong 0
-    Buffer.WriteLong 0
-    Buffer.WriteLong 0
-    Buffer.WriteLong 0
-    SendDataToAllBut index, Buffer.ToArray()
-    Buffer.Flush: Set Buffer = Nothing
+    Dim buffer As clsBuffer
+    Set buffer = New clsBuffer
+    buffer.WriteLong SPlayerData
+    buffer.WriteLong index
+    buffer.WriteString vbNullString
+    buffer.WriteLong 0
+    buffer.WriteLong 0
+    buffer.WriteLong 0
+    buffer.WriteLong 0
+    buffer.WriteLong 0
+    buffer.WriteLong 0
+    buffer.WriteLong 0
+    buffer.WriteLong 0
+    SendDataToAllBut index, buffer.ToArray()
+    buffer.Flush: Set buffer = Nothing
 End Sub
 
-Public Sub SendDoorAnimation(ByVal mapnum As Long, ByVal x As Long, ByVal y As Long)
-    Dim Buffer As clsBuffer
+Public Sub SendDoorAnimation(ByVal MapNum As Long, ByVal x As Long, ByVal y As Long)
+    Dim buffer As clsBuffer
     
-    Set Buffer = New clsBuffer
-    Buffer.WriteLong SDoorAnimation
-    Buffer.WriteLong x
-    Buffer.WriteLong y
+    Set buffer = New clsBuffer
+    buffer.WriteLong SDoorAnimation
+    buffer.WriteLong x
+    buffer.WriteLong y
     
-    SendDataToMap mapnum, Buffer.ToArray()
-    Buffer.Flush: Set Buffer = Nothing
+    SendDataToMap MapNum, buffer.ToArray()
+    buffer.Flush: Set buffer = Nothing
 End Sub
 
-Public Sub SendActionMsg(ByVal mapnum As Long, ByVal message As String, ByVal color As Long, ByVal MsgType As Long, ByVal x As Long, ByVal y As Long, Optional PlayerOnlyNum As Long = 0)
-    Dim Buffer As clsBuffer
+Public Sub SendActionMsg(ByVal MapNum As Long, ByVal message As String, ByVal color As Long, ByVal MsgType As Long, ByVal x As Long, ByVal y As Long, Optional PlayerOnlyNum As Long = 0)
+    Dim buffer As clsBuffer
     
-    Set Buffer = New clsBuffer
-    Buffer.WriteLong SActionMsg
-    Buffer.WriteString message
-    Buffer.WriteLong color
-    Buffer.WriteLong MsgType
-    Buffer.WriteLong x
-    Buffer.WriteLong y
+    Set buffer = New clsBuffer
+    buffer.WriteLong SActionMsg
+    buffer.WriteString message
+    buffer.WriteLong color
+    buffer.WriteLong MsgType
+    buffer.WriteLong x
+    buffer.WriteLong y
     
     If PlayerOnlyNum > 0 Then
-        SendDataTo PlayerOnlyNum, Buffer.ToArray()
+        SendDataTo PlayerOnlyNum, buffer.ToArray()
     Else
-        SendDataToMap mapnum, Buffer.ToArray()
+        SendDataToMap MapNum, buffer.ToArray()
     End If
     
-    Buffer.Flush: Set Buffer = Nothing
+    buffer.Flush: Set buffer = Nothing
 End Sub
 
 Public Sub SendClearSpellBuffer(ByVal index As Long)
-    Dim Buffer As clsBuffer
+    Dim buffer As clsBuffer
     
-    Set Buffer = New clsBuffer
-    Buffer.WriteLong SClearSpellBuffer
+    Set buffer = New clsBuffer
+    buffer.WriteLong SClearSpellBuffer
     
-    SendDataTo index, Buffer.ToArray()
+    SendDataTo index, buffer.ToArray()
     
-    Buffer.Flush: Set Buffer = Nothing
+    buffer.Flush: Set buffer = Nothing
 End Sub
 
-Public Sub SayMsg_Map(ByVal mapnum As Long, ByVal index As Long, ByVal message As String, ByVal saycolour As Long)
-    Dim Buffer As clsBuffer
+Public Sub SayMsg_Map(ByVal MapNum As Long, ByVal index As Long, ByVal message As String, ByVal saycolour As Long)
+    Dim buffer As clsBuffer
     
-    Set Buffer = New clsBuffer
-    Buffer.WriteLong SSayMsg
-    Buffer.WriteString GetPlayerName(index)
-    Buffer.WriteLong GetPlayerAccess(index)
-    Buffer.WriteLong GetPlayerPK(index)
-    Buffer.WriteString message
-    Buffer.WriteString "[Map] "
-    Buffer.WriteLong saycolour
+    Set buffer = New clsBuffer
+    buffer.WriteLong SSayMsg
+    buffer.WriteString GetPlayerName(index)
+    buffer.WriteLong GetPlayerAccess(index)
+    buffer.WriteLong GetPlayerPK(index)
+    buffer.WriteString message
+    buffer.WriteString "[Map] "
+    buffer.WriteLong saycolour
     
-    SendDataToMap mapnum, Buffer.ToArray()
+    SendDataToMap MapNum, buffer.ToArray()
     
-    Buffer.Flush: Set Buffer = Nothing
+    buffer.Flush: Set buffer = Nothing
 End Sub
 
 Public Sub SayMsg_Global(ByVal index As Long, ByVal message As String, ByVal saycolour As Long)
-    Dim Buffer As clsBuffer
+    Dim buffer As clsBuffer
     
-    Set Buffer = New clsBuffer
-    Buffer.WriteLong SSayMsg
-    Buffer.WriteString GetPlayerName(index)
-    Buffer.WriteLong GetPlayerAccess(index)
-    Buffer.WriteLong GetPlayerPK(index)
-    Buffer.WriteString message
-    Buffer.WriteString "[Global] "
-    Buffer.WriteLong saycolour
+    Set buffer = New clsBuffer
+    buffer.WriteLong SSayMsg
+    buffer.WriteString GetPlayerName(index)
+    buffer.WriteLong GetPlayerAccess(index)
+    buffer.WriteLong GetPlayerPK(index)
+    buffer.WriteString message
+    buffer.WriteString "[Global] "
+    buffer.WriteLong saycolour
     
-    SendDataToAll Buffer.ToArray()
+    SendDataToAll buffer.ToArray()
     
-    Buffer.Flush: Set Buffer = Nothing
+    buffer.Flush: Set buffer = Nothing
 End Sub
 
 Public Sub SendMapKey(ByVal index As Long, ByVal x As Long, ByVal y As Long, ByVal Value As Byte)
-    Dim Buffer As clsBuffer
+    Dim buffer As clsBuffer
     
-    Set Buffer = New clsBuffer
-    Buffer.WriteLong SMapKey
-    Buffer.WriteLong x
-    Buffer.WriteLong y
-    Buffer.WriteByte Value
-    SendDataToMap GetPlayerMap(index), Buffer.ToArray()
+    Set buffer = New clsBuffer
+    buffer.WriteLong SMapKey
+    buffer.WriteLong x
+    buffer.WriteLong y
+    buffer.WriteByte Value
+    SendDataToMap GetPlayerMap(index), buffer.ToArray()
     
-    Buffer.Flush: Set Buffer = Nothing
+    buffer.Flush: Set buffer = Nothing
 End Sub
 
-Public Sub SendMapKeyToMap(ByVal mapnum As Long, ByVal x As Long, ByVal y As Long, ByVal Value As Byte)
-    Dim Buffer As clsBuffer
+Public Sub SendMapKeyToMap(ByVal MapNum As Long, ByVal x As Long, ByVal y As Long, ByVal Value As Byte)
+    Dim buffer As clsBuffer
     
-    Set Buffer = New clsBuffer
-    Buffer.WriteLong SMapKey
-    Buffer.WriteLong x
-    Buffer.WriteLong y
-    Buffer.WriteByte Value
-    SendDataToMap mapnum, Buffer.ToArray()
+    Set buffer = New clsBuffer
+    buffer.WriteLong SMapKey
+    buffer.WriteLong x
+    buffer.WriteLong y
+    buffer.WriteByte Value
+    SendDataToMap MapNum, buffer.ToArray()
     
-    Buffer.Flush: Set Buffer = Nothing
+    buffer.Flush: Set buffer = Nothing
 End Sub
 
 Public Sub SendLoginOk(ByVal index As Long)
-    Dim Buffer As clsBuffer
+    Dim buffer As clsBuffer
 
-    Set Buffer = New clsBuffer
-    Buffer.WriteLong SLoginOk
-    Buffer.WriteLong index
-    Buffer.WriteLong Player_HighIndex
-    SendDataTo index, Buffer.ToArray()
-    Buffer.Flush: Set Buffer = Nothing
+    Set buffer = New clsBuffer
+    buffer.WriteLong SLoginOk
+    buffer.WriteLong index
+    buffer.WriteLong Player_HighIndex
+    SendDataTo index, buffer.ToArray()
+    buffer.Flush: Set buffer = Nothing
 End Sub
 
 Public Sub SendInGame(ByVal index As Long)
-    Dim Buffer As clsBuffer
+    Dim buffer As clsBuffer
 
-    Set Buffer = New clsBuffer
-    Buffer.WriteLong SInGame
-    SendDataTo index, Buffer.ToArray()
-    Buffer.Flush: Set Buffer = Nothing
+    Set buffer = New clsBuffer
+    buffer.WriteLong SInGame
+    SendDataTo index, buffer.ToArray()
+    buffer.Flush: Set buffer = Nothing
 End Sub
 
 Public Sub SendHighIndex()
-    Dim Buffer As clsBuffer
+    Dim buffer As clsBuffer
 
-    Set Buffer = New clsBuffer
-    Buffer.WriteLong SHighIndex
-    Buffer.WriteLong Player_HighIndex
-    SendDataToAll Buffer.ToArray()
-    Buffer.Flush: Set Buffer = Nothing
+    Set buffer = New clsBuffer
+    buffer.WriteLong SHighIndex
+    buffer.WriteLong Player_HighIndex
+    SendDataToAll buffer.ToArray()
+    buffer.Flush: Set buffer = Nothing
 End Sub
 
-Public Sub SendSpawnItemToMap(ByVal mapnum As Long, ByVal index As Long)
-    Dim Buffer As clsBuffer
+Public Sub SendSpawnItemToMap(ByVal MapNum As Long, ByVal index As Long)
+    Dim buffer As clsBuffer
 
-    Set Buffer = New clsBuffer
-    Buffer.WriteLong SSpawnItem
-    Buffer.WriteLong index
-    Buffer.WriteString MapItem(mapnum, index).playerName
-    Buffer.WriteLong MapItem(mapnum, index).Num
-    Buffer.WriteLong MapItem(mapnum, index).Value
-    Buffer.WriteLong MapItem(mapnum, index).x
-    Buffer.WriteLong MapItem(mapnum, index).y
-    If MapItem(mapnum, index).Bound Then
-        Buffer.WriteLong 1
+    Set buffer = New clsBuffer
+    buffer.WriteLong SSpawnItem
+    buffer.WriteLong index
+    buffer.WriteString MapItem(MapNum, index).playerName
+    buffer.WriteLong MapItem(MapNum, index).Num
+    buffer.WriteLong MapItem(MapNum, index).Value
+    buffer.WriteLong MapItem(MapNum, index).x
+    buffer.WriteLong MapItem(MapNum, index).y
+    If MapItem(MapNum, index).Bound Then
+        buffer.WriteLong 1
     Else
-        Buffer.WriteLong 0
+        buffer.WriteLong 0
     End If
-    SendDataToMap mapnum, Buffer.ToArray()
-    Buffer.Flush: Set Buffer = Nothing
+    SendDataToMap MapNum, buffer.ToArray()
+    buffer.Flush: Set buffer = Nothing
 End Sub
 
 Public Sub SendChatUpdate(ByVal index As Long, ByVal npcNum As Long, ByVal mT As String, ByVal o1 As String, ByVal o2 As String, ByVal o3 As String, ByVal o4 As String)
-    Dim Buffer As clsBuffer
+    Dim buffer As clsBuffer
     
-    Set Buffer = New clsBuffer
-    Buffer.WriteLong SChatUpdate
-    Buffer.WriteLong npcNum
-    Buffer.WriteString mT
-    Buffer.WriteString o1
-    Buffer.WriteString o2
-    Buffer.WriteString o3
-    Buffer.WriteString o4
-    SendDataTo index, Buffer.ToArray()
-    Buffer.Flush: Set Buffer = Nothing
+    Set buffer = New clsBuffer
+    buffer.WriteLong SChatUpdate
+    buffer.WriteLong npcNum
+    buffer.WriteString mT
+    buffer.WriteString o1
+    buffer.WriteString o2
+    buffer.WriteString o3
+    buffer.WriteString o4
+    SendDataTo index, buffer.ToArray()
+    buffer.Flush: Set buffer = Nothing
 End Sub
 
-Public Sub SendNpcDeath(ByVal mapnum As Long, ByVal mapNpcNum As Long)
-    Dim Buffer As clsBuffer
+Public Sub SendNpcDeath(ByVal MapNum As Long, ByVal mapNpcNum As Long)
+    Dim buffer As clsBuffer
 
-    Set Buffer = New clsBuffer
-    Buffer.WriteLong SNpcDead
-    Buffer.WriteLong mapNpcNum
-    SendDataToMap mapnum, Buffer.ToArray()
-    Buffer.Flush: Set Buffer = Nothing
+    Set buffer = New clsBuffer
+    buffer.WriteLong SNpcDead
+    buffer.WriteLong mapNpcNum
+    SendDataToMap MapNum, buffer.ToArray()
+    buffer.Flush: Set buffer = Nothing
 End Sub
 
-Public Sub SendChatBubble(ByVal mapnum As Long, ByVal target As Long, ByVal targetType As Long, ByVal message As String, ByVal colour As Long)
-    Dim Buffer As clsBuffer
+Public Sub SendChatBubble(ByVal MapNum As Long, ByVal target As Long, ByVal targetType As Long, ByVal message As String, ByVal colour As Long)
+    Dim buffer As clsBuffer
 
-    Set Buffer = New clsBuffer
-    Buffer.WriteLong SChatBubble
-    Buffer.WriteLong target
-    Buffer.WriteLong targetType
-    Buffer.WriteString message
-    Buffer.WriteLong colour
-    SendDataToMap mapnum, Buffer.ToArray()
-    Buffer.Flush: Set Buffer = Nothing
+    Set buffer = New clsBuffer
+    buffer.WriteLong SChatBubble
+    buffer.WriteLong target
+    buffer.WriteLong targetType
+    buffer.WriteString message
+    buffer.WriteLong colour
+    SendDataToMap MapNum, buffer.ToArray()
+    buffer.Flush: Set buffer = Nothing
 End Sub
 
 Public Function SanitiseString(ByVal theString As String) As String
@@ -717,42 +679,42 @@ Public Function SanitiseString(ByVal theString As String) As String
 End Function
 
 Public Sub SendCancelAnimation(ByVal index As Long)
-    Dim Buffer As clsBuffer
+    Dim buffer As clsBuffer
 
-    Set Buffer = New clsBuffer
-    Buffer.WriteLong SCancelAnimation
-    Buffer.WriteLong index
-    SendDataToMap GetPlayerMap(index), Buffer.ToArray()
-    Buffer.Flush: Set Buffer = Nothing
+    Set buffer = New clsBuffer
+    buffer.WriteLong SCancelAnimation
+    buffer.WriteLong index
+    SendDataToMap GetPlayerMap(index), buffer.ToArray()
+    buffer.Flush: Set buffer = Nothing
 End Sub
 
-Public Sub SendCheckForMap(index As Long, mapnum As Long)
-    Dim Buffer As clsBuffer
-    Set Buffer = New clsBuffer
+Public Sub SendCheckForMap(index As Long, MapNum As Long)
+    Dim buffer As clsBuffer
+    Set buffer = New clsBuffer
     
-    Buffer.WriteLong SCheckForMap
-    Buffer.WriteLong mapnum
-    Buffer.WriteLong MapCRC32(mapnum).MapDataCRC
-    Buffer.WriteLong MapCRC32(mapnum).MapTileCRC
+    buffer.WriteLong SCheckForMap
+    buffer.WriteLong MapNum
+    buffer.WriteLong MapCRC32(MapNum).MapDataCRC
+    buffer.WriteLong MapCRC32(MapNum).MapTileCRC
     
-    SendDataTo index, Buffer.ToArray()
-    Buffer.Flush: Set Buffer = Nothing
+    SendDataTo index, buffer.ToArray()
+    buffer.Flush: Set buffer = Nothing
 End Sub
 
 Public Sub SendEvent(index As Long)
-    Dim Buffer As clsBuffer
-    Set Buffer = New clsBuffer
+    Dim buffer As clsBuffer
+    Set buffer = New clsBuffer
     
-    Buffer.WriteLong SEvent
+    buffer.WriteLong SEvent
     If TempPlayer(index).inEvent Then
-        Buffer.WriteLong 1
+        buffer.WriteLong 1
     Else
-        Buffer.WriteLong 0
+        buffer.WriteLong 0
     End If
-    Buffer.WriteLong TempPlayer(index).eventNum
-    Buffer.WriteLong TempPlayer(index).pageNum
-    Buffer.WriteLong TempPlayer(index).commandNum
+    buffer.WriteLong TempPlayer(index).eventNum
+    buffer.WriteLong TempPlayer(index).pageNum
+    buffer.WriteLong TempPlayer(index).commandNum
     
-    SendDataTo index, Buffer.ToArray()
-    Buffer.Flush: Set Buffer = Nothing
+    SendDataTo index, buffer.ToArray()
+    buffer.Flush: Set buffer = Nothing
 End Sub

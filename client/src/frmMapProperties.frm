@@ -30,47 +30,25 @@ Begin VB.Form frmEditor_MapProperties
       Height          =   1695
       Left            =   120
       TabIndex        =   50
-      Top             =   5880
+      Top             =   5760
       Width           =   2055
-      Begin VB.HScrollBar HScroll8 
-         Height          =   255
+      Begin VB.ComboBox CmbWeather 
+         Height          =   315
+         ItemData        =   "frmMapProperties.frx":0000
          Left            =   120
-         TabIndex        =   56
-         Top             =   1200
+         List            =   "frmMapProperties.frx":0016
+         Style           =   2  'Dropdown List
+         TabIndex        =   52
+         Top             =   480
          Width           =   1815
       End
-      Begin VB.OptionButton Option4 
-         Caption         =   "Snow"
-         Height          =   255
-         Left            =   1080
-         TabIndex        =   54
-         Top             =   480
-         Width           =   855
-      End
-      Begin VB.OptionButton Option3 
-         Caption         =   "Storm"
+      Begin VB.HScrollBar scrlWeatherIntensity 
          Height          =   255
          Left            =   120
-         TabIndex        =   53
-         Top             =   480
-         Width           =   855
-      End
-      Begin VB.OptionButton Option2 
-         Caption         =   "Rain"
-         Height          =   255
-         Left            =   1080
-         TabIndex        =   52
-         Top             =   240
-         Width           =   855
-      End
-      Begin VB.OptionButton Option1 
-         Caption         =   "None"
-         Height          =   255
-         Left            =   120
+         Max             =   100
          TabIndex        =   51
-         Top             =   240
-         Value           =   -1  'True
-         Width           =   855
+         Top             =   1200
+         Width           =   1815
       End
       Begin VB.Line Line2 
          BorderColor     =   &H00C0C0C0&
@@ -79,12 +57,154 @@ Begin VB.Form frmEditor_MapProperties
          Y1              =   840
          Y2              =   840
       End
-      Begin VB.Label Label15 
-         Caption         =   "Power: 1"
+      Begin VB.Label Label10 
+         AutoSize        =   -1  'True
+         Caption         =   "Weather Type:"
+         Height          =   195
+         Left            =   120
+         TabIndex        =   54
+         Top             =   240
+         Width           =   1275
+      End
+      Begin VB.Label lblWeatherIntensity 
+         Caption         =   "Intensity: 0"
          Height          =   255
          Left            =   120
-         TabIndex        =   55
+         TabIndex        =   53
          Top             =   960
+         Width           =   1455
+      End
+   End
+   Begin VB.Frame Frame5 
+      Caption         =   "Effects"
+      Height          =   2775
+      Left            =   2280
+      TabIndex        =   35
+      Top             =   4680
+      Width           =   4215
+      Begin VB.HScrollBar scrlRed 
+         Height          =   255
+         Left            =   120
+         Max             =   255
+         TabIndex        =   42
+         Top             =   1800
+         Value           =   255
+         Width           =   1095
+      End
+      Begin VB.HScrollBar scrlGreen 
+         Height          =   255
+         Left            =   1560
+         Max             =   255
+         TabIndex        =   41
+         Top             =   1800
+         Value           =   255
+         Width           =   1095
+      End
+      Begin VB.HScrollBar scrlBlue 
+         Height          =   255
+         Left            =   3000
+         Max             =   255
+         TabIndex        =   40
+         Top             =   1800
+         Value           =   255
+         Width           =   1095
+      End
+      Begin VB.HScrollBar scrlAlpha 
+         Height          =   255
+         Left            =   120
+         Max             =   255
+         TabIndex        =   39
+         Top             =   2400
+         Width           =   1095
+      End
+      Begin VB.HScrollBar scrlFogOpacity 
+         Height          =   255
+         Left            =   2160
+         Max             =   255
+         TabIndex        =   38
+         Top             =   480
+         Width           =   1815
+      End
+      Begin VB.HScrollBar ScrlFog 
+         Height          =   255
+         Left            =   120
+         Max             =   255
+         TabIndex        =   37
+         Top             =   480
+         Width           =   1815
+      End
+      Begin VB.HScrollBar ScrlFogSpeed 
+         Height          =   255
+         Left            =   120
+         Max             =   255
+         TabIndex        =   36
+         Top             =   1050
+         Width           =   1815
+      End
+      Begin VB.Line Line1 
+         BorderColor     =   &H00C0C0C0&
+         X1              =   120
+         X2              =   4080
+         Y1              =   1440
+         Y2              =   1440
+      End
+      Begin VB.Label lblR 
+         Caption         =   "Red: 255"
+         ForeColor       =   &H000000FF&
+         Height          =   255
+         Left            =   120
+         TabIndex        =   49
+         Top             =   1560
+         Width           =   975
+      End
+      Begin VB.Label lblG 
+         Caption         =   "Green: 255"
+         ForeColor       =   &H0000C000&
+         Height          =   255
+         Left            =   1560
+         TabIndex        =   48
+         Top             =   1560
+         Width           =   1095
+      End
+      Begin VB.Label lblB 
+         Caption         =   "Blue: 255"
+         ForeColor       =   &H00FF0000&
+         Height          =   255
+         Left            =   3000
+         TabIndex        =   47
+         Top             =   1560
+         Width           =   1095
+      End
+      Begin VB.Label lblA 
+         Caption         =   "Alpha: 0"
+         Height          =   255
+         Left            =   120
+         TabIndex        =   46
+         Top             =   2160
+         Width           =   1095
+      End
+      Begin VB.Label lblFogOpacity 
+         Caption         =   "Fog Opacity: 0"
+         Height          =   255
+         Left            =   2160
+         TabIndex        =   45
+         Top             =   240
+         Width           =   1815
+      End
+      Begin VB.Label lblFog 
+         Caption         =   "Fog: None"
+         Height          =   255
+         Left            =   120
+         TabIndex        =   44
+         Top             =   240
+         Width           =   1815
+      End
+      Begin VB.Label lblFogSpeed 
+         Caption         =   "Fog Speed: 0"
+         Height          =   255
+         Left            =   120
+         TabIndex        =   43
+         Top             =   810
          Width           =   1815
       End
    End
@@ -109,126 +229,6 @@ Begin VB.Form frmEditor_MapProperties
          TabIndex        =   33
          Top             =   240
          Width           =   1815
-      End
-   End
-   Begin VB.Frame Frame5 
-      Caption         =   "Effects"
-      Height          =   2775
-      Left            =   2280
-      TabIndex        =   35
-      Top             =   4800
-      Width           =   4215
-      Begin VB.HScrollBar HScroll7 
-         Height          =   255
-         Left            =   120
-         TabIndex        =   49
-         Top             =   2400
-         Width           =   1095
-      End
-      Begin VB.HScrollBar HScroll6 
-         Height          =   255
-         Left            =   3000
-         TabIndex        =   47
-         Top             =   1800
-         Width           =   1095
-      End
-      Begin VB.HScrollBar HScroll5 
-         Height          =   255
-         Left            =   1560
-         TabIndex        =   45
-         Top             =   1800
-         Width           =   1095
-      End
-      Begin VB.HScrollBar HScroll4 
-         Height          =   255
-         Left            =   120
-         TabIndex        =   43
-         Top             =   1800
-         Width           =   1095
-      End
-      Begin VB.HScrollBar HScroll3 
-         Height          =   255
-         Left            =   120
-         TabIndex        =   41
-         Top             =   1080
-         Width           =   1815
-      End
-      Begin VB.HScrollBar HScroll2 
-         Height          =   255
-         Left            =   2160
-         TabIndex        =   39
-         Top             =   480
-         Width           =   1935
-      End
-      Begin VB.HScrollBar HScroll1 
-         Height          =   255
-         Left            =   120
-         TabIndex        =   37
-         Top             =   480
-         Width           =   1815
-      End
-      Begin VB.Label Label14 
-         Caption         =   "Grey: 255"
-         Height          =   255
-         Left            =   120
-         TabIndex        =   48
-         Top             =   2160
-         Width           =   1095
-      End
-      Begin VB.Label Label13 
-         Caption         =   "Blue: -255"
-         Height          =   255
-         Left            =   3000
-         TabIndex        =   46
-         Top             =   1560
-         Width           =   1095
-      End
-      Begin VB.Label Label12 
-         Caption         =   "Green: -255"
-         Height          =   255
-         Left            =   1560
-         TabIndex        =   44
-         Top             =   1560
-         Width           =   1095
-      End
-      Begin VB.Label Label10 
-         Caption         =   "Red: -255"
-         Height          =   255
-         Left            =   120
-         TabIndex        =   42
-         Top             =   1560
-         Width           =   975
-      End
-      Begin VB.Line Line1 
-         BorderColor     =   &H00C0C0C0&
-         X1              =   120
-         X2              =   4080
-         Y1              =   1440
-         Y2              =   1440
-      End
-      Begin VB.Label Label5 
-         Caption         =   "Blending: Normal"
-         Height          =   255
-         Left            =   120
-         TabIndex        =   40
-         Top             =   840
-         Width           =   1815
-      End
-      Begin VB.Label Label4 
-         Caption         =   "Opacity: 100%"
-         Height          =   255
-         Left            =   2160
-         TabIndex        =   38
-         Top             =   240
-         Width           =   1575
-      End
-      Begin VB.Label Label3 
-         Caption         =   "Fog: None"
-         Height          =   255
-         Left            =   120
-         TabIndex        =   36
-         Top             =   240
-         Width           =   3135
       End
    End
    Begin VB.Frame Frame3 
@@ -379,9 +379,9 @@ Begin VB.Form frmEditor_MapProperties
       Width           =   4215
       Begin VB.ComboBox cmbMoral 
          Height          =   315
-         ItemData        =   "frmMapProperties.frx":0000
+         ItemData        =   "frmMapProperties.frx":0045
          Left            =   960
-         List            =   "frmMapProperties.frx":000D
+         List            =   "frmMapProperties.frx":0052
          Style           =   2  'Dropdown List
          TabIndex        =   14
          Top             =   360
@@ -554,12 +554,25 @@ Private Sub cmdOk_Click()
 
         .Up = Val(txtUp.text)
         .Down = Val(txtDown.text)
-        .left = Val(txtLeft.text)
+        .Left = Val(txtLeft.text)
         .Right = Val(txtRight.text)
         .Moral = cmbMoral.ListIndex
         .BootMap = Val(txtBootMap.text)
         .BootX = Val(txtBootX.text)
         .BootY = Val(txtBootY.text)
+        
+        .Weather = CmbWeather.ListIndex
+        .WeatherIntensity = scrlWeatherIntensity.value
+        
+        .Fog = ScrlFog.value
+        .FogSpeed = ScrlFogSpeed.value
+        .FogOpacity = scrlFogOpacity.value
+        
+        .Red = scrlRed.value
+        .Green = scrlGreen.value
+        .Blue = scrlBlue.value
+        .Alpha = scrlAlpha.value
+        
         .BossNpc = scrlBoss.value
         ' set the data before changing it
         tempArr = map.TileData.Tile
@@ -592,22 +605,33 @@ Private Sub cmdCancel_Click()
     Unload frmEditor_MapProperties
 End Sub
 
+Private Sub Form_Load()
+    scrlRed.min = 0
+    scrlGreen.min = 0
+    scrlBlue.min = 0
+    scrlAlpha.min = 0
+    scrlRed.max = 255
+    scrlGreen.max = 255
+    scrlBlue.max = 255
+    scrlAlpha.max = 255
+End Sub
+
 Private Sub lstNpcs_Click()
     Dim tmpString() As String
-    Dim npcNum As Long
+    Dim NpcNum As Long
 
     ' exit out if needed
     If Not cmbNpc.ListCount > 0 Then Exit Sub
     If Not lstNpcs.ListCount > 0 Then Exit Sub
     ' set the combo box properly
     tmpString = Split(lstNpcs.list(lstNpcs.ListIndex))
-    npcNum = CLng(left$(tmpString(0), Len(tmpString(0)) - 1))
-    cmbNpc.ListIndex = map.MapData.Npc(npcNum)
+    NpcNum = CLng(Left$(tmpString(0), Len(tmpString(0)) - 1))
+    cmbNpc.ListIndex = map.MapData.Npc(NpcNum)
 End Sub
 
 Private Sub cmbNpc_Click()
     Dim tmpString() As String
-    Dim npcNum As Long
+    Dim NpcNum As Long
     Dim x As Long, tmpIndex As Long
 
     ' exit out if needed
@@ -618,8 +642,8 @@ Private Sub cmbNpc_Click()
 
     ' make sure it's not a clear
     If Not cmbNpc.list(cmbNpc.ListIndex) = "No NPC" Then
-        npcNum = CLng(left$(tmpString(0), Len(tmpString(0)) - 1))
-        map.MapData.Npc(lstNpcs.ListIndex + 1) = npcNum
+        NpcNum = CLng(Left$(tmpString(0), Len(tmpString(0)) - 1))
+        map.MapData.Npc(lstNpcs.ListIndex + 1) = NpcNum
     Else
         map.MapData.Npc(lstNpcs.ListIndex + 1) = 0
     End If
@@ -641,6 +665,14 @@ Private Sub cmbNpc_Click()
     lstNpcs.ListIndex = tmpIndex
 End Sub
 
+Private Sub scrlAlpha_Change()
+    lblA.caption = "Alpha: " & scrlAlpha.value
+End Sub
+
+Private Sub scrlBlue_Change()
+    lblB.caption = "Blue: " & scrlBlue.value
+End Sub
+
 Private Sub scrlBoss_Change()
 
     If scrlBoss.value > 0 Then
@@ -649,4 +681,32 @@ Private Sub scrlBoss_Change()
         lblBoss.caption = "Boss Npc: None"
     End If
 
+End Sub
+
+Private Sub ScrlFog_Change()
+    If ScrlFog.value = 0 Then
+        lblFog.caption = "Fog: None."
+    Else
+        lblFog.caption = "Fog: " & ScrlFog.value
+    End If
+End Sub
+
+Private Sub scrlFogOpacity_Change()
+    lblFogOpacity.caption = "Fog Opacity: " & scrlFogOpacity.value
+End Sub
+
+Private Sub ScrlFogSpeed_Change()
+    lblFogSpeed.caption = "Fog Speed: " & ScrlFogSpeed.value
+End Sub
+
+Private Sub scrlGreen_Change()
+    lblG.caption = "Green: " & scrlGreen.value
+End Sub
+
+Private Sub scrlRed_Change()
+    lblR.caption = "Red: " & scrlRed.value
+End Sub
+
+Private Sub scrlWeatherIntensity_Change()
+    lblWeatherIntensity.caption = "Intensity: " & scrlWeatherIntensity.value
 End Sub

@@ -173,7 +173,7 @@ Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)
         ' handle the video
         If videoPlaying Then
             videoPlaying = False
-            FadeAlpha = 0
+            fadeAlpha = 0
             frmMain.picIntro.visible = False
             StopIntro
             Exit Sub
@@ -207,7 +207,7 @@ Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)
                     Select Case KeyAscii
                         Case vbKeyBack
                             If LenB(.text) > 0 Then
-                                .text = left$(.text, Len(.text) - 1)
+                                .text = Left$(.text, Len(.text) - 1)
                             End If
                         Case vbKeyReturn
                             ' override for function callbacks
@@ -306,7 +306,7 @@ Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)
         End If
     
         ' Broadcast message
-        If left$(chatText, 1) = "'" Then
+        If Left$(chatText, 1) = "'" Then
             chatText = Mid$(chatText, 2, Len(chatText) - 1)
 
             If Len(chatText) > 0 Then
@@ -319,7 +319,7 @@ Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)
         End If
 
         ' Emote message
-        If left$(chatText, 1) = "-" Then
+        If Left$(chatText, 1) = "-" Then
             chatText = Mid$(chatText, 2, Len(chatText) - 1)
 
             If Len(chatText) > 0 Then
@@ -332,7 +332,7 @@ Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)
         End If
 
         ' Player message
-        If left$(chatText, 1) = "!" Then
+        If Left$(chatText, 1) = "!" Then
             Exit Sub
             chatText = Mid$(chatText, 2, Len(chatText) - 1)
             name = vbNullString
@@ -365,7 +365,7 @@ Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)
             Exit Sub
         End If
 
-        If left$(chatText, 1) = "/" Then
+        If Left$(chatText, 1) = "/" Then
             Command = Split(chatText, Space$(1))
 
             Select Case Command(0)
@@ -400,7 +400,7 @@ Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)
                     Buffer.WriteLong CPlayerInfoRequest
                     Buffer.WriteString Command(1)
                     SendData Buffer.ToArray()
-                    Set Buffer = Nothing
+                    Buffer.Flush: Set Buffer = Nothing
 
                     ' Whos Online
                 Case "/who"
@@ -419,7 +419,7 @@ Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)
                     Set Buffer = New clsBuffer
                     Buffer.WriteLong CGetStats
                     SendData Buffer.ToArray()
-                    Set Buffer = Nothing
+                    Buffer.Flush: Set Buffer = Nothing
 
                     ' // Monitor Admin Commands //
                     ' Kicking a player

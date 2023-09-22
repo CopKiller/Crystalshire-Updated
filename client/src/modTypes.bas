@@ -4,6 +4,7 @@ Option Explicit
 ' Public data structures
 Public map As MapRec
 Public MapCRC32(1 To MAX_MAPS) As MapCRCStruct
+Public Particula(1 To MAX_WEATHER_PARTICLES) As ParticulaRec
 Public Bank As BankRec
 Public TempTile() As TempTileRec
 Public Player(1 To MAX_PLAYERS) As PlayerRec
@@ -22,7 +23,12 @@ Public Blood(1 To MAX_BYTE) As BloodRec
 Public AnimInstance(1 To MAX_BYTE) As AnimInstanceRec
 Public Party As PartyRec
 Public Autotile() As AutotileRec
+Public MapSounds() As MapSoundRec
+Public MapSoundCount As Long
 Public Options As OptionsRec
+
+'Client
+Public WeatherParticle(1 To MAX_WEATHER_PARTICLES) As WeatherParticleRec
 
 ' Type recs
 Public Type MapCRCStruct
@@ -85,7 +91,7 @@ Private Type PlayerRec
     map As Long
     x As Byte
     y As Byte
-    dir As Byte
+    Dir As Byte
     ' Variables
     Variable(1 To MAX_BYTE) As Long
     ' Client use only
@@ -104,7 +110,7 @@ Private Type EventCommandRec
     Type As Byte
     text As String
     Colour As Long
-    channel As Byte
+    Channel As Byte
     TargetType As Byte
     target As Long
     x As Long
@@ -158,7 +164,7 @@ Private Type MapDataRec
     
     Up As Long
     Down As Long
-    left As Long
+    Left As Long
     Right As Long
     
     BootMap As Long
@@ -167,6 +173,18 @@ Private Type MapDataRec
     
     MaxX As Byte
     MaxY As Byte
+    
+    Weather As Long
+    WeatherIntensity As Long
+    
+    Fog As Long
+    FogSpeed As Long
+    FogOpacity As Long
+    
+    Red As Long
+    Green As Long
+    Blue As Long
+    Alpha As Long
     
     BossNpc As Long
     
@@ -292,7 +310,7 @@ Private Type MapNpcRec
     map As Long
     x As Byte
     y As Byte
-    dir As Byte
+    Dir As Byte
     ' Client use only
     xOffset As Long
     yOffset As Long
@@ -333,7 +351,7 @@ Public Type SpellRec
     map As Long
     x As Long
     y As Long
-    dir As Byte
+    Dir As Byte
     Vital As Long
     Duration As Long
     Interval As Long
@@ -395,7 +413,7 @@ Private Type ActionMsgRec
     x As Long
     y As Long
     timer As Long
-    alpha As Long
+    Alpha As Long
 End Type
 
 Private Type BloodRec
@@ -443,7 +461,7 @@ End Type
 
 Public Type QuarterTileRec
     QuarterTile(1 To 4) As PointRec
-    renderState As Byte
+    RenderState As Byte
     srcX(1 To 4) As Long
     srcY(1 To 4) As Long
 End Type
@@ -483,8 +501,41 @@ Public Type TextColourRec
 End Type
 
 Public Type GeomRec
-    top As Long
-    left As Long
-    height As Long
-    width As Long
+    Top As Long
+    Left As Long
+    Height As Long
+    Width As Long
 End Type
+
+Public Type WeatherParticleRec
+    Type As Long
+    x As Long
+    y As Long
+    Velocity As Long
+    InUse As Long
+End Type
+
+Public Type ParticulaRec
+    Type As Long
+    x As Long
+    y As Long
+    Movimento As Long
+    InUse As Long
+    Dir As Byte
+    Opacidade As Byte
+    Tamanho As Byte
+    TempoG As Long
+    Rotação As Long
+    RotaçãoOld As Long
+    Cor As Byte
+    UpDown As Byte
+End Type
+
+Public Type MapSoundRec
+    x As Long
+    y As Long
+    SoundHandle As Long
+    InUse As Boolean
+    Channel As Long
+End Type
+
