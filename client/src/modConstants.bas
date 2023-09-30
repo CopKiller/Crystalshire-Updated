@@ -177,6 +177,10 @@ Public Const DIR_UP As Byte = 0
 Public Const DIR_DOWN As Byte = 1
 Public Const DIR_LEFT As Byte = 2
 Public Const DIR_RIGHT As Byte = 3
+Public Const DIR_UP_LEFT As Byte = 4
+Public Const DIR_UP_RIGHT As Byte = 5
+Public Const DIR_DOWN_LEFT As Byte = 6
+Public Const DIR_DOWN_RIGHT As Byte = 7
 ' Constants for player movement: Tiles per Second
 Public Const MOVING_WALKING As Byte = 1
 Public Const MOVING_RUNNING As Byte = 2
@@ -232,24 +236,6 @@ Public Const RENDER_STATE_APPEAR As Long = 3
 Public Const ACTIONMsgSTATIC As Long = 0
 Public Const ACTIONMsgSCROLL As Long = 1
 Public Const ACTIONMsgSCREEN As Long = 2
-' Texture paths
-Public Const Path_Anim As String = "\data files\graphics\animations\"
-Public Const Path_Char As String = "\data files\graphics\characters\"
-Public Const Path_Face As String = "\data files\graphics\faces\"
-Public Const Path_GUI As String = "\data files\graphics\gui\"
-Public Const Path_Design As String = "\data files\graphics\gui\designs\"
-Public Const Path_Gradient As String = "\data files\graphics\gui\gradients\"
-Public Const Path_Item As String = "\data files\graphics\items\"
-Public Const Path_Paperdoll As String = "\data files\graphics\paperdolls\"
-Public Const Path_Resource As String = "\data files\graphics\resources\"
-Public Const Path_Spellicon As String = "\data files\graphics\spellicons\"
-Public Const Path_Tileset As String = "\data files\graphics\tilesets\"
-Public Const Path_Font As String = "\data files\graphics\fonts\"
-Public Const Path_Graphics As String = "\data files\graphics\"
-Public Const Path_Surface As String = "\data files\graphics\surfaces\"
-Public Const Path_Fog As String = "\data files\graphics\fog\"
-Public Const Path_Captcha As String = "\data files\graphics\captchas\"
-
 ' text color pointers
 Public Const Black As Byte = 0
 Public Const Blue As Byte = 1

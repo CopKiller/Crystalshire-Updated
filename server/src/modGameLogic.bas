@@ -50,7 +50,7 @@ Function TotalOnlinePlayers() As Long
 
 End Function
 
-Function FindPlayer(ByVal Name As String) As Long
+Function FindPlayer(ByVal name As String) As Long
     Dim i As Long
 
     For i = 1 To Player_HighIndex
@@ -58,8 +58,8 @@ Function FindPlayer(ByVal Name As String) As Long
         If IsPlaying(i) Then
 
             ' Make sure we dont try to check a name thats to small
-            If Len(GetPlayerName(i)) >= Len(Trim$(Name)) Then
-                If UCase$(Mid$(GetPlayerName(i), 1, Len(Trim$(Name)))) = UCase$(Trim$(Name)) Then
+            If Len(GetPlayerName(i)) >= Len(Trim$(name)) Then
+                If UCase$(Mid$(GetPlayerName(i), 1, Len(Trim$(name)))) = UCase$(Trim$(name)) Then
                     FindPlayer = i
                     Exit Function
                 End If
@@ -176,7 +176,7 @@ Public Sub SpawnNpc(ByVal mapNpcNum As Long, ByVal mapnum As Long)
             .targetType = 0 ' clear
             .Vital(Vitals.HP) = GetNpcMaxVital(npcNum, Vitals.HP)
             .Vital(Vitals.MP) = GetNpcMaxVital(npcNum, Vitals.MP)
-            .dir = Int(Rnd * 4)
+            .Dir = Int(Rnd * 4)
             .spellBuffer.Spell = 0
             .spellBuffer.Timer = 0
             .spellBuffer.target = 0
@@ -189,7 +189,7 @@ Public Sub SpawnNpc(ByVal mapNpcNum As Long, ByVal mapnum As Long)
                         If Map(mapnum).TileData.Tile(x, y).Data1 = mapNpcNum Then
                             .x = x
                             .y = y
-                            .dir = Map(mapnum).TileData.Tile(x, y).Data2
+                            .Dir = Map(mapnum).TileData.Tile(x, y).Data2
                             Spawned = True
                             Exit For
                         End If
@@ -244,7 +244,7 @@ Public Sub SpawnNpc(ByVal mapNpcNum As Long, ByVal mapnum As Long)
                 Buffer.WriteLong .Num
                 Buffer.WriteLong .x
                 Buffer.WriteLong .y
-                Buffer.WriteLong .dir
+                Buffer.WriteLong .Dir
                 SendDataToMap mapnum, Buffer.ToArray()
                 Buffer.Flush: Set Buffer = Nothing
             End If
@@ -315,14 +315,14 @@ Sub SpawnAllMapNpcs()
 
 End Sub
 
-Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal dir As Byte) As Boolean
+Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As Byte) As Boolean
     Dim i As Long
     Dim n As Long
     Dim x As Long
     Dim y As Long
 
     ' Check for subscript out of range
-    If mapnum <= 0 Or mapnum > MAX_MAPS Or mapNpcNum <= 0 Or mapNpcNum > MAX_MAP_NPCS Or dir < DIR_UP Or dir > DIR_RIGHT Then
+    If mapnum <= 0 Or mapnum > MAX_MAPS Or mapNpcNum <= 0 Or mapNpcNum > MAX_MAP_NPCS Or Dir < DIR_UP Or Dir > DIR_DOWN_RIGHT Then
         Exit Function
     End If
 
@@ -330,7 +330,7 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal dir As 
     y = MapNpc(mapnum).Npc(mapNpcNum).y
     CanNpcMove = True
 
-    Select Case dir
+    Select Case Dir
         Case DIR_UP
 
             ' Check to make sure not outside of boundries
@@ -491,80 +491,62 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal dir As 
 
 End Function
 
-Sub NpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal dir As Long, ByVal movement As Long)
+Sub NpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As Long, ByVal movement As Long)
     Dim packet As String
     Dim Buffer As clsBuffer
 
     ' Check for subscript out of range
-    If mapnum <= 0 Or mapnum > MAX_MAPS Or mapNpcNum <= 0 Or mapNpcNum > MAX_MAP_NPCS Or dir < DIR_UP Or dir > DIR_RIGHT Or movement < 1 Or movement > 2 Then
+    If mapnum <= 0 Or mapnum > MAX_MAPS Or mapNpcNum <= 0 Or mapNpcNum > MAX_MAP_NPCS Or Dir < DIR_UP Or Dir > DIR_DOWN_RIGHT Or movement < 1 Or movement > 2 Then
         Exit Sub
     End If
 
-    MapNpc(mapnum).Npc(mapNpcNum).dir = dir
+    MapNpc(mapnum).Npc(mapNpcNum).Dir = Dir
 
-    Select Case dir
+    Select Case Dir
         Case DIR_UP
             MapNpc(mapnum).Npc(mapNpcNum).y = MapNpc(mapnum).Npc(mapNpcNum).y - 1
-            Set Buffer = New clsBuffer
-            Buffer.WriteLong SNpcMove
-            Buffer.WriteLong mapNpcNum
-            Buffer.WriteLong MapNpc(mapnum).Npc(mapNpcNum).x
-            Buffer.WriteLong MapNpc(mapnum).Npc(mapNpcNum).y
-            Buffer.WriteLong MapNpc(mapnum).Npc(mapNpcNum).dir
-            Buffer.WriteLong movement
-            SendDataToMap mapnum, Buffer.ToArray()
-            Buffer.Flush: Set Buffer = Nothing
         Case DIR_DOWN
             MapNpc(mapnum).Npc(mapNpcNum).y = MapNpc(mapnum).Npc(mapNpcNum).y + 1
-            Set Buffer = New clsBuffer
-            Buffer.WriteLong SNpcMove
-            Buffer.WriteLong mapNpcNum
-            Buffer.WriteLong MapNpc(mapnum).Npc(mapNpcNum).x
-            Buffer.WriteLong MapNpc(mapnum).Npc(mapNpcNum).y
-            Buffer.WriteLong MapNpc(mapnum).Npc(mapNpcNum).dir
-            Buffer.WriteLong movement
-            SendDataToMap mapnum, Buffer.ToArray()
-            Buffer.Flush: Set Buffer = Nothing
         Case DIR_LEFT
             MapNpc(mapnum).Npc(mapNpcNum).x = MapNpc(mapnum).Npc(mapNpcNum).x - 1
-            Set Buffer = New clsBuffer
-            Buffer.WriteLong SNpcMove
-            Buffer.WriteLong mapNpcNum
-            Buffer.WriteLong MapNpc(mapnum).Npc(mapNpcNum).x
-            Buffer.WriteLong MapNpc(mapnum).Npc(mapNpcNum).y
-            Buffer.WriteLong MapNpc(mapnum).Npc(mapNpcNum).dir
-            Buffer.WriteLong movement
-            SendDataToMap mapnum, Buffer.ToArray()
-            Buffer.Flush: Set Buffer = Nothing
         Case DIR_RIGHT
             MapNpc(mapnum).Npc(mapNpcNum).x = MapNpc(mapnum).Npc(mapNpcNum).x + 1
-            Set Buffer = New clsBuffer
-            Buffer.WriteLong SNpcMove
-            Buffer.WriteLong mapNpcNum
-            Buffer.WriteLong MapNpc(mapnum).Npc(mapNpcNum).x
-            Buffer.WriteLong MapNpc(mapnum).Npc(mapNpcNum).y
-            Buffer.WriteLong MapNpc(mapnum).Npc(mapNpcNum).dir
-            Buffer.WriteLong movement
-            SendDataToMap mapnum, Buffer.ToArray()
-            Buffer.Flush: Set Buffer = Nothing
+        Case DIR_UP_LEFT
+            MapNpc(mapnum).Npc(mapNpcNum).y = MapNpc(mapnum).Npc(mapNpcNum).y - 1: MapNpc(mapnum).Npc(mapNpcNum).x = MapNpc(mapnum).Npc(mapNpcNum).x - 1
+        Case DIR_UP_RIGHT
+            MapNpc(mapnum).Npc(mapNpcNum).y = MapNpc(mapnum).Npc(mapNpcNum).y - 1: MapNpc(mapnum).Npc(mapNpcNum).x = MapNpc(mapnum).Npc(mapNpcNum).x + 1
+        Case DIR_DOWN_LEFT
+            MapNpc(mapnum).Npc(mapNpcNum).y = MapNpc(mapnum).Npc(mapNpcNum).y + 1: MapNpc(mapnum).Npc(mapNpcNum).x = MapNpc(mapnum).Npc(mapNpcNum).x - 1
+        Case DIR_DOWN_RIGHT
+            MapNpc(mapnum).Npc(mapNpcNum).y = MapNpc(mapnum).Npc(mapNpcNum).y + 1: MapNpc(mapnum).Npc(mapNpcNum).x = MapNpc(mapnum).Npc(mapNpcNum).x + 1
     End Select
+
+    Set Buffer = New clsBuffer
+    Buffer.WriteLong SNpcMove
+    Buffer.WriteLong mapNpcNum
+    Buffer.WriteLong MapNpc(mapnum).Npc(mapNpcNum).x
+    Buffer.WriteLong MapNpc(mapnum).Npc(mapNpcNum).y
+    Buffer.WriteLong MapNpc(mapnum).Npc(mapNpcNum).Dir
+    Buffer.WriteLong movement
+    SendDataToMap mapnum, Buffer.ToArray()
+    Buffer.Flush: Set Buffer = Nothing
 
 End Sub
 
-Sub NpcDir(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal dir As Long)
+Sub NpcDir(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As Long)
     Dim packet As String
     Dim Buffer As clsBuffer
 
     ' Check for subscript out of range
-    If mapnum <= 0 Or mapnum > MAX_MAPS Or mapNpcNum <= 0 Or mapNpcNum > MAX_MAP_NPCS Or dir < DIR_UP Or dir > DIR_RIGHT Then
+    If mapnum <= 0 Or mapnum > MAX_MAPS Or mapNpcNum <= 0 Or mapNpcNum > MAX_MAP_NPCS Or Dir < DIR_UP Or Dir > DIR_DOWN_RIGHT Then
         Exit Sub
     End If
 
-    MapNpc(mapnum).Npc(mapNpcNum).dir = dir
+    MapNpc(mapnum).Npc(mapNpcNum).Dir = Dir
     Set Buffer = New clsBuffer
     Buffer.WriteLong SNpcDir
     Buffer.WriteLong mapNpcNum
-    Buffer.WriteLong dir
+    Buffer.WriteLong Dir
     SendDataToMap mapnum, Buffer.ToArray()
     Buffer.Flush: Set Buffer = Nothing
 End Sub
@@ -703,7 +685,7 @@ Sub PlayerUnequipItem(ByVal index As Long, ByVal EqSlot As Long)
     If EqSlot <= 0 Or EqSlot > Equipment.Equipment_Count - 1 Then Exit Sub ' exit out early if error'd
     If FindOpenInvSlot(index, GetPlayerEquipment(index, EqSlot)) > 0 Then
         GiveInvItem index, GetPlayerEquipment(index, EqSlot), 0, , True
-        PlayerMsg index, "You unequip " & CheckGrammar(Item(GetPlayerEquipment(index, EqSlot)).Name), Yellow
+        PlayerMsg index, "You unequip " & CheckGrammar(Item(GetPlayerEquipment(index, EqSlot)).name), Yellow
         ' send the sound
         SendPlayerSound index, GetPlayerX(index), GetPlayerY(index), SoundEntity.seItem, GetPlayerEquipment(index, EqSlot)
         ' remove equipment
@@ -746,8 +728,8 @@ Dim nVal As Long
     If nVal <= Range Then isInRange = True
 End Function
 
-Public Function isDirBlocked(ByRef blockvar As Byte, ByRef dir As Byte) As Boolean
-    If Not blockvar And (2 ^ dir) Then
+Public Function isDirBlocked(ByRef blockvar As Byte, ByRef Dir As Byte) As Boolean
+    If Not blockvar And (2 ^ Dir) Then
         isDirBlocked = False
     Else
         isDirBlocked = True

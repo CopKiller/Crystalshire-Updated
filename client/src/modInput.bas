@@ -9,14 +9,10 @@ Public Sub CheckKeys()
 
     ' exit out if dialogue
     If diaIndex > 0 Then Exit Sub
-    If GetAsyncKeyState(VK_W) >= 0 Then wDown = False
-    If GetAsyncKeyState(VK_S) >= 0 Then sDown = False
-    If GetAsyncKeyState(VK_A) >= 0 Then aDown = False
-    If GetAsyncKeyState(VK_D) >= 0 Then dDown = False
-    If GetAsyncKeyState(VK_UP) >= 0 Then upDown = False
-    If GetAsyncKeyState(VK_DOWN) >= 0 Then downDown = False
-    If GetAsyncKeyState(VK_LEFT) >= 0 Then leftDown = False
-    If GetAsyncKeyState(VK_RIGHT) >= 0 Then rightDown = False
+    If GetAsyncKeyState(VK_UP) >= 0 Then DirUp = False
+    If GetAsyncKeyState(VK_DOWN) >= 0 Then DirDown = False
+    If GetAsyncKeyState(VK_LEFT) >= 0 Then DirLeft = False
+    If GetAsyncKeyState(VK_RIGHT) >= 0 Then DirRight = False
     If GetAsyncKeyState(VK_CONTROL) >= 0 Then ControlDown = False
     If GetAsyncKeyState(VK_SHIFT) >= 0 Then ShiftDown = False
     If GetAsyncKeyState(VK_TAB) >= 0 Then tabDown = False
@@ -55,111 +51,27 @@ Public Sub CheckInputKeys()
             CheckMapGetItem
         End If
 
-        ' move up
-        If GetKeyState(vbKeyW) < 0 Then
-            wDown = True
-            sDown = False
-            aDown = False
-            dDown = False
-            Exit Sub
-        Else
-            wDown = False
-        End If
-
-        'Move Right
-        If GetKeyState(vbKeyD) < 0 Then
-            wDown = False
-            sDown = False
-            aDown = False
-            dDown = True
-            Exit Sub
-        Else
-            dDown = False
-        End If
-
-        'Move down
-        If GetKeyState(vbKeyS) < 0 Then
-            wDown = False
-            sDown = True
-            aDown = False
-            dDown = False
-            Exit Sub
-        Else
-            sDown = False
-        End If
-
-        'Move left
-        If GetKeyState(vbKeyA) < 0 Then
-            wDown = False
-            sDown = False
-            aDown = True
-            dDown = False
-            Exit Sub
-        Else
-            aDown = False
-        End If
-
-        ' move up
-        If GetKeyState(vbKeyUp) < 0 Then
-            upDown = True
-            leftDown = False
-
-            downDown = False
-            rightDown = False
-            Exit Sub
-        Else
-            upDown = False
-        End If
-
-        'Move Right
-        If GetKeyState(vbKeyRight) < 0 Then
-            upDown = False
-            leftDown = False
-
-            downDown = False
-            rightDown = True
-            Exit Sub
-        Else
-            rightDown = False
-        End If
-
-        'Move down
-        If GetKeyState(vbKeyDown) < 0 Then
-            upDown = False
-            leftDown = False
-
-            downDown = True
-            rightDown = False
-            Exit Sub
-        Else
-
-            downDown = False
-        End If
-
-        'Move left
-        If GetKeyState(vbKeyLeft) < 0 Then
-            upDown = False
-            leftDown = True
-
-            downDown = False
-            rightDown = False
-            Exit Sub
-        Else
-            leftDown = False
-        End If
-
-    Else
-        wDown = False
-        sDown = False
-        aDown = False
-        dDown = False
-        upDown = False
-        leftDown = False
-
-        downDown = False
-        rightDown = False
+        Call SetMoveDirection
     End If
 
+End Sub
+
+Public Sub SetMoveDirection()
+    If GetAsyncKeyState(VK_UP) < 0 Then
+        DirUp = True
+    End If
+    
+    If GetAsyncKeyState(VK_DOWN) < 0 Then
+        DirDown = True
+    End If
+    
+    If GetAsyncKeyState(VK_LEFT) < 0 Then
+        DirLeft = True
+    End If
+    
+    If GetAsyncKeyState(VK_RIGHT) < 0 Then
+        DirRight = True
+    End If
 End Sub
 
 Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)

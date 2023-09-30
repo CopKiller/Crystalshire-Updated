@@ -266,40 +266,74 @@ Public Function CanPlayerAttackNpc(ByVal attacker As Long, ByVal mapNpcNum As Lo
             attackspeed = 1000
         End If
 
-        If npcNum > 0 And GetTickCount > TempPlayer(attacker).AttackTimer + attackspeed Then
+        If npcNum > 0 And getTime > TempPlayer(attacker).AttackTimer + attackspeed Then
             ' Check if at same coordinates
             Select Case GetPlayerDir(attacker)
                 Case DIR_UP
+                    ' Define cordenadas à frente
                     NpcX = MapNpc(mapnum).Npc(mapNpcNum).x
                     NpcY = MapNpc(mapnum).Npc(mapNpcNum).y + 1
+                    
+                    If NpcX >= GetPlayerX(attacker) - 1 And NpcX <= GetPlayerX(attacker) + 1 Then
+                        If NpcY = GetPlayerY(attacker) Then
+                            If Npc(npcNum).Behaviour <> NPC_BEHAVIOUR_FRIENDLY And Npc(npcNum).Behaviour <> NPC_BEHAVIOUR_SHOPKEEPER Then
+                                CanPlayerAttackNpc = True
+                            ElseIf Npc(npcNum).Behaviour = NPC_BEHAVIOUR_FRIENDLY Then
+                                ' init conversation if it's friendly
+                                InitChat attacker, mapnum, mapNpcNum
+                            End If
+                        End If
+                    End If
                 Case DIR_DOWN
                     NpcX = MapNpc(mapnum).Npc(mapNpcNum).x
                     NpcY = MapNpc(mapnum).Npc(mapNpcNum).y - 1
-                Case DIR_LEFT
+                    
+                    If NpcX >= GetPlayerX(attacker) - 1 And NpcX <= GetPlayerX(attacker) + 1 Then
+                        If NpcY = GetPlayerY(attacker) Then
+                            If Npc(npcNum).Behaviour <> NPC_BEHAVIOUR_FRIENDLY And Npc(npcNum).Behaviour <> NPC_BEHAVIOUR_SHOPKEEPER Then
+                                CanPlayerAttackNpc = True
+                            ElseIf Npc(npcNum).Behaviour = NPC_BEHAVIOUR_FRIENDLY Then
+                                ' init conversation if it's friendly
+                                InitChat attacker, mapnum, mapNpcNum
+                            End If
+                        End If
+                    End If
+                Case DIR_LEFT, DIR_UP_LEFT, DIR_DOWN_LEFT
                     NpcX = MapNpc(mapnum).Npc(mapNpcNum).x + 1
                     NpcY = MapNpc(mapnum).Npc(mapNpcNum).y
-                Case DIR_RIGHT
+                    
+                    If NpcX = GetPlayerX(attacker) Then
+                        If NpcY >= GetPlayerY(attacker) - 1 And NpcY <= GetPlayerY(attacker) + 1 Then
+                            If Npc(npcNum).Behaviour <> NPC_BEHAVIOUR_FRIENDLY And Npc(npcNum).Behaviour <> NPC_BEHAVIOUR_SHOPKEEPER Then
+                                CanPlayerAttackNpc = True
+                            ElseIf Npc(npcNum).Behaviour = NPC_BEHAVIOUR_FRIENDLY Then
+                                ' init conversation if it's friendly
+                                InitChat attacker, mapnum, mapNpcNum
+                            End If
+                        End If
+                    End If
+                Case DIR_RIGHT, DIR_UP_RIGHT, DIR_DOWN_RIGHT
                     NpcX = MapNpc(mapnum).Npc(mapNpcNum).x - 1
                     NpcY = MapNpc(mapnum).Npc(mapNpcNum).y
-            End Select
-
-            If NpcX = GetPlayerX(attacker) Then
-                If NpcY = GetPlayerY(attacker) Then
-                    If Npc(npcNum).Behaviour <> NPC_BEHAVIOUR_FRIENDLY And Npc(npcNum).Behaviour <> NPC_BEHAVIOUR_SHOPKEEPER Then
-                        CanPlayerAttackNpc = True
-                    ElseIf Npc(npcNum).Behaviour = NPC_BEHAVIOUR_FRIENDLY Then
-                        ' init conversation if it's friendly
-                        InitChat attacker, mapnum, mapNpcNum
+                    
+                    If NpcX = GetPlayerX(attacker) Then
+                        If NpcY >= GetPlayerY(attacker) - 1 And NpcY <= GetPlayerY(attacker) + 1 Then
+                            If Npc(npcNum).Behaviour <> NPC_BEHAVIOUR_FRIENDLY And Npc(npcNum).Behaviour <> NPC_BEHAVIOUR_SHOPKEEPER Then
+                                CanPlayerAttackNpc = True
+                            ElseIf Npc(npcNum).Behaviour = NPC_BEHAVIOUR_FRIENDLY Then
+                                ' init conversation if it's friendly
+                                InitChat attacker, mapnum, mapNpcNum
+                            End If
+                        End If
                     End If
-                End If
-            End If
+            End Select
         End If
     End If
 
 End Function
 
 Public Sub PlayerAttackNpc(ByVal attacker As Long, ByVal mapNpcNum As Long, ByVal damage As Long, Optional ByVal spellNum As Long, Optional ByVal overTime As Boolean = False)
-    Dim Name As String
+    Dim name As String
     Dim exp As Long
     Dim n As Long
     Dim i As Long
@@ -316,7 +350,7 @@ Public Sub PlayerAttackNpc(ByVal attacker As Long, ByVal mapNpcNum As Long, ByVa
 
     mapnum = GetPlayerMap(attacker)
     npcNum = MapNpc(mapnum).Npc(mapNpcNum).Num
-    Name = Trim$(Npc(npcNum).Name)
+    name = Trim$(Npc(npcNum).name)
     
     ' Check for weapon
     n = 0
@@ -577,17 +611,21 @@ Dim partynum As Long, i As Long
         ' Check if at same coordinates
         Select Case GetPlayerDir(attacker)
             Case DIR_UP
-    
                 If Not ((GetPlayerY(victim) + 1 = GetPlayerY(attacker)) And (GetPlayerX(victim) = GetPlayerX(attacker))) Then Exit Function
             Case DIR_DOWN
-    
                 If Not ((GetPlayerY(victim) - 1 = GetPlayerY(attacker)) And (GetPlayerX(victim) = GetPlayerX(attacker))) Then Exit Function
             Case DIR_LEFT
-    
                 If Not ((GetPlayerY(victim) = GetPlayerY(attacker)) And (GetPlayerX(victim) + 1 = GetPlayerX(attacker))) Then Exit Function
             Case DIR_RIGHT
-    
                 If Not ((GetPlayerY(victim) = GetPlayerY(attacker)) And (GetPlayerX(victim) - 1 = GetPlayerX(attacker))) Then Exit Function
+            Case DIR_UP_LEFT
+                If Not ((GetPlayerY(victim) + 1 = GetPlayerY(attacker)) And (GetPlayerX(victim) + 1 = GetPlayerX(attacker))) Then Exit Function
+            Case DIR_UP_RIGHT
+                If Not ((GetPlayerY(victim) + 1 = GetPlayerY(attacker)) And (GetPlayerX(victim) - 1 = GetPlayerX(attacker))) Then Exit Function
+            Case DIR_DOWN_LEFT
+                If Not ((GetPlayerY(victim) - 1 = GetPlayerY(attacker)) And (GetPlayerX(victim) + 1 = GetPlayerX(attacker))) Then Exit Function
+            Case DIR_DOWN_RIGHT
+                If Not ((GetPlayerY(victim) - 1 = GetPlayerY(attacker)) And (GetPlayerX(victim) - 1 = GetPlayerX(attacker))) Then Exit Function
             Case Else
                 Exit Function
         End Select
@@ -822,7 +860,7 @@ Public Sub BufferSpell(ByVal index As Long, ByVal spellSlot As Long)
     ' make sure the classreq > 0
     If ClassReq > 0 Then ' 0 = no req
         If ClassReq <> GetPlayerClass(index) Then
-            Call PlayerMsg(index, "Only " & CheckGrammar(Trim$(Class(ClassReq).Name)) & " can use this spell.", BrightRed)
+            Call PlayerMsg(index, "Only " & CheckGrammar(Trim$(Class(ClassReq).name)) & " can use this spell.", BrightRed)
             Exit Sub
         End If
     End If
@@ -954,7 +992,7 @@ Public Sub CastSpell(ByVal index As Long, ByVal spellSlot As Long, ByVal target 
     ' make sure the classreq > 0
     If ClassReq > 0 Then ' 0 = no req
         If ClassReq <> GetPlayerClass(index) Then
-            Call PlayerMsg(index, "Only " & CheckGrammar(Trim$(Class(ClassReq).Name)) & " can use this spell.", BrightRed)
+            Call PlayerMsg(index, "Only " & CheckGrammar(Trim$(Class(ClassReq).name)) & " can use this spell.", BrightRed)
             Exit Sub
         End If
     End If

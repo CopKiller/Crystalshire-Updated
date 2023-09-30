@@ -1,9 +1,9 @@
 Attribute VB_Name = "Player_Checks"
-Public Function CanMove(index As Long, dir As Long) As Byte
+Public Function CanMove(index As Long, Dir As Long) As Byte
     Dim warped As Boolean, newMapX As Long, newMapY As Long
 
     CanMove = 1
-    Select Case dir
+    Select Case Dir
         Case DIR_UP
             ' Check to see if they are trying to go out of bounds
             If GetPlayerY(index) > 0 Then
@@ -22,6 +22,8 @@ Public Function CanMove(index As Long, dir As Long) As Byte
                 CanMove = 0
                 Exit Function
             End If
+'#######################################################################################################################
+'#######################################################################################################################
         Case DIR_DOWN
             ' Check to see if they are trying to go out of bounds
             If GetPlayerY(index) < Map(GetPlayerMap(index)).MapData.MaxY Then
@@ -36,9 +38,11 @@ Public Function CanMove(index As Long, dir As Long) As Byte
                     warped = True
                     CanMove = 2
                 End If
-                CanMove = False
+                CanMove = 0
                 Exit Function
             End If
+'#######################################################################################################################
+'#######################################################################################################################
         Case DIR_LEFT
             ' Check to see if they are trying to go out of bounds
             If GetPlayerX(index) > 0 Then
@@ -54,14 +58,16 @@ Public Function CanMove(index As Long, dir As Long) As Byte
                     warped = True
                     CanMove = 2
                 End If
-                CanMove = False
+                CanMove = 0
                 Exit Function
             End If
+'#######################################################################################################################
+'#######################################################################################################################
         Case DIR_RIGHT
             ' Check to see if they are trying to go out of bounds
             If GetPlayerX(index) < Map(GetPlayerMap(index)).MapData.MaxX Then
                 If CheckDirection(index, DIR_RIGHT) Then
-                    CanMove = False
+                    CanMove = 0
                     Exit Function
                 End If
             Else
@@ -71,7 +77,119 @@ Public Function CanMove(index As Long, dir As Long) As Byte
                     warped = True
                     CanMove = 2
                 End If
-                CanMove = False
+                CanMove = 0
+                Exit Function
+            End If
+'#######################################################################################################################
+'#######################################################################################################################
+        Case DIR_UP_LEFT
+            ' Check to see if they are trying to go out of bounds
+            If GetPlayerY(index) > 0 And GetPlayerX(index) > 0 Then
+                If CheckDirection(index, DIR_UP_LEFT) Then
+                    CanMove = 0
+                    Exit Function
+                End If
+            Else
+                ' Check if they can warp to a new map
+                If GetPlayerY(index) = 0 Then
+                    If Map(GetPlayerMap(index)).MapData.Up > 0 Then
+                        newMapY = Map(Map(GetPlayerMap(index)).MapData.Up).MapData.MaxY
+                        Call PlayerWarp(index, Map(GetPlayerMap(index)).MapData.Up, GetPlayerX(index), newMapY)
+                        warped = True
+                        CanMove = 2
+                    End If
+                Else
+                    If Map(GetPlayerMap(index)).MapData.left > 0 Then
+                        newMapX = Map(Map(GetPlayerMap(index)).MapData.left).MapData.MaxX
+                        Call PlayerWarp(index, Map(GetPlayerMap(index)).MapData.left, newMapX, GetPlayerY(index))
+                        warped = True
+                        CanMove = 2
+                    End If
+                End If
+                CanMove = 0
+                Exit Function
+            End If
+'#######################################################################################################################
+'#######################################################################################################################
+        Case DIR_UP_RIGHT
+            ' Check to see if they are trying to go out of bounds
+            If GetPlayerY(index) > 0 And GetPlayerX(index) < Map(GetPlayerMap(index)).MapData.MaxX Then
+                If CheckDirection(index, DIR_UP_RIGHT) Then
+                    CanMove = 0
+                    Exit Function
+                End If
+            Else
+                ' Check if they can warp to a new map
+                If GetPlayerY(index) = 0 Then
+                    If Map(GetPlayerMap(index)).MapData.Up > 0 Then
+                        newMapY = Map(Map(GetPlayerMap(index)).MapData.Up).MapData.MaxY
+                        Call PlayerWarp(index, Map(GetPlayerMap(index)).MapData.Up, GetPlayerX(index), newMapY)
+                        warped = True
+                        CanMove = 2
+                    End If
+                Else
+                    If Map(GetPlayerMap(index)).MapData.Right > 0 Then
+                        Call PlayerWarp(index, Map(GetPlayerMap(index)).MapData.Right, 0, GetPlayerY(index))
+                        warped = True
+                        CanMove = 2
+                    End If
+                End If
+                CanMove = 0
+                Exit Function
+            End If
+'#######################################################################################################################
+'#######################################################################################################################
+        Case DIR_DOWN_LEFT
+            ' Check to see if they are trying to go out of bounds
+            If GetPlayerY(index) < Map(GetPlayerMap(index)).MapData.MaxY And GetPlayerX(index) > 0 Then
+                If CheckDirection(index, DIR_DOWN_LEFT) Then
+                    CanMove = 0
+                    Exit Function
+                End If
+            Else
+                ' Check if they can warp to a new map
+                If GetPlayerY(index) = Map(GetPlayerMap(index)).MapData.MaxY Then
+                    If Map(GetPlayerMap(index)).MapData.Down > 0 Then
+                        Call PlayerWarp(index, Map(GetPlayerMap(index)).MapData.Down, GetPlayerX(index), 0)
+                        warped = True
+                        CanMove = 2
+                    End If
+                Else
+                    If Map(GetPlayerMap(index)).MapData.left > 0 Then
+                        newMapX = Map(Map(GetPlayerMap(index)).MapData.left).MapData.MaxX
+                        Call PlayerWarp(index, Map(GetPlayerMap(index)).MapData.left, newMapX, GetPlayerY(index))
+                        warped = True
+                        CanMove = 2
+                    End If
+                End If
+                CanMove = 0
+                Exit Function
+            End If
+'#######################################################################################################################
+'#######################################################################################################################
+        Case DIR_DOWN_RIGHT
+            ' Check to see if they are trying to go out of bounds
+            If GetPlayerY(index) < Map(GetPlayerMap(index)).MapData.MaxY And GetPlayerX(index) < Map(GetPlayerMap(index)).MapData.MaxX Then
+                If CheckDirection(index, DIR_DOWN_RIGHT) Then
+                    CanMove = 0
+                    Exit Function
+                End If
+            Else
+                ' Check if they can warp to a new map
+                If GetPlayerY(index) = Map(GetPlayerMap(index)).MapData.MaxY Then
+                    If Map(GetPlayerMap(index)).MapData.Down > 0 Then
+                        Call PlayerWarp(index, Map(GetPlayerMap(index)).MapData.Down, GetPlayerX(index), 0)
+                        warped = True
+                        CanMove = 2
+                    End If
+                Else
+                    If Map(GetPlayerMap(index)).MapData.Right > 0 Then
+                        Call PlayerWarp(index, Map(GetPlayerMap(index)).MapData.Right, 0, GetPlayerY(index))
+                        warped = True
+                        CanMove = 2
+                    End If
+                End If
+                CanMove = 0
                 Exit Function
             End If
     End Select
@@ -103,6 +221,18 @@ Public Function CheckDirection(index As Long, direction As Long) As Boolean
         Case DIR_RIGHT
             x = GetPlayerX(index) + 1
             y = GetPlayerY(index)
+        Case DIR_UP_LEFT
+            x = GetPlayerX(index) - 1
+            y = GetPlayerY(index) - 1
+        Case DIR_UP_RIGHT
+            x = GetPlayerX(index) + 1
+            y = GetPlayerY(index) - 1
+        Case DIR_DOWN_LEFT
+            x = GetPlayerX(index) - 1
+            y = GetPlayerY(index) + 1
+        Case DIR_DOWN_RIGHT
+            x = GetPlayerX(index) + 1
+            y = GetPlayerY(index) + 1
     End Select
     
     ' Check to see if the map tile is blocked or not

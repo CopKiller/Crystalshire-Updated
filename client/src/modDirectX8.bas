@@ -1,6 +1,24 @@
 Attribute VB_Name = "modDirectX8"
 Option Explicit
 
+' Texture paths
+Public Const Path_Anim As String = "\data files\graphics\animations\"
+Public Const Path_Char As String = "\data files\graphics\characters\"
+Public Const Path_Face As String = "\data files\graphics\faces\"
+Public Const Path_GUI As String = "\data files\graphics\gui\"
+Public Const Path_Design As String = "\data files\graphics\gui\designs\"
+Public Const Path_Gradient As String = "\data files\graphics\gui\gradients\"
+Public Const Path_Item As String = "\data files\graphics\items\"
+Public Const Path_Paperdoll As String = "\data files\graphics\paperdolls\"
+Public Const Path_Resource As String = "\data files\graphics\resources\"
+Public Const Path_Spellicon As String = "\data files\graphics\spellicons\"
+Public Const Path_Tileset As String = "\data files\graphics\tilesets\"
+Public Const Path_Font As String = "\data files\graphics\fonts\"
+Public Const Path_Graphics As String = "\data files\graphics\"
+Public Const Path_Surface As String = "\data files\graphics\surfaces\"
+Public Const Path_Fog As String = "\data files\graphics\fog\"
+Public Const Path_Captcha As String = "\data files\graphics\captchas\"
+
 ' Texture wrapper
 Public Tex_Anim() As Long
 Public Tex_Char() As Long
@@ -58,13 +76,13 @@ Public Const FVF As Long = D3DFVF_XYZRHW Or D3DFVF_TEX1 Or D3DFVF_DIFFUSE 'Or D3
 
 Public Type TextureStruct
     Texture As Direct3DTexture8
-    data() As Byte
+    Data() As Byte
     w As Long
     h As Long
 End Type
 
 Public Type TextureDataStruct
-    data() As Byte
+    Data() As Byte
 End Type
 
 Public Type Vertex
@@ -86,13 +104,12 @@ Public CurrentTexture As Long
 Public ScreenWidth As Long, ScreenHeight As Long
 Public TileWidth As Long, TileHeight As Long
 Public ScreenX As Long, ScreenY As Long
-Public EndX As Long, EndY As Long
 Public curResolution As Byte, isFullscreen As Boolean
 
-Public Sub InitDX8(ByVal hWnd As Long)
+Public Sub InitDX8(ByVal hwnd As Long)
 Dim DispMode As D3DDISPLAYMODE, Width As Long, Height As Long
 
-    mhWnd = hWnd
+    mhWnd = hwnd
 
     Set DX8 = New DirectX8
     Set D3D = DX8.Direct3DCreate
@@ -114,7 +131,7 @@ Dim DispMode As D3DDISPLAYMODE, Width As Long, Height As Long
     If Options.Fullscreen = 0 Then
         isFullscreen = False
         D3DWindow.SwapEffect = D3DSWAPEFFECT_COPY
-        D3DWindow.hDeviceWindow = hWnd
+        D3DWindow.hDeviceWindow = hwnd
         D3DWindow.BackBufferFormat = DispMode.Format
         D3DWindow.Windowed = 1
     Else
@@ -128,7 +145,7 @@ Dim DispMode As D3DDISPLAYMODE, Width As Long, Height As Long
     
     Select Case Options.Render
         Case 1 ' hardware
-            If LoadDirectX(D3DCREATE_HARDWARE_VERTEXPROCESSING, hWnd) <> 0 Then
+            If LoadDirectX(D3DCREATE_HARDWARE_VERTEXPROCESSING, hwnd) <> 0 Then
                 Options.Fullscreen = 0
                 Options.Resolution = 0
                 Options.Render = 0
@@ -137,7 +154,7 @@ Dim DispMode As D3DDISPLAYMODE, Width As Long, Height As Long
                 Call DestroyGame
             End If
         Case 2 ' mixed
-            If LoadDirectX(D3DCREATE_MIXED_VERTEXPROCESSING, hWnd) <> 0 Then
+            If LoadDirectX(D3DCREATE_MIXED_VERTEXPROCESSING, hwnd) <> 0 Then
                 Options.Fullscreen = 0
                 Options.Resolution = 0
                 Options.Render = 0
@@ -146,7 +163,7 @@ Dim DispMode As D3DDISPLAYMODE, Width As Long, Height As Long
                 Call DestroyGame
             End If
         Case 3 ' software
-            If LoadDirectX(D3DCREATE_SOFTWARE_VERTEXPROCESSING, hWnd) <> 0 Then
+            If LoadDirectX(D3DCREATE_SOFTWARE_VERTEXPROCESSING, hwnd) <> 0 Then
                 Options.Fullscreen = 0
                 Options.Resolution = 0
                 Options.Render = 0
@@ -155,9 +172,9 @@ Dim DispMode As D3DDISPLAYMODE, Width As Long, Height As Long
                 Call DestroyGame
             End If
         Case Else ' auto
-            If LoadDirectX(D3DCREATE_HARDWARE_VERTEXPROCESSING, hWnd) <> 0 Then
-                If LoadDirectX(D3DCREATE_MIXED_VERTEXPROCESSING, hWnd) <> 0 Then
-                    If LoadDirectX(D3DCREATE_SOFTWARE_VERTEXPROCESSING, hWnd) <> 0 Then
+            If LoadDirectX(D3DCREATE_HARDWARE_VERTEXPROCESSING, hwnd) <> 0 Then
+                If LoadDirectX(D3DCREATE_MIXED_VERTEXPROCESSING, hwnd) <> 0 Then
+                    If LoadDirectX(D3DCREATE_SOFTWARE_VERTEXPROCESSING, hwnd) <> 0 Then
                         Options.Fullscreen = 0
                         Options.Resolution = 0
                         Options.Render = 0
@@ -182,10 +199,10 @@ Dim DispMode As D3DDISPLAYMODE, Width As Long, Height As Long
     Call D3DDevice.SetStreamSource(0, DXVB, Len(Box(0)))
 End Sub
 
-Public Function LoadDirectX(ByVal BehaviourFlags As CONST_D3DCREATEFLAGS, ByVal hWnd As Long)
+Public Function LoadDirectX(ByVal BehaviourFlags As CONST_D3DCREATEFLAGS, ByVal hwnd As Long)
 On Error GoTo ErrorInit
 
-    Set D3DDevice = D3D.CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, BehaviourFlags, D3DWindow)
+    Set D3DDevice = D3D.CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hwnd, BehaviourFlags, D3DWindow)
     Exit Function
 
 ErrorInit:
@@ -219,6 +236,7 @@ Dim I As Long
     Tex_Design = LoadTextureFiles(Count_Design, App.path & Path_Design)
     Tex_Gradient = LoadTextureFiles(Count_Gradient, App.path & Path_Gradient)
     Tex_Surface = LoadTextureFiles(Count_Surface, App.path & Path_Surface)
+    Tex_Fog = LoadTextureFiles(Count_Fog, App.path & Path_Fog)
     ' Singles
     Tex_Bars = LoadTextureFile(App.path & Path_Graphics & "bars.png")
     Tex_Blood = LoadTextureFile(App.path & Path_Graphics & "blood.png")
@@ -254,7 +272,7 @@ Dim I As Long
 End Function
 
 Public Function LoadTextureFile(ByVal path As String, Optional ByVal DontReuse As Boolean) As Long
-Dim data() As Byte
+Dim Data() As Byte
 Dim f As Long
 
     If Dir$(path) = vbNullString Then
@@ -264,27 +282,27 @@ Dim f As Long
     
     f = FreeFile
     Open path For Binary As #f
-        ReDim data(0 To LOF(f) - 1)
-        Get #f, , data
+        ReDim Data(0 To LOF(f) - 1)
+        Get #f, , Data
     Close #f
     
-    LoadTextureFile = LoadTexture(data, DontReuse)
+    LoadTextureFile = LoadTexture(Data, DontReuse)
 End Function
 
-Public Function LoadTexture(ByRef data() As Byte, Optional ByVal DontReuse As Boolean) As Long
+Public Function LoadTexture(ByRef Data() As Byte, Optional ByVal DontReuse As Boolean) As Long
 Dim I As Long
 
-    If AryCount(data) = 0 Then
+    If AryCount(Data) = 0 Then
         Exit Function
     End If
     
     mTextures = mTextures + 1
     LoadTexture = mTextures
     ReDim Preserve mTexture(1 To mTextures) As TextureStruct
-    mTexture(mTextures).w = ByteToInt(data(18), data(19))
-    mTexture(mTextures).h = ByteToInt(data(22), data(23))
-    mTexture(mTextures).data = data
-    Set mTexture(mTextures).Texture = D3DX.CreateTextureFromFileInMemoryEx(D3DDevice, data(0), AryCount(data), mTexture(mTextures).w, mTexture(mTextures).h, D3DX_DEFAULT, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, D3DX_FILTER_POINT, D3DX_FILTER_POINT, 0, ByVal 0, ByVal 0)
+    mTexture(mTextures).w = ByteToInt(Data(18), Data(19))
+    mTexture(mTextures).h = ByteToInt(Data(22), Data(23))
+    mTexture(mTextures).Data = Data
+    Set mTexture(mTextures).Texture = D3DX.CreateTextureFromFileInMemoryEx(D3DDevice, Data(0), AryCount(Data), mTexture(mTextures).w, mTexture(mTextures).h, D3DX_DEFAULT, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, D3DX_FILTER_POINT, D3DX_FILTER_POINT, 0, ByVal 0, ByVal 0)
 End Function
 
 Public Sub CheckGFX()
@@ -304,7 +322,7 @@ Dim I As Long, n As Long
     ReDim Temp(1 To n)
     For I = 1 To n
         Set mTexture(I).Texture = Nothing
-        Temp(I).data = mTexture(I).data
+        Temp(I).Data = mTexture(I).Data
     Next
     
     Erase mTexture
@@ -322,7 +340,7 @@ Dim I As Long, n As Long
     Call D3DDevice.SetTextureStageState(0, D3DTSS_ALPHAARG1, 2)
     
     For I = 1 To n
-        Call LoadTexture(Temp(I).data)
+        Call LoadTexture(Temp(I).Data)
     Next
 End Sub
 
@@ -464,7 +482,7 @@ Public Sub GDIRenderAnimation()
                     RenderTexture Tex_Anim(Animationnum), 0, 0, sX, sY, Width, Height, Width, Height
                     ' Finish Rendering
                     Call D3DDevice.EndScene
-                    Call D3DDevice.Present(sRECT, ByVal 0, frmEditor_Animation.picSprite(I).hWnd, ByVal 0)
+                    Call D3DDevice.Present(sRECT, ByVal 0, frmEditor_Animation.picSprite(I).hwnd, ByVal 0)
                 End If
             End If
         End If
@@ -490,7 +508,7 @@ Public Sub GDIRenderChar(ByRef picBox As PictureBox, ByVal sprite As Long)
     RenderTexture Tex_Char(sprite), 0, 0, 0, 0, Width, Height, Width, Height
     ' Finish Rendering
     Call D3DDevice.EndScene
-    Call D3DDevice.Present(sRECT, ByVal 0, picBox.hWnd, ByVal 0)
+    Call D3DDevice.Present(sRECT, ByVal 0, picBox.hwnd, ByVal 0)
 End Sub
 
 Public Sub GDIRenderFace(ByRef picBox As PictureBox, ByVal sprite As Long)
@@ -517,7 +535,7 @@ Public Sub GDIRenderFace(ByRef picBox As PictureBox, ByVal sprite As Long)
     RenderTexture Tex_Face(sprite), 0, 0, 0, 0, Width, Height, Width, Height
     ' Finish Rendering
     Call D3DDevice.EndScene
-    Call D3DDevice.Present(sRECT, ByVal 0, picBox.hWnd, ByVal 0)
+    Call D3DDevice.Present(sRECT, ByVal 0, picBox.hwnd, ByVal 0)
 End Sub
 
 Sub GDIRenderEventGraphic()
@@ -563,7 +581,7 @@ Sub GDIRenderEventGraphic()
     RenderTexture texNum, (frmEditor_Events.picGraphic.ScaleWidth / 2) - 16, (frmEditor_Events.picGraphic.ScaleHeight / 2) - 16, sX * 32, sY * 32, Width, Height, Width, Height
 
     Call D3DDevice.EndScene
-    Call D3DDevice.Present(sRECT, ByVal 0, frmEditor_Events.picGraphic.hWnd, ByVal 0)
+    Call D3DDevice.Present(sRECT, ByVal 0, frmEditor_Events.picGraphic.hwnd, ByVal 0)
 End Sub
 
 Sub GDIRenderEventGraphicSel()
@@ -609,7 +627,7 @@ Sub GDIRenderEventGraphicSel()
     RenderDesign DesignTypes.desTileBox, GraphicSelX * 32, GraphicSelY * 32, 32, 32
 
     Call D3DDevice.EndScene
-    Call D3DDevice.Present(sRECT, ByVal 0, frmEditor_Events.picGraphicSel.hWnd, ByVal 0)
+    Call D3DDevice.Present(sRECT, ByVal 0, frmEditor_Events.picGraphicSel.hwnd, ByVal 0)
 End Sub
 
 Public Sub GDIRenderTileset()
@@ -673,7 +691,7 @@ Public Sub GDIRenderTileset()
     RenderDesign DesignTypes.desTileBox, shpSelectedLeft, shpSelectedTop, shpSelectedWidth, shpSelectedHeight
     ' Finish Rendering
     Call D3DDevice.EndScene
-    Call D3DDevice.Present(sRECT, ByVal 0, frmEditor_Map.picBackSelect.hWnd, ByVal 0)
+    Call D3DDevice.Present(sRECT, ByVal 0, frmEditor_Map.picBackSelect.hwnd, ByVal 0)
 End Sub
 
 Public Sub GDIRenderItem(ByRef picBox As PictureBox, ByVal sprite As Long)
@@ -694,7 +712,28 @@ Public Sub GDIRenderItem(ByRef picBox As PictureBox, ByVal sprite As Long)
     RenderTexture Tex_Item(sprite), 0, 0, 0, 0, 32, 32, 32, 32
     ' Finish Rendering
     Call D3DDevice.EndScene
-    Call D3DDevice.Present(sRECT, ByVal 0, picBox.hWnd, ByVal 0)
+    Call D3DDevice.Present(sRECT, ByVal 0, picBox.hwnd, ByVal 0)
+End Sub
+
+Public Sub GDIRenderItemPaperdoll(ByRef picBox As PictureBox, ByVal sprite As Long)
+    Dim Height As Long, Width As Long, sRECT As RECT
+
+    ' exit out if doesn't exist
+    If sprite <= 0 Or sprite > Count_Paperdoll Then Exit Sub
+    Height = mTexture(Tex_Paperdoll(sprite)).h
+    Width = mTexture(Tex_Paperdoll(sprite)).w
+    sRECT.Top = 0
+    sRECT.bottom = 72
+    sRECT.Left = 0
+    sRECT.Right = 144
+    ' Start Rendering
+    Call D3DDevice.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1#, 0)
+    Call D3DDevice.BeginScene
+    'EngineRenderRectangle Tex_Item(sprite), 0, 0, 0, 0, 32, 32, 32, 32, 32, 32
+    RenderTexture Tex_Paperdoll(sprite), 0, 0, 0, 0, 144, 72, 144, 72
+    ' Finish Rendering
+    Call D3DDevice.EndScene
+    Call D3DDevice.Present(sRECT, ByVal 0, picBox.hwnd, ByVal 0)
 End Sub
 
 Public Sub GDIRenderResource(ByRef picBox As PictureBox, ByVal sprite As Long)
@@ -714,7 +753,7 @@ Public Sub GDIRenderResource(ByRef picBox As PictureBox, ByVal sprite As Long)
     RenderTexture Tex_Resource(sprite), 0, 0, 0, 0, Width, Height, Width, Height
     ' Finish Rendering
     Call D3DDevice.EndScene
-    Call D3DDevice.Present(sRECT, ByVal 0, picBox.hWnd, ByVal 0)
+    Call D3DDevice.Present(sRECT, ByVal 0, picBox.hwnd, ByVal 0)
 End Sub
 
 
@@ -742,7 +781,7 @@ Public Sub GDIRenderSpell(ByRef picBox As PictureBox, ByVal sprite As Long)
     RenderTexture Tex_Spellicon(sprite), 0, 0, 0, 0, 32, 32, 32, 32
     ' Finish Rendering
     Call D3DDevice.EndScene
-    Call D3DDevice.Present(sRECT, ByVal 0, picBox.hWnd, ByVal 0)
+    Call D3DDevice.Present(sRECT, ByVal 0, picBox.hwnd, ByVal 0)
 End Sub
 
 ' Directional blocking
@@ -759,7 +798,7 @@ Public Sub DrawDirection(ByVal X As Long, ByVal Y As Long)
         Left = (I - 1) * 8
 
         ' find out whether render blocked or not
-        If Not isDirBlocked(map.TileData.Tile(X, Y).DirBlock, CByte(I)) Then
+        If Not isDirBlocked(Map.TileData.Tile(X, Y).DirBlock, CByte(I)) Then
             Top = 8
         Else
             Top = 16
@@ -797,8 +836,8 @@ Public Sub DrawFog()
             D3DDevice.SetRenderState D3DRS_DESTBLEND, D3DBLEND_INVSRCCOLOR
     End Select
 
-    For X = 0 To ((map.MapData.MaxX * 32) / 256) + 1
-        For Y = 0 To ((map.MapData.MaxY * 32) / 256) + 1
+    For X = 0 To ((Map.MapData.MaxX * 32) / 256) + 1
+        For Y = 0 To ((Map.MapData.MaxY * 32) / 256) + 1
             RenderTexture Tex_Fog(fogNum), (X * 256) + fogOffsetX, (Y * 256) + fogOffsetY, 0, 0, 256, 256, 256, 256, Colour
         Next
     Next
@@ -836,7 +875,7 @@ Public Sub DrawAutoTile(ByVal layernum As Long, ByVal destX As Long, ByVal destY
     Dim yOffset As Long, xOffset As Long
 
     ' calculate the offset
-    Select Case map.TileData.Tile(X, Y).Autotile(layernum)
+    Select Case Map.TileData.Tile(X, Y).Autotile(layernum)
 
         Case AUTOTILE_WATERFALL
             yOffset = (waterfallFrame - 1) * 32
@@ -849,7 +888,7 @@ Public Sub DrawAutoTile(ByVal layernum As Long, ByVal destX As Long, ByVal destY
     End Select
 
     ' Draw the quarter
-    RenderTexture Tex_Tileset(map.TileData.Tile(X, Y).Layer(layernum).tileSet), destX, destY, Autotile(X, Y).Layer(layernum).srcX(quarterNum) + xOffset, Autotile(X, Y).Layer(layernum).srcY(quarterNum) + yOffset, 16, 16, 16, 16
+    RenderTexture Tex_Tileset(Map.TileData.Tile(X, Y).Layer(layernum).tileSet), destX, destY, Autotile(X, Y).Layer(layernum).srcX(quarterNum) + xOffset, Autotile(X, Y).Layer(layernum).srcY(quarterNum) + yOffset, 16, 16, 16, 16
 End Sub
 
 Sub DrawTileSelection()
@@ -881,7 +920,7 @@ End Sub
 Public Sub DrawMapTile(ByVal X As Long, ByVal Y As Long)
 Dim I As Long, tileSet As Long, sX As Long, sY As Long
 
-    With map.TileData.Tile(X, Y)
+    With Map.TileData.Tile(X, Y)
         ' draw the map
         For I = MapLayer.Ground To MapLayer.Mask2
             ' skip tile if tileset isn't set
@@ -898,9 +937,9 @@ Dim I As Long, tileSet As Long, sX As Long, sY As Long
                 ' check if it's fading
                 If TempTile(X, Y).fadeAlpha(I) > 0 Then
                     ' render it
-                    tileSet = map.TileData.Tile(X, Y).Layer(I).tileSet
-                    sX = map.TileData.Tile(X, Y).Layer(I).X
-                    sY = map.TileData.Tile(X, Y).Layer(I).Y
+                    tileSet = Map.TileData.Tile(X, Y).Layer(I).tileSet
+                    sX = Map.TileData.Tile(X, Y).Layer(I).X
+                    sY = Map.TileData.Tile(X, Y).Layer(I).Y
                     RenderTexture Tex_Tileset(tileSet), ConvertMapX(X * 32), ConvertMapY(Y * 32), sX * 32, sY * 32, 32, 32, 32, 32, DX8Colour(White, TempTile(X, Y).fadeAlpha(I))
                 End If
             End If
@@ -911,7 +950,7 @@ End Sub
 Public Sub DrawMapFringeTile(ByVal X As Long, ByVal Y As Long)
     Dim I As Long
 
-    With map.TileData.Tile(X, Y)
+    With Map.TileData.Tile(X, Y)
         ' draw the map
         For I = MapLayer.Fringe To MapLayer.Fringe2
 
@@ -982,15 +1021,15 @@ End Sub
 Public Sub RenderAppearTileFade()
 Dim X As Long, Y As Long, tileSet As Long, sX As Long, sY As Long, layernum As Long
 
-    For X = 0 To map.MapData.MaxX
-        For Y = 0 To map.MapData.MaxY
+    For X = 0 To Map.MapData.MaxX
+        For Y = 0 To Map.MapData.MaxY
             For layernum = MapLayer.Ground To MapLayer.Mask
                 ' check if it's fading
                 If TempTile(X, Y).fadeAlpha(layernum) > 0 Then
                     ' render it
-                    tileSet = map.TileData.Tile(X, Y).Layer(layernum).tileSet
-                    sX = map.TileData.Tile(X, Y).Layer(layernum).X
-                    sY = map.TileData.Tile(X, Y).Layer(layernum).Y
+                    tileSet = Map.TileData.Tile(X, Y).Layer(layernum).tileSet
+                    sX = Map.TileData.Tile(X, Y).Layer(layernum).X
+                    sY = Map.TileData.Tile(X, Y).Layer(layernum).Y
                     RenderTexture Tex_Tileset(tileSet), ConvertMapX(X * 32), ConvertMapY(Y * 32), sX * 32, sY * 32, 32, 32, 32, 32, DX8Colour(White, TempTile(X, Y).fadeAlpha(layernum))
                 End If
             Next
@@ -1079,18 +1118,18 @@ End Sub
 Public Sub RenderMapName()
 Dim zonetype As String, Colour As Long
 
-    If map.MapData.Moral = 0 Then
+    If Map.MapData.Moral = 0 Then
         zonetype = "PK Zone"
         Colour = Red
-    ElseIf map.MapData.Moral = 1 Then
+    ElseIf Map.MapData.Moral = 1 Then
         zonetype = "Safe Zone"
         Colour = White
-    ElseIf map.MapData.Moral = 2 Then
+    ElseIf Map.MapData.Moral = 2 Then
         zonetype = "Boss Chamber"
         Colour = Grey
     End If
     
-    RenderText font(Fonts.rockwellDec_10), Trim$(map.MapData.name) & " - " & zonetype, ScreenWidth - 15 - TextWidth(font(Fonts.rockwellDec_10), Trim$(map.MapData.name) & " - " & zonetype), 45, Colour, 255
+    RenderText font(Fonts.rockwellDec_10), Trim$(Map.MapData.name) & " - " & zonetype, ScreenWidth - 15 - TextWidth(font(Fonts.rockwellDec_10), Trim$(Map.MapData.name) & " - " & zonetype), 45, Colour, 255
 End Sub
 
 Public Sub DrawShopBackground()
@@ -1482,7 +1521,7 @@ Public Sub DrawInventory()
 End Sub
 
 Public Sub DrawChatBubble(ByVal Index As Long)
-    Dim theArray() As String, X As Long, Y As Long, I As Long, MaxWidth As Long, X2 As Long, Y2 As Long, Colour As Long, tmpNum As Long
+    Dim theArray() As String, X As Long, Y As Long, I As Long, MaxWidth As Long, x2 As Long, y2 As Long, Colour As Long, tmpNum As Long
     
     With chatBubble(Index)
         ' exit out early
@@ -1499,8 +1538,8 @@ Public Sub DrawChatBubble(ByVal Index As Long)
                 Y = ConvertMapY((Player(.target).Y * 32) + Player(.target).yOffset) - 32
             Case TARGET_TYPE_EVENT
                 Colour = .Colour
-                X = ConvertMapX(map.TileData.Events(.target).X * 32) + 16
-                Y = ConvertMapY(map.TileData.Events(.target).Y * 32) - 16
+                X = ConvertMapX(Map.TileData.Events(.target).X * 32) + 16
+                Y = ConvertMapY(Map.TileData.Events(.target).Y * 32) - 16
             Case Else
                 Exit Sub
         End Select
@@ -1515,36 +1554,36 @@ Public Sub DrawChatBubble(ByVal Index As Long)
         Next
 
         ' calculate the new position
-        X2 = X - (MaxWidth \ 2)
-        Y2 = Y - (UBound(theArray) * 12)
+        x2 = X - (MaxWidth \ 2)
+        y2 = Y - (UBound(theArray) * 12)
         ' render bubble - top left
-        RenderTexture Tex_GUI(33), X2 - 9, Y2 - 5, 0, 0, 9, 5, 9, 5
+        RenderTexture Tex_GUI(33), x2 - 9, y2 - 5, 0, 0, 9, 5, 9, 5
         ' top right
-        RenderTexture Tex_GUI(33), X2 + MaxWidth, Y2 - 5, 119, 0, 9, 5, 9, 5
+        RenderTexture Tex_GUI(33), x2 + MaxWidth, y2 - 5, 119, 0, 9, 5, 9, 5
         ' top
-        RenderTexture Tex_GUI(33), X2, Y2 - 5, 9, 0, MaxWidth, 5, 5, 5
+        RenderTexture Tex_GUI(33), x2, y2 - 5, 9, 0, MaxWidth, 5, 5, 5
         ' bottom left
-        RenderTexture Tex_GUI(33), X2 - 9, Y, 0, 19, 9, 6, 9, 6
+        RenderTexture Tex_GUI(33), x2 - 9, Y, 0, 19, 9, 6, 9, 6
         ' bottom right
-        RenderTexture Tex_GUI(33), X2 + MaxWidth, Y, 119, 19, 9, 6, 9, 6
+        RenderTexture Tex_GUI(33), x2 + MaxWidth, Y, 119, 19, 9, 6, 9, 6
         ' bottom - left half
-        RenderTexture Tex_GUI(33), X2, Y, 9, 19, (MaxWidth \ 2) - 5, 6, 9, 6
+        RenderTexture Tex_GUI(33), x2, Y, 9, 19, (MaxWidth \ 2) - 5, 6, 9, 6
         ' bottom - right half
-        RenderTexture Tex_GUI(33), X2 + (MaxWidth \ 2) + 6, Y, 9, 19, (MaxWidth \ 2) - 5, 6, 9, 6
+        RenderTexture Tex_GUI(33), x2 + (MaxWidth \ 2) + 6, Y, 9, 19, (MaxWidth \ 2) - 5, 6, 9, 6
         ' left
-        RenderTexture Tex_GUI(33), X2 - 9, Y2, 0, 6, 9, (UBound(theArray) * 12), 9, 1
+        RenderTexture Tex_GUI(33), x2 - 9, y2, 0, 6, 9, (UBound(theArray) * 12), 9, 1
         ' right
-        RenderTexture Tex_GUI(33), X2 + MaxWidth, Y2, 119, 6, 9, (UBound(theArray) * 12), 9, 1
+        RenderTexture Tex_GUI(33), x2 + MaxWidth, y2, 119, 6, 9, (UBound(theArray) * 12), 9, 1
         ' center
-        RenderTexture Tex_GUI(33), X2, Y2, 9, 5, MaxWidth, (UBound(theArray) * 12), 1, 1
+        RenderTexture Tex_GUI(33), x2, y2, 9, 5, MaxWidth, (UBound(theArray) * 12), 1, 1
         ' little pointy bit
         RenderTexture Tex_GUI(33), X - 5, Y, 58, 19, 11, 11, 11, 11
         ' render each line centralised
         tmpNum = UBound(theArray)
 
         For I = 1 To tmpNum
-            RenderText font(Fonts.georgia_16), theArray(I), X - (TextWidth(font(Fonts.georgiaDec_16), theArray(I)) / 2), Y2, Colour
-            Y2 = Y2 + 12
+            RenderText font(Fonts.georgia_16), theArray(I), X - (TextWidth(font(Fonts.georgiaDec_16), theArray(I)) / 2), y2, Colour
+            y2 = y2 + 12
         Next
 
         ' check if it's timed out - close it if so
@@ -1611,22 +1650,26 @@ Public Sub DrawPlayer(ByVal Index As Long)
 
             ' If not attacking, walk normally
             Select Case GetPlayerDir(Index)
-
                 Case DIR_UP
-
                     If (Player(Index).yOffset > 8) Then Anim = Player(Index).Step
-
                 Case DIR_DOWN
-
                     If (Player(Index).yOffset < -8) Then Anim = Player(Index).Step
-
                 Case DIR_LEFT
-
                     If (Player(Index).xOffset > 8) Then Anim = Player(Index).Step
-
                 Case DIR_RIGHT
-
                     If (Player(Index).xOffset < -8) Then Anim = Player(Index).Step
+                Case DIR_UP_LEFT
+                    If (Player(Index).yOffset > 16) Then Anim = Player(Index).Step
+                    If (Player(Index).xOffset > 16) Then Anim = Player(Index).Step
+                Case DIR_UP_RIGHT
+                    If (Player(Index).yOffset > 16) Then Anim = Player(Index).Step
+                    If (Player(Index).xOffset < -16) Then Anim = Player(Index).Step
+                Case DIR_DOWN_LEFT
+                    If (Player(Index).yOffset < -16) Then Anim = Player(Index).Step
+                    If (Player(Index).xOffset > 16) Then Anim = Player(Index).Step
+                Case DIR_DOWN_RIGHT
+                    If (Player(Index).yOffset < -16) Then Anim = Player(Index).Step
+                    If (Player(Index).xOffset < -16) Then Anim = Player(Index).Step
             End Select
 
         End If
@@ -1659,13 +1702,13 @@ Public Sub DrawPlayer(ByVal Index As Long)
         Case DIR_UP
             spritetop = 3
 
-        Case DIR_RIGHT
+        Case DIR_RIGHT, DIR_UP_RIGHT, DIR_DOWN_RIGHT
             spritetop = 2
 
         Case DIR_DOWN
             spritetop = 0
 
-        Case DIR_LEFT
+        Case DIR_LEFT, DIR_UP_LEFT, DIR_DOWN_LEFT
             spritetop = 1
     End Select
 
@@ -1723,20 +1766,25 @@ Public Sub DrawNpc(ByVal MapNpcNum As Long)
             Select Case MapNpc(MapNpcNum).Dir
 
                 Case DIR_UP
-
                     If (MapNpc(MapNpcNum).yOffset > 8) Then Anim = MapNpc(MapNpcNum).Step
-
                 Case DIR_DOWN
-
                     If (MapNpc(MapNpcNum).yOffset < -8) Then Anim = MapNpc(MapNpcNum).Step
-
                 Case DIR_LEFT
-
                     If (MapNpc(MapNpcNum).xOffset > 8) Then Anim = MapNpc(MapNpcNum).Step
-
                 Case DIR_RIGHT
-
                     If (MapNpc(MapNpcNum).xOffset < -8) Then Anim = MapNpc(MapNpcNum).Step
+                Case DIR_UP_LEFT
+                    If (MapNpc(MapNpcNum).yOffset > 16) Then Anim = MapNpc(MapNpcNum).Step
+                    If (MapNpc(MapNpcNum).xOffset > 16) Then Anim = MapNpc(MapNpcNum).Step
+                Case DIR_UP_RIGHT
+                    If (MapNpc(MapNpcNum).yOffset > 16) Then Anim = MapNpc(MapNpcNum).Step
+                    If (MapNpc(MapNpcNum).xOffset < -16) Then Anim = MapNpc(MapNpcNum).Step
+                Case DIR_DOWN_LEFT
+                    If (MapNpc(MapNpcNum).yOffset < -16) Then Anim = MapNpc(MapNpcNum).Step
+                    If (MapNpc(MapNpcNum).xOffset > 16) Then Anim = MapNpc(MapNpcNum).Step
+                Case DIR_DOWN_RIGHT
+                    If (MapNpc(MapNpcNum).yOffset < -16) Then Anim = MapNpc(MapNpcNum).Step
+                    If (MapNpc(MapNpcNum).xOffset < -16) Then Anim = MapNpc(MapNpcNum).Step
             End Select
 
         End If
@@ -1773,13 +1821,13 @@ Public Sub DrawNpc(ByVal MapNpcNum As Long)
         Case DIR_UP
             spritetop = 3
 
-        Case DIR_RIGHT
+        Case DIR_RIGHT, DIR_UP_RIGHT, DIR_DOWN_RIGHT
             spritetop = 2
 
         Case DIR_DOWN
             spritetop = 0
 
-        Case DIR_LEFT
+        Case DIR_LEFT, DIR_UP_LEFT, DIR_DOWN_LEFT
             spritetop = 1
     End Select
 
@@ -1809,7 +1857,7 @@ Sub DrawEvent(eventNum As Long, pageNum As Long)
 Dim texNum As Long, X As Long, Y As Long
 
     ' render it
-    With map.TileData.Events(eventNum).EventPage(pageNum)
+    With Map.TileData.Events(eventNum).EventPage(pageNum)
         If .GraphicType > 0 Then
             If .Graphic > 0 Then
                 Select Case .GraphicType
@@ -1823,8 +1871,8 @@ Dim texNum As Long, X As Long, Y As Long
                         End If
                 End Select
                 If texNum > 0 Then
-                    X = ConvertMapX(map.TileData.Events(eventNum).X * 32)
-                    Y = ConvertMapY(map.TileData.Events(eventNum).Y * 32)
+                    X = ConvertMapX(Map.TileData.Events(eventNum).X * 32)
+                    Y = ConvertMapY(Map.TileData.Events(eventNum).Y * 32)
                     RenderTexture texNum, X, Y, .GraphicX * 32, .GraphicY * 32, 32, 32, 32, 32
                 End If
             End If
@@ -1835,14 +1883,14 @@ End Sub
 Sub DrawLowerEvents()
 Dim I As Long, X As Long
 
-    If map.TileData.EventCount = 0 Then Exit Sub
-    For I = 1 To map.TileData.EventCount
+    If Map.TileData.EventCount = 0 Then Exit Sub
+    For I = 1 To Map.TileData.EventCount
         ' find the active page
-        If map.TileData.Events(I).pageCount > 0 Then
+        If Map.TileData.Events(I).pageCount > 0 Then
             X = ActiveEventPage(I)
             If X > 0 Then
                 ' make sure it's lower
-                If map.TileData.Events(I).EventPage(X).Priority <> 2 Then
+                If Map.TileData.Events(I).EventPage(X).Priority <> 2 Then
                     ' render event
                     DrawEvent I, X
                 End If
@@ -1854,14 +1902,14 @@ End Sub
 Sub DrawUpperEvents()
 Dim I As Long, X As Long
 
-    If map.TileData.EventCount = 0 Then Exit Sub
-    For I = 1 To map.TileData.EventCount
+    If Map.TileData.EventCount = 0 Then Exit Sub
+    For I = 1 To Map.TileData.EventCount
         ' find the active page
-        If map.TileData.Events(I).pageCount > 0 Then
+        If Map.TileData.Events(I).pageCount > 0 Then
             X = ActiveEventPage(I)
             If X > 0 Then
                 ' make sure it's lower
-                If map.TileData.Events(I).EventPage(X).Priority = 2 Then
+                If Map.TileData.Events(I).EventPage(X).Priority = 2 Then
                     ' render event
                     DrawEvent I, X
                 End If
@@ -1943,10 +1991,10 @@ Public Sub DrawResource(ByVal Resource_num As Long)
     X = MapResource(Resource_num).X
     Y = MapResource(Resource_num).Y
 
-    If X < 0 Or X > map.MapData.MaxX Then Exit Sub
-    If Y < 0 Or Y > map.MapData.MaxY Then Exit Sub
+    If X < 0 Or X > Map.MapData.MaxX Then Exit Sub
+    If Y < 0 Or Y > Map.MapData.MaxY Then Exit Sub
     ' Get the Resource type
-    Resource_master = map.TileData.Tile(X, Y).Data1
+    Resource_master = Map.TileData.Tile(X, Y).Data1
 
     If Resource_master = 0 Then Exit Sub
     If Resource(Resource_master).ResourceImage = 0 Then Exit Sub
@@ -2203,6 +2251,7 @@ Public Sub DrawGDI()
         GDIRenderAnimation
     ElseIf frmEditor_Item.visible Then
         GDIRenderItem frmEditor_Item.picItem, frmEditor_Item.scrlPic.value
+        GDIRenderItemPaperdoll frmEditor_Item.picPaperdoll, frmEditor_Item.scrlPaperdoll.value
     ElseIf frmEditor_Map.visible Then
         GDIRenderTileset
         If frmEditor_Events.visible Then

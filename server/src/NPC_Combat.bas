@@ -222,28 +222,66 @@ Function CanNpcAttackPlayer(ByVal mapNpcNum As Long, ByVal index As Long, Option
     If IsPlaying(index) Then
         If npcNum > 0 Then
 
-            ' Check if at same coordinates
-            If (GetPlayerY(index) + 1 = MapNpc(mapnum).Npc(mapNpcNum).y) And (GetPlayerX(index) = MapNpc(mapnum).Npc(mapNpcNum).x) Then
-                CanNpcAttackPlayer = True
-            Else
-                If (GetPlayerY(index) - 1 = MapNpc(mapnum).Npc(mapNpcNum).y) And (GetPlayerX(index) = MapNpc(mapnum).Npc(mapNpcNum).x) Then
-                    CanNpcAttackPlayer = True
-                Else
-                    If (GetPlayerY(index) = MapNpc(mapnum).Npc(mapNpcNum).y) And (GetPlayerX(index) + 1 = MapNpc(mapnum).Npc(mapNpcNum).x) Then
-                        CanNpcAttackPlayer = True
-                    Else
-                        If (GetPlayerY(index) = MapNpc(mapnum).Npc(mapNpcNum).y) And (GetPlayerX(index) - 1 = MapNpc(mapnum).Npc(mapNpcNum).x) Then
+                        ' Check if at same coordinates
+            Select Case MapNpc(mapnum).Npc(mapNpcNum).Dir
+                Case DIR_UP
+                    PlayerX = GetPlayerX(index)
+                    PlayerY = GetPlayerY(index) + 1
+                    
+                    If PlayerX >= MapNpc(mapnum).Npc(mapNpcNum).x - 1 And PlayerX <= MapNpc(mapnum).Npc(mapNpcNum).x + 1 Then
+                        If PlayerY = MapNpc(mapnum).Npc(mapNpcNum).y Then
+                            If MapNpc(mapnum).Npc(mapNpcNum).Dir <> DIR_UP Then
+                                Call SendNPCDir(mapnum, mapNpcNum, DIR_UP)
+                            End If
                             CanNpcAttackPlayer = True
                         End If
                     End If
-                End If
-            End If
+                Case DIR_DOWN
+                    PlayerX = GetPlayerX(index)
+                    PlayerY = GetPlayerY(index) - 1
+                    
+                    If PlayerX >= MapNpc(mapnum).Npc(mapNpcNum).x - 1 And PlayerX <= MapNpc(mapnum).Npc(mapNpcNum).x + 1 Then
+                        If PlayerY = MapNpc(mapnum).Npc(mapNpcNum).y Then
+                            If MapNpc(mapnum).Npc(mapNpcNum).Dir <> DIR_DOWN Then
+                                Call SendNPCDir(mapnum, mapNpcNum, DIR_DOWN)
+                            End If
+                            CanNpcAttackPlayer = True
+                        End If
+                    End If
+                
+                Case DIR_LEFT, DIR_UP_LEFT, DIR_DOWN_LEFT
+                    PlayerX = GetPlayerX(index) + 1
+                    PlayerY = GetPlayerY(index)
+                    
+                    If PlayerX = MapNpc(mapnum).Npc(mapNpcNum).x Then
+                        If PlayerY >= MapNpc(mapnum).Npc(mapNpcNum).y - 1 And PlayerY <= MapNpc(mapnum).Npc(mapNpcNum).y + 1 Then
+                            If MapNpc(mapnum).Npc(mapNpcNum).Dir <> DIR_LEFT Then
+                                Call SendNPCDir(mapnum, mapNpcNum, DIR_LEFT)
+                            End If
+                            CanNpcAttackPlayer = True
+                        End If
+                    End If
+                
+                Case DIR_RIGHT, DIR_UP_RIGHT, DIR_DOWN_RIGHT
+                    PlayerX = GetPlayerX(index) - 1
+                    PlayerY = GetPlayerY(index)
+                    
+                    If PlayerX = MapNpc(mapnum).Npc(mapNpcNum).x Then
+                        If PlayerY >= MapNpc(mapnum).Npc(mapNpcNum).y - 1 And PlayerY <= MapNpc(mapnum).Npc(mapNpcNum).y + 1 Then
+                            If MapNpc(mapnum).Npc(mapNpcNum).Dir <> DIR_RIGHT Then
+                                Call SendNPCDir(mapnum, mapNpcNum, DIR_RIGHT)
+                            End If
+                            CanNpcAttackPlayer = True
+                        End If
+                    End If
+            
+            End Select
         End If
     End If
 End Function
 
 Sub NpcAttackPlayer(ByVal mapNpcNum As Long, ByVal victim As Long, ByVal damage As Long, Optional ByVal spellNum As Long, Optional ByVal overTime As Boolean = False)
-    Dim Name As String
+    Dim name As String
     Dim exp As Long
     Dim mapnum As Long
     Dim i As Long
@@ -260,7 +298,7 @@ Sub NpcAttackPlayer(ByVal mapNpcNum As Long, ByVal victim As Long, ByVal damage 
     End If
 
     mapnum = GetPlayerMap(victim)
-    Name = Trim$(Npc(MapNpc(mapnum).Npc(mapNpcNum).Num).Name)
+    name = Trim$(Npc(MapNpc(mapnum).Npc(mapNpcNum).Num).name)
     
     ' Send this packet so they can see the npc attacking
     Set Buffer = New clsBuffer
@@ -297,7 +335,7 @@ Sub NpcAttackPlayer(ByVal mapNpcNum As Long, ByVal victim As Long, ByVal damage 
         KillPlayer victim
         
         ' Player is dead
-        Call GlobalMsg(GetPlayerName(victim) & " has been killed by " & Name, BrightRed)
+        Call GlobalMsg(GetPlayerName(victim) & " has been killed by " & name, BrightRed)
 
         ' Set NPC target to 0
         MapNpc(mapnum).Npc(mapNpcNum).target = 0

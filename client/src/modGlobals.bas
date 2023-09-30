@@ -128,14 +128,10 @@ Public isLogging As Boolean
 Public ShiftDown As Boolean
 Public ControlDown As Boolean
 Public tabDown As Boolean
-Public wDown As Boolean
-Public sDown As Boolean
-Public aDown As Boolean
-Public dDown As Boolean
-Public upDown As Boolean
-Public downDown As Boolean
-Public leftDown As Boolean
-Public rightDown As Boolean
+Public DirUp As Boolean
+Public DirDown As Boolean
+Public DirLeft As Boolean
+Public DirRight As Boolean
 ' Used to freeze controls when getting a new map
 Public GettingMap As Boolean
 ' Used to check if FPS needs to be drawn

@@ -2,7 +2,7 @@ Attribute VB_Name = "modTypes"
 Option Explicit
 
 ' Public data structures
-Public map As MapRec
+Public Map As MapRec
 Public MapCRC32(1 To MAX_MAPS) As MapCRCStruct
 Public Particula(1 To MAX_WEATHER_PARTICLES) As ParticulaRec
 Public Bank As BankRec
@@ -26,6 +26,20 @@ Public Autotile() As AutotileRec
 Public MapSounds() As MapSoundRec
 Public MapSoundCount As Long
 Public Options As OptionsRec
+
+Public EmptyMap As MapRec
+Public EmptyPlayer As PlayerRec
+Public EmptyItem As ItemRec
+Public EmptyAnimInstance As AnimInstanceRec
+Public EmptyAnimation As AnimationRec
+Public EmptyNpc As NpcRec
+Public EmptySpell As SpellRec
+Public EmptyShop As ShopRec
+Public EmptyResource As ResourceRec
+Public EmptyMapItem As MapItemRec
+Public EmptyMapNpc As MapNpcRec
+Public EmptyConv As ConvWrapperRec
+Public EmptyActionMsg As ActionMsgRec
 
 'Client
 Public WeatherParticle(1 To MAX_WEATHER_PARTICLES) As WeatherParticleRec
@@ -88,7 +102,7 @@ Private Type PlayerRec
     ' Worn equipment
     Equipment(1 To Equipment.Equipment_Count - 1) As Long
     ' Position
-    map As Long
+    Map As Long
     x As Byte
     y As Byte
     Dir As Byte
@@ -184,7 +198,7 @@ Private Type MapDataRec
     Red As Long
     Green As Long
     Blue As Long
-    Alpha As Long
+    alpha As Long
     
     BossNpc As Long
     
@@ -307,7 +321,7 @@ Private Type MapNpcRec
     target As Long
     TargetType As Byte
     Vital(1 To Vitals.Vital_Count - 1) As Long
-    map As Long
+    Map As Long
     x As Byte
     y As Byte
     Dir As Byte
@@ -348,7 +362,7 @@ Public Type SpellRec
     CastTime As Long
     CDTime As Long
     icon As Long
-    map As Long
+    Map As Long
     x As Long
     y As Long
     Dir As Byte
@@ -413,7 +427,7 @@ Private Type ActionMsgRec
     x As Long
     y As Long
     timer As Long
-    Alpha As Long
+    alpha As Long
 End Type
 
 Private Type BloodRec
@@ -528,7 +542,7 @@ Public Type ParticulaRec
     Rotação As Long
     RotaçãoOld As Long
     Cor As Byte
-    UpDown As Byte
+    DirUp As Byte
 End Type
 
 Public Type MapSoundRec

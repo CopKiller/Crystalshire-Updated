@@ -3,17 +3,17 @@ Attribute VB_Name = "Map_Handle"
 ' :: Request edit map packet ::
 ' :::::::::::::::::::::::::::::
 Sub HandleRequestEditMap(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim buffer As clsBuffer
+    Dim Buffer As clsBuffer
 
     ' Prevent hacking
     If GetPlayerAccess(index) < ADMIN_MAPPER Then
         Exit Sub
     End If
 
-    Set buffer = New clsBuffer
-    buffer.WriteLong SEditMap
-    SendDataTo index, buffer.ToArray()
-    buffer.Flush: Set buffer = Nothing
+    Set Buffer = New clsBuffer
+    Buffer.WriteLong SEditMap
+    SendDataTo index, Buffer.ToArray()
+    Buffer.Flush: Set Buffer = Nothing
 End Sub
 
 ' ::::::::::::::::::::::::::::::::::
@@ -21,14 +21,14 @@ End Sub
 ' ::::::::::::::::::::::::::::::::::
 Sub HandleRequestNewMap(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
     Dim dir As Long
-    Dim buffer As clsBuffer
-    Set buffer = New clsBuffer
-    buffer.WriteBytes Data()
-    dir = buffer.ReadLong 'CLng(Parse(1))
-    buffer.Flush: Set buffer = Nothing
+    Dim Buffer As clsBuffer
+    Set Buffer = New clsBuffer
+    Buffer.WriteBytes Data()
+    dir = Buffer.ReadLong 'CLng(Parse(1))
+    Buffer.Flush: Set Buffer = Nothing
 
     ' Prevent hacking
-    If dir < DIR_UP Or dir > DIR_RIGHT Then
+    If dir < DIR_UP Or dir > DIR_DOWN_RIGHT Then
         Exit Sub
     End If
 
@@ -40,73 +40,73 @@ End Sub
 ' :::::::::::::::::::::
 Public Sub HandleMapData(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
     Dim i As Long
-    Dim MapNum As Long
+    Dim mapnum As Long
     Dim x As Long
     Dim y As Long
-    Dim buffer As clsBuffer
-    Set buffer = New clsBuffer
-    buffer.WriteBytes Data()
+    Dim Buffer As clsBuffer
+    Set Buffer = New clsBuffer
+    Buffer.WriteBytes Data()
 
     ' Prevent hacking
     If GetPlayerAccess(index) < ADMIN_MAPPER Then
         Exit Sub
     End If
 
-    MapNum = GetPlayerMap(index)
+    mapnum = GetPlayerMap(index)
 
-    Call ClearMap(MapNum)
+    Call ClearMap(mapnum)
     
-    With Map(MapNum).MapData
-        .name = buffer.ReadString
-        .Music = buffer.ReadString
-        .Moral = buffer.ReadByte
-        .Up = buffer.ReadLong
-        .Down = buffer.ReadLong
-        .left = buffer.ReadLong
-        .Right = buffer.ReadLong
-        .BootMap = buffer.ReadLong
-        .BootX = buffer.ReadByte
-        .BootY = buffer.ReadByte
-        .MaxX = buffer.ReadByte
-        .MaxY = buffer.ReadByte
-        .Weather = buffer.ReadLong
-        .WeatherIntensity = buffer.ReadLong
-        .Fog = buffer.ReadLong
-        .FogSpeed = buffer.ReadLong
-        .FogOpacity = buffer.ReadLong
-        .Red = buffer.ReadLong
-        .Green = buffer.ReadLong
-        .Blue = buffer.ReadLong
-        .Alpha = buffer.ReadLong
-        .BossNpc = buffer.ReadLong
+    With Map(mapnum).MapData
+        .name = Buffer.ReadString
+        .Music = Buffer.ReadString
+        .Moral = Buffer.ReadByte
+        .Up = Buffer.ReadLong
+        .Down = Buffer.ReadLong
+        .left = Buffer.ReadLong
+        .Right = Buffer.ReadLong
+        .BootMap = Buffer.ReadLong
+        .BootX = Buffer.ReadByte
+        .BootY = Buffer.ReadByte
+        .MaxX = Buffer.ReadByte
+        .MaxY = Buffer.ReadByte
+        .Weather = Buffer.ReadLong
+        .WeatherIntensity = Buffer.ReadLong
+        .Fog = Buffer.ReadLong
+        .FogSpeed = Buffer.ReadLong
+        .FogOpacity = Buffer.ReadLong
+        .Red = Buffer.ReadLong
+        .Green = Buffer.ReadLong
+        .Blue = Buffer.ReadLong
+        .Alpha = Buffer.ReadLong
+        .BossNpc = Buffer.ReadLong
         For i = 1 To MAX_MAP_NPCS
-            .Npc(i) = buffer.ReadLong
-            Call ClearMapNpc(i, MapNum)
+            .Npc(i) = Buffer.ReadLong
+            Call ClearMapNpc(i, mapnum)
         Next
     End With
     
-    ReDim Map(MapNum).TileData.Tile(0 To Map(MapNum).MapData.MaxX, 0 To Map(MapNum).MapData.MaxY)
+    ReDim Map(mapnum).TileData.Tile(0 To Map(mapnum).MapData.MaxX, 0 To Map(mapnum).MapData.MaxY)
 
-    For x = 0 To Map(MapNum).MapData.MaxX
-        For y = 0 To Map(MapNum).MapData.MaxY
+    For x = 0 To Map(mapnum).MapData.MaxX
+        For y = 0 To Map(mapnum).MapData.MaxY
             For i = 1 To MapLayer.Layer_Count - 1
-                Map(MapNum).TileData.Tile(x, y).Layer(i).x = buffer.ReadLong
-                Map(MapNum).TileData.Tile(x, y).Layer(i).y = buffer.ReadLong
-                Map(MapNum).TileData.Tile(x, y).Layer(i).Tileset = buffer.ReadLong
-                Map(MapNum).TileData.Tile(x, y).Autotile(i) = buffer.ReadByte
+                Map(mapnum).TileData.Tile(x, y).Layer(i).x = Buffer.ReadLong
+                Map(mapnum).TileData.Tile(x, y).Layer(i).y = Buffer.ReadLong
+                Map(mapnum).TileData.Tile(x, y).Layer(i).Tileset = Buffer.ReadLong
+                Map(mapnum).TileData.Tile(x, y).Autotile(i) = Buffer.ReadByte
             Next
-            Map(MapNum).TileData.Tile(x, y).Type = buffer.ReadByte
-            Map(MapNum).TileData.Tile(x, y).Data1 = buffer.ReadLong
-            Map(MapNum).TileData.Tile(x, y).Data2 = buffer.ReadLong
-            Map(MapNum).TileData.Tile(x, y).Data3 = buffer.ReadLong
-            Map(MapNum).TileData.Tile(x, y).Data4 = buffer.ReadLong
-            Map(MapNum).TileData.Tile(x, y).Data5 = buffer.ReadLong
-            Map(MapNum).TileData.Tile(x, y).DirBlock = buffer.ReadByte
+            Map(mapnum).TileData.Tile(x, y).Type = Buffer.ReadByte
+            Map(mapnum).TileData.Tile(x, y).Data1 = Buffer.ReadLong
+            Map(mapnum).TileData.Tile(x, y).Data2 = Buffer.ReadLong
+            Map(mapnum).TileData.Tile(x, y).Data3 = Buffer.ReadLong
+            Map(mapnum).TileData.Tile(x, y).Data4 = Buffer.ReadLong
+            Map(mapnum).TileData.Tile(x, y).Data5 = Buffer.ReadLong
+            Map(mapnum).TileData.Tile(x, y).DirBlock = Buffer.ReadByte
         Next
     Next
 
-    Call SendMapNpcsToMap(MapNum)
-    Call SpawnMapNpcs(MapNum)
+    Call SendMapNpcsToMap(mapnum)
+    Call SpawnMapNpcs(mapnum)
 
     ' Clear out it all
     For i = 1 To MAX_MAP_ITEMS
@@ -117,20 +117,20 @@ Public Sub HandleMapData(ByVal index As Long, ByRef Data() As Byte, ByVal StartA
     ' Respawn
     Call SpawnMapItems(GetPlayerMap(index))
     ' Save the map
-    Call SaveMap(MapNum)
-    Call MapCache_Create(MapNum)
-    Call ClearTempTile(MapNum)
-    Call CacheResources(MapNum)
-    Call GetMapCRC32(MapNum)
+    Call SaveMap(mapnum)
+    Call MapCache_Create(mapnum)
+    Call ClearTempTile(mapnum)
+    Call CacheResources(mapnum)
+    Call GetMapCRC32(mapnum)
 
     ' Refresh map for everyone online
     For i = 1 To Player_HighIndex
-        If IsPlaying(i) And GetPlayerMap(i) = MapNum Then
-            Call PlayerWarp(i, MapNum, GetPlayerX(i), GetPlayerY(i))
+        If IsPlaying(i) And GetPlayerMap(i) = mapnum Then
+            Call PlayerWarp(i, mapnum, GetPlayerX(i), GetPlayerY(i))
         End If
     Next i
 
-    buffer.Flush: Set buffer = Nothing
+    Buffer.Flush: Set Buffer = Nothing
 End Sub
 
 ' ::::::::::::::::::::::::::::
@@ -138,13 +138,13 @@ End Sub
 ' ::::::::::::::::::::::::::::
 Sub HandleNeedMap(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
     Dim s As String
-    Dim buffer As clsBuffer
+    Dim Buffer As clsBuffer
     Dim i As Long
-    Set buffer = New clsBuffer
-    buffer.WriteBytes Data()
+    Set Buffer = New clsBuffer
+    Buffer.WriteBytes Data()
     ' Get yes/no value
-    s = buffer.ReadLong 'Parse(1)
-    buffer.Flush: Set buffer = Nothing
+    s = Buffer.ReadLong 'Parse(1)
+    Buffer.Flush: Set Buffer = Nothing
 
     ' Check if map data is needed to be sent
     If s = 1 Then
@@ -161,9 +161,9 @@ Sub HandleNeedMap(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As 
     Next
 
     TempPlayer(index).GettingMap = NO
-    Set buffer = New clsBuffer
-    buffer.WriteLong SMapDone
-    SendDataTo index, buffer.ToArray()
+    Set Buffer = New clsBuffer
+    Buffer.WriteLong SMapDone
+    SendDataTo index, Buffer.ToArray()
 End Sub
 
 ' :::::::::::::::::::::::::::::::::::::::::::::::
@@ -179,13 +179,13 @@ End Sub
 Sub HandleMapDropItem(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
     Dim invNum As Long
     Dim amount As Long
-    Dim buffer As clsBuffer
-    Set buffer = New clsBuffer
+    Dim Buffer As clsBuffer
+    Set Buffer = New clsBuffer
     
-    buffer.WriteBytes Data()
-    invNum = buffer.ReadLong 'CLng(Parse(1))
-    amount = buffer.ReadLong 'CLng(Parse(2))
-    buffer.Flush: Set buffer = Nothing
+    Buffer.WriteBytes Data()
+    invNum = Buffer.ReadLong 'CLng(Parse(1))
+    amount = Buffer.ReadLong 'CLng(Parse(2))
+    Buffer.Flush: Set Buffer = Nothing
     
     If TempPlayer(index).InBank Or TempPlayer(index).InShop Then Exit Sub
 
