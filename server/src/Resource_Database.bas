@@ -51,7 +51,7 @@ Public Sub LoadResources()
 End Sub
 
 Public Sub ClearResource(ByVal index As Long)
-    Call ZeroMemory(ByVal VarPtr(Resource(index)), LenB(Resource(index)))
+    Resource(index) = EmptyResource
     Resource(index).Name = vbNullString
     Resource(index).SuccessMessage = vbNullString
     Resource(index).EmptyMessage = vbNullString

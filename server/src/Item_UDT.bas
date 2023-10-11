@@ -2,6 +2,7 @@ Attribute VB_Name = "Item_UDT"
 Option Explicit
 
 Public Item(1 To MAX_ITEMS) As ItemRec
+Public EmptyItem As ItemRec
 
 Private Type ItemRec
     Name As String * NAME_LENGTH

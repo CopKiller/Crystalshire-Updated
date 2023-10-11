@@ -3,7 +3,7 @@ Option Explicit
 
 Sub SendNewCharClasses(ByVal index As Long)
     Dim packet As String
-    Dim i As Long, n As Long, q As Long
+    Dim i As Long, N As Long, q As Long
     Dim Buffer As clsBuffer
     Set Buffer = New clsBuffer
     Buffer.WriteLong SNewCharClasses
@@ -15,20 +15,20 @@ Sub SendNewCharClasses(ByVal index As Long)
         Buffer.WriteLong GetClassMaxVital(i, Vitals.MP)
         
         ' set sprite array size
-        n = UBound(Class(i).MaleSprite)
+        N = UBound(Class(i).MaleSprite)
         ' send array size
-        Buffer.WriteLong n
+        Buffer.WriteLong N
         ' loop around sending each sprite
-        For q = 0 To n
+        For q = 0 To N
             Buffer.WriteLong Class(i).MaleSprite(q)
         Next
         
         ' set sprite array size
-        n = UBound(Class(i).FemaleSprite)
+        N = UBound(Class(i).FemaleSprite)
         ' send array size
-        Buffer.WriteLong n
+        Buffer.WriteLong N
         ' loop around sending each sprite
-        For q = 0 To n
+        For q = 0 To N
             Buffer.WriteLong Class(i).FemaleSprite(q)
         Next
         
@@ -38,7 +38,7 @@ Sub SendNewCharClasses(ByVal index As Long)
     Next
 
     SendDataTo index, Buffer.ToArray()
-    Set Buffer = Nothing
+    Buffer.Flush: Set Buffer = Nothing
 End Sub
 
 Sub SendPlayerChars(ByVal index As Long)
@@ -61,5 +61,5 @@ Dim Buffer As clsBuffer, tmpName As String, i As Long, tmpSprite As Long, tmpAcc
     Next
     
     SendDataTo index, Buffer.ToArray()
-    Set Buffer = Nothing
+    Buffer.Flush: Set Buffer = Nothing
 End Sub

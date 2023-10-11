@@ -2,6 +2,7 @@ Attribute VB_Name = "NPC_UDT"
 Option Explicit
 
 Public Npc(1 To MAX_NPCS) As NpcRec
+Public EmptyNpc As NpcRec
 
 Private Type NpcRec
     Name As String * NAME_LENGTH
@@ -11,6 +12,7 @@ Private Type NpcRec
     Sprite As Long
     SpawnSecs As Long
     Behaviour As Byte
+    Mission As Long
     Range As Byte
     Stat(1 To Stats.Stat_Count - 1) As Byte
     HP As Long

@@ -65,6 +65,5 @@ Public Sub SendAnimation(ByVal mapnum As Long, ByVal Anim As Long, ByVal x As Lo
     Buffer.WriteByte isCasting
     
     SendDataToMap mapnum, Buffer.ToArray()
-    
     Buffer.Flush: Set Buffer = Nothing
 End Sub

@@ -52,7 +52,7 @@ Public Sub LoadSpells()
 End Sub
 
 Public Sub ClearSpell(ByVal index As Long)
-    Call ZeroMemory(ByVal VarPtr(Spell(index)), LenB(Spell(index)))
+    Spell(index) = EmptySpell
     Spell(index).Name = vbNullString
     Spell(index).LevelReq = 1    'Needs to be 1 for the spell editor
     Spell(index).Desc = vbNullString

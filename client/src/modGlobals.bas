@@ -202,11 +202,6 @@ Public AnimationIndex As Byte
 Public FPS_Lock As Boolean
 ' Editor edited items array
 Public Item_Changed(1 To MAX_ITEMS) As Boolean
-Public NPC_Changed(1 To MAX_NPCS) As Boolean
-Public Resource_Changed(1 To MAX_RESOURCES) As Boolean
-Public Animation_Changed(1 To MAX_ANIMATIONS) As Boolean
-Public Spell_Changed(1 To MAX_SPELLS) As Boolean
-Public Shop_Changed(1 To MAX_SHOPS) As Boolean
 Public Conv_Changed(1 To MAX_CONVS) As Boolean
 ' New char
 Public newCharSprite As Long

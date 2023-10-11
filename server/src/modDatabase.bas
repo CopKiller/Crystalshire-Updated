@@ -11,11 +11,11 @@ Public Declare Sub ZeroMemory Lib "Kernel32.dll" Alias "RtlZeroMemory" (Destinat
 Private crcTable(0 To 255) As Long
 
 Public Sub InitCRC32()
-    Dim i As Long, n As Long, CRC As Long
+    Dim i As Long, N As Long, CRC As Long
 
     For i = 0 To 255
         CRC = i
-        For n = 0 To 7
+        For N = 0 To 7
             If CRC And 1 Then
                 CRC = (((CRC And &HFFFFFFFE) \ 2) And &H7FFFFFFF) Xor &HEDB88320
             Else
@@ -50,28 +50,24 @@ Public Sub HandleError(ByVal procName As String, ByVal contName As String, ByVal
     Close #1
 End Sub
 
-Public Sub ChkDir(ByVal tDir As String, ByVal tName As String)
-    If LCase$(dir(tDir & tName, vbDirectory)) <> tName Then Call MkDir(tDir & tName)
-End Sub
-
 ' Outputs string to text file
 Sub AddLog(ByVal Text As String, ByVal FN As String)
     Dim filename As String
-    Dim F As Long
+    Dim f As Long
 
     If ServerLog Then
         filename = App.Path & "\data\logs\" & FN
 
         If Not FileExist(filename) Then
-            F = FreeFile
-            Open filename For Output As #F
-            Close #F
+            f = FreeFile
+            Open filename For Output As #f
+            Close #f
         End If
 
-        F = FreeFile
-        Open filename For Append As #F
-        Print #F, DateValue(Now) & " " & Time & ": " & Text
-        Close #F
+        f = FreeFile
+        Open filename For Append As #f
+        Print #f, DateValue(Now) & " " & Time & ": " & Text
+        Close #f
     End If
 
 End Sub
@@ -95,7 +91,7 @@ End Sub
 '//This check if the file exist
 Public Function FileExist(ByVal filename As String) As Boolean
 ' Checking if File Exist
-    If LenB(dir(filename)) > 0 Then FileExist = True
+    If LenB(Dir(filename)) > 0 Then FileExist = True
 End Function
 
 Public Sub SaveOptions()
@@ -128,7 +124,7 @@ Public Sub ToggleMute(ByVal index As Long)
 End Sub
 
 Public Sub BanIndex(ByVal BanPlayerIndex As Long)
-    Dim filename As String, IP As String, F As Long, i As Long
+    Dim filename As String, IP As String, f As Long, i As Long
 
     ' Add banned to the player's index
     Player(BanPlayerIndex).isBanned = 1
@@ -139,17 +135,17 @@ Public Sub BanIndex(ByVal BanPlayerIndex As Long)
 
     ' Make sure the file exists
     If Not FileExist(filename) Then
-        F = FreeFile
-        Open filename For Output As #F
-        Close #F
+        f = FreeFile
+        Open filename For Output As #f
+        Close #f
     End If
 
     ' Print the IP in the ip ban list
     IP = GetPlayerIP(BanPlayerIndex)
-    F = FreeFile
-    Open filename For Append As #F
-    Print #F, IP
-    Close #F
+    f = FreeFile
+    Open filename For Append As #f
+    Print #f, IP
+    Close #f
 
     ' Tell them they're banned
     Call GlobalMsg(GetPlayerName(BanPlayerIndex) & " has been banned from " & GAME_NAME & ".", White)
@@ -158,32 +154,32 @@ Public Sub BanIndex(ByVal BanPlayerIndex As Long)
 End Sub
 
 Public Function isBanned_IP(ByVal IP As String) As Boolean
-    Dim filename As String, fIP As String, F As Long
+    Dim filename As String, fIP As String, f As Long
 
     filename = App.Path & "\data\banlist_ip.txt"
 
     ' Check if file exists
     If Not FileExist(filename) Then
-        F = FreeFile
-        Open filename For Output As #F
-        Close #F
+        f = FreeFile
+        Open filename For Output As #f
+        Close #f
     End If
 
-    F = FreeFile
-    Open filename For Input As #F
+    f = FreeFile
+    Open filename For Input As #f
 
-    Do While Not EOF(F)
-        Input #F, fIP
+    Do While Not EOF(f)
+        Input #f, fIP
 
         ' Is banned?
         If Trim$(LCase$(fIP)) = Trim$(LCase$(Mid$(IP, 1, Len(fIP)))) Then
             isBanned_IP = True
-            Close #F
+            Close #f
             Exit Function
         End If
     Loop
 
-    Close #F
+    Close #f
 End Function
 
 Public Function isBanned_Account(ByVal index As Long) As Boolean
@@ -195,5 +191,5 @@ Public Function isBanned_Account(ByVal index As Long) As Boolean
 End Function
 
 Public Sub ClearParty(ByVal partynum As Long)
-    Call ZeroMemory(ByVal VarPtr(Party(partynum)), LenB(Party(partynum)))
+    Party(partynum) = EmptyParty
 End Sub

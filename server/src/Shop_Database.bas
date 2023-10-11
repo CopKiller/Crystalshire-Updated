@@ -51,7 +51,7 @@ Public Sub LoadShops()
 End Sub
 
 Public Sub ClearShop(ByVal index As Long)
-    Call ZeroMemory(ByVal VarPtr(Shop(index)), LenB(Shop(index)))
+    Shop(index) = EmptyShop
     Shop(index).Name = vbNullString
 End Sub
 

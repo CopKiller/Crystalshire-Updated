@@ -10,17 +10,11 @@ Public TempTile() As TempTileRec
 Public Player(1 To MAX_PLAYERS) As PlayerRec
 Public Class() As ClassRec
 Public Item(1 To MAX_ITEMS) As ItemRec
-Public Npc(1 To MAX_NPCS) As NpcRec
 Public MapItem(1 To MAX_MAP_ITEMS) As MapItemRec
 Public MapNpc(1 To MAX_MAP_NPCS) As MapNpcRec
-Public Shop(1 To MAX_SHOPS) As ShopRec
-Public Spell(1 To MAX_SPELLS) As SpellRec
-Public Resource(1 To MAX_RESOURCES) As ResourceRec
-Public Animation(1 To MAX_ANIMATIONS) As AnimationRec
 Public Conv(1 To MAX_CONVS) As ConvWrapperRec
 Public ActionMsg(1 To MAX_BYTE) As ActionMsgRec
 Public Blood(1 To MAX_BYTE) As BloodRec
-Public AnimInstance(1 To MAX_BYTE) As AnimInstanceRec
 Public Party As PartyRec
 Public Autotile() As AutotileRec
 Public MapSounds() As MapSoundRec
@@ -30,12 +24,6 @@ Public Options As OptionsRec
 Public EmptyMap As MapRec
 Public EmptyPlayer As PlayerRec
 Public EmptyItem As ItemRec
-Public EmptyAnimInstance As AnimInstanceRec
-Public EmptyAnimation As AnimationRec
-Public EmptyNpc As NpcRec
-Public EmptySpell As SpellRec
-Public EmptyShop As ShopRec
-Public EmptyResource As ResourceRec
 Public EmptyMapItem As MapItemRec
 Public EmptyMapNpc As MapNpcRec
 Public EmptyConv As ConvWrapperRec
@@ -84,9 +72,14 @@ Private Type BankRec
     Item(1 To MAX_BANK) As PlayerInvRec
 End Type
 
+Private Type PlayerMission
+    ID As Long
+    Count As Long
+End Type
+
 Private Type PlayerRec
     ' General
-    name As String
+    Name As String
     Class As Long
     sprite As Long
     Level As Byte
@@ -108,6 +101,9 @@ Private Type PlayerRec
     Dir As Byte
     ' Variables
     Variable(1 To MAX_BYTE) As Long
+    ' Missions
+    Mission(1 To MAX_PLAYER_MISSIONS) As PlayerMission
+    CompletedMission(1 To MAX_MISSIONS) As Long
     ' Client use only
     xOffset As Integer
     yOffset As Integer
@@ -164,7 +160,7 @@ Public Type EventPageRec
 End Type
 
 Public Type EventRec
-    name As String
+    Name As String
     x As Long
     y As Long
     pageCount As Long
@@ -172,7 +168,7 @@ Public Type EventRec
 End Type
 
 Private Type MapDataRec
-    name As String
+    Name As String
     Music As String
     Moral As Byte
     
@@ -236,7 +232,7 @@ Private Type MapRec
 End Type
 
 Private Type ClassRec
-    name As String * NAME_LENGTH
+    Name As String * NAME_LENGTH
     Stat(1 To Stats.Stat_Count - 1) As Byte
     MaleSprite() As Long
     FemaleSprite() As Long
@@ -245,7 +241,7 @@ Private Type ClassRec
 End Type
 
 Public Type ItemRec
-    name As String * NAME_LENGTH
+    Name As String * NAME_LENGTH
     Desc As String * 255
     sound As String * NAME_LENGTH
     Pic As Long
@@ -292,30 +288,6 @@ Private Type MapItemRec
     bound As Boolean
 End Type
 
-Public Type NpcRec
-    name As String * NAME_LENGTH
-    AttackSay As String * 100
-    sound As String * NAME_LENGTH
-    sprite As Long
-    SpawnSecs As Long
-    Behaviour As Byte
-    Range As Byte
-    Stat(1 To Stats.Stat_Count - 1) As Byte
-    HP As Long
-    EXP As Long
-    Animation As Long
-    Damage As Long
-    Level As Long
-    Conv As Long
-    ' Npc drops
-    DropChance(1 To MAX_NPC_DROPS) As Double
-    DropItem(1 To MAX_NPC_DROPS) As Byte
-    DropItemValue(1 To MAX_NPC_DROPS) As Integer
-    ' Casting
-    Spirit As Long
-    Spell(1 To MAX_NPC_SPELLS) As Long
-End Type
-
 Private Type MapNpcRec
     num As Long
     target As Long
@@ -334,52 +306,6 @@ Private Type MapNpcRec
     Step As Byte
     Anim As Long
     AnimTimer As Long
-End Type
-
-Public Type TradeItemRec
-    Item As Long
-    ItemValue As Long
-    CostItem As Long
-    CostValue As Long
-End Type
-
-Private Type ShopRec
-    name As String * NAME_LENGTH
-    BuyRate As Long
-    TradeItem(1 To MAX_TRADES) As TradeItemRec
-End Type
-
-Public Type SpellRec
-    name As String * NAME_LENGTH
-    Desc As String * 255
-    sound As String * NAME_LENGTH
-
-    Type As Byte
-    MPCost As Long
-    LevelReq As Long
-    AccessReq As Long
-    ClassReq As Long
-    CastTime As Long
-    CDTime As Long
-    icon As Long
-    Map As Long
-    x As Long
-    y As Long
-    Dir As Byte
-    Vital As Long
-    Duration As Long
-    Interval As Long
-    Range As Byte
-    IsAoE As Boolean
-    AoE As Long
-    CastAnim As Long
-    SpellAnim As Long
-    StunDuration As Long
-    ' ranking
-    UniqueIndex As Long
-    NextRank As Long
-    NextUses As Long
-
 End Type
 
 Private Type TempTileRec
@@ -401,22 +327,6 @@ Public Type MapResourceRec
     ResourceState As Byte
 End Type
 
-Private Type ResourceRec
-    name As String * NAME_LENGTH
-    SuccessMessage As String * NAME_LENGTH
-    EmptyMessage As String * NAME_LENGTH
-    sound As String * NAME_LENGTH
-    ResourceType As Byte
-    ResourceImage As Long
-    ExhaustedImage As Long
-    ItemReward As Long
-    ToolRequired As Long
-    health As Long
-    RespawnTime As Long
-    WalkThrough As Boolean
-    Animation As Long
-End Type
-
 Private Type ActionMsgRec
     message As String
     Created As Long
@@ -435,32 +345,6 @@ Private Type BloodRec
     timer As Long
     x As Long
     y As Long
-End Type
-
-Private Type AnimationRec
-    name As String * NAME_LENGTH
-    sound As String * NAME_LENGTH
-    sprite(0 To 1) As Long
-    Frames(0 To 1) As Long
-    LoopCount(0 To 1) As Long
-    looptime(0 To 1) As Long
-End Type
-
-Private Type AnimInstanceRec
-    Animation As Long
-    x As Long
-    y As Long
-    ' used for locking to players/npcs
-    lockindex As Long
-    LockType As Byte
-    isCasting As Byte
-    ' timing
-    timer(0 To 1) As Long
-    ' rendering check
-    Used(0 To 1) As Boolean
-    ' counting the loop
-    LoopIndex(0 To 1) As Long
-    FrameIndex(0 To 1) As Long
 End Type
 
 Public Type HotbarRec
@@ -495,7 +379,7 @@ Public Type ConvRec
 End Type
 
 Private Type ConvWrapperRec
-    name As String * NAME_LENGTH
+    Name As String * NAME_LENGTH
     chatCount As Long
     Conv() As ConvRec
 End Type

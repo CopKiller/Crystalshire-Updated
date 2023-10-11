@@ -8,7 +8,7 @@ Public Declare Function GetTickCount Lib "kernel32" () As Long
 Public Declare Sub ZeroMemory Lib "kernel32.dll" Alias "RtlZeroMemory" (Destination As Any, ByVal length As Long)
 
 Public Sub Main()
-Dim I As Long
+Dim i As Long
     InitCRC32
     ' Check if the directory is there, if its not make it
     ChkDir App.path & "\data files\", "graphics"
@@ -61,8 +61,8 @@ Dim I As Long
     ' cache the buttons then reset & render them
     Call SetStatus("Caching map CRC32 checksums...")
     ' cache map crc32s
-    For I = 1 To MAX_MAPS
-        GetMapCRC32 I
+    For i = 1 To MAX_MAPS
+        GetMapCRC32 i
     Next
     ' set values for directional blocking arrows
     DirArrowX(1) = 12 ' up
@@ -101,11 +101,11 @@ Dim I As Long
     MenuLoop
 End Sub
 
-Public Sub AddChar(name As String, sex As Long, Class As Long, sprite As Long)
+Public Sub AddChar(Name As String, sex As Long, Class As Long, sprite As Long)
 
     If ConnectToServer Then
         Call SetStatus("Sending character information.")
-        Call SendAddChar(name, sex, Class, sprite)
+        Call SendAddChar(Name, sex, Class, sprite)
         Exit Sub
     Else
         ShowWindow GetWindowIndex("winLogin")
@@ -114,14 +114,14 @@ Public Sub AddChar(name As String, sex As Long, Class As Long, sprite As Long)
 
 End Sub
 
-Public Sub Login(name As String, password As String)
+Public Sub Login(Name As String, password As String)
     'TcpInit GAME_SERVER_IP, GAME_SERVER_PORT
 
     If ConnectToServer Then
         Call SetStatus("Sending login information.")
-        Call SendLogin(name, password)
+        Call SendLogin(Name, password)
         ' save details
-        If Options.SaveUser Then Options.Username = name Else Options.Username = vbNullString
+        If Options.SaveUser Then Options.Username = Name Else Options.Username = vbNullString
         SaveOptions
         Exit Sub
     Else
@@ -130,12 +130,12 @@ Public Sub Login(name As String, password As String)
     End If
 
 End Sub
-Public Sub SendRegister(name As String, password As String, codigo As String)
+Public Sub SendRegister(Name As String, password As String, codigo As String)
     'TcpInit GAME_SERVER_IP, GAME_SERVER_PORT
 
     If ConnectToServer Then
         Call SetStatus("Sending Register information.")
-        Call SendNewAccount(name, password, codigo)
+        Call SendNewAccount(Name, password, codigo)
     Else
         ShowWindow GetWindowIndex("winregister")
         Dialogue "Connection Problem", "Cannot connect to login server.", "Please try again later.", TypeALERT
@@ -143,15 +143,15 @@ Public Sub SendRegister(name As String, password As String, codigo As String)
 
 End Sub
 Public Sub logoutGame()
-    Dim I As Long
+    Dim i As Long
     isLogging = True
     InGame = False
     
     DestroyTCP
 
     ' destroy the animations loaded
-    For I = 1 To MAX_BYTE
-        ClearAnimInstance (I)
+    For i = 1 To MAX_BYTE
+        ClearAnimInstance (i)
     Next
 
     ' destroy temp values
@@ -172,8 +172,8 @@ Public Sub logoutGame()
     Unload frmEditor_Shop
     Unload frmEditor_Spell
     ' clear chat
-    For I = 1 To ChatLines
-        Chat(I).text = vbNullString
+    For i = 1 To ChatLines
+        Chat(i).text = vbNullString
     Next
 
     inMenu = True
@@ -189,7 +189,7 @@ Sub GameInit()
     ' get ping
     GetPing
     ' play music
-    musicFile = Trim$(map.MapData.Music)
+    musicFile = Trim$(Map.MapData.Music)
 
     If Not musicFile = "None." Then
         Play_Music musicFile
@@ -256,13 +256,13 @@ Public Function isLoginLegal(ByVal Username As String, ByVal password As String)
 End Function
 
 Public Function isStringLegal(ByVal sInput As String) As Boolean
-    Dim I As Long, tmpNum As Long
+    Dim i As Long, tmpNum As Long
     ' Prevent high ascii chars
     tmpNum = Len(sInput)
 
-    For I = 1 To tmpNum
+    For i = 1 To tmpNum
 
-        If Asc(Mid$(sInput, I, 1)) < vbKeySpace Or Asc(Mid$(sInput, I, 1)) > vbKeyF15 Then
+        If Asc(Mid$(sInput, i, 1)) < vbKeySpace Or Asc(Mid$(sInput, i, 1)) > vbKeyF15 Then
             Dialogue "Illegal Characters", "This string contains illegal characters.", "", TypeALERT
             Exit Function
         End If
@@ -273,27 +273,27 @@ Public Function isStringLegal(ByVal sInput As String) As Boolean
 End Function
 
 Public Sub PopulateLists()
-    Dim strLoad As String, I As Long
+    Dim strLoad As String, i As Long
     ' Cache music list
     strLoad = Dir$(App.path & MUSIC_PATH & "*.*")
-    I = 1
+    i = 1
 
     Do While strLoad > vbNullString
-        ReDim Preserve musicCache(1 To I) As String
-        musicCache(I) = strLoad
+        ReDim Preserve musicCache(1 To i) As String
+        musicCache(i) = strLoad
         strLoad = Dir
-        I = I + 1
+        i = i + 1
     Loop
 
     ' Cache sound list
     strLoad = Dir$(App.path & SOUND_PATH & "*.*")
-    I = 1
+    i = 1
 
     Do While strLoad > vbNullString
-        ReDim Preserve soundCache(1 To I) As String
-        soundCache(I) = strLoad
+        ReDim Preserve soundCache(1 To i) As String
+        soundCache(i) = strLoad
         strLoad = Dir
-        I = I + 1
+        i = i + 1
     Loop
 
 End Sub

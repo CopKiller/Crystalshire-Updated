@@ -94,25 +94,33 @@ Begin VB.Form frmEditor_NPC
    End
    Begin VB.Frame Frame4 
       Caption         =   "Info"
-      Height          =   4095
+      Height          =   4215
       Left            =   3360
       TabIndex        =   35
       Top             =   120
       Width           =   3015
+      Begin VB.ComboBox cmbMission 
+         Height          =   300
+         Left            =   840
+         Style           =   2  'Dropdown List
+         TabIndex        =   62
+         Top             =   3480
+         Width           =   2055
+      End
       Begin VB.TextBox txtSpawnSecs 
          Alignment       =   1  'Right Justify
          Height          =   285
          Left            =   1080
          TabIndex        =   45
          Text            =   "0"
-         Top             =   3600
+         Top             =   3840
          Width           =   1815
       End
       Begin VB.HScrollBar scrlConv 
          Height          =   255
          Left            =   120
          TabIndex        =   44
-         Top             =   3240
+         Top             =   3120
          Width           =   2775
       End
       Begin VB.ComboBox cmbSound 
@@ -127,7 +135,7 @@ Begin VB.Form frmEditor_NPC
          Height          =   255
          Left            =   120
          TabIndex        =   42
-         Top             =   2640
+         Top             =   2570
          Width           =   2775
       End
       Begin VB.PictureBox picSprite 
@@ -192,13 +200,22 @@ Begin VB.Form frmEditor_NPC
          Top             =   600
          Width           =   2055
       End
+      Begin VB.Label Label6 
+         AutoSize        =   -1  'True
+         Caption         =   "Quest:"
+         Height          =   180
+         Left            =   120
+         TabIndex        =   63
+         Top             =   3480
+         Width           =   525
+      End
       Begin VB.Label Label16 
          AutoSize        =   -1  'True
          Caption         =   "Spawn Rate:"
          Height          =   180
          Left            =   120
          TabIndex        =   54
-         Top             =   3600
+         Top             =   3840
          UseMnemonic     =   0   'False
          Width           =   930
       End
@@ -207,7 +224,7 @@ Begin VB.Form frmEditor_NPC
          Height          =   255
          Left            =   120
          TabIndex        =   53
-         Top             =   3000
+         Top             =   2880
          Width           =   1695
       End
       Begin VB.Label Label1 
@@ -223,7 +240,7 @@ Begin VB.Form frmEditor_NPC
          Height          =   255
          Left            =   120
          TabIndex        =   51
-         Top             =   2400
+         Top             =   2330
          Width           =   2775
       End
       Begin VB.Label lblSprite 
@@ -600,6 +617,12 @@ Private Sub cmbBehaviour_Click()
     Npc(EditorIndex).Behaviour = cmbBehaviour.ListIndex
 End Sub
 
+Private Sub cmbMission_Click()
+    If EditorIndex <= 0 Or EditorIndex > MAX_NPCS Then Exit Sub
+    
+    Npc(EditorIndex).Mission = cmbMission.ListIndex
+End Sub
+
 Private Sub cmdCopy_Click()
     NpcEditorCopy
 End Sub
@@ -609,7 +632,7 @@ Private Sub cmdDelete_Click()
     ClearNPC EditorIndex
     tmpIndex = lstIndex.ListIndex
     lstIndex.RemoveItem EditorIndex - 1
-    lstIndex.AddItem EditorIndex & ": " & Npc(EditorIndex).name, EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Npc(EditorIndex).Name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
     NpcEditorInit
 End Sub
@@ -619,15 +642,15 @@ Private Sub cmdPaste_Click()
 End Sub
 
 Private Sub Form_Load()
-    scrlSprite.Max = Count_Char
-    scrlAnimation.Max = MAX_ANIMATIONS
-    scrlConv.Max = MAX_CONVS
+    scrlSprite.max = Count_Char
+    scrlAnimation.max = MAX_ANIMATIONS
+    scrlConv.max = MAX_CONVS
 End Sub
 
 Private Sub scrlConv_Change()
 
     If scrlConv.value > 0 Then
-        lblConv.caption = "Conv: " & Trim$(Conv(scrlConv.value).name)
+        lblConv.caption = "Conv: " & Trim$(Conv(scrlConv.value).Name)
     Else
         lblConv.caption = "Conv: None"
     End If
@@ -650,7 +673,7 @@ End Sub
 Private Sub scrlAnimation_Change()
     Dim sString As String
 
-    If scrlAnimation.value = 0 Then sString = "None" Else sString = Trim$(Animation(scrlAnimation.value).name)
+    If scrlAnimation.value = 0 Then sString = "None" Else sString = Trim$(Animation(scrlAnimation.value).Name)
     lblAnimation.caption = "Anim: " & sString
     Npc(EditorIndex).Animation = scrlAnimation.value
 End Sub
@@ -673,7 +696,7 @@ Private Sub scrlSpellNum_Change()
     lblSpellNum.caption = "Num: " & scrlSpellNum.value
 
     If scrlSpellNum.value > 0 Then
-        lblSpellName.caption = "Spell: " & Trim$(Spell(scrlSpellNum.value).name)
+        lblSpellName.caption = "Spell: " & Trim$(Spell(scrlSpellNum.value).Name)
     Else
         lblSpellName.caption = "Spell: None"
     End If
@@ -695,16 +718,16 @@ Private Sub scrlNum_Change()
     lblNum.caption = "Num: " & scrlNum.value
 
     If scrlNum.value > 0 Then
-        lblItemName.caption = "Item: " & Trim$(Item(scrlNum.value).name)
+        lblItemName.caption = "Item: " & Trim$(Item(scrlNum.value).Name)
     End If
 
     Npc(EditorIndex).DropItem(DropIndex) = scrlNum.value
 End Sub
 
-Private Sub scrlStat_Change(index As Integer)
+Private Sub scrlStat_Change(Index As Integer)
     Dim prefix As String
 
-    Select Case index
+    Select Case Index
 
         Case 1
             prefix = "Str: "
@@ -722,8 +745,8 @@ Private Sub scrlStat_Change(index As Integer)
             prefix = "Will: "
     End Select
 
-    lblStat(index).caption = prefix & scrlStat(index).value
-    Npc(EditorIndex).Stat(index) = scrlStat(index).value
+    lblStat(Index).caption = prefix & scrlStat(Index).value
+    Npc(EditorIndex).Stat(Index) = scrlStat(Index).value
 End Sub
 
 Private Sub scrlValue_Change()
@@ -747,7 +770,7 @@ Private Sub txtChance_Validate(Cancel As Boolean)
     End If
 
     If Right$(txtChance.text, 1) = "%" Then
-        txtChance.text = left$(txtChance.text, Len(txtChance.text) - 1) / 100
+        txtChance.text = Left$(txtChance.text, Len(txtChance.text) - 1) / 100
     ElseIf InStr(1, txtChance.text, "/") > 0 Then
         Dim i() As String
         i = Split(txtChance.text, "/")
@@ -795,9 +818,9 @@ Public Sub txtName_Validate(Cancel As Boolean)
 
     If EditorIndex = 0 Then Exit Sub
     tmpIndex = lstIndex.ListIndex
-    Npc(EditorIndex).name = Trim$(txtName.text)
+    Npc(EditorIndex).Name = Trim$(txtName.text)
     lstIndex.RemoveItem EditorIndex - 1
-    lstIndex.AddItem EditorIndex & ": " & Npc(EditorIndex).name, EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Npc(EditorIndex).Name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
 End Sub
 

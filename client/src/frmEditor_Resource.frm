@@ -353,7 +353,7 @@ Private Sub cmdDelete_Click()
     ClearResource EditorIndex
     tmpIndex = lstIndex.ListIndex
     lstIndex.RemoveItem EditorIndex - 1
-    lstIndex.AddItem EditorIndex & ": " & Resource(EditorIndex).name, EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Resource(EditorIndex).Name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
     ResourceEditorInit
 End Sub
@@ -363,7 +363,7 @@ Private Sub cmdSave_Click()
 End Sub
 
 Private Sub Form_Load()
-    scrlReward.Max = MAX_ITEMS
+    scrlReward.max = MAX_ITEMS
 End Sub
 
 Private Sub cmdCancel_Click()
@@ -377,7 +377,7 @@ End Sub
 Private Sub scrlAnimation_Change()
     Dim sString As String
 
-    If scrlAnimation.value = 0 Then sString = "None" Else sString = Trim$(Animation(scrlAnimation.value).name)
+    If scrlAnimation.value = 0 Then sString = "None" Else sString = Trim$(Animation(scrlAnimation.value).Name)
     lblAnim.caption = "Animation: " & sString
     Resource(EditorIndex).Animation = scrlAnimation.value
 End Sub
@@ -405,7 +405,7 @@ End Sub
 Private Sub scrlReward_Change()
 
     If scrlReward.value > 0 Then
-        lblReward.caption = "Item Reward: " & Trim$(Item(scrlReward.value).name)
+        lblReward.caption = "Item Reward: " & Trim$(Item(scrlReward.value).Name)
     Else
         lblReward.caption = "Item Reward: None"
     End If
@@ -414,24 +414,24 @@ Private Sub scrlReward_Change()
 End Sub
 
 Private Sub scrlTool_Change()
-    Dim name As String
+    Dim Name As String
 
     Select Case scrlTool.value
 
         Case 0
-            name = "None"
+            Name = "None"
 
         Case 1
-            name = "Hatchet"
+            Name = "Hatchet"
 
         Case 2
-            name = "Rod"
+            Name = "Rod"
 
         Case 3
-            name = "Pickaxe"
+            Name = "Pickaxe"
     End Select
 
-    lblTool.caption = "Tool Required: " & name
+    lblTool.caption = "Tool Required: " & Name
     Resource(EditorIndex).ToolRequired = scrlTool.value
 End Sub
 
@@ -448,9 +448,9 @@ Private Sub txtName_Validate(Cancel As Boolean)
 
     If EditorIndex = 0 Then Exit Sub
     tmpIndex = lstIndex.ListIndex
-    Resource(EditorIndex).name = Trim$(txtName.text)
+    Resource(EditorIndex).Name = Trim$(txtName.text)
     lstIndex.RemoveItem EditorIndex - 1
-    lstIndex.AddItem EditorIndex & ": " & Resource(EditorIndex).name, EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Resource(EditorIndex).Name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
 End Sub
 

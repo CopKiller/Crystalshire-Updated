@@ -2,6 +2,7 @@ Attribute VB_Name = "Shop_UDT"
 Option Explicit
 
 Public Shop(1 To MAX_SHOPS) As ShopRec
+Public EmptyShop As ShopRec
 
 Private Type TradeItemRec
     Item As Long

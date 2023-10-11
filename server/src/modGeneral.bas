@@ -32,16 +32,7 @@ Public Sub InitServer()
     Player_HighIndex = MAX_PLAYERS
 
     ' Check if the directory is there, if its not make it
-    ChkDir App.Path & "\Data\", "accounts"
-    ChkDir App.Path & "\Data\", "animations"
-    ChkDir App.Path & "\Data\", "items"
-    ChkDir App.Path & "\Data\", "logs"
-    ChkDir App.Path & "\Data\", "maps"
-    ChkDir App.Path & "\Data\", "npcs"
-    ChkDir App.Path & "\Data\", "resources"
-    ChkDir App.Path & "\Data\", "shops"
-    ChkDir App.Path & "\Data\", "spells"
-    ChkDir App.Path & "\Data\", "convs"
+    Call CheckDirs
 
     ' set quote character
     vbQuote = ChrW$(34) ' "
@@ -123,52 +114,6 @@ End Sub
 Public Sub SetStatus(ByVal Status As String)
     Call TextAdd(Status)
     DoEvents
-End Sub
-
-Public Sub ClearGameData()
-    Call SetStatus("Clearing temp tile fields...")
-    Call ClearTempTiles
-    Call SetStatus("Clearing maps...")
-    Call ClearMaps
-    Call SetStatus("Clearing map items...")
-    Call ClearMapItems
-    Call SetStatus("Clearing map npcs...")
-    Call ClearMapNpcs
-    Call SetStatus("Clearing npcs...")
-    Call ClearNpcs
-    Call SetStatus("Clearing Resources...")
-    Call ClearResources
-    Call SetStatus("Clearing items...")
-    Call ClearItems
-    Call SetStatus("Clearing shops...")
-    Call ClearShops
-    Call SetStatus("Clearing spells...")
-    Call ClearSpells
-    Call SetStatus("Clearing animations...")
-    Call ClearAnimations
-    Call SetStatus("Clearing conversations...")
-    Call ClearConvs
-End Sub
-
-Private Sub LoadGameData()
-    Call SetStatus("Loading classes...")
-    Call LoadClasses
-    Call SetStatus("Loading maps...")
-    Call LoadMaps
-    Call SetStatus("Loading items...")
-    Call LoadItems
-    Call SetStatus("Loading npcs...")
-    Call LoadNpcs
-    Call SetStatus("Loading Resources...")
-    Call LoadResources
-    Call SetStatus("Loading shops...")
-    Call LoadShops
-    Call SetStatus("Loading spells...")
-    Call LoadSpells
-    Call SetStatus("Loading animations...")
-    Call LoadAnimations
-    Call SetStatus("Loading conversations...")
-    Call LoadConvs
 End Sub
 
 Public Sub TextAdd(Msg As String)

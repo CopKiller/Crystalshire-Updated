@@ -12,6 +12,7 @@ Public Sub HandleRequestEditNpc(ByVal index As Long, ByRef Data() As Byte, ByVal
 
     Set Buffer = New clsBuffer
     Buffer.WriteLong SNpcEditor
+    
     SendDataTo index, Buffer.ToArray()
     Buffer.Flush: Set Buffer = Nothing
 End Sub
@@ -23,32 +24,35 @@ End Sub
 ' :::::::::::::::::::::
 ' :: Save npc packet ::
 ' :::::::::::::::::::::
-Public Sub HandleSaveNpc(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim npcNum As Long
+Public Sub HandleSaveNPC(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+    Dim N As Long
+    Dim i As Long
     Dim Buffer As clsBuffer
     Dim NPCSize As Long
     Dim NPCData() As Byte
+    Set Buffer = New clsBuffer
+    Buffer.WriteBytes Data()
 
     ' Prevent hacking
     If GetPlayerAccess(index) < ADMIN_DEVELOPER Then
         Exit Sub
     End If
 
-    Set Buffer = New clsBuffer
-    Buffer.WriteBytes Data()
-    npcNum = Buffer.ReadLong
+    N = Buffer.ReadLong
 
     ' Prevent hacking
-    If npcNum < 0 Or npcNum > MAX_NPCS Then
+    If N < 0 Or N > MAX_NPCS Then
         Exit Sub
     End If
 
-    NPCSize = LenB(Npc(npcNum))
+    NPCSize = LenB(Npc(N))
     ReDim NPCData(NPCSize - 1)
     NPCData = Buffer.ReadBytes(NPCSize)
-    CopyMemory ByVal VarPtr(Npc(npcNum)), ByVal VarPtr(NPCData(0)), NPCSize
+    CopyMemory ByVal VarPtr(Npc(N)), ByVal VarPtr(NPCData(0)), NPCSize
+    Buffer.Flush: Set Buffer = Nothing
+    
     ' Save it
-    Call SendUpdateNpcToAll(npcNum)
-    Call SaveNpc(npcNum)
-    Call AddLog(GetPlayerName(index) & " saved Npc #" & npcNum & ".", ADMIN_LOG)
+    Call SendUpdateNpcToAll(N)
+    Call SaveNpc(N)
+    Call AddLog(GetPlayerName(index) & " saving NPC #" & N & ".", ADMIN_LOG)
 End Sub

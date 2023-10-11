@@ -330,7 +330,7 @@ Private Sub cmdAtt_Click()
 End Sub
 
 Private Sub cmdAWarp_Click()
-    Dim n As Long
+    Dim N As Long
 
     If GetPlayerAccess(MyIndex) < ADMIN_MAPPER Then
 
@@ -345,11 +345,11 @@ Private Sub cmdAWarp_Click()
         Exit Sub
     End If
 
-    n = CLng(Trim$(txtAMap.text))
+    N = CLng(Trim$(txtAMap.text))
 
     ' Check to make sure its a valid map #
-    If n > 0 And n <= MAX_MAPS Then
-        Call WarpTo(n)
+    If N > 0 And N <= MAX_MAPS Then
+        Call WarpTo(N)
     Else
         Call AddText("Invalid map number.", Red)
     End If
@@ -403,8 +403,8 @@ Private Sub CmdNpc_Click()
 End Sub
 
 Private Sub CmdQuest_Click()
-    'If GetPlayerAccess(MyIndex) < ADMIN_DEVELOPER Then Exit Sub
-    'SendRequestEditQuest
+    If GetPlayerAccess(MyIndex) < ADMIN_DEVELOPER Then Exit Sub
+    SendRequestEditMission
 End Sub
 
 Private Sub CmdResource_Click()
@@ -424,7 +424,7 @@ End Sub
 
 Private Sub scrlAItem_Change()
     If scrlAItem.value > 0 Then
-        lblAItem.caption = " " & Trim$(Item(scrlAItem.value).name)
+        lblAItem.caption = " " & Trim$(Item(scrlAItem.value).Name)
     Else
         lblAItem.caption = "Item: None"
     End If

@@ -50,7 +50,7 @@ End Sub
 
 Public Sub LoadConvs()
     Dim filename As String
-    Dim i As Long, n As Long, x As Long, f As Long
+    Dim i As Long, N As Long, x As Long, f As Long
     Dim sLen As Long
 
     Call CheckConvs
@@ -63,20 +63,20 @@ Public Sub LoadConvs()
             Get #f, , .Name
             Get #f, , .chatCount
             If .chatCount > 0 Then ReDim .Conv(1 To .chatCount)
-            For n = 1 To .chatCount
+            For N = 1 To .chatCount
                 Get #f, , sLen
-                .Conv(n).Conv = Space$(sLen)
-                Get #f, , .Conv(n).Conv
+                .Conv(N).Conv = Space$(sLen)
+                Get #f, , .Conv(N).Conv
                 For x = 1 To 4
                     Get #f, , sLen
-                    .Conv(n).rText(x) = Space$(sLen)
-                    Get #f, , .Conv(n).rText(x)
-                    Get #f, , .Conv(n).rTarget(x)
+                    .Conv(N).rText(x) = Space$(sLen)
+                    Get #f, , .Conv(N).rText(x)
+                    Get #f, , .Conv(N).rTarget(x)
                 Next
-                Get #f, , .Conv(n).Event
-                Get #f, , .Conv(n).Data1
-                Get #f, , .Conv(n).Data2
-                Get #f, , .Conv(n).Data3
+                Get #f, , .Conv(N).Event
+                Get #f, , .Conv(N).Data1
+                Get #f, , .Conv(N).Data2
+                Get #f, , .Conv(N).Data3
             Next
         End With
         Close #f
@@ -84,7 +84,7 @@ Public Sub LoadConvs()
 End Sub
 
 Public Sub ClearConv(ByVal index As Long)
-    Call ZeroMemory(ByVal VarPtr(Conv(index)), LenB(Conv(index)))
+    Conv(index) = EmptyConv
     Conv(index).Name = vbNullString
     ReDim Conv(index).Conv(1)
 End Sub

@@ -12,6 +12,7 @@ Sub HandleRequestEditMap(ByVal index As Long, ByRef Data() As Byte, ByVal StartA
 
     Set Buffer = New clsBuffer
     Buffer.WriteLong SEditMap
+    
     SendDataTo index, Buffer.ToArray()
     Buffer.Flush: Set Buffer = Nothing
 End Sub
@@ -20,19 +21,19 @@ End Sub
 ' :: Player request for a new map ::
 ' ::::::::::::::::::::::::::::::::::
 Sub HandleRequestNewMap(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim dir As Long
+    Dim Dir As Long
     Dim Buffer As clsBuffer
     Set Buffer = New clsBuffer
     Buffer.WriteBytes Data()
-    dir = Buffer.ReadLong 'CLng(Parse(1))
+    Dir = Buffer.ReadLong 'CLng(Parse(1))
     Buffer.Flush: Set Buffer = Nothing
 
     ' Prevent hacking
-    If dir < DIR_UP Or dir > DIR_DOWN_RIGHT Then
+    If Dir < DIR_UP Or Dir > DIR_DOWN_RIGHT Then
         Exit Sub
     End If
 
-    Call PlayerMove(index, dir, 1)
+    Call PlayerMove(index, Dir, 1)
 End Sub
 
 ' :::::::::::::::::::::
@@ -57,7 +58,7 @@ Public Sub HandleMapData(ByVal index As Long, ByRef Data() As Byte, ByVal StartA
     Call ClearMap(mapnum)
     
     With Map(mapnum).MapData
-        .name = Buffer.ReadString
+        .Name = Buffer.ReadString
         .Music = Buffer.ReadString
         .Moral = Buffer.ReadByte
         .Up = Buffer.ReadLong
@@ -162,6 +163,7 @@ Sub HandleNeedMap(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As 
 
     TempPlayer(index).GettingMap = NO
     Set Buffer = New clsBuffer
+    
     Buffer.WriteLong SMapDone
     SendDataTo index, Buffer.ToArray()
 End Sub
@@ -252,7 +254,7 @@ Sub HandleMapReport(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr A
 
     For i = 1 To MAX_MAPS
 
-        If LenB(Trim$(Map(i).MapData.name)) = 0 Then
+        If LenB(Trim$(Map(i).MapData.Name)) = 0 Then
             tMapEnd = tMapEnd + 1
         Else
 

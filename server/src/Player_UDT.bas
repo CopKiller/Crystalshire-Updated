@@ -1,8 +1,17 @@
 Attribute VB_Name = "Player_UDT"
+Option Explicit
+
+Public Const MAX_PLAYER_MISSIONS As Long = 20
+
 Public Player(1 To MAX_PLAYERS) As PlayerRec
 Public Party(1 To MAX_PARTYS) As PartyRec
 Public TempPlayer(1 To MAX_PLAYERS) As TempPlayerRec
 Public Class() As ClassRec
+
+Public EmptyPlayer As PlayerRec
+Public EmptyTempPlayer As TempPlayerRec
+Public EmptyParty As PartyRec
+Public EmptyClass As ClassRec
 
 Public Type PlayerSpellRec
     Spell As Long
@@ -26,6 +35,11 @@ Public Type DoTRec
     Timer As Long
     Caster As Long
     StartTime As Long
+End Type
+
+Private Type PlayerMission
+    ID As Long
+    Count As Long
 End Type
 
 Public Type PlayerRec
@@ -65,6 +79,10 @@ Public Type PlayerRec
     
     ' Variables
     Variable(1 To MAX_BYTE) As Long
+    
+    ' Missions
+    Mission(1 To MAX_PLAYER_MISSIONS) As PlayerMission
+    CompletedMission(1 To MAX_MISSIONS) As Long
     
     ' Tutorial
     TutorialState As Byte

@@ -2,6 +2,7 @@ Attribute VB_Name = "Conv_UDT"
 Option Explicit
 
 Public Conv(1 To MAX_CONVS) As ConvWrapperRec
+Public EmptyConv As ConvWrapperRec
 
 Private Type ConvRec
     Conv As String

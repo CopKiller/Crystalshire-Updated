@@ -2,6 +2,7 @@ Attribute VB_Name = "Resource_UDT"
 Option Explicit
 
 Public Resource(1 To MAX_RESOURCES) As ResourceRec
+Public EmptyResource As ResourceRec
 
 Private Type ResourceRec
     Name As String * NAME_LENGTH

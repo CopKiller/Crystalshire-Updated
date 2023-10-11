@@ -281,7 +281,7 @@ Function CanNpcAttackPlayer(ByVal mapNpcNum As Long, ByVal index As Long, Option
 End Function
 
 Sub NpcAttackPlayer(ByVal mapNpcNum As Long, ByVal victim As Long, ByVal damage As Long, Optional ByVal spellNum As Long, Optional ByVal overTime As Boolean = False)
-    Dim name As String
+    Dim Name As String
     Dim exp As Long
     Dim mapnum As Long
     Dim i As Long
@@ -298,12 +298,13 @@ Sub NpcAttackPlayer(ByVal mapNpcNum As Long, ByVal victim As Long, ByVal damage 
     End If
 
     mapnum = GetPlayerMap(victim)
-    name = Trim$(Npc(MapNpc(mapnum).Npc(mapNpcNum).Num).name)
+    Name = Trim$(Npc(MapNpc(mapnum).Npc(mapNpcNum).Num).Name)
     
     ' Send this packet so they can see the npc attacking
     Set Buffer = New clsBuffer
     Buffer.WriteLong SNpcAttack
     Buffer.WriteLong mapNpcNum
+    
     SendDataToMap mapnum, Buffer.ToArray()
     Buffer.Flush: Set Buffer = Nothing
     
@@ -335,7 +336,7 @@ Sub NpcAttackPlayer(ByVal mapNpcNum As Long, ByVal victim As Long, ByVal damage 
         KillPlayer victim
         
         ' Player is dead
-        Call GlobalMsg(GetPlayerName(victim) & " has been killed by " & name, BrightRed)
+        Call GlobalMsg(GetPlayerName(victim) & " has been killed by " & Name, BrightRed)
 
         ' Set NPC target to 0
         MapNpc(mapnum).Npc(mapNpcNum).target = 0

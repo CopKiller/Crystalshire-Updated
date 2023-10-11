@@ -8,86 +8,89 @@ Public Enum ServerPackets
     SLoginOk
     SNewCharClasses
     SClassesData
-    SInGame
+    SInGame ' = 5
     SPlayerInv
     SPlayerInvUpdate
     SPlayerWornEq
     SPlayerHp
-    SPlayerMp
+    SPlayerMp ' = 10
     SPlayerStats
     SPlayerData
     SPlayerMove
     SNpcMove
-    SPlayerDir
+    SPlayerDir ' = 15
     SNpcDir
     SPlayerXY
     SPlayerXYMap
     SAttack
-    SNpcAttack
+    SNpcAttack ' = 20
     SCheckForMap
     SMapData
     SMapItemData
     SMapNpcData
-    SMapDone
+    SMapDone ' = 25
     SGlobalMsg
     SAdminMsg
     SPlayerMsg
     SMapMsg
-    SSpawnItem
+    SSpawnItem ' = 30
     SItemEditor
     SUpdateItem
     SREditor
     SSpawnNpc
-    SNpcDead
+    SNpcDead ' = 35
     SNpcEditor
     SUpdateNpc
     SMapKey
     SEditMap
-    SShopEditor
+    SShopEditor ' = 40
     SUpdateShop
     SSpellEditor
     SUpdateSpell
     SSpells
-    SLeft
+    SLeft ' = 45
     SResourceCache
     SResourceEditor
     SUpdateResource
     SSendPing
-    SDoorAnimation
+    SDoorAnimation ' = 50
     SActionMsg
     SPlayerEXP
     SBlood
     SAnimationEditor
-    SUpdateAnimation
+    SUpdateAnimation ' = 55
     SAnimation
     SMapNpcVitals
     SCooldown
     SClearSpellBuffer
-    SSayMsg
+    SSayMsg ' = 60
     SOpenShop
     SResetShopAction
     SStunned
     SMapWornEq
-    SBank
+    SBank ' = 65
     STrade
     SCloseTrade
     STradeUpdate
     STradeStatus
-    STarget
+    STarget ' = 70
     SHotbar
     SHighIndex
     SSound
     STradeRequest
-    SPartyInvite
+    SPartyInvite ' = 75
     SPartyUpdate
     SPartyVitals
     SChatUpdate
     SConvEditor
-    SUpdateConv
+    SUpdateConv ' = 80
     SStartTutorial
     SChatBubble
     SPlayerChars
     SCancelAnimation
+    SMissionEditor ' = 85
+    SUpdateMission
+    SPlayerMission
     SPlayerVariables
     SEvent
     ' Make sure SMsgCOUNT is below everything else
@@ -100,98 +103,101 @@ Public Enum ClientPackets
     CDelChar
     clogin
     CAddChar
-    CUseChar
+    CUseChar ' = 5
     CSayMsg
     CEmoteMsg
     CBroadcastMsg
     CPlayerMsg
-    CPlayerMove
+    CPlayerMove ' = 10
     CPlayerDir
     CUseItem
     CAttack
     CUseStatPoint
-    CPlayerInfoRequest
+    CPlayerInfoRequest ' = 15
     CWarpMeTo
     CWarpToMe
     CWarpTo
     CSetSprite
-    CGetStats
+    CGetStats ' = 20
     CRequestNewMap
     CMapData
     CNeedMap
     CMapGetItem
-    CMapDropItem
+    CMapDropItem ' = 25
     CMapRespawn
     CMapReport
     CKickPlayer
     CBanList
-    CBanDestroy
+    CBanDestroy ' = 30
     CBanPlayer
     CRequestEditMap
     CRequestEditItem
     CSaveItem
-    CRequestEditNpc
+    CRequestEditNpc ' = 35
     CSaveNpc
     CRequestEditShop
     CSaveShop
     CRequestEditSpell
-    CSaveSpell
+    CSaveSpell ' = 40
     CSetAccess
     CWhosOnline
     CSetMotd
     CTarget
-    CSpells
+    CSpells ' = 45
     CCast
     CQuit
     CSwapInvSlots
     CRequestEditResource
-    CSaveResource
+    CSaveResource ' = 50
     CCheckPing
     CUnequip
     CRequestPlayerData
     CRequestItems
-    CRequestNPCS
+    CRequestNPCS ' = 55
     CRequestResources
     CSpawnItem
     CRequestEditAnimation
     CSaveAnimation
-    CRequestAnimations
+    CRequestAnimations ' = 60
     CRequestSpells
     CRequestShops
     CRequestLevelUp
     CForgetSpell
-    CCloseShop
+    CCloseShop ' = 65
     CBuyItem
     CSellItem
     CChangeBankSlots
     CDepositItem
-    CWithdrawItem
+    CWithdrawItem ' = 70
     CCloseBank
     CAdminWarp
     CTradeRequest
     CAcceptTrade
-    CDeclineTrade
+    CDeclineTrade ' = 75
     CTradeItem
     CUntradeItem
     CHotbarChange
     CHotbarUse
-    CSwapSpellSlots
+    CSwapSpellSlots ' = 80
     CAcceptTradeRequest
     CDeclineTradeRequest
     CPartyRequest
     CAcceptParty
-    CDeclineParty
+    CDeclineParty ' = 85
     CPartyLeave
     CChatOption
     CRequestEditConv
     CSaveConv
-    CRequestConvs
+    CRequestConvs ' = 90
+    CRequestEditMission
+    CSaveMission
+    CRequestMissions
     CFinishTutorial
-    ' Make sure CMsgCOUNT is below everything else
-    CMsgCOUNT
+    ' Make sure CMSG_COUNT is below everything else
+    CMSG_COUNT
 End Enum
 
-Public HandleDataSub(SMsgCOUNT) As Long
+Public HandleDataSub(CMSG_COUNT) As Long
 
 ' Stats used by Players, Npcs and Classes
 Public Enum Stats

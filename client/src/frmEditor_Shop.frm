@@ -241,26 +241,26 @@ Option Explicit
 Private tmpTrade As TradeItemRec
 
 Private Sub cmdCopy_Click()
-Dim index As Long
+Dim Index As Long
 
-    index = lstTradeItem.ListIndex + 1
-    tmpTrade.Item = Shop(EditorIndex).TradeItem(index).Item
-    tmpTrade.ItemValue = Shop(EditorIndex).TradeItem(index).ItemValue
-    tmpTrade.CostItem = Shop(EditorIndex).TradeItem(index).CostItem
-    tmpTrade.CostValue = Shop(EditorIndex).TradeItem(index).CostValue
+    Index = lstTradeItem.ListIndex + 1
+    tmpTrade.Item = Shop(EditorIndex).TradeItem(Index).Item
+    tmpTrade.ItemValue = Shop(EditorIndex).TradeItem(Index).ItemValue
+    tmpTrade.CostItem = Shop(EditorIndex).TradeItem(Index).CostItem
+    tmpTrade.CostValue = Shop(EditorIndex).TradeItem(Index).CostValue
     
     cmdDeleteTrade_Click
 End Sub
 
 Private Sub cmdPaste_Click()
-Dim index As Long, tmpPos As Long
+Dim Index As Long, tmpPos As Long
     tmpPos = lstTradeItem.ListIndex
 
-    index = lstTradeItem.ListIndex + 1
-    Shop(EditorIndex).TradeItem(index).Item = tmpTrade.Item
-    Shop(EditorIndex).TradeItem(index).ItemValue = tmpTrade.ItemValue
-    Shop(EditorIndex).TradeItem(index).CostItem = tmpTrade.CostItem
-    Shop(EditorIndex).TradeItem(index).CostValue = tmpTrade.CostValue
+    Index = lstTradeItem.ListIndex + 1
+    Shop(EditorIndex).TradeItem(Index).Item = tmpTrade.Item
+    Shop(EditorIndex).TradeItem(Index).ItemValue = tmpTrade.ItemValue
+    Shop(EditorIndex).TradeItem(Index).CostItem = tmpTrade.CostItem
+    Shop(EditorIndex).TradeItem(Index).CostValue = tmpTrade.CostValue
     
     UpdateShopTrade tmpPos
 End Sub
@@ -280,14 +280,14 @@ Private Sub cmdCancel_Click()
 End Sub
 
 Private Sub cmdUpdate_Click()
-    Dim index As Long
+    Dim Index As Long
     Dim tmpPos As Long
     tmpPos = lstTradeItem.ListIndex
-    index = lstTradeItem.ListIndex + 1
+    Index = lstTradeItem.ListIndex + 1
 
-    If index = 0 Then Exit Sub
+    If Index = 0 Then Exit Sub
 
-    With Shop(EditorIndex).TradeItem(index)
+    With Shop(EditorIndex).TradeItem(Index)
         .Item = cmbItem.ListIndex
         .ItemValue = Val(txtItemValue.text)
         .CostItem = cmbCostItem.ListIndex
@@ -298,14 +298,14 @@ Private Sub cmdUpdate_Click()
 End Sub
 
 Private Sub cmdDeleteTrade_Click()
-    Dim index As Long
+    Dim Index As Long
     Dim tmpPos As Long
     tmpPos = lstTradeItem.ListIndex
-    index = lstTradeItem.ListIndex + 1
+    Index = lstTradeItem.ListIndex + 1
 
-    If index = 0 Then Exit Sub
+    If Index = 0 Then Exit Sub
 
-    With Shop(EditorIndex).TradeItem(index)
+    With Shop(EditorIndex).TradeItem(Index)
         .Item = 0
         .ItemValue = 0
         .CostItem = 0
@@ -329,8 +329,8 @@ Private Sub txtName_Validate(Cancel As Boolean)
 
     If EditorIndex = 0 Then Exit Sub
     tmpIndex = lstIndex.ListIndex
-    Shop(EditorIndex).name = Trim$(txtName.text)
+    Shop(EditorIndex).Name = Trim$(txtName.text)
     lstIndex.RemoveItem EditorIndex - 1
-    lstIndex.AddItem EditorIndex & ": " & Shop(EditorIndex).name, EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Shop(EditorIndex).Name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
 End Sub

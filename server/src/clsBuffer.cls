@@ -175,3 +175,57 @@ End Function
 Public Function ToString() As String
     ToString = StrConv(Buffer, vbUnicode)
 End Function
+
+Public Function CompressBuffer() As Long
+    'zlib
+    Dim Result As Long
+    Dim Size As Long
+    Dim tempSize As Long
+    Dim tempBuffer() As Byte
+    Dim compressed() As Byte
+    CompressBuffer = -1
+    tempSize = Count
+
+    If tempSize > 0 Then
+        Size = tempSize
+        Size = Size + (Size * 0.01) + 12
+        ReDim tempBuffer(0 To Size - 1) As Byte
+        Result = Compress(tempBuffer(0), Size, Buffer(0), tempSize)
+
+        If Result = 0 Then
+            ReDim compressed(0 To Size - 1)
+            CopyMemory compressed(0), tempBuffer(0), Size
+            Flush
+            WriteLong tempSize      ' original size
+            WriteLong Size          ' compressed size
+            WriteBytes compressed() ' compressed data
+            CompressBuffer = 0
+        End If
+    End If
+
+End Function
+
+Public Function DecompressBuffer() As Long
+    'zlib
+    Dim Result As Long
+    Dim OrigSize As Long
+    Dim tempBuffer() As Byte
+    Dim compressed() As Byte
+    DecompressBuffer = -1
+
+    If Count > 0 Then
+        OrigSize = ReadLong + 1
+        ReDim tempBuffer(0 To OrigSize - 1) As Byte
+        compressed = ReadBytes(ReadLong)
+        Result = uncompress(tempBuffer(0), OrigSize, compressed(0), UBound(compressed) + 1)
+
+        If Result = 0 Then
+            ReDim compressed(0 To OrigSize - 1)
+            CopyMemory compressed(0), tempBuffer(0), OrigSize
+            Flush
+            WriteBytes compressed()
+            DecompressBuffer = 0
+        End If
+    End If
+
+End Function

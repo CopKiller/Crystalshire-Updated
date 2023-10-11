@@ -54,7 +54,7 @@ Public Sub LoadAnimations()
 End Sub
 
 Public Sub ClearAnimation(ByVal index As Long)
-    Call ZeroMemory(ByVal VarPtr(Animation(index)), LenB(Animation(index)))
+    Animation(index) = EmptyAnimation
     Animation(index).Name = vbNullString
     Animation(index).Sound = "None."
 End Sub

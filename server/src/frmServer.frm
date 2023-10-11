@@ -68,7 +68,6 @@ Begin VB.Form frmServer
       TabPicture(1)   =   "frmServer.frx":170A6
       Tab(1).ControlEnabled=   0   'False
       Tab(1).Control(0)=   "lvwInfo"
-      Tab(1).Control(0).Enabled=   0   'False
       Tab(1).ControlCount=   1
       TabCaption(2)   =   "Control "
       TabPicture(2)   =   "frmServer.frx":170C2

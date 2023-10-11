@@ -50,7 +50,7 @@ Function TotalOnlinePlayers() As Long
 
 End Function
 
-Function FindPlayer(ByVal name As String) As Long
+Function FindPlayer(ByVal Name As String) As Long
     Dim i As Long
 
     For i = 1 To Player_HighIndex
@@ -58,8 +58,8 @@ Function FindPlayer(ByVal name As String) As Long
         If IsPlaying(i) Then
 
             ' Make sure we dont try to check a name thats to small
-            If Len(GetPlayerName(i)) >= Len(Trim$(name)) Then
-                If UCase$(Mid$(GetPlayerName(i), 1, Len(Trim$(name)))) = UCase$(Trim$(name)) Then
+            If Len(GetPlayerName(i)) >= Len(Trim$(Name)) Then
+                If UCase$(Mid$(GetPlayerName(i), 1, Len(Trim$(Name)))) = UCase$(Trim$(Name)) Then
                     FindPlayer = i
                     Exit Function
                 End If
@@ -71,38 +71,38 @@ Function FindPlayer(ByVal name As String) As Long
     FindPlayer = 0
 End Function
 
-Sub SpawnItem(ByVal itemNum As Long, ByVal ItemVal As Long, ByVal mapnum As Long, ByVal x As Long, ByVal y As Long, Optional ByVal playerName As String = vbNullString)
+Sub SpawnItem(ByVal ItemNum As Long, ByVal ItemVal As Long, ByVal mapnum As Long, ByVal x As Long, ByVal y As Long, Optional ByVal playerName As String = vbNullString)
     Dim i As Long
 
     ' Check for subscript out of range
-    If itemNum < 1 Or itemNum > MAX_ITEMS Or mapnum <= 0 Or mapnum > MAX_MAPS Then
+    If ItemNum < 1 Or ItemNum > MAX_ITEMS Or mapnum <= 0 Or mapnum > MAX_MAPS Then
         Exit Sub
     End If
 
     ' Find open map item slot
     i = FindOpenMapItemSlot(mapnum)
-    Call SpawnItemSlot(i, itemNum, ItemVal, mapnum, x, y, playerName)
+    Call SpawnItemSlot(i, ItemNum, ItemVal, mapnum, x, y, playerName)
 End Sub
 
-Sub SpawnItemSlot(ByVal MapItemSlot As Long, ByVal itemNum As Long, ByVal ItemVal As Long, ByVal mapnum As Long, ByVal x As Long, ByVal y As Long, Optional ByVal playerName As String = vbNullString, Optional ByVal canDespawn As Boolean = True, Optional ByVal isSB As Boolean = False)
+Sub SpawnItemSlot(ByVal MapItemSlot As Long, ByVal ItemNum As Long, ByVal ItemVal As Long, ByVal mapnum As Long, ByVal x As Long, ByVal y As Long, Optional ByVal playerName As String = vbNullString, Optional ByVal canDespawn As Boolean = True, Optional ByVal isSB As Boolean = False)
     Dim packet As String
     Dim i As Long
     Dim Buffer As clsBuffer
 
     ' Check for subscript out of range
-    If MapItemSlot <= 0 Or MapItemSlot > MAX_MAP_ITEMS Or itemNum < 0 Or itemNum > MAX_ITEMS Or mapnum <= 0 Or mapnum > MAX_MAPS Then
+    If MapItemSlot <= 0 Or MapItemSlot > MAX_MAP_ITEMS Or ItemNum < 0 Or ItemNum > MAX_ITEMS Or mapnum <= 0 Or mapnum > MAX_MAPS Then
         Exit Sub
     End If
 
     i = MapItemSlot
 
     If i <> 0 Then
-        If itemNum >= 0 And itemNum <= MAX_ITEMS Then
+        If ItemNum >= 0 And ItemNum <= MAX_ITEMS Then
             MapItem(mapnum, i).playerName = playerName
             MapItem(mapnum, i).playerTimer = GetTickCount + ITEM_SPAWN_TIME
             MapItem(mapnum, i).canDespawn = canDespawn
             MapItem(mapnum, i).despawnTimer = GetTickCount + ITEM_DESPAWN_TIME
-            MapItem(mapnum, i).Num = itemNum
+            MapItem(mapnum, i).Num = ItemNum
             MapItem(mapnum, i).Value = ItemVal
             MapItem(mapnum, i).x = x
             MapItem(mapnum, i).y = y
@@ -245,6 +245,7 @@ Public Sub SpawnNpc(ByVal mapNpcNum As Long, ByVal mapnum As Long)
                 Buffer.WriteLong .x
                 Buffer.WriteLong .y
                 Buffer.WriteLong .Dir
+                
                 SendDataToMap mapnum, Buffer.ToArray()
                 Buffer.Flush: Set Buffer = Nothing
             End If
@@ -317,7 +318,7 @@ End Sub
 
 Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As Byte) As Boolean
     Dim i As Long
-    Dim n As Long
+    Dim N As Long
     Dim x As Long
     Dim y As Long
 
@@ -335,10 +336,10 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
 
             ' Check to make sure not outside of boundries
             If y > 0 Then
-                n = Map(mapnum).TileData.Tile(x, y - 1).Type
+                N = Map(mapnum).TileData.Tile(x, y - 1).Type
 
                 ' Check to make sure that the tile is walkable
-                If n <> TILE_TYPE_WALKABLE And n <> TILE_TYPE_ITEM And n <> TILE_TYPE_NPCSPAWN Then
+                If N <> TILE_TYPE_WALKABLE And N <> TILE_TYPE_ITEM And N <> TILE_TYPE_NPCSPAWN Then
                     CanNpcMove = False
                     Exit Function
                 End If
@@ -374,10 +375,10 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
 
             ' Check to make sure not outside of boundries
             If y < Map(mapnum).MapData.MaxY Then
-                n = Map(mapnum).TileData.Tile(x, y + 1).Type
+                N = Map(mapnum).TileData.Tile(x, y + 1).Type
 
                 ' Check to make sure that the tile is walkable
-                If n <> TILE_TYPE_WALKABLE And n <> TILE_TYPE_ITEM And n <> TILE_TYPE_NPCSPAWN Then
+                If N <> TILE_TYPE_WALKABLE And N <> TILE_TYPE_ITEM And N <> TILE_TYPE_NPCSPAWN Then
                     CanNpcMove = False
                     Exit Function
                 End If
@@ -413,10 +414,10 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
 
             ' Check to make sure not outside of boundries
             If x > 0 Then
-                n = Map(mapnum).TileData.Tile(x - 1, y).Type
+                N = Map(mapnum).TileData.Tile(x - 1, y).Type
 
                 ' Check to make sure that the tile is walkable
-                If n <> TILE_TYPE_WALKABLE And n <> TILE_TYPE_ITEM And n <> TILE_TYPE_NPCSPAWN Then
+                If N <> TILE_TYPE_WALKABLE And N <> TILE_TYPE_ITEM And N <> TILE_TYPE_NPCSPAWN Then
                     CanNpcMove = False
                     Exit Function
                 End If
@@ -452,10 +453,10 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
 
             ' Check to make sure not outside of boundries
             If x < Map(mapnum).MapData.MaxX Then
-                n = Map(mapnum).TileData.Tile(x + 1, y).Type
+                N = Map(mapnum).TileData.Tile(x + 1, y).Type
 
                 ' Check to make sure that the tile is walkable
-                If n <> TILE_TYPE_WALKABLE And n <> TILE_TYPE_ITEM And n <> TILE_TYPE_NPCSPAWN Then
+                If N <> TILE_TYPE_WALKABLE And N <> TILE_TYPE_ITEM And N <> TILE_TYPE_NPCSPAWN Then
                     CanNpcMove = False
                     Exit Function
                 End If
@@ -528,6 +529,7 @@ Sub NpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As Long, By
     Buffer.WriteLong MapNpc(mapnum).Npc(mapNpcNum).y
     Buffer.WriteLong MapNpc(mapnum).Npc(mapNpcNum).Dir
     Buffer.WriteLong movement
+    
     SendDataToMap mapnum, Buffer.ToArray()
     Buffer.Flush: Set Buffer = Nothing
 
@@ -547,24 +549,25 @@ Sub NpcDir(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As Long)
     Buffer.WriteLong SNpcDir
     Buffer.WriteLong mapNpcNum
     Buffer.WriteLong Dir
+    
     SendDataToMap mapnum, Buffer.ToArray()
     Buffer.Flush: Set Buffer = Nothing
 End Sub
 
 Function GetTotalMapPlayers(ByVal mapnum As Long) As Long
     Dim i As Long
-    Dim n As Long
-    n = 0
+    Dim N As Long
+    N = 0
 
     For i = 1 To Player_HighIndex
 
         If IsPlaying(i) And GetPlayerMap(i) = mapnum Then
-            n = n + 1
+            N = N + 1
         End If
 
     Next
 
-    GetTotalMapPlayers = n
+    GetTotalMapPlayers = N
 End Function
 
 Sub ClearTempTiles()
@@ -685,7 +688,7 @@ Sub PlayerUnequipItem(ByVal index As Long, ByVal EqSlot As Long)
     If EqSlot <= 0 Or EqSlot > Equipment.Equipment_Count - 1 Then Exit Sub ' exit out early if error'd
     If FindOpenInvSlot(index, GetPlayerEquipment(index, EqSlot)) > 0 Then
         GiveInvItem index, GetPlayerEquipment(index, EqSlot), 0, , True
-        PlayerMsg index, "You unequip " & CheckGrammar(Item(GetPlayerEquipment(index, EqSlot)).name), Yellow
+        PlayerMsg index, "You unequip " & CheckGrammar(Item(GetPlayerEquipment(index, EqSlot)).Name), Yellow
         ' send the sound
         SendPlayerSound index, GetPlayerX(index), GetPlayerY(index), SoundEntity.seItem, GetPlayerEquipment(index, EqSlot)
         ' remove equipment
@@ -1094,10 +1097,10 @@ Dim multiplier As Long, partynum As Long, expBonus As Long
     End If
 End Sub
 
-Public Sub Unique_Item(ByVal index As Long, ByVal itemNum As Long)
+Public Sub Unique_Item(ByVal index As Long, ByVal ItemNum As Long)
 Dim ClassNum As Long, i As Long
 
-    Select Case Item(itemNum).Data1
+    Select Case Item(ItemNum).Data1
         Case 1 ' Reset Stats
             ClassNum = GetPlayerClass(index)
             If ClassNum <= 0 Or ClassNum > Max_Classes Then Exit Sub
@@ -1108,7 +1111,7 @@ Dim ClassNum As Long, i As Long
             ' give player their points back
             SetPlayerPOINTS index, (GetPlayerLevel(index) - 1) * 3
             ' take item
-            TakeInvItem index, itemNum, 1
+            TakeInvItem index, ItemNum, 1
             ' let them know we've done it
             PlayerMsg index, "Your stats have been reset.", BrightGreen
             ' send them their new stats

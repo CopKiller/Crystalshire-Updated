@@ -51,7 +51,7 @@ Public Sub LoadNpcs()
 End Sub
 
 Public Sub ClearNpc(ByVal index As Long)
-    Call ZeroMemory(ByVal VarPtr(Npc(index)), LenB(Npc(index)))
+    Npc(index) = EmptyNpc
     Npc(index).Name = vbNullString
     Npc(index).AttackSay = vbNullString
     Npc(index).Sound = "None."

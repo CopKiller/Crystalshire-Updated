@@ -2,6 +2,7 @@ Attribute VB_Name = "Spell_UDT"
 Option Explicit
 
 Public Spell(1 To MAX_SPELLS) As SpellRec
+Public EmptySpell As SpellRec
 
 Private Type SpellRec
     Name As String * NAME_LENGTH
@@ -19,7 +20,7 @@ Private Type SpellRec
     Map As Long
     x As Long
     y As Long
-    dir As Byte
+    Dir As Byte
     Vital As Long
     Duration As Long
     Interval As Long

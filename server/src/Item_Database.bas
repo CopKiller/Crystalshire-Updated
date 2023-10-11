@@ -3,13 +3,13 @@ Attribute VB_Name = "Item_Database"
 ' ** Items **
 ' ***********
 
-Public Sub SaveItem(ByVal itemNum As Long)
+Public Sub SaveItem(ByVal ItemNum As Long)
     Dim filename As String
     Dim f As Long
-    filename = App.Path & "\data\items\item" & itemNum & ".dat"
+    filename = App.Path & "\data\items\item" & ItemNum & ".dat"
     f = FreeFile
     Open filename For Binary As #f
-    Put #f, , Item(itemNum)
+    Put #f, , Item(ItemNum)
     Close #f
 End Sub
 
@@ -52,7 +52,7 @@ Public Sub LoadItems()
 End Sub
 
 Public Sub ClearItem(ByVal index As Long)
-    Call ZeroMemory(ByVal VarPtr(Item(index)), LenB(Item(index)))
+    Item(index) = EmptyItem
     Item(index).Name = vbNullString
     Item(index).Desc = vbNullString
     Item(index).Sound = "None."

@@ -8,6 +8,11 @@ Public TempTile(1 To MAX_MAPS) As TempTileRec
 Public MapItem(1 To MAX_MAPS, 1 To MAX_MAP_ITEMS) As MapItemRec
 Public MapNpc(1 To MAX_MAPS) As MapNpcDataRec
 
+Public EmptyMap As MapRec
+Public EmptyResourceCache As ResourceCacheRec
+Public EmptyMapItem As MapItemRec
+Public EmptyMapNpc As MapNpcDataRec
+
 Public Type MapCRCStruct
     MapDataCRC As Long
     MapTileCRC As Long
@@ -65,7 +70,7 @@ Private Type EventPageRec
 End Type
 
 Private Type EventRec
-    name As String
+    Name As String
     x As Long
     y As Long
     PageCount As Long
@@ -73,7 +78,7 @@ Private Type EventRec
 End Type
 
 Private Type MapDataRec
-    name As String
+    Name As String
     Music As String
     Moral As Byte
     
@@ -156,7 +161,7 @@ Private Type MapNpcRec
     Vital(1 To Vitals.Vital_Count - 1) As Long
     x As Byte
     y As Byte
-    dir As Byte
+    Dir As Byte
     ' For server use only
     SpawnWait As Long
     AttackTimer As Long

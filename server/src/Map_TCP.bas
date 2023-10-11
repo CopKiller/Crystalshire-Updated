@@ -6,8 +6,8 @@ Public Sub SendMap(ByVal index As Long, ByVal mapnum As Long)
     'Buffer.PreAllocate (UBound(MapCache(mapNum).Data) - LBound(MapCache(mapNum).Data)) + 5
     Buffer.WriteLong SMapData
     Buffer.WriteBytes MapCache(mapnum).Data()
-    SendDataTo index, Buffer.ToArray()
     
+    SendDataTo index, Buffer.ToArray()
     Buffer.Flush: Set Buffer = Nothing
 End Sub
 
@@ -23,7 +23,6 @@ Public Sub SendMapEquipment(ByVal index As Long)
     Buffer.WriteLong GetPlayerEquipment(index, Shield)
     
     SendDataToMap GetPlayerMap(index), Buffer.ToArray()
-    
     Buffer.Flush: Set Buffer = Nothing
 End Sub
 
@@ -39,7 +38,6 @@ Public Sub SendMapEquipmentTo(ByVal PlayerNum As Long, ByVal index As Long)
     Buffer.WriteLong GetPlayerEquipment(PlayerNum, Shield)
     
     SendDataTo index, Buffer.ToArray()
-    
     Buffer.Flush: Set Buffer = Nothing
 End Sub
 
@@ -65,7 +63,6 @@ Public Sub SendMapItemsTo(ByVal index As Long, ByVal mapnum As Long)
     Next
 
     SendDataTo index, Buffer.ToArray()
-    
     Buffer.Flush: Set Buffer = Nothing
 End Sub
 
@@ -91,7 +88,6 @@ Public Sub SendMapItemsToAll(ByVal mapnum As Long)
     Next
 
     SendDataToMap mapnum, Buffer.ToArray()
-    
     Buffer.Flush: Set Buffer = Nothing
 End Sub
 
@@ -107,7 +103,6 @@ Public Sub SendMapNpcVitals(ByVal mapnum As Long, ByVal mapNpcNum As Long)
     Next
 
     SendDataToMap mapnum, Buffer.ToArray()
-    
     Buffer.Flush: Set Buffer = Nothing
 End Sub
 
@@ -123,12 +118,11 @@ Public Sub SendMapNpcsTo(ByVal index As Long, ByVal mapnum As Long)
         Buffer.WriteLong MapNpc(mapnum).Npc(i).Num
         Buffer.WriteLong MapNpc(mapnum).Npc(i).x
         Buffer.WriteLong MapNpc(mapnum).Npc(i).y
-        Buffer.WriteLong MapNpc(mapnum).Npc(i).dir
+        Buffer.WriteLong MapNpc(mapnum).Npc(i).Dir
         Buffer.WriteLong MapNpc(mapnum).Npc(i).Vital(HP)
     Next
 
     SendDataTo index, Buffer.ToArray()
-    
     Buffer.Flush: Set Buffer = Nothing
 End Sub
 
@@ -144,12 +138,11 @@ Public Sub SendMapNpcsToMap(ByVal mapnum As Long)
         Buffer.WriteLong MapNpc(mapnum).Npc(i).Num
         Buffer.WriteLong MapNpc(mapnum).Npc(i).x
         Buffer.WriteLong MapNpc(mapnum).Npc(i).y
-        Buffer.WriteLong MapNpc(mapnum).Npc(i).dir
+        Buffer.WriteLong MapNpc(mapnum).Npc(i).Dir
         Buffer.WriteLong MapNpc(mapnum).Npc(i).Vital(HP)
     Next
 
     SendDataToMap mapnum, Buffer.ToArray()
-    
     Buffer.Flush: Set Buffer = Nothing
 End Sub
 
@@ -204,6 +197,7 @@ Public Sub SendMapSound(ByVal index As Long, ByVal x As Long, ByVal y As Long, B
     Buffer.WriteLong y
     Buffer.WriteLong entityType
     Buffer.WriteLong entityNum
+    
     SendDataToMap GetPlayerMap(index), Buffer.ToArray()
     Buffer.Flush: Set Buffer = Nothing
 End Sub

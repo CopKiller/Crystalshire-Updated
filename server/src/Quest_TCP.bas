@@ -1,53 +1,53 @@
 Attribute VB_Name = "Quest_TCP"
-Public Sub SendUpdateQuestTo(ByVal index As Long, ByVal QuestNum As Long)
+Public Sub SendUpdateMissionTo(ByVal index As Long, ByVal N As Long)
     Dim packet As String
     Dim Buffer As clsBuffer
-    Dim QuestSize As Long
-    Dim QuestData() As Byte
+    Dim MissionSize As Long
+    Dim MissionData() As Byte
     
     Set Buffer = New clsBuffer
+    MissionSize = LenB(Mission(N))
     
-    QuestSize = LenB(Quest(QuestNum))
-    ReDim QuestData(QuestSize - 1)
-    CopyMemory QuestData(0), ByVal VarPtr(Quest(QuestNum)), QuestSize
+    ReDim MissionData(MissionSize - 1)
+    CopyMemory MissionData(0), ByVal VarPtr(Mission(N)), MissionSize
     
-    Buffer.WriteLong SUpdateQuest
-    Buffer.WriteLong QuestNum
-    Buffer.WriteBytes QuestData
+    Buffer.WriteLong SUpdateMission
+    Buffer.WriteLong N
+    Buffer.WriteBytes MissionData
     
     SendDataTo index, Buffer.ToArray()
     Buffer.Flush: Set Buffer = Nothing
 End Sub
 
-Public Sub SendQuests(ByVal index As Long)
+Public Sub SendMissions(ByVal index As Long)
     Dim i As Long
 
-    For i = 1 To MAX_QUESTS
+    For i = 1 To MAX_MISSIONS
 
-        If LenB(Trim$(Quest(i).name)) > 0 Then
-            Call SendUpdateQuestTo(index, i)
+        If LenB(Trim$(Mission(i).Name)) > 0 Then
+            Call SendUpdateMissionTo(index, i)
         End If
 
     Next
 
 End Sub
 
-Public Sub SendUpdateQuestToAll(ByVal QuestNum As Long)
+Public Sub SendUpdateMissionToAll(ByVal N As Long)
     Dim packet As String
     Dim Buffer As clsBuffer
-    Dim QuestSize As Long
-    Dim QuestData() As Byte
+    Dim MissionSize As Long
+    Dim MissionData() As Byte
     
     Set Buffer = New clsBuffer
+    MissionSize = LenB(Mission(N))
     
-    QuestSize = LenB(Quest(QuestNum))
-    ReDim QuestData(QuestSize - 1)
-    CopyMemory QuestData(0), ByVal VarPtr(Quest(QuestNum)), QuestSize
+    ReDim MissionData(MissionSize - 1)
+    CopyMemory MissionData(0), ByVal VarPtr(Mission(N)), MissionSize
     
-    Buffer.WriteLong SUpdateQuest
-    Buffer.WriteLong QuestNum
-    Buffer.WriteBytes QuestData
-
+    Buffer.WriteLong SUpdateMission
+    Buffer.WriteLong N
+    Buffer.WriteBytes MissionData
+    
     SendDataToAll Buffer.ToArray()
     Buffer.Flush: Set Buffer = Nothing
 End Sub

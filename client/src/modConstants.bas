@@ -1,5 +1,8 @@
 Attribute VB_Name = "modConstants"
 Option Explicit
+' System of compressing
+Public Declare Function Compress Lib "zlib.dll" Alias "compress" (dest As Any, destLen As Any, src As Any, ByVal srcLen As Long) As Long
+Public Declare Function uncompress Lib "zlib.dll" (dest As Any, destLen As Any, src As Any, ByVal srcLen As Long) As Long
 ' in development? [turn off music]
 Public Const inDevelopment As Boolean = True
 ' Version constants
@@ -105,6 +108,7 @@ Public Const PIC_Y As Long = 32
 ' ********************************************************
 ' General constants
 Public Const MAX_PLAYERS As Long = 200
+Public Const MAX_PLAYER_MISSIONS As Long = 20
 Public Const MAX_ITEMS As Long = 255
 Public Const MAX_NPCS As Long = 255
 Public Const MAX_ANIMATIONS As Long = 255
@@ -114,7 +118,6 @@ Public Const MAX_MAP_NPCS As Long = 30
 Public Const MAX_SHOPS As Long = 50
 Public Const MAX_PLAYER_SPELLS As Long = 35
 Public Const MAX_SPELLS As Long = 255
-Public Const MAX_TRADES As Long = 35
 Public Const MAX_RESOURCES As Long = 100
 Public Const MAX_LEVELS As Long = 25
 Public Const MAX_BANK As Long = 99
@@ -131,6 +134,7 @@ Public Const GAME_NAME As String = "Crystalshire"
 Public Const GAME_WEBSITE As String = "http://www.crystalshire.com"
 ' String constants
 Public Const NAME_LENGTH As Byte = 20
+Public Const DESC_LENGTH As Byte = 150
 ' Sex constants
 Public Const SEX_MALE As Byte = 0
 Public Const SEX_FEMALE As Byte = 1
@@ -209,6 +213,7 @@ Public Const EDITOR_SHOP As Byte = 4
 Public Const EDITOR_RESOURCE As Byte = 5
 Public Const EDITOR_ANIMATION As Byte = 6
 Public Const EDITOR_CONV As Byte = 7
+Public Const EDITOR_Mission As Byte = 8
 ' Target type constants
 Public Const TARGET_TYPE_NONE As Byte = 0
 Public Const TARGET_TYPE_PLAYER As Byte = 1

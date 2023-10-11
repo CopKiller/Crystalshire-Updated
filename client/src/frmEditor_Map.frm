@@ -1188,8 +1188,8 @@ End Sub
 
 Private Sub Form_Load()
     ' move the entire attributes box on screen
-    picAttributes.left = 8
-    picAttributes.top = 8
+    picAttributes.Left = 8
+    picAttributes.Top = 8
 End Sub
 
 Private Sub optAppear_Click()
@@ -1202,9 +1202,9 @@ Private Sub optDoor_Click()
     ClearAttributeDialogue
     picAttributes.visible = True
     fraMapWarp.visible = True
-    scrlMapWarp.Max = MAX_MAPS
-    scrlMapWarpX.Max = MAX_BYTE
-    scrlMapWarpY.Max = MAX_BYTE
+    scrlMapWarp.max = MAX_MAPS
+    scrlMapWarpX.max = MAX_BYTE
+    scrlMapWarpY.max = MAX_BYTE
 End Sub
 
 Private Sub optEvents_Click()
@@ -1237,17 +1237,17 @@ Private Sub optAttribs_Click()
 End Sub
 
 Private Sub optNpcSpawn_Click()
-    Dim n As Long
+    Dim N As Long
     
     If lstNpc.ListCount <= 0 Then
         lstNpc.Clear
-        For n = 1 To MAX_MAP_NPCS
-            If map.MapData.Npc(n) > 0 Then
-                lstNpc.AddItem n & ": " & Npc(map.MapData.Npc(n)).name
+        For N = 1 To MAX_MAP_NPCS
+            If Map.MapData.Npc(N) > 0 Then
+                lstNpc.AddItem N & ": " & Npc(Map.MapData.Npc(N)).Name
             Else
-                lstNpc.AddItem n & ": No Npc"
+                lstNpc.AddItem N & ": No Npc"
             End If
-        Next n
+        Next N
         lstNpc.ListIndex = 0
     End If
     
@@ -1308,33 +1308,33 @@ Private Sub optWarp_Click()
     ClearAttributeDialogue
     picAttributes.visible = True
     fraMapWarp.visible = True
-    scrlMapWarp.Max = MAX_MAPS
-    scrlMapWarpX.Max = MAX_BYTE
-    scrlMapWarpY.Max = MAX_BYTE
+    scrlMapWarp.max = MAX_MAPS
+    scrlMapWarpX.max = MAX_BYTE
+    scrlMapWarpY.max = MAX_BYTE
 End Sub
 
 Private Sub optItem_Click()
     ClearAttributeDialogue
     picAttributes.visible = True
     fraMapItem.visible = True
-    scrlMapItem.Max = MAX_ITEMS
-    lblMapItem.caption = Trim$(Item(scrlMapItem.value).name) & " x" & scrlMapItemValue.value
+    scrlMapItem.max = MAX_ITEMS
+    lblMapItem.caption = Trim$(Item(scrlMapItem.value).Name) & " x" & scrlMapItemValue.value
 End Sub
 
 Private Sub optKey_Click()
     ClearAttributeDialogue
     picAttributes.visible = True
     fraMapKey.visible = True
-    scrlMapKey.Max = MAX_ITEMS
-    lblMapKey.caption = "Item: " & Trim$(Item(scrlMapKey.value).name)
+    scrlMapKey.max = MAX_ITEMS
+    lblMapKey.caption = "Item: " & Trim$(Item(scrlMapKey.value).Name)
 End Sub
 
 Private Sub optKeyOpen_Click()
     ClearAttributeDialogue
     fraKeyOpen.visible = True
     picAttributes.visible = True
-    scrlKeyX.Max = map.MapData.MaxX
-    scrlKeyY.Max = map.MapData.MaxY
+    scrlKeyX.max = Map.MapData.MaxX
+    scrlKeyY.max = Map.MapData.MaxY
 End Sub
 
 Private Sub cmdFill_Click()
@@ -1413,7 +1413,7 @@ Private Sub scrlMapItem_Change()
         scrlMapItemValue.enabled = False
     End If
 
-    lblMapItem.caption = Trim$(Item(scrlMapItem.value).name) & " x" & scrlMapItemValue.value
+    lblMapItem.caption = Trim$(Item(scrlMapItem.value).Name) & " x" & scrlMapItemValue.value
 End Sub
 
 Private Sub scrlMapItem_Scroll()
@@ -1421,7 +1421,7 @@ Private Sub scrlMapItem_Scroll()
 End Sub
 
 Private Sub scrlMapItemValue_Change()
-    lblMapItem.caption = Trim$(Item(scrlMapItem.value).name) & " x" & scrlMapItemValue.value
+    lblMapItem.caption = Trim$(Item(scrlMapItem.value).Name) & " x" & scrlMapItemValue.value
 End Sub
 
 Private Sub scrlMapItemValue_Scroll()
@@ -1429,7 +1429,7 @@ Private Sub scrlMapItemValue_Scroll()
 End Sub
 
 Private Sub scrlMapKey_Change()
-    lblMapKey.caption = "Item: " & Trim$(Item(scrlMapKey.value).name)
+    lblMapKey.caption = "Item: " & Trim$(Item(scrlMapKey.value).Name)
 End Sub
 
 Private Sub scrlMapKey_Scroll()
@@ -1484,7 +1484,7 @@ Private Sub scrlNpcDir_Scroll()
 End Sub
 
 Private Sub scrlResource_Change()
-    lblResource.caption = "Resource: " & Resource(scrlResource.value).name
+    lblResource.caption = "Resource: " & Resource(scrlResource.value).Name
 End Sub
 
 Private Sub scrlResource_Scroll()
@@ -1511,11 +1511,11 @@ Private Sub scrlTileSet_Change()
     fraTileSet.caption = "Tileset: " & scrlTileSet.value
     frmEditor_Map.scrlPictureX.value = 0
     frmEditor_Map.scrlPictureY.value = 0
-    frmEditor_Map.picBackSelect.left = 0
-    frmEditor_Map.picBackSelect.top = 0
+    frmEditor_Map.picBackSelect.Left = 0
+    frmEditor_Map.picBackSelect.Top = 0
     GDIRenderTileset
-    frmEditor_Map.scrlPictureY.Max = (frmEditor_Map.picBackSelect.height \ PIC_Y) - (frmEditor_Map.picBack.height \ PIC_Y)
-    frmEditor_Map.scrlPictureX.Max = (frmEditor_Map.picBackSelect.width \ PIC_X) - (frmEditor_Map.picBack.width \ PIC_X)
+    frmEditor_Map.scrlPictureY.max = (frmEditor_Map.picBackSelect.Height \ PIC_Y) - (frmEditor_Map.picBack.Height \ PIC_Y)
+    frmEditor_Map.scrlPictureX.max = (frmEditor_Map.picBackSelect.Width \ PIC_X) - (frmEditor_Map.picBack.Width \ PIC_X)
     MapEditorTileScroll
 End Sub
 
@@ -1531,16 +1531,16 @@ Private Sub cmdChat_Click()
 End Sub
 
 Private Sub optChat_Click()
-    Dim n As Long
+    Dim N As Long
     If lstChat.ListCount <= 0 Then
         lstChat.Clear
-        For n = 1 To MAX_MAP_NPCS
-            If map.MapData.Npc(n) > 0 Then
-                lstChat.AddItem n & ": " & Npc(map.MapData.Npc(n)).name
+        For N = 1 To MAX_MAP_NPCS
+            If Map.MapData.Npc(N) > 0 Then
+                lstChat.AddItem N & ": " & Npc(Map.MapData.Npc(N)).Name
             Else
-                lstChat.AddItem n & ": No Npc"
+                lstChat.AddItem N & ": No Npc"
             End If
-        Next n
+        Next N
         scrlChat.value = 0
         lstChat.ListIndex = 0
     End If

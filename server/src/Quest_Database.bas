@@ -1,66 +1,94 @@
 Attribute VB_Name = "Quest_Database"
 ' **********
-' ** Quests **
+' ** Missions **
 ' **********
-Public Sub SaveQuest(ByVal QuestNum As Long)
+Public Sub SaveMission(ByVal N As Long)
     Dim filename As String
-    Dim f As Long
-    filename = App.Path & "\data\quests\Quest" & QuestNum & ".dat"
+    Dim i As Long, x As Long, f As Long
+
+    filename = App.Path & "\data\missions\Mission" & N & ".dat"
     f = FreeFile
+
     Open filename For Binary As #f
-    Put #f, , Quest(QuestNum)
+    With Mission(N)
+        Put #f, , .Name
+        Put #f, , .Type
+        Put #f, , .Repeatable
+        Put #f, , .Dialogue
+        
+        Put #f, , .KillNPC
+        Put #f, , .KillNPCAmount
+        
+        Put #f, , .CollectItem
+        Put #f, , .CollectItemAmount
+        
+        Put #f, , .TalkNPC
+        
+        Put #f, , .PreviousQuestComplete
+        
+        Put #f, , .Incomplete
+        Put #f, , .Completed
+        
+        For i = 1 To 5
+            Put #f, , .RewardItem(i).ItemNum
+            Put #f, , .RewardItem(i).ItemAmount
+        Next
+        
+        Put #f, , .RewardExperience
+        
+    End With
     Close #f
 End Sub
 
-Public Sub SaveQuests()
+Public Sub SaveMissions()
     Dim i As Long
 
-    For i = 1 To MAX_QUESTS
-        Call SaveQuest(i)
+    For i = 1 To MAX_MISSIONS
+        Call SaveMission(i)
     Next
 
 End Sub
 
-Public Sub CheckQuests()
+Public Sub CheckMissions()
     Dim i As Long
 
-    For i = 1 To MAX_QUESTS
-        If Not FileExist(App.Path & "\data\quests\Quest" & i & ".dat") Then
-            Call SaveQuest(i)
+    For i = 1 To MAX_MISSIONS
+        If Not FileExist(App.Path & "\data\missions\Mission" & i & ".dat") Then
+            Call SaveMission(i)
         End If
     Next
 
 End Sub
 
-Public Sub LoadQuests()
+Public Sub LoadMissions()
     Dim filename As String
     Dim i As Long
     Dim f As Long
     Dim sLen As Long
 
-    Call CheckQuests
+    Call CheckMissions
 
-    For i = 1 To MAX_QUESTS
-        filename = App.Path & "\data\quests\quest" & i & ".dat"
+    For i = 1 To MAX_MISSIONS
+        filename = App.Path & "\data\missions\Mission" & i & ".dat"
         f = FreeFile
         Open filename For Binary As #f
-        Get #f, , Quest(i)
+        Get #f, , Mission(i)
         Close #f
     Next
 
 End Sub
 
-Public Sub ClearQuest(ByVal index As Long)
-    Call ZeroMemory(ByVal VarPtr(Quest(index)), LenB(Quest(index)))
-    Quest(index).name = vbNullString
+Public Sub ClearMission(ByVal index As Long)
+    Mission(index) = EmptyMission
+    Mission(index).Name = vbNullString
+    Mission(index).Incomplete = vbNullString
+    Mission(index).Completed = vbNullString
 End Sub
 
-Public Sub ClearQuests()
+Public Sub ClearMissions()
     Dim i As Long
 
-    For i = 1 To MAX_QUESTS
-        Call ClearQuest(i)
+    For i = 1 To MAX_MISSIONS
+        Call ClearMission(i)
     Next
 End Sub
-
-

@@ -125,10 +125,10 @@ End Sub
 Public Sub ClearPlayer(ByVal index As Long)
     Dim i As Long
 
-    Call ZeroMemory(ByVal VarPtr(TempPlayer(index)), LenB(TempPlayer(index)))
+    TempPlayer(index) = EmptyTempPlayer
     Set TempPlayer(index).Buffer = New clsBuffer
 
-    Call ZeroMemory(ByVal VarPtr(Player(index)), LenB(Player(index)))
+    Player(index) = EmptyPlayer
     Player(index).Name = vbNullString
     Player(index).Class = 1
 
@@ -162,7 +162,7 @@ End Sub
 
 Public Sub LoadClasses()
     Dim filename As String
-    Dim i As Long, n As Long
+    Dim i As Long, N As Long
     Dim tmpSprite As String
     Dim tmpArray() As String
     Dim startItemCount As Long, startSpellCount As Long
@@ -189,8 +189,8 @@ Public Sub LoadClasses()
         ' redim the class sprite array
         ReDim Class(i).MaleSprite(0 To UBound(tmpArray))
         ' loop through converting strings to values and store in the sprite array
-        For n = 0 To UBound(tmpArray)
-            Class(i).MaleSprite(n) = Val(tmpArray(n))
+        For N = 0 To UBound(tmpArray)
+            Class(i).MaleSprite(N) = Val(tmpArray(N))
         Next
 
         ' read string of sprites
@@ -200,8 +200,8 @@ Public Sub LoadClasses()
         ' redim the class sprite array
         ReDim Class(i).FemaleSprite(0 To UBound(tmpArray))
         ' loop through converting strings to values and store in the sprite array
-        For n = 0 To UBound(tmpArray)
-            Class(i).FemaleSprite(n) = Val(tmpArray(n))
+        For N = 0 To UBound(tmpArray)
+            Class(i).FemaleSprite(N) = Val(tmpArray(N))
         Next
 
         ' continue
@@ -284,7 +284,7 @@ Public Sub ClearClasses()
     Dim i As Long
 
     For i = 1 To Max_Classes
-        Call ZeroMemory(ByVal VarPtr(Class(i)), LenB(Class(i)))
+        Class(i) = EmptyClass
         Class(i).Name = vbNullString
     Next
 

@@ -12,6 +12,7 @@ Public Sub HandleRequestEditAnimation(ByVal index As Long, ByRef Data() As Byte,
 
     Set Buffer = New clsBuffer
     Buffer.WriteLong SAnimationEditor
+    
     SendDataTo index, Buffer.ToArray()
     Buffer.Flush: Set Buffer = Nothing
 End Sub
@@ -24,7 +25,7 @@ End Sub
 ' :: Save Animation packet ::
 ' ::::::::::::::::::::::
 Public Sub HandleSaveAnimation(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim n As Long
+    Dim N As Long
     Dim Buffer As clsBuffer
     Dim AnimationSize As Long
     Dim AnimationData() As Byte
@@ -36,21 +37,21 @@ Public Sub HandleSaveAnimation(ByVal index As Long, ByRef Data() As Byte, ByVal 
         Exit Sub
     End If
 
-    n = Buffer.ReadLong 'CLng(Parse(1))
+    N = Buffer.ReadLong 'CLng(Parse(1))
 
-    If n < 0 Or n > MAX_ANIMATIONS Then
+    If N < 0 Or N > MAX_ANIMATIONS Then
         Exit Sub
     End If
 
     ' Update the Animation
-    AnimationSize = LenB(Animation(n))
+    AnimationSize = LenB(Animation(N))
     ReDim AnimationData(AnimationSize - 1)
     AnimationData = Buffer.ReadBytes(AnimationSize)
-    CopyMemory ByVal VarPtr(Animation(n)), ByVal VarPtr(AnimationData(0)), AnimationSize
+    CopyMemory ByVal VarPtr(Animation(N)), ByVal VarPtr(AnimationData(0)), AnimationSize
     Buffer.Flush: Set Buffer = Nothing
     
     ' Save it
-    Call SendUpdateAnimationToAll(n)
-    Call SaveAnimation(n)
-    Call AddLog(GetPlayerName(index) & " saved Animation #" & n & ".", ADMIN_LOG)
+    Call SendUpdateAnimationToAll(N)
+    Call SaveAnimation(N)
+    Call AddLog(GetPlayerName(index) & " saved Animation #" & N & ".", ADMIN_LOG)
 End Sub

@@ -1,8 +1,8 @@
 Attribute VB_Name = "Quest_Handle"
 ' :::::::::::::::::::::::::::::
-' :: Request edit Quest packet ::
+' :: Request edit Mission packet ::
 ' :::::::::::::::::::::::::::::
-Public Sub HandleRequestEditQuest(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Public Sub HandleRequestEditMission(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
     Dim Buffer As clsBuffer
 
     ' Prevent hacking
@@ -11,45 +11,47 @@ Public Sub HandleRequestEditQuest(ByVal index As Long, ByRef Data() As Byte, ByV
     End If
 
     Set Buffer = New clsBuffer
-    Buffer.WriteLong SQuestEditor
+    Buffer.WriteLong SMissionEditor
+    
     SendDataTo index, Buffer.ToArray()
     Buffer.Flush: Set Buffer = Nothing
 End Sub
 
-Public Sub HandleRequestQuests(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Call SendQuests(index)
+Public Sub HandleRequestMissions(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+    Call SendMissions(index)
 End Sub
 
 ' :::::::::::::::::::::
-' :: Save Quest packet ::
+' :: Save Mission packet ::
 ' :::::::::::::::::::::
-Public Sub HandleSaveQuest(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim QuestNum As Long
+Public Sub HandleSaveMission(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+    Dim N As Long
     Dim Buffer As clsBuffer
-    Dim QuestSize As Long
-    Dim QuestData() As Byte
+    Dim MissionSize As Long
+    Dim MissionData() As Byte
+    Set Buffer = New clsBuffer
+    Buffer.WriteBytes Data()
 
     ' Prevent hacking
     If GetPlayerAccess(index) < ADMIN_DEVELOPER Then
         Exit Sub
     End If
 
-    Set Buffer = New clsBuffer
-    Buffer.WriteBytes Data()
-    QuestNum = Buffer.ReadLong
+    N = Buffer.ReadLong 'CLng(Parse(1))
 
-    ' Prevent hacking
-    If QuestNum < 0 Or QuestNum > MAX_QUESTS Then
+    If N < 0 Or N > MAX_MISSIONS Then
         Exit Sub
     End If
 
-    QuestSize = LenB(Quest(QuestNum))
-    ReDim QuestData(QuestSize - 1)
-    QuestData = Buffer.ReadBytes(QuestSize)
-    CopyMemory ByVal VarPtr(Quest(QuestNum)), ByVal VarPtr(QuestData(0)), QuestSize
+    ' Update the Mission
+    MissionSize = LenB(Mission(N))
+    ReDim MissionData(MissionSize - 1)
+    MissionData = Buffer.ReadBytes(MissionSize)
+    CopyMemory ByVal VarPtr(Mission(N)), ByVal VarPtr(MissionData(0)), MissionSize
+    Buffer.Flush: Set Buffer = Nothing
+    
     ' Save it
-    Call SendUpdateQuestToAll(QuestNum)
-    Call SaveQuest(QuestNum)
-    Call AddLog(GetPlayerName(index) & " saved Quest #" & QuestNum & ".", ADMIN_LOG)
+    Call SendUpdateMissionToAll(N)
+    Call SaveMission(N)
+    Call AddLog(GetPlayerName(index) & " saved Mission #" & N & ".", ADMIN_LOG)
 End Sub
-

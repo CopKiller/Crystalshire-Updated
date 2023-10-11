@@ -12,22 +12,22 @@ End Sub
 ' :: Player info request packet ::
 ' ::::::::::::::::::::::::::::::::
 Sub HandlePlayerInfoRequest(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim name As String
+    Dim Name As String
     Dim i As Long
-    Dim n As Long
+    Dim N As Long
     Dim Buffer As clsBuffer
     Set Buffer = New clsBuffer
     Buffer.WriteBytes Data()
-    name = Buffer.ReadString 'Parse(1)
+    Name = Buffer.ReadString 'Parse(1)
     Buffer.Flush: Set Buffer = Nothing
-    i = FindPlayer(name)
+    i = FindPlayer(Name)
 End Sub
 
 ' :::::::::::::::::::::::::::::
 ' :: Moving character packet ::
 ' :::::::::::::::::::::::::::::
 Public Sub HandlePlayerMove(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim dir As Long
+    Dim Dir As Long
     Dim movement As Long
     Dim Buffer As clsBuffer
     Dim tmpX As Long, tmpY As Long
@@ -38,14 +38,14 @@ Public Sub HandlePlayerMove(ByVal index As Long, ByRef Data() As Byte, ByVal Sta
         Exit Sub
     End If
 
-    dir = Buffer.ReadLong 'CLng(Parse(1))
+    Dir = Buffer.ReadLong 'CLng(Parse(1))
     movement = Buffer.ReadLong 'CLng(Parse(2))
     tmpX = Buffer.ReadLong
     tmpY = Buffer.ReadLong
     Buffer.Flush: Set Buffer = Nothing
 
     ' Prevent hacking
-    If dir < DIR_UP Or dir > DIR_DOWN_RIGHT Then
+    If Dir < DIR_UP Or Dir > DIR_DOWN_RIGHT Then
         Exit Sub
     End If
 
@@ -95,14 +95,14 @@ Public Sub HandlePlayerMove(ByVal index As Long, ByRef Data() As Byte, ByVal Sta
         ClosePlayerChat index
     End If
     
-    Call PlayerMove(index, dir, movement)
+    Call PlayerMove(index, Dir, movement)
 End Sub
 
 ' :::::::::::::::::::::::::::::
 ' :: Moving character packet ::
 ' :::::::::::::::::::::::::::::
 Public Sub HandlePlayerDir(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim dir As Long
+    Dim Dir As Long
     Dim Buffer As clsBuffer
     Set Buffer = New clsBuffer
     Buffer.WriteBytes Data()
@@ -111,27 +111,29 @@ Public Sub HandlePlayerDir(ByVal index As Long, ByRef Data() As Byte, ByVal Star
         Exit Sub
     End If
 
-    dir = Buffer.ReadLong 'CLng(Parse(1))
+    Dir = Buffer.ReadLong 'CLng(Parse(1))
     Buffer.Flush: Set Buffer = Nothing
 
     ' Prevent hacking
-    If dir < DIR_UP Or dir > DIR_DOWN_RIGHT Then
+    If Dir < DIR_UP Or Dir > DIR_DOWN_RIGHT Then
         Exit Sub
     End If
 
-    Call SetPlayerDir(index, dir)
+    Call SetPlayerDir(index, Dir)
     Set Buffer = New clsBuffer
     Buffer.WriteLong SPlayerDir
     Buffer.WriteLong index
     Buffer.WriteLong GetPlayerDir(index)
+    
     SendDataToMapBut index, GetPlayerMap(index), Buffer.ToArray()
+    Buffer.Flush: Set Buffer = Nothing
 End Sub
 
 ' ::::::::::::::::::::::::::
 ' :: Player attack packet ::
 ' ::::::::::::::::::::::::::
 Public Sub HandleAttack(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim i As Long, n As Long, damage As Long, TempIndex As Long, x As Long, y As Long, mapnum As Long, dirReq As Long
+    Dim i As Long, N As Long, damage As Long, TempIndex As Long, x As Long, y As Long, mapnum As Long, dirReq As Long
     
     ' can't attack whilst casting
     If TempPlayer(index).spellBuffer.Spell > 0 Then Exit Sub
@@ -163,7 +165,7 @@ Public Sub HandleAttack(ByVal index As Long, ByRef Data() As Byte, ByVal StartAd
     y = GetPlayerY(index)
     If Map(mapnum).TileData.Tile(x, y).Type = TILE_TYPE_CHAT Then
         dirReq = Map(mapnum).TileData.Tile(x, y).Data2
-        If Player(index).dir = dirReq Then
+        If Player(index).Dir = dirReq Then
             InitChat index, mapnum, Map(mapnum).TileData.Tile(x, y).Data1, True
             Exit Sub
         End If
@@ -200,15 +202,15 @@ End Sub
 ' :: Cast packet ::
 ' :::::::::::::::::
 Public Sub HandleCast(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim n As Long
+    Dim N As Long
     Dim Buffer As clsBuffer
     Set Buffer = New clsBuffer
     Buffer.WriteBytes Data()
     ' Spell slot
-    n = Buffer.ReadLong 'CLng(Parse(1))
+    N = Buffer.ReadLong 'CLng(Parse(1))
     Buffer.Flush: Set Buffer = Nothing
     ' set the spell buffer before castin
-    Call BufferSpell(index, n)
+    Call BufferSpell(index, N)
 End Sub
 
 ' :::::::::::::::::::::
@@ -380,7 +382,7 @@ End Sub
 ' :: Swap Inventory Slots ::
 ' ::::::::::::::::::::::::::
 Public Sub HandleSwapInvSlots(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim n As Long
+    Dim N As Long
     Dim Buffer As clsBuffer
     Dim oldSlot As Long, newSlot As Long
     
@@ -397,7 +399,7 @@ End Sub
 
 Public Sub HandleSwapSpellSlots(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
     Dim Buffer As clsBuffer
-    Dim oldSlot As Long, newSlot As Long, n As Long
+    Dim oldSlot As Long, newSlot As Long, N As Long
     
     If TempPlayer(index).InTrade > 0 Or TempPlayer(index).InBank Or TempPlayer(index).InShop Then Exit Sub
     
@@ -406,8 +408,8 @@ Public Sub HandleSwapSpellSlots(ByVal index As Long, ByRef Data() As Byte, ByVal
         Exit Sub
     End If
     
-    For n = 1 To MAX_PLAYER_SPELLS
-        If TempPlayer(index).SpellCD(n) > GetTickCount Then
+    For N = 1 To MAX_PLAYER_SPELLS
+        If TempPlayer(index).SpellCD(N) > GetTickCount Then
             PlayerMsg index, "You cannot swap spells whilst they're cooling down.", BrightRed
             Exit Sub
         End If
@@ -491,7 +493,7 @@ Public Sub HandleHotbarChange(ByVal index As Long, ByRef Data() As Byte, ByVal S
         Case 1 ' inventory
             If Slot > 0 And Slot <= MAX_INV Then
                 If Player(index).Inv(Slot).Num > 0 Then
-                    If Len(Trim$(Item(GetPlayerInvItemNum(index, Slot)).name)) > 0 Then
+                    If Len(Trim$(Item(GetPlayerInvItemNum(index, Slot)).Name)) > 0 Then
                         Player(index).Hotbar(hotbarNum).Slot = Player(index).Inv(Slot).Num
                         Player(index).Hotbar(hotbarNum).sType = sType
                     End If
@@ -500,7 +502,7 @@ Public Sub HandleHotbarChange(ByVal index As Long, ByRef Data() As Byte, ByVal S
         Case 2 ' spell
             If Slot > 0 And Slot <= MAX_PLAYER_SPELLS Then
                 If Player(index).Spell(Slot).Spell > 0 Then
-                    If Len(Trim$(Spell(Player(index).Spell(Slot).Spell).name)) > 0 Then
+                    If Len(Trim$(Spell(Player(index).Spell(Slot).Spell).Name)) > 0 Then
                         Player(index).Hotbar(hotbarNum).Slot = Player(index).Spell(Slot).Spell
                         Player(index).Hotbar(hotbarNum).sType = sType
                     End If
@@ -668,7 +670,7 @@ Public Sub HandleAcceptTrade(ByVal index As Long, ByRef Data() As Byte, ByVal St
     Dim i As Long, x As Long
     Dim tmpTradeItem(1 To MAX_INV) As PlayerInvRec
     Dim tmpTradeItem2(1 To MAX_INV) As PlayerInvRec
-    Dim itemNum As Long
+    Dim ItemNum As Long
     Dim theirInvSpace As Long, yourInvSpace As Long
     Dim theirItemCount As Long, yourItemCount As Long
     
@@ -702,9 +704,9 @@ Public Sub HandleAcceptTrade(ByVal index As Long, ByRef Data() As Byte, ByVal St
             ' check if we're offering it
             For x = 1 To MAX_INV
                 If TempPlayer(index).TradeOffer(x).Num = i Then
-                    itemNum = Player(index).Inv(TempPlayer(index).TradeOffer(x).Num).Num
+                    ItemNum = Player(index).Inv(TempPlayer(index).TradeOffer(x).Num).Num
                     ' if it's a currency then make sure we're offering all of it
-                    If Item(itemNum).Type = ITEM_TYPE_CURRENCY Then
+                    If Item(ItemNum).Type = ITEM_TYPE_CURRENCY Then
                         If TempPlayer(index).TradeOffer(x).Value = GetPlayerInvItemNum(index, i) Then
                             yourInvSpace = yourInvSpace + 1
                         End If
@@ -720,9 +722,9 @@ Public Sub HandleAcceptTrade(ByVal index As Long, ByRef Data() As Byte, ByVal St
             ' check if we're offering it
             For x = 1 To MAX_INV
                 If TempPlayer(tradeTarget).TradeOffer(x).Num = i Then
-                    itemNum = Player(tradeTarget).Inv(TempPlayer(tradeTarget).TradeOffer(x).Num).Num
+                    ItemNum = Player(tradeTarget).Inv(TempPlayer(tradeTarget).TradeOffer(x).Num).Num
                     ' if it's a currency then make sure we're offering all of it
-                    If Item(itemNum).Type = ITEM_TYPE_CURRENCY Then
+                    If Item(ItemNum).Type = ITEM_TYPE_CURRENCY Then
                         If TempPlayer(tradeTarget).TradeOffer(x).Value = GetPlayerInvItemNum(tradeTarget, i) Then
                             theirInvSpace = theirInvSpace + 1
                         End If
@@ -739,11 +741,11 @@ Public Sub HandleAcceptTrade(ByVal index As Long, ByRef Data() As Byte, ByVal St
     ' get item count
     For i = 1 To MAX_INV
         If TempPlayer(index).TradeOffer(i).Num > 0 Then
-            itemNum = Player(index).Inv(TempPlayer(index).TradeOffer(i).Num).Num
-            If itemNum > 0 Then
-                If Item(itemNum).Type = ITEM_TYPE_CURRENCY Then
+            ItemNum = Player(index).Inv(TempPlayer(index).TradeOffer(i).Num).Num
+            If ItemNum > 0 Then
+                If Item(ItemNum).Type = ITEM_TYPE_CURRENCY Then
                     ' check if the other player has the item
-                    If HasItem(tradeTarget, itemNum) = 0 Then
+                    If HasItem(tradeTarget, ItemNum) = 0 Then
                         yourItemCount = yourItemCount + 1
                     End If
                 Else
@@ -752,11 +754,11 @@ Public Sub HandleAcceptTrade(ByVal index As Long, ByRef Data() As Byte, ByVal St
             End If
         End If
         If TempPlayer(tradeTarget).TradeOffer(i).Num > 0 Then
-            itemNum = Player(tradeTarget).Inv(TempPlayer(tradeTarget).TradeOffer(i).Num).Num
-            If itemNum > 0 Then
-                If Item(itemNum).Type = ITEM_TYPE_CURRENCY Then
+            ItemNum = Player(tradeTarget).Inv(TempPlayer(tradeTarget).TradeOffer(i).Num).Num
+            If ItemNum > 0 Then
+                If Item(ItemNum).Type = ITEM_TYPE_CURRENCY Then
                     ' check if the other player has the item
-                    If HasItem(index, itemNum) = 0 Then
+                    If HasItem(index, ItemNum) = 0 Then
                         theirItemCount = theirItemCount + 1
                     End If
                 Else
@@ -794,10 +796,10 @@ Public Sub HandleAcceptTrade(ByVal index As Long, ByRef Data() As Byte, ByVal St
     For i = 1 To MAX_INV
         ' player
         If TempPlayer(index).TradeOffer(i).Num > 0 Then
-            itemNum = Player(index).Inv(TempPlayer(index).TradeOffer(i).Num).Num
-            If itemNum > 0 Then
+            ItemNum = Player(index).Inv(TempPlayer(index).TradeOffer(i).Num).Num
+            If ItemNum > 0 Then
                 ' store temp
-                tmpTradeItem(i).Num = itemNum
+                tmpTradeItem(i).Num = ItemNum
                 tmpTradeItem(i).Value = TempPlayer(index).TradeOffer(i).Value
                 ' take item
                 TakeInvSlot index, TempPlayer(index).TradeOffer(i).Num, tmpTradeItem(i).Value
@@ -805,10 +807,10 @@ Public Sub HandleAcceptTrade(ByVal index As Long, ByRef Data() As Byte, ByVal St
         End If
         ' target
         If TempPlayer(tradeTarget).TradeOffer(i).Num > 0 Then
-            itemNum = GetPlayerInvItemNum(tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num)
-            If itemNum > 0 Then
+            ItemNum = GetPlayerInvItemNum(tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num)
+            If ItemNum > 0 Then
                 ' store temp
-                tmpTradeItem2(i).Num = itemNum
+                tmpTradeItem2(i).Num = ItemNum
                 tmpTradeItem2(i).Value = TempPlayer(tradeTarget).TradeOffer(i).Value
                 ' take item
                 TakeInvSlot tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num, tmpTradeItem2(i).Value
@@ -884,7 +886,7 @@ Public Sub HandleTradeItem(ByVal index As Long, ByRef Data() As Byte, ByVal Star
     Dim invSlot As Long
     Dim amount As Long
     Dim EmptySlot As Long
-    Dim itemNum As Long
+    Dim ItemNum As Long
     Dim i As Long
     
     Set Buffer = New clsBuffer
@@ -897,8 +899,8 @@ Public Sub HandleTradeItem(ByVal index As Long, ByRef Data() As Byte, ByVal Star
     
     If invSlot <= 0 Or invSlot > MAX_INV Then Exit Sub
     
-    itemNum = GetPlayerInvItemNum(index, invSlot)
-    If itemNum <= 0 Or itemNum > MAX_ITEMS Then Exit Sub
+    ItemNum = GetPlayerInvItemNum(index, invSlot)
+    If ItemNum <= 0 Or ItemNum > MAX_ITEMS Then Exit Sub
     
     If TempPlayer(index).InTrade <= 0 Or TempPlayer(index).InTrade > MAX_PLAYERS Then Exit Sub
     
@@ -909,14 +911,14 @@ Public Sub HandleTradeItem(ByVal index As Long, ByRef Data() As Byte, ByVal Star
     End If
     
     ' make sure it's not soulbound
-    If Item(itemNum).BindType > 0 Then
+    If Item(ItemNum).BindType > 0 Then
         If Player(index).Inv(invSlot).Bound > 0 Then
             PlayerMsg index, "Cannot trade a soulbound item.", BrightRed
             Exit Sub
         End If
     End If
 
-    If Item(itemNum).Type = ITEM_TYPE_CURRENCY Then
+    If Item(ItemNum).Type = ITEM_TYPE_CURRENCY Then
         ' check if already offering same currency item
         For i = 1 To MAX_INV
             If TempPlayer(index).TradeOffer(i).Num = invSlot Then
@@ -1009,7 +1011,7 @@ Public Sub HandleBuyItem(ByVal index As Long, ByRef Data() As Byte, ByVal StartA
     Dim Buffer As clsBuffer
     Dim shopslot As Long
     Dim shopNum As Long
-    Dim itemAmount As Long
+    Dim ItemAmount As Long
     
     Set Buffer = New clsBuffer
     Buffer.WriteBytes Data()
@@ -1032,8 +1034,8 @@ Public Sub HandleBuyItem(ByVal index As Long, ByRef Data() As Byte, ByVal StartA
         End If
             
         ' check has the cost item
-        itemAmount = HasItem(index, .costitem)
-        If itemAmount = 0 Or itemAmount < .costvalue Then
+        ItemAmount = HasItem(index, .costitem)
+        If ItemAmount = 0 Or ItemAmount < .costvalue Then
             PlayerMsg index, "You do not have enough to buy this item.", BrightRed
             ResetShopAction index
             Exit Sub
@@ -1043,7 +1045,7 @@ Public Sub HandleBuyItem(ByVal index As Long, ByRef Data() As Byte, ByVal StartA
         TakeInvItem index, .costitem, .costvalue
         GiveInvItem index, .Item, .ItemValue
         
-        PlayerMsg index, "You successfully bought " & Trim$(Item(.Item).name) & " for " & .costvalue & " " & Trim$(Item(.costitem).name) & ".", BrightGreen
+        PlayerMsg index, "You successfully bought " & Trim$(Item(.Item).Name) & " for " & .costvalue & " " & Trim$(Item(.costitem).Name) & ".", BrightGreen
     End With
     
     ' send confirmation message & reset their shop action
@@ -1057,7 +1059,7 @@ End Sub
 Public Sub HandleSellItem(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
     Dim Buffer As clsBuffer
     Dim invSlot As Long
-    Dim itemNum As Long
+    Dim ItemNum As Long
     Dim price As Long
     Dim multiplier As Double
     Dim amount As Long
@@ -1076,11 +1078,11 @@ Public Sub HandleSellItem(ByVal index As Long, ByRef Data() As Byte, ByVal Start
     If GetPlayerInvItemNum(index, invSlot) < 1 Or GetPlayerInvItemNum(index, invSlot) > MAX_ITEMS Then Exit Sub
     
     ' seems to be valid
-    itemNum = GetPlayerInvItemNum(index, invSlot)
+    ItemNum = GetPlayerInvItemNum(index, invSlot)
     
     ' work out price
     multiplier = Shop(TempPlayer(index).InShop).BuyRate / 100
-    price = Item(itemNum).price * multiplier
+    price = Item(ItemNum).price * multiplier
     
     ' item has cost?
     If price <= 0 Then
@@ -1090,7 +1092,7 @@ Public Sub HandleSellItem(ByVal index As Long, ByRef Data() As Byte, ByVal Start
     End If
 
     ' take item and give gold
-    TakeInvItem index, itemNum, 1
+    TakeInvItem index, ItemNum, 1
     GiveInvItem index, 1, price
     
     ' send confirmation message & reset their shop action

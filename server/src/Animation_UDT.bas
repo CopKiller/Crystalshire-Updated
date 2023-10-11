@@ -2,6 +2,7 @@ Attribute VB_Name = "Animation_UDT"
 Option Explicit
 
 Public Animation(1 To MAX_ANIMATIONS) As AnimationRec
+Public EmptyAnimation As AnimationRec
 
 Private Type AnimationRec
     Name As String * NAME_LENGTH

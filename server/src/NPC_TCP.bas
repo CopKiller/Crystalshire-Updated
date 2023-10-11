@@ -11,6 +11,7 @@ Public Sub SendUpdateNpcTo(ByVal index As Long, ByVal npcNum As Long)
     Buffer.WriteLong SUpdateNpc
     Buffer.WriteLong npcNum
     Buffer.WriteBytes NPCData
+    
     SendDataTo index, Buffer.ToArray()
     Buffer.Flush: Set Buffer = Nothing
 End Sub
@@ -45,6 +46,7 @@ Public Sub SendUpdateNpcToAll(ByVal npcNum As Long)
     Buffer.WriteLong SUpdateNpc
     Buffer.WriteLong npcNum
     Buffer.WriteBytes NPCData
+    
     SendDataToAll Buffer.ToArray()
     Buffer.Flush: Set Buffer = Nothing
 End Sub

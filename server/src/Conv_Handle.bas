@@ -12,6 +12,7 @@ Public Sub HandleRequestEditConv(ByVal index As Long, ByRef Data() As Byte, ByVa
 
     Set Buffer = New clsBuffer
     Buffer.WriteLong SConvEditor
+    
     SendDataTo index, Buffer.ToArray()
     Buffer.Flush: Set Buffer = Nothing
 End Sub
@@ -24,7 +25,7 @@ End Sub
 ' :: Save Conv packet ::
 ' :::::::::::::::::::::::
 Public Sub HandleSaveConv(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim convNum As Long
+    Dim N As Long
     Dim Buffer As clsBuffer
     Dim i As Long
     Dim x As Long
@@ -36,14 +37,14 @@ Public Sub HandleSaveConv(ByVal index As Long, ByRef Data() As Byte, ByVal Start
 
     Set Buffer = New clsBuffer
     Buffer.WriteBytes Data()
-    convNum = Buffer.ReadLong
+    N = Buffer.ReadLong
 
     ' Prevent hacking
-    If convNum < 0 Or convNum > MAX_CONVS Then
+    If N < 0 Or N > MAX_CONVS Then
         Exit Sub
     End If
 
-    With Conv(convNum)
+    With Conv(N)
         .Name = Buffer.ReadString
         .chatCount = Buffer.ReadLong
         ReDim .Conv(1 To .chatCount)
@@ -61,7 +62,7 @@ Public Sub HandleSaveConv(ByVal index As Long, ByRef Data() As Byte, ByVal Start
     End With
     
     ' Save it
-    Call SendUpdateConvToAll(convNum)
-    Call SaveConv(convNum)
-    Call AddLog(GetPlayerName(index) & " saved Conv #" & convNum & ".", ADMIN_LOG)
+    Call SendUpdateConvToAll(N)
+    Call SaveConv(N)
+    Call AddLog(GetPlayerName(index) & " saved Conv #" & N & ".", ADMIN_LOG)
 End Sub

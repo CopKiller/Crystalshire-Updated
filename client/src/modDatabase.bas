@@ -133,7 +133,7 @@ Public Sub SaveMap(ByVal mapNum As Long)
     
     ' General
     With Map.MapData
-        PutVar filename, "General", "Name", .name
+        PutVar filename, "General", "Name", .Name
         PutVar filename, "General", "Music", .Music
         PutVar filename, "General", "Moral", Val(.Moral)
         PutVar filename, "General", "Up", Val(.Up)
@@ -234,7 +234,7 @@ Public Sub LoadMap(ByVal mapNum As Long)
     
     ' General
     With Map.MapData
-        .name = GetVar(filename, "General", "Name")
+        .Name = GetVar(filename, "General", "Name")
         .Music = GetVar(filename, "General", "Music")
         .Moral = Val(GetVar(filename, "General", "Moral"))
         .Up = Val(GetVar(filename, "General", "Up"))
@@ -297,12 +297,12 @@ End Sub
 
 Sub ClearPlayer(ByVal Index As Long)
     Player(Index) = EmptyPlayer
-    Player(Index).name = vbNullString
+    Player(Index).Name = vbNullString
 End Sub
 
 Sub ClearItem(ByVal Index As Long)
     Item(Index) = EmptyItem
-    Item(Index).name = vbNullString
+    Item(Index).Name = vbNullString
     Item(Index).Desc = vbNullString
     Item(Index).sound = "None."
 End Sub
@@ -316,94 +316,13 @@ Sub ClearItems()
 
 End Sub
 
-Sub ClearAnimInstance(ByVal Index As Long)
-    AnimInstance(Index) = EmptyAnimInstance
-End Sub
-
-Sub ClearAnimation(ByVal Index As Long)
-    Animation(Index) = EmptyAnimation
-    Animation(Index).name = vbNullString
-    Animation(Index).sound = "None."
-End Sub
-
-Sub ClearAnimations()
-    Dim i As Long
-
-    For i = 1 To MAX_ANIMATIONS
-        Call ClearAnimation(i)
-    Next
-
-End Sub
-
-Sub ClearNPC(ByVal Index As Long)
-    Npc(Index) = EmptyNpc
-    Npc(Index).name = vbNullString
-    Npc(Index).sound = "None."
-End Sub
-
-Sub ClearNpcs()
-    Dim i As Long
-
-    For i = 1 To MAX_NPCS
-        Call ClearNPC(i)
-    Next
-
-End Sub
-
-Sub ClearSpell(ByVal Index As Long)
-    Spell(Index) = EmptySpell
-    Spell(Index).name = vbNullString
-    Spell(Index).Desc = vbNullString
-    Spell(Index).sound = "None."
-End Sub
-
-Sub ClearSpells()
-    Dim i As Long
-
-    For i = 1 To MAX_SPELLS
-        Call ClearSpell(i)
-    Next
-
-End Sub
-
-Sub ClearShop(ByVal Index As Long)
-    Shop(Index) = EmptyShop
-    Shop(Index).name = vbNullString
-End Sub
-
-Sub ClearShops()
-    Dim i As Long
-
-    For i = 1 To MAX_SHOPS
-        Call ClearShop(i)
-    Next
-
-End Sub
-
-Sub ClearResource(ByVal Index As Long)
-    Resource(Index) = EmptyResource
-    Resource(Index).name = vbNullString
-    Resource(Index).SuccessMessage = vbNullString
-    Resource(Index).EmptyMessage = vbNullString
-    Resource(Index).sound = "None."
-End Sub
-
-Sub ClearResources()
-    Dim i As Long
-
-    For i = 1 To MAX_RESOURCES
-        Call ClearResource(i)
-    Next
-
-End Sub
-
 Sub ClearMapItem(ByVal Index As Long)
     MapItem(Index) = EmptyMapItem
 End Sub
 
 Sub ClearMap()
     Map = EmptyMap
-    Map.MapData.name = vbNullString
+    Map.MapData.Name = vbNullString
     Map.MapData.MaxX = MAX_MAPX
     Map.MapData.MaxY = MAX_MAPY
     ReDim Map.TileData.Tile(0 To Map.MapData.MaxX, 0 To Map.MapData.MaxY)
@@ -438,13 +357,13 @@ End Sub
 Function GetPlayerName(ByVal Index As Long) As String
 
     If Index > MAX_PLAYERS Then Exit Function
-    GetPlayerName = Trim$(Player(Index).name)
+    GetPlayerName = Trim$(Player(Index).Name)
 End Function
 
-Sub SetPlayerName(ByVal Index As Long, ByVal name As String)
+Sub SetPlayerName(ByVal Index As Long, ByVal Name As String)
 
     If Index > MAX_PLAYERS Then Exit Sub
-    Player(Index).name = name
+    Player(Index).Name = Name
 End Sub
 
 Function GetPlayerClass(ByVal Index As Long) As Long
@@ -623,10 +542,10 @@ Function GetPlayerInvItemNum(ByVal Index As Long, ByVal invSlot As Long) As Long
     GetPlayerInvItemNum = PlayerInv(invSlot).num
 End Function
 
-Sub SetPlayerInvItemNum(ByVal Index As Long, ByVal invSlot As Long, ByVal itemNum As Long)
+Sub SetPlayerInvItemNum(ByVal Index As Long, ByVal invSlot As Long, ByVal ItemNum As Long)
 
     If Index > MAX_PLAYERS Then Exit Sub
-    PlayerInv(invSlot).num = itemNum
+    PlayerInv(invSlot).num = ItemNum
 End Sub
 
 Function GetPlayerInvItemValue(ByVal Index As Long, ByVal invSlot As Long) As Long
@@ -655,7 +574,7 @@ End Sub
 
 Sub ClearConv(ByVal Index As Long)
     Conv(Index) = EmptyConv
-    Conv(Index).name = vbNullString
+    Conv(Index).Name = vbNullString
     ReDim Conv(Index).Conv(1)
 End Sub
 

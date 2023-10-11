@@ -46,7 +46,7 @@ End Sub
 Public Sub ClearAccount(ByVal index As Long)
     Dim i As Long
 
-    Call ZeroMemory(ByVal VarPtr(Account(index)), LenB(Account(index)))
+    Account(index) = EmptyAccount
     
     Account(index).Login = vbNullString
     Account(index).Password = vbNullString
@@ -201,7 +201,7 @@ Public Sub MergeAccount(ByVal index As Long, ByVal charNum As Long, ByVal oldAcc
         .Map = Val(GetVar(filename, charHeader, "Map"))
         .x = Val(GetVar(filename, charHeader, "X"))
         .y = Val(GetVar(filename, charHeader, "Y"))
-        .dir = Val(GetVar(filename, charHeader, "Dir"))
+        .Dir = Val(GetVar(filename, charHeader, "Dir"))
 
         ' Tutorial
         .TutorialState = Val(GetVar(filename, charHeader, "TutorialState"))
@@ -261,7 +261,7 @@ Public Sub MergeAccount(ByVal index As Long, ByVal charNum As Long, ByVal oldAcc
         PutVar filename, charHeader, "Map", Val(.Map)
         PutVar filename, charHeader, "X", Val(.x)
         PutVar filename, charHeader, "Y", Val(.y)
-        PutVar filename, charHeader, "Dir", Val(.dir)
+        PutVar filename, charHeader, "Dir", Val(.Dir)
 
         ' Tutorial
         PutVar filename, charHeader, "TutorialState", Val(.TutorialState)

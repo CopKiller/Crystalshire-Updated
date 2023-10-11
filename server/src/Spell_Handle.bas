@@ -12,6 +12,7 @@ Public Sub HandleRequestEditspell(ByVal index As Long, ByRef Data() As Byte, ByV
 
     Set Buffer = New clsBuffer
     Buffer.WriteLong SSpellEditor
+    
     SendDataTo index, Buffer.ToArray()
     Buffer.Flush: Set Buffer = Nothing
 End Sub
@@ -24,31 +25,34 @@ End Sub
 ' :: Save spell packet ::
 ' :::::::::::::::::::::::
 Public Sub HandleSaveSpell(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim spellNum As Long
+    Dim N As Long
+    Dim i As Long
     Dim Buffer As clsBuffer
     Dim SpellSize As Long
     Dim SpellData() As Byte
+    Set Buffer = New clsBuffer
+    Buffer.WriteBytes Data()
 
     ' Prevent hacking
     If GetPlayerAccess(index) < ADMIN_DEVELOPER Then
         Exit Sub
     End If
 
-    Set Buffer = New clsBuffer
-    Buffer.WriteBytes Data()
-    spellNum = Buffer.ReadLong
+    N = Buffer.ReadLong
 
     ' Prevent hacking
-    If spellNum < 0 Or spellNum > MAX_SPELLS Then
+    If N < 0 Or N > MAX_SPELLS Then
         Exit Sub
     End If
 
-    SpellSize = LenB(Spell(spellNum))
+    SpellSize = LenB(Spell(N))
     ReDim SpellData(SpellSize - 1)
     SpellData = Buffer.ReadBytes(SpellSize)
-    CopyMemory ByVal VarPtr(Spell(spellNum)), ByVal VarPtr(SpellData(0)), SpellSize
+    CopyMemory ByVal VarPtr(Spell(N)), ByVal VarPtr(SpellData(0)), SpellSize
+    Buffer.Flush: Set Buffer = Nothing
+    
     ' Save it
-    Call SendUpdateSpellToAll(spellNum)
-    Call SaveSpell(spellNum)
-    Call AddLog(GetPlayerName(index) & " saved Spell #" & spellNum & ".", ADMIN_LOG)
+    Call SendUpdateSpellToAll(N)
+    Call SaveSpell(N)
+    Call AddLog(GetPlayerName(index) & " saving Spell #" & N & ".", ADMIN_LOG)
 End Sub

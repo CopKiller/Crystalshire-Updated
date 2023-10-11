@@ -1,6 +1,10 @@
 Attribute VB_Name = "Server_Constants"
 Option Explicit
 
+' System of compressing
+Public Declare Function Compress Lib "zlib.dll" Alias "compress" (dest As Any, destLen As Any, src As Any, ByVal srcLen As Long) As Long
+Public Declare Function uncompress Lib "zlib.dll" (dest As Any, destLen As Any, src As Any, ByVal srcLen As Long) As Long
+
 ' Connection details
 Public Const GAME_SERVER_IP As String = "127.0.0.1" ' "46.23.70.66"
 Public Const GAME_SERVER_PORT As Long = 7001 ' the port used by the main game server
@@ -27,7 +31,6 @@ Public Const MAX_LINES As Long = 500 ' Used for frmServer.txtText
 ' ********************************************************
 ' General constants
 Public Const MAX_PLAYERS As Long = 200
-Public Const MAX_QUESTS As Long = 255
 Public Const MAX_ITEMS As Long = 255
 Public Const MAX_NPCS As Long = 255
 Public Const MAX_ANIMATIONS As Long = 255
@@ -94,6 +97,7 @@ Public Const YES As Byte = 1
 Public Const NAME_LENGTH As Byte = 20
 Public Const ACCOUNT_LENGTH As Byte = 12
 Public Const EMAIL_LENGTH As Byte = 25
+Public Const DESC_LENGTH As Byte = 150
 
 ' Sex constants
 Public Const SEX_MALE As Byte = 0

@@ -12,7 +12,7 @@ Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
-Private Buffer() As Byte
+Private buffer() As Byte
 Private buffersize As Long
 Private WriteHead As Long
 Private ReadHead As Long
@@ -25,21 +25,21 @@ Public Sub PreAllocate(ByVal nLength As Long)
     WriteHead = 0
     ReadHead = 0
     buffersize = nLength - 1
-    ReDim Buffer(0 To buffersize)
+    ReDim buffer(0 To buffersize)
 End Sub
 
 Public Sub Allocate(ByVal nLength As Long)
 
     If buffersize = 0 And nLength > 1 Then nLength = nLength - 1
     buffersize = buffersize + nLength
-    ReDim Preserve Buffer(0 To buffersize)
+    ReDim Preserve buffer(0 To buffersize)
 End Sub
 
 Public Sub Flush()
     WriteHead = 0
     ReadHead = 0
     buffersize = 0
-    ReDim Buffer(0)
+    ReDim buffer(0)
 End Sub
 
 Public Sub Trim()
@@ -55,7 +55,7 @@ End Sub
 Public Sub WriteByte(ByVal nByte As Byte)
 
     If WriteHead > buffersize Then Allocate 1
-    Buffer(WriteHead) = nByte
+    buffer(WriteHead) = nByte
     WriteHead = WriteHead + 1
 End Sub
 
@@ -64,21 +64,21 @@ Public Sub WriteBytes(ByRef nByte() As Byte)
     nLength = (UBound(nByte) - LBound(nByte)) + 1
 
     If WriteHead + nLength - 1 > buffersize Then Allocate nLength
-    CopyMemory Buffer(WriteHead), nByte(0), nLength
+    CopyMemory buffer(WriteHead), nByte(0), nLength
     WriteHead = WriteHead + nLength
 End Sub
 
 Public Sub WriteInteger(ByVal nInteger As Integer)
 
     If WriteHead + 1 > buffersize Then Allocate 2
-    CopyMemory Buffer(WriteHead), nInteger, 2
+    CopyMemory buffer(WriteHead), nInteger, 2
     WriteHead = WriteHead + 2
 End Sub
 
 Public Sub WriteLong(ByVal nLong As Long)
 
     If WriteHead + 3 > buffersize Then Allocate 4
-    CopyMemory Buffer(WriteHead), nLong, 4
+    CopyMemory buffer(WriteHead), nLong, 4
     WriteHead = WriteHead + 4
 End Sub
 
@@ -91,34 +91,34 @@ Public Sub WriteString(ByRef nString As String)
 
     If sLength <= 0 Then Exit Sub
     If WriteHead + sLength - 1 > buffersize Then Allocate sLength
-    CopyMemory Buffer(WriteHead), sBytes(0), sLength
+    CopyMemory buffer(WriteHead), sBytes(0), sLength
     WriteHead = WriteHead + sLength
 End Sub
 
 Public Function ReadByte(Optional MoveReadHead As Boolean = True) As Byte
 
     If ReadHead > buffersize Then Exit Function
-    ReadByte = Buffer(ReadHead)
+    ReadByte = buffer(ReadHead)
 
     If MoveReadHead Then ReadHead = ReadHead + 1
 End Function
 
 Public Function ReadBytes(ByVal nLength As Long, Optional MoveReadHead As Boolean = True) As Byte()
-    Dim data() As Byte
+    Dim Data() As Byte
 
     If nLength = 0 Then Exit Function
     If ReadHead + nLength - 1 > buffersize Then Exit Function
-    ReDim data(nLength - 1)
-    CopyMemory data(0), Buffer(ReadHead), nLength
+    ReDim Data(nLength - 1)
+    CopyMemory Data(0), buffer(ReadHead), nLength
 
     If MoveReadHead Then ReadHead = ReadHead + nLength
-    ReadBytes = data
+    ReadBytes = Data
 End Function
 
 Public Function ReadInteger(Optional MoveReadHead As Boolean = True) As Integer
 
     If ReadHead + 1 > buffersize Then Exit Function
-    CopyMemory ReadInteger, Buffer(ReadHead), 2
+    CopyMemory ReadInteger, buffer(ReadHead), 2
 
     If MoveReadHead Then ReadHead = ReadHead + 2
 End Function
@@ -126,7 +126,7 @@ End Function
 Public Function ReadLong(Optional MoveReadHead As Boolean = True) As Long
 
     If ReadHead + 3 > buffersize Then Exit Function
-    CopyMemory ReadLong, Buffer(ReadHead), 4
+    CopyMemory ReadLong, buffer(ReadHead), 4
 
     If MoveReadHead Then ReadHead = ReadHead + 4
 End Function
@@ -142,14 +142,14 @@ Public Function ReadString(Optional MoveReadHead As Boolean = True) As String
     End If
 
     ReDim sBytes(sLength - 1)
-    CopyMemory sBytes(0), Buffer(ReadHead + 4), sLength
+    CopyMemory sBytes(0), buffer(ReadHead + 4), sLength
     ReadString = StrConv(sBytes, vbUnicode)
 
     If MoveReadHead Then ReadHead = ReadHead + sLength + 4
 End Function
 
 Public Function count() As Long
-    count = (UBound(Buffer) - LBound(Buffer)) + 1
+    count = (UBound(buffer) - LBound(buffer)) + 1
 End Function
 
 Public Function length() As Long
@@ -157,9 +157,63 @@ Public Function length() As Long
 End Function
 
 Public Function ToArray() As Byte()
-    ToArray = Buffer()
+    ToArray = buffer()
 End Function
 
 Public Function ToString() As String
-    ToString = StrConv(Buffer, vbUnicode)
+    ToString = StrConv(buffer, vbUnicode)
+End Function
+
+Public Function CompressBuffer() As Long
+    'zlib
+    Dim result As Long
+    Dim Size As Long
+    Dim tempSize As Long
+    Dim tempBuffer() As Byte
+    Dim compressed() As Byte
+    CompressBuffer = -1
+    tempSize = count
+
+    If tempSize > 0 Then
+        Size = tempSize
+        Size = Size + (Size * 0.01) + 12
+        ReDim tempBuffer(0 To Size - 1) As Byte
+        result = Compress(tempBuffer(0), Size, buffer(0), tempSize)
+
+        If result = 0 Then
+            ReDim compressed(0 To Size - 1)
+            CopyMemory compressed(0), tempBuffer(0), Size
+            Flush
+            WriteLong tempSize      ' original size
+            WriteLong Size          ' compressed size
+            WriteBytes compressed() ' compressed data
+            CompressBuffer = 0
+        End If
+    End If
+
+End Function
+
+Public Function DecompressBuffer() As Long
+    'zlib
+    Dim result As Long
+    Dim OrigSize As Long
+    Dim tempBuffer() As Byte
+    Dim compressed() As Byte
+    DecompressBuffer = -1
+
+    If count > 0 Then
+        OrigSize = ReadLong + 1
+        ReDim tempBuffer(0 To OrigSize - 1) As Byte
+        compressed = ReadBytes(ReadLong)
+        result = uncompress(tempBuffer(0), OrigSize, compressed(0), UBound(compressed) + 1)
+
+        If result = 0 Then
+            ReDim compressed(0 To OrigSize - 1)
+            CopyMemory compressed(0), tempBuffer(0), OrigSize
+            Flush
+            WriteBytes compressed()
+            DecompressBuffer = 0
+        End If
+    End If
+
 End Function
