@@ -4,9 +4,9 @@ Public Function IsPlayerItemRequerimentsOK(ByVal PlayerIndex As Long, ByVal Item
     IsPlayerItemRequerimentsOK = True
     
     ' stat requirement
-    For I = 1 To Stats.Stat_Count - 1
-        If Item(ItemNum).Stat_Req(I) > GetPlayerStat(PlayerIndex, I) Then
-            Select Case I
+    For i = 1 To Stats.Stat_Count - 1
+        If Item(ItemNum).Stat_Req(i) > GetPlayerStat(PlayerIndex, i) Then
+            Select Case i
                 Case Stats.Intelligence
                     Call PlayerMsg(PlayerIndex, "Você não tem a Intelligence mínima necessária.", BrightRed)
                 Case Stats.Intelligence
@@ -42,30 +42,30 @@ Public Function IsPlayerItemRequerimentsOK(ByVal PlayerIndex As Long, ByVal Item
     
     ' class requirement
     If Item(ItemNum).ClassReq > 0 Then
-        If Not GetPlayerClass(Index) = Item(ItemNum).ClassReq Then
-            PlayerMsg Index, "You do not meet the class requirement to equip this item.", BrightRed
+        If Not GetPlayerClass(index) = Item(ItemNum).ClassReq Then
+            PlayerMsg index, "You do not meet the class requirement to equip this item.", BrightRed
             IsPlayerItemRequerimentsOK = False
         End If
     End If
 End Function
 
-Public Function CanMove(Index As Long, Dir As Long) As Byte
+Public Function CanMove(index As Long, dir As Long) As Byte
     Dim warped As Boolean, newMapX As Long, newMapY As Long
 
     CanMove = 1
-    Select Case Dir
+    Select Case dir
         Case DIR_UP
             ' Check to see if they are trying to go out of bounds
-            If GetPlayerY(Index) > 0 Then
-                If CheckDirection(Index, DIR_UP) Then
+            If GetPlayerY(index) > 0 Then
+                If CheckDirection(index, DIR_UP) Then
                     CanMove = 0
                     Exit Function
                 End If
             Else
                 ' Check if they can warp to a new map
-                If Map(GetPlayerMap(Index)).MapData.Up > 0 Then
-                    newMapY = Map(Map(GetPlayerMap(Index)).MapData.Up).MapData.MaxY
-                    Call PlayerWarp(Index, Map(GetPlayerMap(Index)).MapData.Up, GetPlayerX(Index), newMapY)
+                If Map(GetPlayerMap(index)).MapData.Up > 0 Then
+                    newMapY = Map(Map(GetPlayerMap(index)).MapData.Up).MapData.MaxY
+                    Call PlayerWarp(index, Map(GetPlayerMap(index)).MapData.Up, GetPlayerX(index), newMapY)
                     warped = True
                     CanMove = 2
                 End If
@@ -76,15 +76,15 @@ Public Function CanMove(Index As Long, Dir As Long) As Byte
 '#######################################################################################################################
         Case DIR_DOWN
             ' Check to see if they are trying to go out of bounds
-            If GetPlayerY(Index) < Map(GetPlayerMap(Index)).MapData.MaxY Then
-                If CheckDirection(Index, DIR_DOWN) Then
+            If GetPlayerY(index) < Map(GetPlayerMap(index)).MapData.MaxY Then
+                If CheckDirection(index, DIR_DOWN) Then
                     CanMove = 0
                     Exit Function
                 End If
             Else
                 ' Check if they can warp to a new map
-                If Map(GetPlayerMap(Index)).MapData.Down > 0 Then
-                    Call PlayerWarp(Index, Map(GetPlayerMap(Index)).MapData.Down, GetPlayerX(Index), 0)
+                If Map(GetPlayerMap(index)).MapData.Down > 0 Then
+                    Call PlayerWarp(index, Map(GetPlayerMap(index)).MapData.Down, GetPlayerX(index), 0)
                     warped = True
                     CanMove = 2
                 End If
@@ -95,16 +95,16 @@ Public Function CanMove(Index As Long, Dir As Long) As Byte
 '#######################################################################################################################
         Case DIR_LEFT
             ' Check to see if they are trying to go out of bounds
-            If GetPlayerX(Index) > 0 Then
-                If CheckDirection(Index, DIR_LEFT) Then
+            If GetPlayerX(index) > 0 Then
+                If CheckDirection(index, DIR_LEFT) Then
                     CanMove = 0
                     Exit Function
                 End If
             Else
                 ' Check if they can warp to a new map
-                If Map(GetPlayerMap(Index)).MapData.left > 0 Then
-                    newMapX = Map(Map(GetPlayerMap(Index)).MapData.left).MapData.MaxX
-                    Call PlayerWarp(Index, Map(GetPlayerMap(Index)).MapData.left, newMapX, GetPlayerY(Index))
+                If Map(GetPlayerMap(index)).MapData.left > 0 Then
+                    newMapX = Map(Map(GetPlayerMap(index)).MapData.left).MapData.MaxX
+                    Call PlayerWarp(index, Map(GetPlayerMap(index)).MapData.left, newMapX, GetPlayerY(index))
                     warped = True
                     CanMove = 2
                 End If
@@ -115,15 +115,15 @@ Public Function CanMove(Index As Long, Dir As Long) As Byte
 '#######################################################################################################################
         Case DIR_RIGHT
             ' Check to see if they are trying to go out of bounds
-            If GetPlayerX(Index) < Map(GetPlayerMap(Index)).MapData.MaxX Then
-                If CheckDirection(Index, DIR_RIGHT) Then
+            If GetPlayerX(index) < Map(GetPlayerMap(index)).MapData.MaxX Then
+                If CheckDirection(index, DIR_RIGHT) Then
                     CanMove = 0
                     Exit Function
                 End If
             Else
                 ' Check if they can warp to a new map
-                If Map(GetPlayerMap(Index)).MapData.Right > 0 Then
-                    Call PlayerWarp(Index, Map(GetPlayerMap(Index)).MapData.Right, 0, GetPlayerY(Index))
+                If Map(GetPlayerMap(index)).MapData.Right > 0 Then
+                    Call PlayerWarp(index, Map(GetPlayerMap(index)).MapData.Right, 0, GetPlayerY(index))
                     warped = True
                     CanMove = 2
                 End If
@@ -134,24 +134,24 @@ Public Function CanMove(Index As Long, Dir As Long) As Byte
 '#######################################################################################################################
         Case DIR_UP_LEFT
             ' Check to see if they are trying to go out of bounds
-            If GetPlayerY(Index) > 0 And GetPlayerX(Index) > 0 Then
-                If CheckDirection(Index, DIR_UP_LEFT) Then
+            If GetPlayerY(index) > 0 And GetPlayerX(index) > 0 Then
+                If CheckDirection(index, DIR_UP_LEFT) Then
                     CanMove = 0
                     Exit Function
                 End If
             Else
                 ' Check if they can warp to a new map
-                If GetPlayerY(Index) = 0 Then
-                    If Map(GetPlayerMap(Index)).MapData.Up > 0 Then
-                        newMapY = Map(Map(GetPlayerMap(Index)).MapData.Up).MapData.MaxY
-                        Call PlayerWarp(Index, Map(GetPlayerMap(Index)).MapData.Up, GetPlayerX(Index), newMapY)
+                If GetPlayerY(index) = 0 Then
+                    If Map(GetPlayerMap(index)).MapData.Up > 0 Then
+                        newMapY = Map(Map(GetPlayerMap(index)).MapData.Up).MapData.MaxY
+                        Call PlayerWarp(index, Map(GetPlayerMap(index)).MapData.Up, GetPlayerX(index), newMapY)
                         warped = True
                         CanMove = 2
                     End If
                 Else
-                    If Map(GetPlayerMap(Index)).MapData.left > 0 Then
-                        newMapX = Map(Map(GetPlayerMap(Index)).MapData.left).MapData.MaxX
-                        Call PlayerWarp(Index, Map(GetPlayerMap(Index)).MapData.left, newMapX, GetPlayerY(Index))
+                    If Map(GetPlayerMap(index)).MapData.left > 0 Then
+                        newMapX = Map(Map(GetPlayerMap(index)).MapData.left).MapData.MaxX
+                        Call PlayerWarp(index, Map(GetPlayerMap(index)).MapData.left, newMapX, GetPlayerY(index))
                         warped = True
                         CanMove = 2
                     End If
@@ -163,23 +163,23 @@ Public Function CanMove(Index As Long, Dir As Long) As Byte
 '#######################################################################################################################
         Case DIR_UP_RIGHT
             ' Check to see if they are trying to go out of bounds
-            If GetPlayerY(Index) > 0 And GetPlayerX(Index) < Map(GetPlayerMap(Index)).MapData.MaxX Then
-                If CheckDirection(Index, DIR_UP_RIGHT) Then
+            If GetPlayerY(index) > 0 And GetPlayerX(index) < Map(GetPlayerMap(index)).MapData.MaxX Then
+                If CheckDirection(index, DIR_UP_RIGHT) Then
                     CanMove = 0
                     Exit Function
                 End If
             Else
                 ' Check if they can warp to a new map
-                If GetPlayerY(Index) = 0 Then
-                    If Map(GetPlayerMap(Index)).MapData.Up > 0 Then
-                        newMapY = Map(Map(GetPlayerMap(Index)).MapData.Up).MapData.MaxY
-                        Call PlayerWarp(Index, Map(GetPlayerMap(Index)).MapData.Up, GetPlayerX(Index), newMapY)
+                If GetPlayerY(index) = 0 Then
+                    If Map(GetPlayerMap(index)).MapData.Up > 0 Then
+                        newMapY = Map(Map(GetPlayerMap(index)).MapData.Up).MapData.MaxY
+                        Call PlayerWarp(index, Map(GetPlayerMap(index)).MapData.Up, GetPlayerX(index), newMapY)
                         warped = True
                         CanMove = 2
                     End If
                 Else
-                    If Map(GetPlayerMap(Index)).MapData.Right > 0 Then
-                        Call PlayerWarp(Index, Map(GetPlayerMap(Index)).MapData.Right, 0, GetPlayerY(Index))
+                    If Map(GetPlayerMap(index)).MapData.Right > 0 Then
+                        Call PlayerWarp(index, Map(GetPlayerMap(index)).MapData.Right, 0, GetPlayerY(index))
                         warped = True
                         CanMove = 2
                     End If
@@ -191,23 +191,23 @@ Public Function CanMove(Index As Long, Dir As Long) As Byte
 '#######################################################################################################################
         Case DIR_DOWN_LEFT
             ' Check to see if they are trying to go out of bounds
-            If GetPlayerY(Index) < Map(GetPlayerMap(Index)).MapData.MaxY And GetPlayerX(Index) > 0 Then
-                If CheckDirection(Index, DIR_DOWN_LEFT) Then
+            If GetPlayerY(index) < Map(GetPlayerMap(index)).MapData.MaxY And GetPlayerX(index) > 0 Then
+                If CheckDirection(index, DIR_DOWN_LEFT) Then
                     CanMove = 0
                     Exit Function
                 End If
             Else
                 ' Check if they can warp to a new map
-                If GetPlayerY(Index) = Map(GetPlayerMap(Index)).MapData.MaxY Then
-                    If Map(GetPlayerMap(Index)).MapData.Down > 0 Then
-                        Call PlayerWarp(Index, Map(GetPlayerMap(Index)).MapData.Down, GetPlayerX(Index), 0)
+                If GetPlayerY(index) = Map(GetPlayerMap(index)).MapData.MaxY Then
+                    If Map(GetPlayerMap(index)).MapData.Down > 0 Then
+                        Call PlayerWarp(index, Map(GetPlayerMap(index)).MapData.Down, GetPlayerX(index), 0)
                         warped = True
                         CanMove = 2
                     End If
                 Else
-                    If Map(GetPlayerMap(Index)).MapData.left > 0 Then
-                        newMapX = Map(Map(GetPlayerMap(Index)).MapData.left).MapData.MaxX
-                        Call PlayerWarp(Index, Map(GetPlayerMap(Index)).MapData.left, newMapX, GetPlayerY(Index))
+                    If Map(GetPlayerMap(index)).MapData.left > 0 Then
+                        newMapX = Map(Map(GetPlayerMap(index)).MapData.left).MapData.MaxX
+                        Call PlayerWarp(index, Map(GetPlayerMap(index)).MapData.left, newMapX, GetPlayerY(index))
                         warped = True
                         CanMove = 2
                     End If
@@ -219,22 +219,22 @@ Public Function CanMove(Index As Long, Dir As Long) As Byte
 '#######################################################################################################################
         Case DIR_DOWN_RIGHT
             ' Check to see if they are trying to go out of bounds
-            If GetPlayerY(Index) < Map(GetPlayerMap(Index)).MapData.MaxY And GetPlayerX(Index) < Map(GetPlayerMap(Index)).MapData.MaxX Then
-                If CheckDirection(Index, DIR_DOWN_RIGHT) Then
+            If GetPlayerY(index) < Map(GetPlayerMap(index)).MapData.MaxY And GetPlayerX(index) < Map(GetPlayerMap(index)).MapData.MaxX Then
+                If CheckDirection(index, DIR_DOWN_RIGHT) Then
                     CanMove = 0
                     Exit Function
                 End If
             Else
                 ' Check if they can warp to a new map
-                If GetPlayerY(Index) = Map(GetPlayerMap(Index)).MapData.MaxY Then
-                    If Map(GetPlayerMap(Index)).MapData.Down > 0 Then
-                        Call PlayerWarp(Index, Map(GetPlayerMap(Index)).MapData.Down, GetPlayerX(Index), 0)
+                If GetPlayerY(index) = Map(GetPlayerMap(index)).MapData.MaxY Then
+                    If Map(GetPlayerMap(index)).MapData.Down > 0 Then
+                        Call PlayerWarp(index, Map(GetPlayerMap(index)).MapData.Down, GetPlayerX(index), 0)
                         warped = True
                         CanMove = 2
                     End If
                 Else
-                    If Map(GetPlayerMap(Index)).MapData.Right > 0 Then
-                        Call PlayerWarp(Index, Map(GetPlayerMap(Index)).MapData.Right, 0, GetPlayerY(Index))
+                    If Map(GetPlayerMap(index)).MapData.Right > 0 Then
+                        Call PlayerWarp(index, Map(GetPlayerMap(index)).MapData.Right, 0, GetPlayerY(index))
                         warped = True
                         CanMove = 2
                     End If
@@ -246,67 +246,67 @@ Public Function CanMove(Index As Long, Dir As Long) As Byte
     ' check if we've warped
     If warped Then
         ' clear their target
-        TempPlayer(Index).target = 0
-        TempPlayer(Index).targetType = TARGET_TYPE_NONE
-        SendTarget Index
+        TempPlayer(index).target = 0
+        TempPlayer(index).targetType = TARGET_TYPE_NONE
+        SendTarget index
     End If
 End Function
 
-Public Function CheckDirection(Index As Long, direction As Long) As Boolean
-    Dim x As Long, y As Long, I As Long
-    Dim EventCount As Long, MapNum As Long, page As Long
+Public Function CheckDirection(index As Long, direction As Long) As Boolean
+    Dim x As Long, y As Long, i As Long
+    Dim EventCount As Long, mapnum As Long, page As Long
 
     CheckDirection = False
     
     Select Case direction
         Case DIR_UP
-            x = GetPlayerX(Index)
-            y = GetPlayerY(Index) - 1
+            x = GetPlayerX(index)
+            y = GetPlayerY(index) - 1
         Case DIR_DOWN
-            x = GetPlayerX(Index)
-            y = GetPlayerY(Index) + 1
+            x = GetPlayerX(index)
+            y = GetPlayerY(index) + 1
         Case DIR_LEFT
-            x = GetPlayerX(Index) - 1
-            y = GetPlayerY(Index)
+            x = GetPlayerX(index) - 1
+            y = GetPlayerY(index)
         Case DIR_RIGHT
-            x = GetPlayerX(Index) + 1
-            y = GetPlayerY(Index)
+            x = GetPlayerX(index) + 1
+            y = GetPlayerY(index)
         Case DIR_UP_LEFT
-            x = GetPlayerX(Index) - 1
-            y = GetPlayerY(Index) - 1
+            x = GetPlayerX(index) - 1
+            y = GetPlayerY(index) - 1
         Case DIR_UP_RIGHT
-            x = GetPlayerX(Index) + 1
-            y = GetPlayerY(Index) - 1
+            x = GetPlayerX(index) + 1
+            y = GetPlayerY(index) - 1
         Case DIR_DOWN_LEFT
-            x = GetPlayerX(Index) - 1
-            y = GetPlayerY(Index) + 1
+            x = GetPlayerX(index) - 1
+            y = GetPlayerY(index) + 1
         Case DIR_DOWN_RIGHT
-            x = GetPlayerX(Index) + 1
-            y = GetPlayerY(Index) + 1
+            x = GetPlayerX(index) + 1
+            y = GetPlayerY(index) + 1
     End Select
     
     ' Check to see if the map tile is blocked or not
-    If Map(GetPlayerMap(Index)).TileData.Tile(x, y).Type = TILE_TYPE_BLOCKED Then
+    If Map(GetPlayerMap(index)).TileData.Tile(x, y).Type = TILE_TYPE_BLOCKED Then
         CheckDirection = True
         Exit Function
     End If
 
     ' Check to see if the map tile is tree or not
-    If Map(GetPlayerMap(Index)).TileData.Tile(x, y).Type = TILE_TYPE_RESOURCE Then
+    If Map(GetPlayerMap(index)).TileData.Tile(x, y).Type = TILE_TYPE_RESOURCE Then
         CheckDirection = True
         Exit Function
     End If
     
     ' Check to make sure that any events on that space aren't blocked
-    MapNum = GetPlayerMap(Index)
-    EventCount = Map(MapNum).TileData.EventCount
-    For I = 1 To EventCount
-        With Map(MapNum).TileData.Events(I)
+    mapnum = GetPlayerMap(index)
+    EventCount = Map(mapnum).TileData.EventCount
+    For i = 1 To EventCount
+        With Map(mapnum).TileData.Events(i)
             If .x = x And .y = y Then
                 ' Get the active event page
-                page = ActiveEventPage(Index, I)
+                page = ActiveEventPage(index, i)
                 If page > 0 Then
-                    If Map(MapNum).TileData.Events(I).EventPage(page).WalkThrough = 0 Then
+                    If Map(mapnum).TileData.Events(i).EventPage(page).WalkThrough = 0 Then
                         CheckDirection = True
                         Exit Function
                     End If
@@ -316,24 +316,24 @@ Public Function CheckDirection(Index As Long, direction As Long) As Boolean
     Next
 
     ' Check to see if a player is already on that tile
-    If Map(GetPlayerMap(Index)).MapData.Moral = 0 Then
-        For I = 1 To Player_HighIndex
-            If IsPlaying(I) And GetPlayerMap(I) = GetPlayerMap(Index) Then
-                If GetPlayerX(I) = x Then
-                    If GetPlayerY(I) = y Then
+    If Map(GetPlayerMap(index)).MapData.Moral = 0 Then
+        For i = 1 To Player_HighIndex
+            If IsPlaying(i) And GetPlayerMap(i) = GetPlayerMap(index) Then
+                If GetPlayerX(i) = x Then
+                    If GetPlayerY(i) = y Then
                         CheckDirection = True
                         Exit Function
                     End If
                 End If
             End If
-        Next I
+        Next i
     End If
 
     ' Check to see if a npc is already on that tile
-    For I = 1 To MAX_MAP_NPCS
-        If MapNpc(GetPlayerMap(Index)).Npc(I).Num > 0 Then
-            If MapNpc(GetPlayerMap(Index)).Npc(I).x = x Then
-                If MapNpc(GetPlayerMap(Index)).Npc(I).y = y Then
+    For i = 1 To MAX_MAP_NPCS
+        If MapNpc(GetPlayerMap(index)).Npc(i).Num > 0 Then
+            If MapNpc(GetPlayerMap(index)).Npc(i).x = x Then
+                If MapNpc(GetPlayerMap(index)).Npc(i).y = y Then
                     CheckDirection = True
                     Exit Function
                 End If
@@ -342,54 +342,54 @@ Public Function CheckDirection(Index As Long, direction As Long) As Boolean
     Next
 End Function
 
-Public Sub CheckEquippedItems(ByVal Index As Long)
+Public Sub CheckEquippedItems(ByVal index As Long)
     Dim Slot As Long
     Dim ItemNum As Long
-    Dim I As Long
+    Dim i As Long
 
     ' We want to check incase an admin takes away an object but they had it equipped
-    For I = 1 To Equipment.Equipment_Count - 1
-        ItemNum = GetPlayerEquipment(Index, I)
+    For i = 1 To Equipment.Equipment_Count - 1
+        ItemNum = GetPlayerEquipment(index, i)
 
         If ItemNum > 0 Then
 
-            Select Case I
+            Select Case i
                 Case Equipment.Weapon
 
-                    If Item(ItemNum).Type <> ITEM_TYPE_WEAPON Then SetPlayerEquipment Index, 0, I
+                    If Item(ItemNum).Type <> ITEM_TYPE_WEAPON Then SetPlayerEquipment index, 0, i
                 Case Equipment.Armor
 
-                    If Item(ItemNum).Type <> ITEM_TYPE_ARMOR Then SetPlayerEquipment Index, 0, I
+                    If Item(ItemNum).Type <> ITEM_TYPE_ARMOR Then SetPlayerEquipment index, 0, i
                 Case Equipment.Helmet
 
-                    If Item(ItemNum).Type <> ITEM_TYPE_HELMET Then SetPlayerEquipment Index, 0, I
+                    If Item(ItemNum).Type <> ITEM_TYPE_HELMET Then SetPlayerEquipment index, 0, i
                 Case Equipment.Shield
 
-                    If Item(ItemNum).Type <> ITEM_TYPE_SHIELD Then SetPlayerEquipment Index, 0, I
+                    If Item(ItemNum).Type <> ITEM_TYPE_SHIELD Then SetPlayerEquipment index, 0, i
             End Select
 
         Else
-            SetPlayerEquipment Index, 0, I
+            SetPlayerEquipment index, 0, i
         End If
 
     Next
 
 End Sub
 
-Public Function HasItem(ByVal Index As Long, ByVal ItemNum As Long) As Long
-    Dim I As Long
+Public Function HasItem(ByVal index As Long, ByVal ItemNum As Long) As Long
+    Dim i As Long
 
     ' Check for subscript out of range
-    If IsPlaying(Index) = False Or ItemNum <= 0 Or ItemNum > MAX_ITEMS Then
+    If IsPlaying(index) = False Or ItemNum <= 0 Or ItemNum > MAX_ITEMS Then
         Exit Function
     End If
 
-    For I = 1 To MAX_INV
+    For i = 1 To MAX_INV
 
         ' Check to see if the player has the item
-        If GetPlayerInvItemNum(Index, I) = ItemNum Then
+        If GetPlayerInvItemNum(index, i) = ItemNum Then
             If Item(ItemNum).Type = ITEM_TYPE_CURRENCY Then
-                HasItem = GetPlayerInvItemValue(Index, I)
+                HasItem = GetPlayerInvItemValue(index, i)
             Else
                 HasItem = 1
             End If
@@ -401,12 +401,12 @@ Public Function HasItem(ByVal Index As Long, ByVal ItemNum As Long) As Long
 
 End Function
 
-Public Function HasSpell(ByVal Index As Long, ByVal spellNum As Long) As Boolean
-    Dim I As Long
+Public Function HasSpell(ByVal index As Long, ByVal spellNum As Long) As Boolean
+    Dim i As Long
 
-    For I = 1 To MAX_PLAYER_SPELLS
+    For i = 1 To MAX_PLAYER_SPELLS
 
-        If Player(Index).Spell(I).Spell = spellNum Then
+        If Player(index).Spell(i).Spell = spellNum Then
             HasSpell = True
             Exit Function
         End If
@@ -415,24 +415,24 @@ Public Function HasSpell(ByVal Index As Long, ByVal spellNum As Long) As Boolean
 
 End Function
 
-Public Function CanPlayerPickupItem(ByVal Index As Long, ByVal mapItemNum As Long)
-    Dim MapNum As Long, tmpIndex As Long, I As Long
+Public Function CanPlayerPickupItem(ByVal index As Long, ByVal mapItemNum As Long)
+    Dim mapnum As Long, tmpIndex As Long, i As Long
 
-    MapNum = GetPlayerMap(Index)
+    mapnum = GetPlayerMap(index)
     
     ' no lock or locked to player?
-    If MapItem(MapNum, mapItemNum).playerName = vbNullString Or MapItem(MapNum, mapItemNum).playerName = Trim$(GetPlayerName(Index)) Then
+    If MapItem(mapnum, mapItemNum).playerName = vbNullString Or MapItem(mapnum, mapItemNum).playerName = Trim$(GetPlayerName(index)) Then
         CanPlayerPickupItem = True
         Exit Function
     End If
     
     ' if in party show their party member's drops
-    If TempPlayer(Index).inParty > 0 Then
-        For I = 1 To MAX_PARTY_MEMBERS
-            tmpIndex = Party(TempPlayer(Index).inParty).Member(I)
+    If TempPlayer(index).inParty > 0 Then
+        For i = 1 To MAX_PARTY_MEMBERS
+            tmpIndex = Party(TempPlayer(index).inParty).Member(i)
             If tmpIndex > 0 Then
-                If Trim$(GetPlayerName(tmpIndex)) = MapItem(MapNum, mapItemNum).playerName Then
-                    If MapItem(MapNum, mapItemNum).Bound = 0 Then
+                If Trim$(GetPlayerName(tmpIndex)) = MapItem(mapnum, mapItemNum).playerName Then
+                    If MapItem(mapnum, mapItemNum).Bound = 0 Then
                         CanPlayerPickupItem = True
                         Exit Function
                     End If
@@ -445,43 +445,43 @@ Public Function CanPlayerPickupItem(ByVal Index As Long, ByVal mapItemNum As Lon
     CanPlayerPickupItem = False
 End Function
 
-Public Sub CheckPlayerEvent(Index As Long, eventNum As Long)
-    Dim Count As Long, MapNum As Long, I As Long
+Public Sub CheckPlayerEvent(index As Long, eventNum As Long)
+    Dim Count As Long, mapnum As Long, i As Long
     ' find the page to process
-    MapNum = GetPlayerMap(Index)
+    mapnum = GetPlayerMap(index)
     ' make sure it's in the same spot
-    If Map(MapNum).TileData.Events(eventNum).x <> GetPlayerX(Index) Then Exit Sub
-    If Map(MapNum).TileData.Events(eventNum).y <> GetPlayerY(Index) Then Exit Sub
+    If Map(mapnum).TileData.Events(eventNum).x <> GetPlayerX(index) Then Exit Sub
+    If Map(mapnum).TileData.Events(eventNum).y <> GetPlayerY(index) Then Exit Sub
     ' loop
-    Count = Map(MapNum).TileData.Events(eventNum).PageCount
+    Count = Map(mapnum).TileData.Events(eventNum).PageCount
     ' get the active page
-    I = ActiveEventPage(Index, eventNum)
+    i = ActiveEventPage(index, eventNum)
     ' exit out early
-    If I = 0 Then Exit Sub
+    If i = 0 Then Exit Sub
     ' make sure the page has actual commands
-    If Map(MapNum).TileData.Events(eventNum).EventPage(I).CommandCount = 0 Then Exit Sub
+    If Map(mapnum).TileData.Events(eventNum).EventPage(i).CommandCount = 0 Then Exit Sub
     ' set event
-    TempPlayer(Index).inEvent = True
-    TempPlayer(Index).eventNum = eventNum
-    TempPlayer(Index).pageNum = I
-    TempPlayer(Index).commandNum = 1
+    TempPlayer(index).inEvent = True
+    TempPlayer(index).eventNum = eventNum
+    TempPlayer(index).pageNum = i
+    TempPlayer(index).commandNum = 1
     ' send it to the player
-    SendEvent Index
+    SendEvent index
 End Sub
 
-Public Function CanPlayerCriticalHit(ByVal Index As Long) As Boolean
+Public Function CanPlayerCriticalHit(ByVal index As Long) As Boolean
     On Error Resume Next
-    Dim I As Long
-    Dim N As Long
+    Dim i As Long
+    Dim n As Long
 
-    If GetPlayerEquipment(Index, Weapon) > 0 Then
-        N = (Rnd) * 2
+    If GetPlayerEquipment(index, Weapon) > 0 Then
+        n = (Rnd) * 2
 
-        If N = 1 Then
-            I = (GetPlayerStat(Index, Stats.Strength) \ 2) + (GetPlayerLevel(Index) \ 2)
-            N = Int(Rnd * 100) + 1
+        If n = 1 Then
+            i = (GetPlayerStat(index, Stats.Strength) \ 2) + (GetPlayerLevel(index) \ 2)
+            n = Int(Rnd * 100) + 1
 
-            If N <= I Then
+            If n <= i Then
                 CanPlayerCriticalHit = True
             End If
         End If
@@ -489,20 +489,20 @@ Public Function CanPlayerCriticalHit(ByVal Index As Long) As Boolean
 
 End Function
 
-Public Function CanPlayerBlockHit(ByVal Index As Long) As Boolean
-    Dim I As Long
-    Dim N As Long
+Public Function CanPlayerBlockHit(ByVal index As Long) As Boolean
+    Dim i As Long
+    Dim n As Long
     Dim ShieldSlot As Long
-    ShieldSlot = GetPlayerEquipment(Index, Shield)
+    ShieldSlot = GetPlayerEquipment(index, Shield)
 
     If ShieldSlot > 0 Then
-        N = Int(Rnd * 2)
+        n = Int(Rnd * 2)
 
-        If N = 1 Then
-            I = (GetPlayerStat(Index, Stats.Endurance) \ 2) + (GetPlayerLevel(Index) \ 2)
-            N = Int(Rnd * 100) + 1
+        If n = 1 Then
+            i = (GetPlayerStat(index, Stats.Endurance) \ 2) + (GetPlayerLevel(index) \ 2)
+            n = Int(Rnd * 100) + 1
 
-            If N <= I Then
+            If n <= i Then
                 CanPlayerBlockHit = True
             End If
         End If
@@ -510,45 +510,172 @@ Public Function CanPlayerBlockHit(ByVal Index As Long) As Boolean
 
 End Function
 
+Public Sub CheckHas_Mission(ByVal index As Long, ByVal NpcIndex As Long)
+    Dim MissionID As Long, npcNum As Long
+    Dim AlreadyOnMission As Boolean
+    Dim HasCompletedMission As Boolean
+    Dim AlreadyCompletedMission As Boolean
+    Dim IsRepeatable As Boolean
+    Dim ActualMissionID As Long
+    Dim MissionSlot As Long
+    Dim i As Long, n As Long
+    Dim mapnum As Long
+    
+    mapnum = GetPlayerMap(index)
+    
+    If NpcIndex = 0 Then
+        Exit Sub
+    End If
+    
+'    'Before we bother checking the main Mission variables, if we are on a Mission to talk to this NPC, let's do that first!
+'    For i = 1 To MAX_PLAYER_MISSIONS
+'        MissionID = Player(index).Mission(i).ID
+'        If MissionID > 0 Then
+'            If Mission(MissionID).Type = Mission_TYPE_TALK Then
+'                If Mission(MissionID).TalkNPC = NPCNum Then
+'                    Call MissionChat(index, MissionID)
+'                    Call CompleteMission(index, i)
+'                    Exit Sub
+'                End If
+'            End If
+'        End If
+'    Next i
+    
+    'Exit out if it's not a Mission giver
+    If Npc(npcNum).Behaviour <> NPC_BEHAVIOUR_FRIENDLY Then
+        Exit Sub
+    End If
+    
+    If Npc(npcNum).Mission <> 0 Then
+        MissionID = Npc(npcNum).Mission
+        For i = 1 To MAX_PLAYER_MISSIONS
+            'Toggle flags to false, this will be modified further down as we run if statements
+            AlreadyOnMission = False
+            HasCompletedMission = False
+            AlreadyCompletedMission = False
+            IsRepeatable = False
+            'See if we're already on the Mission,
+            For n = 1 To MAX_MISSIONS
+                If Player(index).CompletedMission(n) = MissionID Then
+                    ' AlreadyOnMission = True
+                    AlreadyCompletedMission = True
+                    If Mission(MissionID).Repeatable = 1 Then
+                       IsRepeatable = True
+                    Else
+                       IsRepeatable = False
+                    End If
+                End If
+            Next n
+            
+            MissionSlot = 0
+            
+            For n = 1 To MAX_PLAYER_MISSIONS
+                If Player(index).Mission(n).ID = MissionID Then
+                    AlreadyOnMission = True
+                    MissionSlot = n
+                End If
+            Next n
+    
+            'We're going to use a bunch of If statements to run some checks and figure out what state we're at in the Mission
+            If AlreadyOnMission = True Then
+            'Flag that we're already on this NPC's Mission
+            ' AlreadyOnMission = True
+            
+                'if it's a kill Mission
+                If Mission(MissionID).Type = Mission_TYPE_KILL Then
+                'We have completed the objective...
+                    If Player(index).Mission(MissionSlot).Count >= Mission(MissionID).KillNPCAmount Then
+                        HasCompletedMission = True
+                    Else
+                        HasCompletedMission = False
+                    End If
+                'if it's a collect Mission
+                ElseIf Mission(MissionID).Type = Mission_TYPE_COLLECT Then
+                    'We have completed the objective
+                    If HasItem(index, Mission(MissionID).CollectItem) >= Mission(MissionID).CollectItemAmount Then
+                        HasCompletedMission = True
+                    Else
+                        HasCompletedMission = False
+                    End If
+                'if it's a talk Mission
+                ElseIf Mission(MissionID).Type = Mission_TYPE_TALK Then
+                    'We flag this as incomplete because we're not going to have a Mission to talk to the same person...or we shouldn't anyways, that'd bad dialogue..
+                    HasCompletedMission = False
+                End If
+            End If
+    
+    
+            If IsRepeatable = True And AlreadyOnMission = False And AlreadyCompletedMission = True Then
+                Call OfferMission(index, MissionID)
+                Exit Sub
+            End If
+            If IsRepeatable = True And AlreadyOnMission = True And AlreadyCompletedMission = True And HasCompletedMission = False Then
+                Call SendChatBubble(GetPlayerMap(index), NpcIndex, TARGET_TYPE_NPC, Mission(MissionID).Incomplete, White)
+                Exit Sub
+            End If
+            If IsRepeatable = True And AlreadyOnMission = True And AlreadyCompletedMission = True And HasCompletedMission = True Then
+                Call MissionChat(index, MissionID)
+                Call CompleteMission(index, MissionSlot)
+                Exit Sub
+            End If
+            If AlreadyOnMission = True And HasCompletedMission = True And AlreadyCompletedMission = False Then
+                Call MissionChat(index, MissionID)
+                Call CompleteMission(index, MissionSlot)
+                Exit Sub
+            End If
+            If AlreadyOnMission = True And HasCompletedMission = False And AlreadyCompletedMission = False Then
+                Call PlayerMsg(index, Mission(MissionID).Incomplete, BrightRed)
+                Call SendChatBubble(GetPlayerMap(index), NpcIndex, TARGET_TYPE_NPC, Mission(MissionID).Incomplete, White)
+                Exit Sub
+            End If
+            If AlreadyOnMission = False And HasCompletedMission = False And AlreadyCompletedMission = False And Player(index).Mission(i).ID = 0 Then
+                Call OfferMission(index, MissionID)
+                Exit Sub
+            End If
+        Next i
+    End If
+End Sub
+
+
 Public Sub Check_Mission(ByVal Player_Index As Long, ByVal Target_Index As Long)
-    Dim Missin_ID As Long, I As Long
-    Dim MapNum As Long
+    Dim Missin_ID As Long, i As Long
+    Dim mapnum As Long
     
-    MapNum = GetPlayerMap(Player_Index)
+    mapnum = GetPlayerMap(Player_Index)
     
-    For I = 1 To MAX_PLAYER_MISSIONS
-        Mission_ID = Player(Player_Index).Mission(I).ID
+    For i = 1 To MAX_PLAYER_MISSIONS
+        Mission_ID = Player(Player_Index).Mission(i).ID
         If Mission_ID > 0 Then
             If Mission(Mission_ID).Type = MissionType.TypeKill And Mission(Mission_ID).KillNPC = Target_Index Then
                 If TempPlayer(Player_Index).inParty > 0 Then
-                    'Party_ShareNPCKill TempPlayer(Player_Index).inParty, Player_Index, GetPlayerMap(Player_Index), Player(Player_Index).Quest(i).ID
+                    'Party_ShareNPCKill TempPlayer(Player_Index).inParty, Player_Index, GetPlayerMap(Player_Index), Player(Player_Index).Mission(i).ID
                 Else
-                    If Player(Player_Index).Mission(I).Count < Mission(Mission_ID).KillNPCAmount Then
-                        Player(Player_Index).Mission(I).Count = Player(Player_Index).Mission(I).Count + 1
-                        If Player(Player_Index).Mission(I).Count Mod 5 = 0 Then
-                            Call PlayerMsg(Player_Index, Player(Player_Index).Mission(I).Count & "/" & Mission(Mission_ID).KillNPCAmount & " " & Npc(Target_Index).Name, Yellow)
+                    If Player(Player_Index).Mission(i).Count < Mission(Mission_ID).KillNPCAmount Then
+                        Player(Player_Index).Mission(i).Count = Player(Player_Index).Mission(i).Count + 1
+                        If Player(Player_Index).Mission(i).Count Mod 5 = 0 Then
+                            Call PlayerMsg(Player_Index, Player(Player_Index).Mission(i).Count & "/" & Mission(Mission_ID).KillNPCAmount & " " & Npc(Target_Index).Name, Yellow)
                         End If
                         Call SendPlayerMission(Player_Index, Mission_ID)
                     End If
                 End If
                 
-            ElseIf Mission(Mission_ID).Type = MissionType.TypeCollect And Mission(Mission_ID).CollectItem = MapItem(MapNum, Target_Index).Num Then
-                If Player(Player_Index).Quest(I).Counter < Mission(Mission_ID).CollectItemAmount Then
-                    Player(Player_Index).Mission(I).Count = Player(Player_Index).Mission(I).Count + 1
-                    If Player(Player_Index).Mission(I).Count Mod 5 = 0 Then
-                        Call PlayerMsg(Player_Index, Player(Player_Index).Mission(I).Count & "/" & Mission(Mission_ID).CollectItemAmount & " " & Item(MapItem(MapNum, Target_Index).Num).Name, Yellow)
+            ElseIf Mission(Mission_ID).Type = MissionType.TypeCollect And Mission(Mission_ID).CollectItem = MapItem(mapnum, Target_Index).Num Then
+                If Player(Player_Index).Mission(i).Count < Mission(Mission_ID).CollectItemAmount Then
+                    Player(Player_Index).Mission(i).Count = Player(Player_Index).Mission(i).Count + 1
+                    If Player(Player_Index).Mission(i).Count Mod 5 = 0 Then
+                        Call PlayerMsg(Player_Index, Player(Player_Index).Mission(i).Count & "/" & Mission(Mission_ID).CollectItemAmount & " " & Item(MapItem(mapnum, Target_Index).Num).Name, Yellow)
                     End If
                     Call SendPlayerMission(Player_Index, Mission_ID)
                 End If
             ElseIf Mission(Mission_ID).Type = MissionType.TypeTalk And Mission(Mission_ID).TalkNPC = Target_Index Then
-                If Player(Player_Index).Mission(I).Count = 0 Then
-                    Player(Player_Index).Mission(I).Count = Player(Player_Index).Mission(I).Count + 1
-                    If Player(Player_Index).Mission(I).Count <> 5 = 0 Then
+                If Player(Player_Index).Mission(i).Count = 0 Then
+                    Player(Player_Index).Mission(i).Count = Player(Player_Index).Mission(i).Count + 1
+                    If Player(Player_Index).Mission(i).Count <> 5 = 0 Then
                         Call PlayerMsg(Player_Index, "Mission conv " & Npc(Target_Index).Name, Yellow)
                     End If
                     Call SendPlayerMission(Player_Index, Mission_ID)
                 End If
             End If
         End If
-    Next I
+    Next i
 End Sub

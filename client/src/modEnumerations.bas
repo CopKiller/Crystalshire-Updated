@@ -93,6 +93,7 @@ Public Enum ServerPackets
     SPlayerMission
     SPlayerVariables
     SEvent
+    SOfferMission ' = 90
     ' Make sure SMsgCOUNT is below everything else
     SMsgCOUNT
 End Enum
@@ -226,6 +227,15 @@ Public Enum Equipment
     Shield
     ' Make sure Equipment_Count is below everything else
     Equipment_Count
+End Enum
+
+' Offer used by Players
+Public Enum Offers
+    Offer_Type_Mission = 1
+    Offer_Type_Trade
+    Offer_Type_Party
+    ' Make sure Vital_Count is below everything else
+    Offer_Count
 End Enum
 
 ' Layers in a map

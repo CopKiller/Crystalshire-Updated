@@ -94,6 +94,7 @@ Public Enum ServerPackets
     SPlayerMission
     SPlayerVariables
     SEvent
+    SOfferMission ' = 90
     ' Make sure SMSG_COUNT is below everything else
     SMSG_COUNT
 End Enum

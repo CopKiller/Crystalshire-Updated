@@ -27,9 +27,6 @@ Public Sub InitServer()
     
     ' Initialize the random-number generator
     Randomize ', seed
-    
-    ' highindexing turned off
-    Player_HighIndex = MAX_PLAYERS
 
     ' Check if the directory is there, if its not make it
     Call CheckDirs
@@ -114,6 +111,24 @@ End Sub
 Public Sub SetStatus(ByVal Status As String)
     Call TextAdd(Status)
     DoEvents
+End Sub
+
+Public Sub SetHighIndex()
+    Dim i As Integer
+    Dim x As Integer
+
+    For i = 0 To MAX_PLAYERS
+        x = MAX_PLAYERS - i
+
+        If IsConnected(x) = True Then
+            Player_HighIndex = x
+            Exit Sub
+        End If
+
+    Next i
+
+    Player_HighIndex = 0
+
 End Sub
 
 Public Sub TextAdd(Msg As String)

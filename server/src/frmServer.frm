@@ -72,8 +72,8 @@ Begin VB.Form frmServer
       TabCaption(2)   =   "Control "
       TabPicture(2)   =   "frmServer.frx":170C2
       Tab(2).ControlEnabled=   0   'False
-      Tab(2).Control(0)=   "fraServer"
-      Tab(2).Control(1)=   "fraDatabase"
+      Tab(2).Control(0)=   "fraDatabase"
+      Tab(2).Control(1)=   "fraServer"
       Tab(2).ControlCount=   2
       Begin VB.Frame fraServer 
          Caption         =   "Server"
@@ -309,8 +309,8 @@ End Sub
 ' ********************
 ' ** Winsock object **
 ' ********************
-Private Sub Socket_ConnectionRequest(index As Integer, ByVal requestID As Long)
-    Call AcceptConnection(index, requestID)
+Private Sub Socket_ConnectionRequest(index As Integer, ByVal RequestID As Long)
+    Call AcceptConnection(index, RequestID)
 End Sub
 
 Private Sub Socket_Accept(index As Integer, SocketId As Integer)

@@ -208,7 +208,8 @@ Dim i As Long
             Call AlertMsg(index, DIALOGUE_MSG_BANNED)
         End If
         ' re-set the high index
-        SendHighIndex
+        Call SetHighIndex
+        Call SendHighIndex
     End If
 End Sub
 
@@ -275,6 +276,12 @@ Sub CloseSocket(ByVal index As Long)
         Call TextAdd("Connection from " & GetPlayerIP(index) & " has been terminated.")
         frmServer.Socket(index).Close
         Call UpdateCaption
+        
+        Call ClearPlayer(index)
+        
+        ' Set The High Index
+        Call SetHighIndex
+        Call SendHighIndex
     End If
 
 End Sub

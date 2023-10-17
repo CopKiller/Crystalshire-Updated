@@ -446,7 +446,7 @@ End Sub
 
 Private Sub cmbPreviousQuest_Click()
     If EditorIndex = 0 Or EditorIndex > MAX_MISSIONS Then Exit Sub
-    Mission(EditorIndex).PreviousQuestComplete = cmbPreviousQuest.ListIndex
+    Mission(EditorIndex).PreviousMissionComplete = cmbPreviousQuest.ListIndex
 End Sub
 
 Private Sub cmbTalkNPC_Click()

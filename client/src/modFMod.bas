@@ -481,7 +481,7 @@ Public Declare Sub FSOUND_GetMemoryStats Lib "fmod.dll" Alias "_FSOUND_GetMemory
 '          Use FSOUND_LOADRAW      flag with FSOUND_Sample_Load to treat as as raw pcm data.
 
 
-Public Declare Function FSOUND_Sample_Load Lib "fmod.dll" Alias "_FSOUND_Sample_Load@20" (ByVal Index As Long, ByVal name As String, ByVal mode As FSOUND_MODES, ByVal offset As Long, ByVal length As Long) As Long
+Public Declare Function FSOUND_Sample_Load Lib "fmod.dll" Alias "_FSOUND_Sample_Load@20" (ByVal Index As Long, ByVal Name As String, ByVal mode As FSOUND_MODES, ByVal offset As Long, ByVal length As Long) As Long
 Public Declare Function FSOUND_Sample_Alloc Lib "fmod.dll" Alias "_FSOUND_Sample_Alloc@28" (ByVal Index As Long, ByVal length As Long, ByVal mode As Long, ByVal deffreq As Long, ByVal defvol As Long, ByVal defpan As Long, ByVal defpri As Long) As Long
 Public Declare Function FSOUND_Sample_Free Lib "fmod.dll" Alias "_FSOUND_Sample_Free@4" (ByVal sptr As Long) As Long
 Public Declare Function FSOUND_Sample_Upload Lib "fmod.dll" Alias "_FSOUND_Sample_Upload@12" (ByVal sptr As Long, ByRef srcdata As Long, ByVal mode As Long) As Byte
@@ -655,7 +655,7 @@ Public Declare Function FSOUND_Stream_CreateDSP Lib "fmod.dll" Alias "_FSOUND_St
 Public Declare Function FSOUND_Stream_SetEndCallback Lib "fmod.dll" Alias "_FSOUND_Stream_SetEndCallback@12" (ByVal stream As Long, ByVal callback As Long, ByVal userdata As Long) As Byte
 Public Declare Function FSOUND_Stream_SetSyncCallback Lib "fmod.dll" Alias "_FSOUND_Stream_SetSyncCallback@12" (ByVal stream As Long, ByVal callback As Long, ByVal userdata As Long) As Byte
 
-Public Declare Function FSOUND_Stream_AddSyncPoint Lib "fmod.dll" Alias "_FSOUND_Stream_AddSyncPoint@12" (ByVal stream As Long, ByVal pcmoffset As Long, ByVal name As String) As Long
+Public Declare Function FSOUND_Stream_AddSyncPoint Lib "fmod.dll" Alias "_FSOUND_Stream_AddSyncPoint@12" (ByVal stream As Long, ByVal pcmoffset As Long, ByVal Name As String) As Long
 Public Declare Function FSOUND_Stream_DeleteSyncPoint Lib "fmod.dll" Alias "_FSOUND_Stream_DeleteSyncPoint@4" (ByVal point As Long) As Byte
 Public Declare Function FSOUND_Stream_GetNumSyncPoints Lib "fmod.dll" Alias "_FSOUND_Stream_GetNumSyncPoints@4" (ByVal stream As Long) As Long
 Public Declare Function FSOUND_Stream_GetSyncPoint Lib "fmod.dll" Alias "_FSOUND_Stream_GetSyncPoint@8" (ByVal stream As Long, ByVal Index As Long) As Long
@@ -666,8 +666,8 @@ Public Declare Function FSOUND_Stream_GetNumSubStreams Lib "fmod.dll" Alias "_FS
 Public Declare Function FSOUND_Stream_SetSubStreamSentence Lib "fmod.dll" Alias "_FSOUND_Stream_SetSubStreamSentence@12" (ByVal stream As Long, ByRef sentencelist As Long, ByVal numitems As Long) As Byte
 
 Public Declare Function FSOUND_Stream_GetNumTagFields Lib "fmod.dll" Alias "_FSOUND_Stream_GetNumTagFields@8" (ByVal stream As Long, ByRef num As Long) As Byte
-Public Declare Function FSOUND_Stream_GetTagField Lib "fmod.dll" Alias "_FSOUND_Stream_GetTagField@24" (ByVal stream As Long, ByVal num As Long, ByRef tagtype As Long, ByRef name As Long, ByRef value As Long, ByRef length As Long) As Byte
-Public Declare Function FSOUND_Stream_FindTagField Lib "fmod.dll" Alias "_FSOUND_Stream_FindTagField@20" (ByVal stream As Long, ByVal tagtype As Long, ByVal name As String, ByRef value As Long, ByRef length As Long) As Byte
+Public Declare Function FSOUND_Stream_GetTagField Lib "fmod.dll" Alias "_FSOUND_Stream_GetTagField@24" (ByVal stream As Long, ByVal num As Long, ByRef tagtype As Long, ByRef Name As Long, ByRef value As Long, ByRef length As Long) As Byte
+Public Declare Function FSOUND_Stream_FindTagField Lib "fmod.dll" Alias "_FSOUND_Stream_FindTagField@20" (ByVal stream As Long, ByVal tagtype As Long, ByVal Name As String, ByRef value As Long, ByRef length As Long) As Byte
 
 '
 '   Internet streaming functions
@@ -784,8 +784,8 @@ Public Declare Function FSOUND_Record_GetPosition Lib "fmod.dll" Alias "_FSOUND_
 '   Song management / playback functions.
 
 
-Public Declare Function FMUSIC_LoadSong Lib "fmod.dll" Alias "_FMUSIC_LoadSong@4" (ByVal name As String) As Long
-Public Declare Function FMUSIC_LoadSongEx Lib "fmod.dll" Alias "_FMUSIC_LoadSongEx@24" (ByVal name As String, ByVal offset As Long, ByVal length As Long, ByVal mode As FSOUND_MODES, ByRef sentencelist As Long, ByVal numitems As Long) As Long
+Public Declare Function FMUSIC_LoadSong Lib "fmod.dll" Alias "_FMUSIC_LoadSong@4" (ByVal Name As String) As Long
+Public Declare Function FMUSIC_LoadSongEx Lib "fmod.dll" Alias "_FMUSIC_LoadSongEx@24" (ByVal Name As String, ByVal offset As Long, ByVal length As Long, ByVal mode As FSOUND_MODES, ByRef sentencelist As Long, ByVal numitems As Long) As Long
 Public Declare Function FMUSIC_LoadSongEx2 Lib "fmod.dll" Alias "_FMUSIC_LoadSongEx@24" (ByRef Data As Byte, ByVal offset As Long, ByVal length As Long, ByVal mode As FSOUND_MODES, ByRef sentencelist As Long, ByVal numitems As Long) As Long
 Public Declare Function FMUSIC_GetOpenState Lib "fmod.dll" Alias "_FMUSIC_GetOpenState@4" (ByVal module As Long) As Long
 Public Declare Function FMUSIC_FreeSong Lib "fmod.dll" Alias "_FMUSIC_FreeSong@4" (ByVal module As Long) As Byte

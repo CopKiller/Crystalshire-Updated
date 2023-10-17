@@ -65,7 +65,7 @@ Public Sub MissionEditorInit()
         For i = 1 To MAX_MISSIONS
             .cmbPreviousQuest.AddItem i & ": " & Trim$(Mission(EditorIndex).Name)
         Next
-        .cmbPreviousQuest.ListIndex = Mission(EditorIndex).PreviousQuestComplete
+        .cmbPreviousQuest.ListIndex = Mission(EditorIndex).PreviousMissionComplete
 
         ' Message
         .txtIncomplete = Mission(EditorIndex).Incomplete

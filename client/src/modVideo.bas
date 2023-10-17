@@ -2,7 +2,7 @@ Attribute VB_Name = "modVideo"
 Option Explicit
 
 Public Declare Function LockWindowUpdate Lib "user32" (ByVal hwndLock As Long) As Long
-Public Declare Function GetClientRect Lib "user32" (ByVal hWnd As Long, lpRect As RECT) As Long
+Public Declare Function GetClientRect Lib "user32" (ByVal hwnd As Long, lpRect As RECT) As Long
 
 Public BasicAudio As IBasicAudio
 Public BasicVideo As IBasicVideo
@@ -43,8 +43,8 @@ Dim handle As Long
     Set MediaControl = New FilgraphManager
 
     ' set the size
-    frmMain.picIntro.width = 800
-    frmMain.picIntro.height = 600
+    frmMain.picIntro.Width = 800
+    frmMain.picIntro.Height = 600
 
     ' render the file
     MediaControl.RenderFile App.path & "\data files\video\intro.mp4"
@@ -59,7 +59,7 @@ Dim handle As Long
     
     ' hack the window
     VideoWindow.WindowStyle = &H6000000
-    handle = frmMain.picIntro.hWnd
+    handle = frmMain.picIntro.hwnd
     VideoWindow.Owner = handle
     
     ' turn off music if need be
@@ -70,10 +70,10 @@ Dim handle As Long
     End If
     
     ' resize
-    VideoWindow.left = 0
-    VideoWindow.top = 0
-    VideoWindow.width = 800
-    VideoWindow.height = 600
+    VideoWindow.Left = 0
+    VideoWindow.Top = 0
+    VideoWindow.Width = 800
+    VideoWindow.Height = 600
     
     ' run the video
     MediaControl.Run

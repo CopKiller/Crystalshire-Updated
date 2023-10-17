@@ -97,6 +97,11 @@ Public TradeTheirOffer(1 To MAX_INV) As PlayerInvRec
 Public MapResource() As MapResourceRec
 Public Resource_Index As Long
 Public Resources_Init As Boolean
+' Offer
+Public Offer_HighIndex As Long
+Public inOffer(1 To MAX_OFFER) As Long
+Public inOfferType(1 To MAX_OFFER) As Long
+Public inOfferInvite(1 To MAX_OFFER) As String
 ' drag + drop
 Public DragInvSlotNum As Long
 ' gui

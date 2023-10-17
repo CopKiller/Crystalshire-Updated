@@ -314,9 +314,9 @@ Private Sub cmbEvent_Click()
 
         Case 0, 2 ' None, Bank
             ' set max values
-            scrlData1.Max = 1
-            scrlData2.Max = 1
-            scrlData3.Max = 1
+            scrlData1.max = 1
+            scrlData2.max = 1
+            scrlData3.max = 1
             ' hide / unhide
             scrlData1.visible = False
             scrlData2.visible = False
@@ -327,9 +327,9 @@ Private Sub cmbEvent_Click()
 
         Case 1 ' Shop
             ' set max values
-            scrlData1.Max = MAX_SHOPS
-            scrlData2.Max = 1
-            scrlData3.Max = 1
+            scrlData1.max = MAX_SHOPS
+            scrlData2.max = 1
+            scrlData3.max = 1
             ' hide / unhide
             scrlData1.visible = True
             scrlData2.visible = False
@@ -342,9 +342,9 @@ Private Sub cmbEvent_Click()
 
         Case 3 ' Give Item
             ' set max values
-            scrlData1.Max = MAX_ITEMS
-            scrlData2.Max = 32000
-            scrlData3.Max = 1
+            scrlData1.max = MAX_ITEMS
+            scrlData2.max = 32000
+            scrlData3.max = 1
             ' hide / unhide
             scrlData1.visible = True
             scrlData2.visible = True
@@ -357,9 +357,9 @@ Private Sub cmbEvent_Click()
             lblData2.caption = "Amount: " & scrlData2.value
 
         Case 4 ' Unique
-            scrlData1.Max = 32000
-            scrlData2.Max = 32000
-            scrlData3.Max = 32000
+            scrlData1.max = 32000
+            scrlData2.max = 32000
+            scrlData3.max = 32000
             ' hide
             scrlData1.visible = True
             scrlData2.visible = True
@@ -387,7 +387,7 @@ Private Sub cmdDelete_Click()
     ClearConv EditorIndex
     tmpIndex = lstIndex.ListIndex
     lstIndex.RemoveItem EditorIndex - 1
-    lstIndex.AddItem EditorIndex & ": " & Conv(EditorIndex).name, EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Conv(EditorIndex).Name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
     ConvEditorInit
 End Sub
@@ -411,21 +411,21 @@ End Sub
 Private Sub scrlChatCount_Change()
     lblChatCount.caption = "Chat Count: " & scrlChatCount.value
     Conv(EditorIndex).chatCount = scrlChatCount.value
-    scrlConv.Max = scrlChatCount.value
+    scrlConv.max = scrlChatCount.value
     ReDim Preserve Conv(EditorIndex).Conv(1 To scrlChatCount.value) As ConvRec
 End Sub
 
 Private Sub scrlConv_Change()
-    Dim x As Long
+    Dim X As Long
     curConv = scrlConv.value
     fraConv.caption = "Conversation - " & curConv
 
     With Conv(EditorIndex).Conv(curConv)
         txtConv.text = .Conv
 
-        For x = 1 To 4
-            txtReply(x).text = .rText(x)
-            cmbReply(x).ListIndex = .rTarget(x)
+        For X = 1 To 4
+            txtReply(X).text = .rText(X)
+            cmbReply(X).ListIndex = .rTarget(X)
         Next
 
         cmbEvent.ListIndex = .Event
@@ -443,7 +443,7 @@ Private Sub scrlData1_Change()
         Case 1 ' shop
 
             If scrlData1.value > 0 Then
-                lblData1.caption = "Shop: " & Trim$(Shop(scrlData1.value).name)
+                lblData1.caption = "Shop: " & Trim$(Shop(scrlData1.value).Name)
             Else
                 lblData1.caption = "Shop: None"
             End If
@@ -451,7 +451,7 @@ Private Sub scrlData1_Change()
         Case 3 ' Give item
 
             If scrlData1.value > 0 Then
-                lblData1.caption = "Item: " & Trim$(Shop(scrlData1.value).name)
+                lblData1.caption = "Item: " & Trim$(Shop(scrlData1.value).Name)
             Else
                 lblData1.caption = "Item: None"
             End If
@@ -497,16 +497,16 @@ Private Sub txtName_Validate(Cancel As Boolean)
 
     If EditorIndex = 0 Or EditorIndex > MAX_CONVS Then Exit Sub
     tmpIndex = lstIndex.ListIndex
-    Conv(EditorIndex).name = Trim$(txtName.text)
+    Conv(EditorIndex).Name = Trim$(txtName.text)
     lstIndex.RemoveItem EditorIndex - 1
-    lstIndex.AddItem EditorIndex & ": " & Conv(EditorIndex).name, EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Conv(EditorIndex).Name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
 End Sub
 
-Private Sub txtReply_Change(index As Integer)
-    Conv(EditorIndex).Conv(curConv).rText(index) = txtReply(index).text
+Private Sub txtReply_Change(Index As Integer)
+    Conv(EditorIndex).Conv(curConv).rText(Index) = txtReply(Index).text
 End Sub
 
-Private Sub cmbReply_Click(index As Integer)
-    Conv(EditorIndex).Conv(curConv).rTarget(index) = cmbReply(index).ListIndex
+Private Sub cmbReply_Click(Index As Integer)
+    Conv(EditorIndex).Conv(curConv).rTarget(Index) = cmbReply(Index).ListIndex
 End Sub

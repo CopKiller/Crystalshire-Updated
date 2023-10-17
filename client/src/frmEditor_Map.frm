@@ -1280,14 +1280,14 @@ Private Sub optTrap_Click()
     fraTrap.visible = True
 End Sub
 
-Private Sub picBackSelect_MouseDown(Button As Integer, Shift As Integer, x As Single, y As Single)
-    Call MapEditorChooseTile(Button, x, y)
+Private Sub picBackSelect_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
+    Call MapEditorChooseTile(Button, X, Y)
 End Sub
  
-Private Sub picBackSelect_MouseMove(Button As Integer, Shift As Integer, x As Single, y As Single)
-    shpLocTop = (y \ PIC_Y) * PIC_Y
-    shpLocLeft = (x \ PIC_X) * PIC_X
-    Call MapEditorDrag(Button, x, y)
+Private Sub picBackSelect_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
+    shpLocTop = (Y \ PIC_Y) * PIC_Y
+    shpLocLeft = (X \ PIC_X) * PIC_X
+    Call MapEditorDrag(Button, X, Y)
 End Sub
 
 Private Sub cmdSend_Click()

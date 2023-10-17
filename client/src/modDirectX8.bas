@@ -119,10 +119,10 @@ Dim DispMode As D3DDISPLAYMODE, Width As Long, Height As Long
     GetResolutionSize curResolution, Width, Height
     ScreenWidth = Width
     ScreenHeight = Height
-    TileWidth = (Width / 32) - 1
-    TileHeight = (Height / 32) - 1
-    ScreenX = (TileWidth) * PIC_X
-    ScreenY = (TileHeight) * PIC_Y
+    TileWidth = (ScreenWidth / 32)
+    TileHeight = (ScreenHeight / 32)
+    ScreenX = (TileWidth + 1) * PIC_X
+    ScreenY = (TileHeight + 1) * PIC_Y
     
     ' set up window
     Call D3D.GetAdapterDisplayMode(D3DADAPTER_DEFAULT, DispMode)
@@ -970,41 +970,41 @@ Public Sub DrawMapFringeTile(ByVal x As Long, ByVal y As Long)
 End Sub
 
 Public Sub DrawHotbar()
-    Dim xO As Long, yO As Long, Width As Long, Height As Long, i As Long, t As Long, sS As String
+    Dim Xo As Long, Yo As Long, Width As Long, Height As Long, i As Long, t As Long, sS As String
     
-    xO = Windows(GetWindowIndex("winHotbar")).Window.Left
-    yO = Windows(GetWindowIndex("winHotbar")).Window.Top
+    Xo = Windows(GetWindowIndex("winHotbar")).Window.Left
+    Yo = Windows(GetWindowIndex("winHotbar")).Window.Top
     
     ' render start + end wood
-    RenderTexture Tex_GUI(31), xO - 1, yO + 3, 0, 0, 11, 26, 11, 26
-    RenderTexture Tex_GUI(31), xO + 407, yO + 3, 0, 0, 11, 26, 11, 26
+    RenderTexture Tex_GUI(31), Xo - 1, Yo + 3, 0, 0, 11, 26, 11, 26
+    RenderTexture Tex_GUI(31), Xo + 407, Yo + 3, 0, 0, 11, 26, 11, 26
     
     For i = 1 To MAX_HOTBAR
-        xO = Windows(GetWindowIndex("winHotbar")).Window.Left + HotbarLeft + ((i - 1) * HotbarOffsetX)
-        yO = Windows(GetWindowIndex("winHotbar")).Window.Top + HotbarTop
+        Xo = Windows(GetWindowIndex("winHotbar")).Window.Left + HotbarLeft + ((i - 1) * HotbarOffsetX)
+        Yo = Windows(GetWindowIndex("winHotbar")).Window.Top + HotbarTop
         Width = 36
         Height = 36
         ' don't render last one
         If i <> 10 Then
             ' render wood
-            RenderTexture Tex_GUI(32), xO + 30, yO + 3, 0, 0, 13, 26, 13, 26
+            RenderTexture Tex_GUI(32), Xo + 30, Yo + 3, 0, 0, 13, 26, 13, 26
         End If
         ' render box
-        RenderTexture Tex_GUI(30), xO - 2, yO - 2, 0, 0, Width, Height, Width, Height
+        RenderTexture Tex_GUI(30), Xo - 2, Yo - 2, 0, 0, Width, Height, Width, Height
         ' render icon
         If Not (DragBox.Origin = origin_Hotbar And DragBox.Slot = i) Then
             Select Case Hotbar(i).sType
                 Case 1 ' inventory
                     If Len(Item(Hotbar(i).Slot).Name) > 0 And Item(Hotbar(i).Slot).Pic > 0 Then
-                        RenderTexture Tex_Item(Item(Hotbar(i).Slot).Pic), xO, yO, 0, 0, 32, 32, 32, 32
+                        RenderTexture Tex_Item(Item(Hotbar(i).Slot).Pic), Xo, Yo, 0, 0, 32, 32, 32, 32
                     End If
                 Case 2 ' spell
                     If Len(Spell(Hotbar(i).Slot).Name) > 0 And Spell(Hotbar(i).Slot).icon > 0 Then
-                        RenderTexture Tex_Spellicon(Spell(Hotbar(i).Slot).icon), xO, yO, 0, 0, 32, 32, 32, 32
+                        RenderTexture Tex_Spellicon(Spell(Hotbar(i).Slot).icon), Xo, Yo, 0, 0, 32, 32, 32, 32
                         For t = 1 To MAX_PLAYER_SPELLS
                             If PlayerSpells(t).Spell > 0 Then
                                 If PlayerSpells(t).Spell = Hotbar(i).Slot And SpellCD(t) > 0 Then
-                                    RenderTexture Tex_Spellicon(Spell(Hotbar(i).Slot).icon), xO, yO, 0, 0, 32, 32, 32, 32, D3DColorARGB(255, 100, 100, 100)
+                                    RenderTexture Tex_Spellicon(Spell(Hotbar(i).Slot).icon), Xo, Yo, 0, 0, 32, 32, 32, 32, D3DColorARGB(255, 100, 100, 100)
                                 End If
                             End If
                         Next
@@ -1014,7 +1014,7 @@ Public Sub DrawHotbar()
         ' draw the numbers
         sS = Str(i)
         If i = 10 Then sS = "0"
-        RenderText font(Fonts.rockwellDec_15), sS, xO + 4, yO + 19, White
+        RenderText font(Fonts.rockwellDec_15), sS, Xo + 4, Yo + 19, White
     Next
 End Sub
 
@@ -1038,19 +1038,19 @@ Dim x As Long, y As Long, tileSet As Long, sX As Long, sY As Long, layernum As L
 End Sub
 
 Public Sub DrawCharacter()
-    Dim xO As Long, yO As Long, Width As Long, Height As Long, i As Long, sprite As Long, ItemNum As Long, ItemPic As Long
+    Dim Xo As Long, Yo As Long, Width As Long, Height As Long, i As Long, sprite As Long, ItemNum As Long, ItemPic As Long
     
-    xO = Windows(GetWindowIndex("winCharacter")).Window.Left
-    yO = Windows(GetWindowIndex("winCharacter")).Window.Top
+    Xo = Windows(GetWindowIndex("winCharacter")).Window.Left
+    Yo = Windows(GetWindowIndex("winCharacter")).Window.Top
     
     ' Render bottom
-    RenderTexture Tex_GUI(37), xO + 4, yO + 314, 0, 0, 40, 38, 40, 38
-    RenderTexture Tex_GUI(37), xO + 44, yO + 314, 0, 0, 40, 38, 40, 38
-    RenderTexture Tex_GUI(37), xO + 84, yO + 314, 0, 0, 40, 38, 40, 38
-    RenderTexture Tex_GUI(37), xO + 124, yO + 314, 0, 0, 46, 38, 46, 38
+    RenderTexture Tex_GUI(37), Xo + 4, Yo + 314, 0, 0, 40, 38, 40, 38
+    RenderTexture Tex_GUI(37), Xo + 44, Yo + 314, 0, 0, 40, 38, 40, 38
+    RenderTexture Tex_GUI(37), Xo + 84, Yo + 314, 0, 0, 40, 38, 40, 38
+    RenderTexture Tex_GUI(37), Xo + 124, Yo + 314, 0, 0, 46, 38, 46, 38
     
     ' render top wood
-    RenderTexture Tex_GUI(1), xO + 4, yO + 23, 100, 100, 166, 291, 166, 291
+    RenderTexture Tex_GUI(1), Xo + 4, Yo + 23, 100, 100, 166, 291, 166, 291
     
     ' loop through equipment
     For i = 1 To Equipment.Equipment_Count - 1
@@ -1064,35 +1064,35 @@ Public Sub DrawCharacter()
             ItemPic = Tex_GUI(37 + i)
         End If
         
-        yO = Windows(GetWindowIndex("winCharacter")).Window.Top + EqTop
-        xO = Windows(GetWindowIndex("winCharacter")).Window.Left + EqLeft + ((EqOffsetX + 32) * (((i - 1) Mod EqColumns)))
+        Yo = Windows(GetWindowIndex("winCharacter")).Window.Top + EqTop
+        Xo = Windows(GetWindowIndex("winCharacter")).Window.Left + EqLeft + ((EqOffsetX + 32) * (((i - 1) Mod EqColumns)))
 
-        RenderTexture ItemPic, xO, yO, 0, 0, 32, 32, 32, 32
+        RenderTexture ItemPic, Xo, Yo, 0, 0, 32, 32, 32, 32
     Next
 End Sub
 
 Public Sub DrawSkills()
-    Dim xO As Long, yO As Long, Width As Long, Height As Long, i As Long, y As Long, spellnum As Long, spellPic As Long, x As Long, Top As Long, Left As Long
+    Dim Xo As Long, Yo As Long, Width As Long, Height As Long, i As Long, y As Long, spellnum As Long, spellPic As Long, x As Long, Top As Long, Left As Long
     
-    xO = Windows(GetWindowIndex("winSkills")).Window.Left
-    yO = Windows(GetWindowIndex("winSkills")).Window.Top
+    Xo = Windows(GetWindowIndex("winSkills")).Window.Left
+    Yo = Windows(GetWindowIndex("winSkills")).Window.Top
     
     Width = Windows(GetWindowIndex("winSkills")).Window.Width
     Height = Windows(GetWindowIndex("winSkills")).Window.Height
     
     ' render green
-    RenderTexture Tex_GUI(34), xO + 4, yO + 23, 0, 0, Width - 8, Height - 27, 4, 4
+    RenderTexture Tex_GUI(34), Xo + 4, Yo + 23, 0, 0, Width - 8, Height - 27, 4, 4
     
     Width = 76
     Height = 76
     
-    y = yO + 23
+    y = Yo + 23
     ' render grid - row
     For i = 1 To 4
         If i = 4 Then Height = 42
-        RenderTexture Tex_GUI(35), xO + 4, y, 0, 0, Width, Height, Width, Height
-        RenderTexture Tex_GUI(35), xO + 80, y, 0, 0, Width, Height, Width, Height
-        RenderTexture Tex_GUI(35), xO + 156, y, 0, 0, 42, Height, 42, Height
+        RenderTexture Tex_GUI(35), Xo + 4, y, 0, 0, Width, Height, Width, Height
+        RenderTexture Tex_GUI(35), Xo + 80, y, 0, 0, Width, Height, Width, Height
+        RenderTexture Tex_GUI(35), Xo + 156, y, 0, 0, 42, Height, 42, Height
         y = y + 76
     Next
     
@@ -1105,8 +1105,8 @@ Public Sub DrawSkills()
                 spellPic = Spell(spellnum).icon
     
                 If spellPic > 0 And spellPic <= Count_Spellicon Then
-                    Top = yO + InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
-                    Left = xO + InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
+                    Top = Yo + InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
+                    Left = Xo + InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
     
                     RenderTexture Tex_Spellicon(spellPic), Left, Top, 0, 0, 32, 32, 32, 32
                 End If
@@ -1133,40 +1133,40 @@ Dim zonetype As String, Colour As Long
 End Sub
 
 Public Sub DrawShopBackground()
-    Dim xO As Long, yO As Long, Width As Long, Height As Long, i As Long, y As Long
+    Dim Xo As Long, Yo As Long, Width As Long, Height As Long, i As Long, y As Long
     
-    xO = Windows(GetWindowIndex("winShop")).Window.Left
-    yO = Windows(GetWindowIndex("winShop")).Window.Top
+    Xo = Windows(GetWindowIndex("winShop")).Window.Left
+    Yo = Windows(GetWindowIndex("winShop")).Window.Top
     Width = Windows(GetWindowIndex("winShop")).Window.Width
     Height = Windows(GetWindowIndex("winShop")).Window.Height
     
     ' render green
-    RenderTexture Tex_GUI(34), xO + 4, yO + 23, 0, 0, Width - 8, Height - 27, 4, 4
+    RenderTexture Tex_GUI(34), Xo + 4, Yo + 23, 0, 0, Width - 8, Height - 27, 4, 4
     
     Width = 76
     Height = 76
     
-    y = yO + 23
+    y = Yo + 23
     ' render grid - row
     For i = 1 To 3
         If i = 3 Then Height = 42
-        RenderTexture Tex_GUI(35), xO + 4, y, 0, 0, Width, Height, Width, Height
-        RenderTexture Tex_GUI(35), xO + 80, y, 0, 0, Width, Height, Width, Height
-        RenderTexture Tex_GUI(35), xO + 156, y, 0, 0, Width, Height, Width, Height
-        RenderTexture Tex_GUI(35), xO + 232, y, 0, 0, 42, Height, 42, Height
+        RenderTexture Tex_GUI(35), Xo + 4, y, 0, 0, Width, Height, Width, Height
+        RenderTexture Tex_GUI(35), Xo + 80, y, 0, 0, Width, Height, Width, Height
+        RenderTexture Tex_GUI(35), Xo + 156, y, 0, 0, Width, Height, Width, Height
+        RenderTexture Tex_GUI(35), Xo + 232, y, 0, 0, 42, Height, 42, Height
         y = y + 76
     Next
     ' render bottom wood
-    RenderTexture Tex_GUI(1), xO + 4, y - 34, 0, 0, 270, 72, 270, 72
+    RenderTexture Tex_GUI(1), Xo + 4, y - 34, 0, 0, 270, 72, 270, 72
 End Sub
 
 Public Sub DrawShop()
-Dim xO As Long, yO As Long, ItemPic As Long, ItemNum As Long, Amount As Long, i As Long, Top As Long, Left As Long, y As Long, x As Long, Colour As Long
+Dim Xo As Long, Yo As Long, ItemPic As Long, ItemNum As Long, Amount As Long, i As Long, Top As Long, Left As Long, y As Long, x As Long, Colour As Long
 
     If InShop = 0 Then Exit Sub
     
-    xO = Windows(GetWindowIndex("winShop")).Window.Left
-    yO = Windows(GetWindowIndex("winShop")).Window.Top
+    Xo = Windows(GetWindowIndex("winShop")).Window.Left
+    Yo = Windows(GetWindowIndex("winShop")).Window.Top
     
     If Not shopIsSelling Then
         ' render the shop items
@@ -1174,8 +1174,8 @@ Dim xO As Long, yO As Long, ItemPic As Long, ItemNum As Long, Amount As Long, i 
             ItemNum = Shop(InShop).TradeItem(i).Item
             
             ' draw early
-            Top = yO + ShopTop + ((ShopOffsetY + 32) * ((i - 1) \ ShopColumns))
-            Left = xO + ShopLeft + ((ShopOffsetX + 32) * (((i - 1) Mod ShopColumns)))
+            Top = Yo + ShopTop + ((ShopOffsetY + 32) * ((i - 1) \ ShopColumns))
+            Left = Xo + ShopLeft + ((ShopOffsetX + 32) * (((i - 1) Mod ShopColumns)))
             ' draw selected square
             If shopSelectedSlot = i Then RenderTexture Tex_GUI(61), Left, Top, 0, 0, 32, 32, 32, 32
             
@@ -1193,8 +1193,8 @@ Dim xO As Long, yO As Long, ItemPic As Long, ItemNum As Long, Amount As Long, i 
             ItemNum = GetPlayerInvItemNum(MyIndex, i)
             
             ' draw early
-            Top = yO + ShopTop + ((ShopOffsetY + 32) * ((i - 1) \ ShopColumns))
-            Left = xO + ShopLeft + ((ShopOffsetX + 32) * (((i - 1) Mod ShopColumns)))
+            Top = Yo + ShopTop + ((ShopOffsetY + 32) * ((i - 1) \ ShopColumns))
+            Left = Xo + ShopLeft + ((ShopOffsetX + 32) * (((i - 1) Mod ShopColumns)))
             ' draw selected square
             If shopSelectedSlot = i Then RenderTexture Tex_GUI(61), Left, Top, 0, 0, 32, 32, 32, 32
             
@@ -1229,58 +1229,58 @@ Dim xO As Long, yO As Long, ItemPic As Long, ItemNum As Long, Amount As Long, i 
 End Sub
 
 Sub DrawTrade()
-    Dim xO As Long, yO As Long, Width As Long, Height As Long, i As Long, y As Long, x As Long
+    Dim Xo As Long, Yo As Long, Width As Long, Height As Long, i As Long, y As Long, x As Long
     
-    xO = Windows(GetWindowIndex("winTrade")).Window.Left
-    yO = Windows(GetWindowIndex("winTrade")).Window.Top
+    Xo = Windows(GetWindowIndex("winTrade")).Window.Left
+    Yo = Windows(GetWindowIndex("winTrade")).Window.Top
     Width = Windows(GetWindowIndex("winTrade")).Window.Width
     Height = Windows(GetWindowIndex("winTrade")).Window.Height
     
     ' render green
-    RenderTexture Tex_GUI(34), xO + 4, yO + 23, 0, 0, Width - 8, Height - 27, 4, 4
+    RenderTexture Tex_GUI(34), Xo + 4, Yo + 23, 0, 0, Width - 8, Height - 27, 4, 4
     
     ' top wood
-    RenderTexture Tex_GUI(1), xO + 4, yO + 23, 100, 100, Width - 8, 18, Width - 8, 18
+    RenderTexture Tex_GUI(1), Xo + 4, Yo + 23, 100, 100, Width - 8, 18, Width - 8, 18
     ' left wood
-    RenderTexture Tex_GUI(1), xO + 4, yO + 41, 350, 0, 5, Height - 45, 5, Height - 45
+    RenderTexture Tex_GUI(1), Xo + 4, Yo + 41, 350, 0, 5, Height - 45, 5, Height - 45
     ' right wood
-    RenderTexture Tex_GUI(1), xO + Width - 9, yO + 41, 350, 0, 5, Height - 45, 5, Height - 45
+    RenderTexture Tex_GUI(1), Xo + Width - 9, Yo + 41, 350, 0, 5, Height - 45, 5, Height - 45
     ' centre wood
-    RenderTexture Tex_GUI(1), xO + 203, yO + 41, 350, 0, 6, Height - 45, 6, Height - 45
+    RenderTexture Tex_GUI(1), Xo + 203, Yo + 41, 350, 0, 6, Height - 45, 6, Height - 45
     ' bottom wood
-    RenderTexture Tex_GUI(1), xO + 4, yO + 307, 100, 100, Width - 8, 75, Width - 8, 75
+    RenderTexture Tex_GUI(1), Xo + 4, Yo + 307, 100, 100, Width - 8, 75, Width - 8, 75
     
     ' left
     Width = 76
     Height = 76
-    y = yO + 41
+    y = Yo + 41
     For i = 1 To 4
         If i = 4 Then Height = 38
-        RenderTexture Tex_GUI(35), xO + 4 + 5, y, 0, 0, Width, Height, Width, Height
-        RenderTexture Tex_GUI(35), xO + 80 + 5, y, 0, 0, Width, Height, Width, Height
-        RenderTexture Tex_GUI(35), xO + 156 + 5, y, 0, 0, 42, Height, 42, Height
+        RenderTexture Tex_GUI(35), Xo + 4 + 5, y, 0, 0, Width, Height, Width, Height
+        RenderTexture Tex_GUI(35), Xo + 80 + 5, y, 0, 0, Width, Height, Width, Height
+        RenderTexture Tex_GUI(35), Xo + 156 + 5, y, 0, 0, 42, Height, 42, Height
         y = y + 76
     Next
     
     ' right
     Width = 76
     Height = 76
-    y = yO + 41
+    y = Yo + 41
     For i = 1 To 4
         If i = 4 Then Height = 38
-        RenderTexture Tex_GUI(35), xO + 4 + 205, y, 0, 0, Width, Height, Width, Height
-        RenderTexture Tex_GUI(35), xO + 80 + 205, y, 0, 0, Width, Height, Width, Height
-        RenderTexture Tex_GUI(35), xO + 156 + 205, y, 0, 0, 42, Height, 42, Height
+        RenderTexture Tex_GUI(35), Xo + 4 + 205, y, 0, 0, Width, Height, Width, Height
+        RenderTexture Tex_GUI(35), Xo + 80 + 205, y, 0, 0, Width, Height, Width, Height
+        RenderTexture Tex_GUI(35), Xo + 156 + 205, y, 0, 0, 42, Height, 42, Height
         y = y + 76
     Next
 End Sub
 
 Sub DrawYourTrade()
 Dim i As Long, ItemNum As Long, ItemPic As Long, Top As Long, Left As Long, Colour As Long, Amount As String, x As Long, y As Long
-Dim xO As Long, yO As Long
+Dim Xo As Long, Yo As Long
 
-    xO = Windows(GetWindowIndex("winTrade")).Window.Left + Windows(GetWindowIndex("winTrade")).Controls(GetControlIndex("winTrade", "picYour")).Left
-    yO = Windows(GetWindowIndex("winTrade")).Window.Top + Windows(GetWindowIndex("winTrade")).Controls(GetControlIndex("winTrade", "picYour")).Top
+    Xo = Windows(GetWindowIndex("winTrade")).Window.Left + Windows(GetWindowIndex("winTrade")).Controls(GetControlIndex("winTrade", "picYour")).Left
+    Yo = Windows(GetWindowIndex("winTrade")).Window.Top + Windows(GetWindowIndex("winTrade")).Controls(GetControlIndex("winTrade", "picYour")).Top
     
     ' your items
     For i = 1 To MAX_INV
@@ -1288,8 +1288,8 @@ Dim xO As Long, yO As Long
         If ItemNum > 0 And ItemNum <= MAX_ITEMS Then
             ItemPic = Item(ItemNum).Pic
             If ItemPic > 0 And ItemPic <= Count_Item Then
-                Top = yO + TradeTop + ((TradeOffsetY + 32) * ((i - 1) \ TradeColumns))
-                Left = xO + TradeLeft + ((TradeOffsetX + 32) * (((i - 1) Mod TradeColumns)))
+                Top = Yo + TradeTop + ((TradeOffsetY + 32) * ((i - 1) \ TradeColumns))
+                Left = Xo + TradeLeft + ((TradeOffsetX + 32) * (((i - 1) Mod TradeColumns)))
 
                 ' draw icon
                 RenderTexture Tex_Item(ItemPic), Left, Top, 0, 0, 32, 32, 32, 32
@@ -1318,10 +1318,10 @@ End Sub
 
 Sub DrawTheirTrade()
 Dim i As Long, ItemNum As Long, ItemPic As Long, Top As Long, Left As Long, Colour As Long, Amount As String, x As Long, y As Long
-Dim xO As Long, yO As Long
+Dim Xo As Long, Yo As Long
 
-    xO = Windows(GetWindowIndex("winTrade")).Window.Left + Windows(GetWindowIndex("winTrade")).Controls(GetControlIndex("winTrade", "picTheir")).Left
-    yO = Windows(GetWindowIndex("winTrade")).Window.Top + Windows(GetWindowIndex("winTrade")).Controls(GetControlIndex("winTrade", "picTheir")).Top
+    Xo = Windows(GetWindowIndex("winTrade")).Window.Left + Windows(GetWindowIndex("winTrade")).Controls(GetControlIndex("winTrade", "picTheir")).Left
+    Yo = Windows(GetWindowIndex("winTrade")).Window.Top + Windows(GetWindowIndex("winTrade")).Controls(GetControlIndex("winTrade", "picTheir")).Top
 
     ' their items
     For i = 1 To MAX_INV
@@ -1329,8 +1329,8 @@ Dim xO As Long, yO As Long
         If ItemNum > 0 And ItemNum <= MAX_ITEMS Then
             ItemPic = Item(ItemNum).Pic
             If ItemPic > 0 And ItemPic <= Count_Item Then
-                Top = yO + TradeTop + ((TradeOffsetY + 32) * ((i - 1) \ TradeColumns))
-                Left = xO + TradeLeft + ((TradeOffsetX + 32) * (((i - 1) Mod TradeColumns)))
+                Top = Yo + TradeTop + ((TradeOffsetY + 32) * ((i - 1) \ TradeColumns))
+                Left = Xo + TradeLeft + ((TradeOffsetX + 32) * (((i - 1) Mod TradeColumns)))
 
                 ' draw icon
                 RenderTexture Tex_Item(ItemPic), Left, Top, 0, 0, 32, 32, 32, 32
@@ -1358,32 +1358,32 @@ Dim xO As Long, yO As Long
 End Sub
 
 Public Sub DrawBank()
-    Dim x As Long, y As Long, xO As Long, yO As Long, Width As Long, Height As Long
+    Dim x As Long, y As Long, Xo As Long, Yo As Long, Width As Long, Height As Long
     Dim i As Long, ItemNum As Long, ItemPic As Long
 
     Dim Left As Long, Top As Long
     Dim Colour As Long, skipItem As Boolean, Amount As Long, tmpItem As Long
 
-    xO = Windows(GetWindowIndex("winBank")).Window.Left
-    yO = Windows(GetWindowIndex("winBank")).Window.Top
+    Xo = Windows(GetWindowIndex("winBank")).Window.Left
+    Yo = Windows(GetWindowIndex("winBank")).Window.Top
     Width = Windows(GetWindowIndex("winBank")).Window.Width
     Height = Windows(GetWindowIndex("winBank")).Window.Height
     
     ' render green
-    RenderTexture Tex_GUI(34), xO + 4, yO + 23, 0, 0, Width - 8, Height - 27, 4, 4
+    RenderTexture Tex_GUI(34), Xo + 4, Yo + 23, 0, 0, Width - 8, Height - 27, 4, 4
 
     Width = 76
     Height = 76
 
-    y = yO + 23
+    y = Yo + 23
     ' render grid - row
     For i = 1 To 5
         If i = 5 Then Height = 42
-        RenderTexture Tex_GUI(35), xO + 4, y, 0, 0, Width, Height, Width, Height
-        RenderTexture Tex_GUI(35), xO + 80, y, 0, 0, Width, Height, Width, Height
-        RenderTexture Tex_GUI(35), xO + 156, y, 0, 0, Width, Height, Width, Height
-        RenderTexture Tex_GUI(35), xO + 232, y, 0, 0, Width, Height, Width, Height
-        RenderTexture Tex_GUI(35), xO + 308, y, 0, 0, 79, Height, 79, Height
+        RenderTexture Tex_GUI(35), Xo + 4, y, 0, 0, Width, Height, Width, Height
+        RenderTexture Tex_GUI(35), Xo + 80, y, 0, 0, Width, Height, Width, Height
+        RenderTexture Tex_GUI(35), Xo + 156, y, 0, 0, Width, Height, Width, Height
+        RenderTexture Tex_GUI(35), Xo + 232, y, 0, 0, Width, Height, Width, Height
+        RenderTexture Tex_GUI(35), Xo + 308, y, 0, 0, 79, Height, 79, Height
         y = y + 76
     Next
 
@@ -1398,8 +1398,8 @@ Public Sub DrawBank()
 
 
                 If ItemPic > 0 And ItemPic <= Count_Item Then
-                    Top = yO + BankTop + ((BankOffsetY + 32) * ((i - 1) \ BankColumns))
-                    Left = xO + BankLeft + ((BankOffsetX + 32) * (((i - 1) Mod BankColumns)))
+                    Top = Yo + BankTop + ((BankOffsetY + 32) * ((i - 1) \ BankColumns))
+                    Left = Xo + BankLeft + ((BankOffsetX + 32) * (((i - 1) Mod BankColumns)))
 
                     ' draw icon
                     RenderTexture Tex_Item(ItemPic), Left, Top, 0, 0, 32, 32, 32, 32
@@ -1429,31 +1429,31 @@ Public Sub DrawBank()
 End Sub
 
 Public Sub DrawInventory()
-    Dim xO As Long, yO As Long, Width As Long, Height As Long, i As Long, y As Long, ItemNum As Long, ItemPic As Long, x As Long, Top As Long, Left As Long, Amount As String
+    Dim Xo As Long, Yo As Long, Width As Long, Height As Long, i As Long, y As Long, ItemNum As Long, ItemPic As Long, x As Long, Top As Long, Left As Long, Amount As String
     Dim Colour As Long, skipItem As Boolean, amountModifier  As Long, tmpItem As Long
     
-    xO = Windows(GetWindowIndex("winInventory")).Window.Left
-    yO = Windows(GetWindowIndex("winInventory")).Window.Top
+    Xo = Windows(GetWindowIndex("winInventory")).Window.Left
+    Yo = Windows(GetWindowIndex("winInventory")).Window.Top
     Width = Windows(GetWindowIndex("winInventory")).Window.Width
     Height = Windows(GetWindowIndex("winInventory")).Window.Height
     
     ' render green
-    RenderTexture Tex_GUI(34), xO + 4, yO + 23, 0, 0, Width - 8, Height - 27, 4, 4
+    RenderTexture Tex_GUI(34), Xo + 4, Yo + 23, 0, 0, Width - 8, Height - 27, 4, 4
     
     Width = 76
     Height = 76
     
-    y = yO + 23
+    y = Yo + 23
     ' render grid - row
     For i = 1 To 4
         If i = 4 Then Height = 38
-        RenderTexture Tex_GUI(35), xO + 4, y, 0, 0, Width, Height, Width, Height
-        RenderTexture Tex_GUI(35), xO + 80, y, 0, 0, Width, Height, Width, Height
-        RenderTexture Tex_GUI(35), xO + 156, y, 0, 0, 42, Height, 42, Height
+        RenderTexture Tex_GUI(35), Xo + 4, y, 0, 0, Width, Height, Width, Height
+        RenderTexture Tex_GUI(35), Xo + 80, y, 0, 0, Width, Height, Width, Height
+        RenderTexture Tex_GUI(35), Xo + 156, y, 0, 0, 42, Height, 42, Height
         y = y + 76
     Next
     ' render bottom wood
-    RenderTexture Tex_GUI(1), xO + 4, yO + 289, 100, 100, 194, 26, 194, 26
+    RenderTexture Tex_GUI(1), Xo + 4, Yo + 289, 100, 100, 194, 26, 194, 26
     
     ' actually draw the icons
     For i = 1 To MAX_INV
@@ -1488,8 +1488,8 @@ Public Sub DrawInventory()
                 
                 If Not skipItem Then
                     If ItemPic > 0 And ItemPic <= Count_Item Then
-                        Top = yO + InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
-                        Left = xO + InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
+                        Top = Yo + InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
+                        Left = Xo + InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
         
                         ' draw icon
                         RenderTexture Tex_Item(ItemPic), Left, Top, 0, 0, 32, 32, 32, 32

@@ -35,7 +35,7 @@ Private Type MissionRec
     ' Mission Type Talk
     TalkNPC As Long
     ' Next Mission
-    PreviousQuestComplete As Long
+    PreviousMissionComplete As Long
     ' Message
     Incomplete As String * DESC_LENGTH
     Completed As String * DESC_LENGTH

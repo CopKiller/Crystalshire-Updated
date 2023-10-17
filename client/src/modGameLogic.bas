@@ -1770,16 +1770,15 @@ Public Function ConvertMapY(ByVal y As Long) As Long
 End Function
 
 Public Sub UpdateCamera()
-    Dim offsetX As Long, offsetY As Long
-    Dim StartX As Long, StartY As Long
-    Dim EndX As Long, EndY As Long
+    Dim offsetX As Long, StartX As Long, EndX As Long
+    Dim offsetY As Long, StartY As Long, EndY As Long
     
     If MyIndex = 0 Then Exit Sub
     
     offsetX = Player(MyIndex).xOffset + PIC_X
     offsetY = Player(MyIndex).yOffset + PIC_Y
-    StartX = GetPlayerX(MyIndex) - ((TileWidth + 1) \ 2) - 1
-    StartY = GetPlayerY(MyIndex) - ((TileHeight + 1) \ 2) - 1
+    StartX = Player(MyIndex).x - (((TileWidth + 1) \ 2) - 1)
+    StartY = GetPlayerY(MyIndex) - (((TileHeight + 1) \ 2) - 1)
 
     If StartX < 0 Then
         offsetX = 0
@@ -1842,11 +1841,11 @@ Public Sub UpdateCamera()
                 StartX = EndX - TileWidth - 1
             End If
         Else
-            StartX = EndX - TileWidth - 1
+            StartX = EndX - TileWidth
         End If
     End If
     
-    If EndY - 1 >= Map.MapData.MaxY Then
+    If EndY - 1 > Map.MapData.MaxY Then
         offsetY = 32
         EndY = Map.MapData.MaxY
         
@@ -1863,7 +1862,7 @@ Public Sub UpdateCamera()
                 StartY = EndY - TileHeight - 1
             End If
         Else
-            StartY = EndY - TileHeight - 1
+            StartY = EndY - TileHeight
         End If
     End If
     
@@ -1872,7 +1871,7 @@ Public Sub UpdateCamera()
             StartX = StartX + ((TileWidth - EndX) / 2)
         End If
     End If
-    
+
     If TileHeight > Map.MapData.MaxY Then
         If EndY + 1 < TileHeight Then
             StartY = StartY + ((TileHeight - EndY) / 2)
@@ -1882,7 +1881,7 @@ Public Sub UpdateCamera()
     If TileWidth = Map.MapData.MaxX Then
         offsetX = 0
     End If
-    
+
     If TileHeight = Map.MapData.MaxY Then
         offsetY = 0
     End If
@@ -1893,6 +1892,9 @@ Public Sub UpdateCamera()
         .Left = StartX
         .Right = EndX
     End With
+    
+    Debug.Print StartX
+    Debug.Print EndX
     
     With Camera
         .Top = offsetY
@@ -3939,16 +3941,6 @@ Dim Top As Long
     ' move menu
     Windows(GetWindowIndex("winMenu")).Window.Left = ScreenWidth - 236
     Windows(GetWindowIndex("winMenu")).Window.Top = ScreenHeight - 37
-    ' move invitations
-    Windows(GetWindowIndex("winInvite_Party")).Window.Left = ScreenWidth - 234
-    Windows(GetWindowIndex("winInvite_Party")).Window.Top = ScreenHeight - 80
-    ' loop through
-    Top = ScreenHeight - 80
-    If Windows(GetWindowIndex("winInvite_Party")).Window.visible Then
-        Top = Top - 37
-    End If
-    Windows(GetWindowIndex("winInvite_Trade")).Window.Left = ScreenWidth - 234
-    Windows(GetWindowIndex("winInvite_Trade")).Window.Top = Top
     ' re-size right-click background
     Windows(GetWindowIndex("winRightClickBG")).Window.Width = ScreenWidth
     Windows(GetWindowIndex("winRightClickBG")).Window.Height = ScreenHeight
@@ -3983,10 +3975,10 @@ Dim Width As Long, Height As Long
     Resize Width, Height
     ScreenWidth = Width
     ScreenHeight = Height
-    TileWidth = (Width / 32) - 1
-    TileHeight = (Height / 32) - 1
-    ScreenX = (TileWidth) * PIC_X
-    ScreenY = (TileHeight) * PIC_Y
+    TileWidth = (ScreenWidth / 32)
+    TileHeight = (ScreenHeight / 32)
+    ScreenX = (TileWidth + 1) * PIC_X
+    ScreenY = (TileHeight + 1) * PIC_Y
     ResetGFX
     ResizeGUI
 End Sub

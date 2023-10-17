@@ -2,15 +2,15 @@ Attribute VB_Name = "Quest_Database"
 ' **********
 ' ** Missions **
 ' **********
-Public Sub SaveMission(ByVal N As Long)
+Public Sub SaveMission(ByVal n As Long)
     Dim filename As String
     Dim i As Long, x As Long, f As Long
 
-    filename = App.Path & "\data\missions\Mission" & N & ".dat"
+    filename = App.Path & "\data\missions\Mission" & n & ".dat"
     f = FreeFile
 
     Open filename For Binary As #f
-    With Mission(N)
+    With Mission(n)
         Put #f, , .Name
         Put #f, , .Type
         Put #f, , .Repeatable
@@ -24,7 +24,7 @@ Public Sub SaveMission(ByVal N As Long)
         
         Put #f, , .TalkNPC
         
-        Put #f, , .PreviousQuestComplete
+        Put #f, , .PreviousMissionComplete
         
         Put #f, , .Incomplete
         Put #f, , .Completed

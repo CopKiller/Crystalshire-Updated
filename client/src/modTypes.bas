@@ -73,8 +73,8 @@ Private Type BankRec
 End Type
 
 Private Type PlayerMission
-    ID As Long
-    Count As Long
+    id As Long
+    count As Long
 End Type
 
 Private Type PlayerRec
@@ -96,8 +96,8 @@ Private Type PlayerRec
     Equipment(1 To Equipment.Equipment_Count - 1) As Long
     ' Position
     Map As Long
-    x As Byte
-    y As Byte
+    X As Byte
+    Y As Byte
     Dir As Byte
     ' Variables
     Variable(1 To MAX_BYTE) As Long
@@ -123,8 +123,8 @@ Private Type EventCommandRec
     Channel As Byte
     TargetType As Byte
     target As Long
-    x As Long
-    y As Long
+    X As Long
+    Y As Long
 End Type
 
 Public Type EventPageRec
@@ -161,8 +161,8 @@ End Type
 
 Public Type EventRec
     Name As String
-    x As Long
-    y As Long
+    X As Long
+    Y As Long
     pageCount As Long
     EventPage() As EventPageRec
 End Type
@@ -202,8 +202,8 @@ Private Type MapDataRec
 End Type
 
 Private Type TileDataRec
-    x As Long
-    y As Long
+    X As Long
+    Y As Long
     tileSet As Long
 End Type
 
@@ -283,8 +283,8 @@ Private Type MapItemRec
     num As Long
     value As Long
     Frame As Byte
-    x As Byte
-    y As Byte
+    X As Byte
+    Y As Byte
     bound As Boolean
 End Type
 
@@ -294,8 +294,8 @@ Private Type MapNpcRec
     TargetType As Byte
     Vital(1 To Vitals.Vital_Count - 1) As Long
     Map As Long
-    x As Byte
-    y As Byte
+    X As Byte
+    Y As Byte
     Dir As Byte
     ' Client use only
     xOffset As Long
@@ -322,8 +322,8 @@ Private Type TempTileRec
 End Type
 
 Public Type MapResourceRec
-    x As Long
-    y As Long
+    X As Long
+    Y As Long
     ResourceState As Byte
 End Type
 
@@ -334,8 +334,8 @@ Private Type ActionMsgRec
     Type As Long
     Color As Long
     Scroll As Long
-    x As Long
-    y As Long
+    X As Long
+    Y As Long
     timer As Long
     alpha As Long
 End Type
@@ -343,8 +343,8 @@ End Type
 Private Type BloodRec
     sprite As Long
     timer As Long
-    x As Long
-    y As Long
+    X As Long
+    Y As Long
 End Type
 
 Public Type HotbarRec
@@ -353,8 +353,8 @@ Public Type HotbarRec
 End Type
 
 Public Type PointRec
-    x As Long
-    y As Long
+    X As Long
+    Y As Long
 End Type
 
 Public Type QuarterTileRec
@@ -407,16 +407,16 @@ End Type
 
 Public Type WeatherParticleRec
     Type As Long
-    x As Long
-    y As Long
+    X As Long
+    Y As Long
     Velocity As Long
     InUse As Long
 End Type
 
 Public Type ParticulaRec
     Type As Long
-    x As Long
-    y As Long
+    X As Long
+    Y As Long
     Movimento As Long
     InUse As Long
     Dir As Byte
@@ -430,8 +430,8 @@ Public Type ParticulaRec
 End Type
 
 Public Type MapSoundRec
-    x As Long
-    y As Long
+    X As Long
+    Y As Long
     SoundHandle As Long
     InUse As Boolean
     Channel As Long
