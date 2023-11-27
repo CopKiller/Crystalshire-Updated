@@ -31,6 +31,7 @@ Public Const MAX_LINES As Long = 500 ' Used for frmServer.txtText
 ' ********************************************************
 ' General constants
 Public Const MAX_PLAYERS As Long = 200
+Public Const MAX_PLAYER_MISSIONS As Long = 12
 Public Const MAX_ITEMS As Long = 255
 Public Const MAX_NPCS As Long = 255
 Public Const MAX_ANIMATIONS As Long = 255
@@ -137,12 +138,14 @@ Public Const ITEM_TYPE_WEAPON As Byte = 1
 Public Const ITEM_TYPE_ARMOR As Byte = 2
 Public Const ITEM_TYPE_HELMET As Byte = 3
 Public Const ITEM_TYPE_SHIELD As Byte = 4
-Public Const ITEM_TYPE_CONSUME As Byte = 5
-Public Const ITEM_TYPE_KEY As Byte = 6
-Public Const ITEM_TYPE_CURRENCY As Byte = 7
-Public Const ITEM_TYPE_SPELL As Byte = 8
-Public Const ITEM_TYPE_UNIQUE As Byte = 9
-Public Const ITEM_TYPE_FOOD As Byte = 10
+Public Const ITEM_TYPE_PANTS As Byte = 5
+Public Const ITEM_TYPE_FEET As Byte = 6
+Public Const ITEM_TYPE_CONSUME As Byte = 7
+Public Const ITEM_TYPE_KEY As Byte = 8
+Public Const ITEM_TYPE_CURRENCY As Byte = 9
+Public Const ITEM_TYPE_SPELL As Byte = 10
+Public Const ITEM_TYPE_UNIQUE As Byte = 11
+Public Const ITEM_TYPE_FOOD As Byte = 12
 
 ' Direction constants
 Public Const DIR_UP As Byte = 0

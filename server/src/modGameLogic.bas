@@ -158,7 +158,7 @@ End Function
 
 Public Sub SpawnNpc(ByVal mapNpcNum As Long, ByVal mapnum As Long)
     Dim Buffer As clsBuffer
-    Dim npcNum As Long
+    Dim NpcNum As Long
     Dim i As Long
     Dim x As Long
     Dim y As Long
@@ -166,16 +166,16 @@ Public Sub SpawnNpc(ByVal mapNpcNum As Long, ByVal mapnum As Long)
 
     ' Check for subscript out of range
     If mapNpcNum <= 0 Or mapNpcNum > MAX_MAP_NPCS Or mapnum <= 0 Or mapnum > MAX_MAPS Then Exit Sub
-    npcNum = Map(mapnum).MapData.Npc(mapNpcNum)
+    NpcNum = Map(mapnum).MapData.Npc(mapNpcNum)
 
-    If npcNum > 0 Then
+    If NpcNum > 0 Then
     
         With MapNpc(mapnum).Npc(mapNpcNum)
-            .Num = npcNum
+            .Num = NpcNum
             .target = 0
             .targetType = 0 ' clear
-            .Vital(Vitals.HP) = GetNpcMaxVital(npcNum, Vitals.HP)
-            .Vital(Vitals.MP) = GetNpcMaxVital(npcNum, Vitals.MP)
+            .Vital(Vitals.HP) = GetNpcMaxVital(NpcNum, Vitals.HP)
+            .Vital(Vitals.MP) = GetNpcMaxVital(NpcNum, Vitals.MP)
             .Dir = Int(Rnd * 4)
             .spellBuffer.Spell = 0
             .spellBuffer.Timer = 0
@@ -474,6 +474,164 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
                 ' Check to make sure that there is not another npc in the way
                 For i = 1 To MAX_MAP_NPCS
                     If (i <> mapNpcNum) And (MapNpc(mapnum).Npc(i).Num > 0) And (MapNpc(mapnum).Npc(i).x = MapNpc(mapnum).Npc(mapNpcNum).x + 1) And (MapNpc(mapnum).Npc(i).y = MapNpc(mapnum).Npc(mapNpcNum).y) Then
+                        CanNpcMove = False
+                        Exit Function
+                    End If
+                Next
+                
+                ' Directional blocking
+                If isDirBlocked(Map(mapnum).TileData.Tile(MapNpc(mapnum).Npc(mapNpcNum).x, MapNpc(mapnum).Npc(mapNpcNum).y).DirBlock, DIR_RIGHT + 1) Then
+                    CanNpcMove = False
+                    Exit Function
+                End If
+            Else
+                CanNpcMove = False
+            End If
+'#######################################################################################################################
+'#######################################################################################################################
+        Case DIR_UP_LEFT
+            ' Check to make sure not outside of boundries
+            If y > 0 And x > 0 Then
+                N = Map(mapnum).TileData.Tile(x - 1, y - 1).Type
+
+                ' Check to make sure that the tile is walkable
+                If N <> TILE_TYPE_WALKABLE And N <> TILE_TYPE_ITEM And N <> TILE_TYPE_NPCSPAWN Then
+                    CanNpcMove = False
+                    Exit Function
+                End If
+
+                ' Check to make sure that there is not a player in the way
+                For i = 1 To Player_HighIndex
+                    If IsPlaying(i) Then
+                        If (GetPlayerMap(i) = mapnum) And (GetPlayerX(i) = MapNpc(mapnum).Npc(mapNpcNum).x - 1) And (GetPlayerY(i) = MapNpc(mapnum).Npc(mapNpcNum).y - 1) Then
+                            CanNpcMove = False
+                            Exit Function
+                        End If
+                    End If
+                Next
+
+                ' Check to make sure that there is not another npc in the way
+                For i = 1 To MAX_MAP_NPCS
+                    If (i <> mapNpcNum) And (MapNpc(mapnum).Npc(i).Num > 0) And (MapNpc(mapnum).Npc(i).x = MapNpc(mapnum).Npc(mapNpcNum).x - 1) And (MapNpc(mapnum).Npc(i).y = MapNpc(mapnum).Npc(mapNpcNum).y - 1) Then
+                        CanNpcMove = False
+                        Exit Function
+                    End If
+                Next
+                
+                ' Directional blocking
+                If isDirBlocked(Map(mapnum).TileData.Tile(MapNpc(mapnum).Npc(mapNpcNum).x, MapNpc(mapnum).Npc(mapNpcNum).y).DirBlock, DIR_LEFT + 1) Then
+                    CanNpcMove = False
+                    Exit Function
+                End If
+            Else
+                CanNpcMove = False
+            End If
+'#######################################################################################################################
+'#######################################################################################################################
+        Case DIR_UP_RIGHT
+            ' Check to make sure not outside of boundries
+            If y > 0 And x < Map(mapnum).MapData.MaxX Then
+                N = Map(mapnum).TileData.Tile(x + 1, y - 1).Type
+
+                ' Check to make sure that the tile is walkable
+                If N <> TILE_TYPE_WALKABLE And N <> TILE_TYPE_ITEM And N <> TILE_TYPE_NPCSPAWN Then
+                    CanNpcMove = False
+                    Exit Function
+                End If
+
+                ' Check to make sure that there is not a player in the way
+                For i = 1 To Player_HighIndex
+                    If IsPlaying(i) Then
+                        If (GetPlayerMap(i) = mapnum) And (GetPlayerX(i) = MapNpc(mapnum).Npc(mapNpcNum).x + 1) And (GetPlayerY(i) = MapNpc(mapnum).Npc(mapNpcNum).y - 1) Then
+                            CanNpcMove = False
+                            Exit Function
+                        End If
+                    End If
+                Next
+
+                ' Check to make sure that there is not another npc in the way
+                For i = 1 To MAX_MAP_NPCS
+                    If (i <> mapNpcNum) And (MapNpc(mapnum).Npc(i).Num > 0) And (MapNpc(mapnum).Npc(i).x = MapNpc(mapnum).Npc(mapNpcNum).x + 1) And (MapNpc(mapnum).Npc(i).y = MapNpc(mapnum).Npc(mapNpcNum).y - 1) Then
+                        CanNpcMove = False
+                        Exit Function
+                    End If
+                Next
+                
+                ' Directional blocking
+                If isDirBlocked(Map(mapnum).TileData.Tile(MapNpc(mapnum).Npc(mapNpcNum).x, MapNpc(mapnum).Npc(mapNpcNum).y).DirBlock, DIR_RIGHT + 1) Then
+                    CanNpcMove = False
+                    Exit Function
+                End If
+            Else
+                CanNpcMove = False
+            End If
+'#######################################################################################################################
+'#######################################################################################################################
+        Case DIR_DOWN_LEFT
+
+            ' Check to make sure not outside of boundries
+            If y < Map(mapnum).MapData.MaxY And x > 0 Then
+                N = Map(mapnum).TileData.Tile(x - 1, y + 1).Type
+
+                ' Check to make sure that the tile is walkable
+                If N <> TILE_TYPE_WALKABLE And N <> TILE_TYPE_ITEM And N <> TILE_TYPE_NPCSPAWN Then
+                    CanNpcMove = False
+                    Exit Function
+                End If
+
+                ' Check to make sure that there is not a player in the way
+                For i = 1 To Player_HighIndex
+                    If IsPlaying(i) Then
+                        If (GetPlayerMap(i) = mapnum) And (GetPlayerX(i) = MapNpc(mapnum).Npc(mapNpcNum).x - 1) And (GetPlayerY(i) = MapNpc(mapnum).Npc(mapNpcNum).y + 1) Then
+                            CanNpcMove = False
+                            Exit Function
+                        End If
+                    End If
+                Next
+
+                ' Check to make sure that there is not another npc in the way
+                For i = 1 To MAX_MAP_NPCS
+                    If (i <> mapNpcNum) And (MapNpc(mapnum).Npc(i).Num > 0) And (MapNpc(mapnum).Npc(i).x = MapNpc(mapnum).Npc(mapNpcNum).x - 1) And (MapNpc(mapnum).Npc(i).y = MapNpc(mapnum).Npc(mapNpcNum).y + 1) Then
+                        CanNpcMove = False
+                        Exit Function
+                    End If
+                Next
+                
+                ' Directional blocking
+                If isDirBlocked(Map(mapnum).TileData.Tile(MapNpc(mapnum).Npc(mapNpcNum).x, MapNpc(mapnum).Npc(mapNpcNum).y).DirBlock, DIR_LEFT + 1) Then
+                    CanNpcMove = False
+                    Exit Function
+                End If
+            Else
+                CanNpcMove = False
+            End If
+'#######################################################################################################################
+'#######################################################################################################################
+        Case DIR_DOWN_RIGHT
+
+            ' Check to make sure not outside of boundries
+            If y < Map(mapnum).MapData.MaxY And x < Map(mapnum).MapData.MaxX Then
+                N = Map(mapnum).TileData.Tile(x + 1, y + 1).Type
+
+                ' Check to make sure that the tile is walkable
+                If N <> TILE_TYPE_WALKABLE And N <> TILE_TYPE_ITEM And N <> TILE_TYPE_NPCSPAWN Then
+                    CanNpcMove = False
+                    Exit Function
+                End If
+
+                ' Check to make sure that there is not a player in the way
+                For i = 1 To Player_HighIndex
+                    If IsPlaying(i) Then
+                        If (GetPlayerMap(i) = mapnum) And (GetPlayerX(i) = MapNpc(mapnum).Npc(mapNpcNum).x + 1) And (GetPlayerY(i) = MapNpc(mapnum).Npc(mapNpcNum).y + 1) Then
+                            CanNpcMove = False
+                            Exit Function
+                        End If
+                    End If
+                Next
+
+                ' Check to make sure that there is not another npc in the way
+                For i = 1 To MAX_MAP_NPCS
+                    If (i <> mapNpcNum) And (MapNpc(mapnum).Npc(i).Num > 0) And (MapNpc(mapnum).Npc(i).x = MapNpc(mapnum).Npc(mapNpcNum).x + 1) And (MapNpc(mapnum).Npc(i).y = MapNpc(mapnum).Npc(mapNpcNum).y + 1) Then
                         CanNpcMove = False
                         Exit Function
                     End If

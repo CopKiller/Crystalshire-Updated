@@ -30,3 +30,20 @@ Public Sub SendRequestMissions()
     buffer.Flush: Set buffer = Nothing
 End Sub
 
+Public Sub SendAcceptMissionRequest(ByVal Index_Offer)
+    Dim buffer As clsBuffer
+    Set buffer = New clsBuffer
+    buffer.WriteLong CAcceptMissionRequest
+    buffer.WriteLong inOffer(Index_Offer)
+    SendData buffer.ToArray()
+    buffer.Flush: Set buffer = Nothing
+End Sub
+
+Public Sub SendDeclineMissionRequest()
+    Dim buffer As clsBuffer
+    Set buffer = New clsBuffer
+    buffer.WriteLong CDeclineMissionRequest
+    SendData buffer.ToArray()
+    buffer.Flush: Set buffer = Nothing
+End Sub
+

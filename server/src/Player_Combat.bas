@@ -52,7 +52,7 @@ Public Function GetPlayerVitalRegen(ByVal index As Long, ByVal Vital As Vitals) 
 End Function
 
 Public Function GetPlayerDamage(ByVal index As Long) As Long
-Dim weaponNum As Long
+    Dim weaponNum As Long
     
     GetPlayerDamage = 0
 
@@ -172,7 +172,7 @@ End Function
 ' ###################################
 Public Sub TryPlayerAttackNpc(ByVal index As Long, ByVal mapNpcNum As Long)
 Dim blockAmount As Long
-Dim npcNum As Long
+Dim NpcNum As Long
 Dim mapnum As Long
 Dim damage As Long
 
@@ -182,14 +182,14 @@ Dim damage As Long
     If CanPlayerAttackNpc(index, mapNpcNum) Then
     
         mapnum = GetPlayerMap(index)
-        npcNum = MapNpc(mapnum).Npc(mapNpcNum).Num
+        NpcNum = MapNpc(mapnum).Npc(mapNpcNum).Num
     
         ' check if NPC can avoid the attack
-        If CanNpcDodge(npcNum) Then
+        If CanNpcDodge(NpcNum) Then
             SendActionMsg mapnum, "Dodge!", Pink, 1, (MapNpc(mapnum).Npc(mapNpcNum).x * 32), (MapNpc(mapnum).Npc(mapNpcNum).y * 32)
             Exit Sub
         End If
-        If CanNpcParry(npcNum) Then
+        If CanNpcParry(NpcNum) Then
             SendActionMsg mapnum, "Parry!", Pink, 1, (MapNpc(mapnum).Npc(mapNpcNum).x * 32), (MapNpc(mapnum).Npc(mapNpcNum).y * 32)
             Exit Sub
         End If
@@ -203,7 +203,7 @@ Dim damage As Long
         
         ' take away armour
         'damage = damage - RAND(1, (Npc(NpcNum).Stat(Stats.Agility) * 2))
-        damage = damage - RAND((GetNpcDefence(npcNum) / 100) * 10, (GetNpcDefence(npcNum) / 100) * 10)
+        damage = damage - RAND((GetNpcDefence(NpcNum) / 100) * 10, (GetNpcDefence(NpcNum) / 100) * 10)
         ' randomise from 1 to max hit
         damage = RAND(damage - ((damage / 100) * 10), damage + ((damage / 100) * 10))
         
@@ -223,7 +223,7 @@ End Sub
 
 Public Function CanPlayerAttackNpc(ByVal attacker As Long, ByVal mapNpcNum As Long, Optional ByVal isSpell As Boolean = False) As Boolean
     Dim mapnum As Long
-    Dim npcNum As Long
+    Dim NpcNum As Long
     Dim attackspeed As Long
 
     ' Check for subscript out of range
@@ -237,11 +237,11 @@ Public Function CanPlayerAttackNpc(ByVal attacker As Long, ByVal mapNpcNum As Lo
     End If
 
     mapnum = GetPlayerMap(attacker)
-    npcNum = MapNpc(mapnum).Npc(mapNpcNum).Num
+    NpcNum = MapNpc(mapnum).Npc(mapNpcNum).Num
     
     ' Make sure the npc isn't already dead
     If MapNpc(mapnum).Npc(mapNpcNum).Vital(Vitals.HP) <= 0 Then
-        If Npc(npcNum).Behaviour <> NPC_BEHAVIOUR_FRIENDLY And Npc(npcNum).Behaviour <> NPC_BEHAVIOUR_SHOPKEEPER Then
+        If Npc(NpcNum).Behaviour <> NPC_BEHAVIOUR_FRIENDLY And Npc(NpcNum).Behaviour <> NPC_BEHAVIOUR_SHOPKEEPER Then
             Exit Function
         End If
     End If
@@ -251,8 +251,8 @@ Public Function CanPlayerAttackNpc(ByVal attacker As Long, ByVal mapNpcNum As Lo
     
         ' exit out early
         If isSpell Then
-             If npcNum > 0 Then
-                If Npc(npcNum).Behaviour <> NPC_BEHAVIOUR_FRIENDLY And Npc(npcNum).Behaviour <> NPC_BEHAVIOUR_SHOPKEEPER Then
+             If NpcNum > 0 Then
+                If Npc(NpcNum).Behaviour <> NPC_BEHAVIOUR_FRIENDLY And Npc(NpcNum).Behaviour <> NPC_BEHAVIOUR_SHOPKEEPER Then
                     CanPlayerAttackNpc = True
                     Exit Function
                 End If
@@ -266,20 +266,20 @@ Public Function CanPlayerAttackNpc(ByVal attacker As Long, ByVal mapNpcNum As Lo
             attackspeed = 1000
         End If
 
-        If npcNum > 0 And GetTickCount > TempPlayer(attacker).AttackTimer + attackspeed Then
+        If NpcNum > 0 And GetTickCount > TempPlayer(attacker).AttackTimer + attackspeed Then
             ' Check if at same coordinates
             Select Case GetPlayerDir(attacker)
                 Case DIR_UP
                     If MapNpc(mapnum).Npc(mapNpcNum).x >= Player(attacker).x - 1 And MapNpc(mapnum).Npc(mapNpcNum).x <= Player(attacker).x + 1 Then
                         If MapNpc(mapnum).Npc(mapNpcNum).y + 1 = Player(attacker).y Then
-                            If Npc(npcNum).Behaviour <> NPC_BEHAVIOUR_FRIENDLY And Npc(npcNum).Behaviour <> NPC_BEHAVIOUR_SHOPKEEPER Then
+                            If Npc(NpcNum).Behaviour <> NPC_BEHAVIOUR_FRIENDLY And Npc(NpcNum).Behaviour <> NPC_BEHAVIOUR_SHOPKEEPER Then
                                 CanPlayerAttackNpc = True
-                            ElseIf Npc(npcNum).Behaviour = NPC_BEHAVIOUR_FRIENDLY Then
+                            ElseIf Npc(NpcNum).Behaviour = NPC_BEHAVIOUR_FRIENDLY Then
                                 ' init conversation if it's friendly
-                                If Npc(npcNum).Conv > 0 Then
+                                If Npc(NpcNum).Conv > 0 Then
                                     InitChat attacker, mapnum, mapNpcNum
-                                ElseIf Npc(npcNum).Mission > 0 Then
-                                    Call CheckHas_Mission(index, mapNpcNum)
+                                ElseIf Npc(NpcNum).Mission > 0 Then
+                                    Call CheckHas_Mission(attacker, mapNpcNum)
                                 End If
                             End If
                         End If
@@ -287,14 +287,14 @@ Public Function CanPlayerAttackNpc(ByVal attacker As Long, ByVal mapNpcNum As Lo
                 Case DIR_DOWN
                     If MapNpc(mapnum).Npc(mapNpcNum).x >= Player(attacker).x - 1 And MapNpc(mapnum).Npc(mapNpcNum).x <= Player(attacker).x + 1 Then
                         If MapNpc(mapnum).Npc(mapNpcNum).y - 1 = Player(attacker).y Then
-                            If Npc(npcNum).Behaviour <> NPC_BEHAVIOUR_FRIENDLY And Npc(npcNum).Behaviour <> NPC_BEHAVIOUR_SHOPKEEPER Then
+                            If Npc(NpcNum).Behaviour <> NPC_BEHAVIOUR_FRIENDLY And Npc(NpcNum).Behaviour <> NPC_BEHAVIOUR_SHOPKEEPER Then
                                 CanPlayerAttackNpc = True
-                            ElseIf Npc(npcNum).Behaviour = NPC_BEHAVIOUR_FRIENDLY Then
+                            ElseIf Npc(NpcNum).Behaviour = NPC_BEHAVIOUR_FRIENDLY Then
                                 ' init conversation if it's friendly
-                                If Npc(npcNum).Conv > 0 Then
+                                If Npc(NpcNum).Conv > 0 Then
                                     InitChat attacker, mapnum, mapNpcNum
-                                ElseIf Npc(npcNum).Mission > 0 Then
-                                    Call CheckHas_Mission(index, mapNpcNum)
+                                ElseIf Npc(NpcNum).Mission > 0 Then
+                                    Call CheckHas_Mission(attacker, mapNpcNum)
                                 End If
                             End If
                         End If
@@ -302,14 +302,14 @@ Public Function CanPlayerAttackNpc(ByVal attacker As Long, ByVal mapNpcNum As Lo
                 Case DIR_LEFT, DIR_UP_LEFT, DIR_DOWN_LEFT
                     If MapNpc(mapnum).Npc(mapNpcNum).x + 1 = Player(attacker).x Then
                         If MapNpc(mapnum).Npc(mapNpcNum).y >= Player(attacker).y - 1 And MapNpc(mapnum).Npc(mapNpcNum).y <= Player(attacker).y + 1 Then
-                            If Npc(npcNum).Behaviour <> NPC_BEHAVIOUR_FRIENDLY And Npc(npcNum).Behaviour <> NPC_BEHAVIOUR_SHOPKEEPER Then
+                            If Npc(NpcNum).Behaviour <> NPC_BEHAVIOUR_FRIENDLY And Npc(NpcNum).Behaviour <> NPC_BEHAVIOUR_SHOPKEEPER Then
                                 CanPlayerAttackNpc = True
-                            ElseIf Npc(npcNum).Behaviour = NPC_BEHAVIOUR_FRIENDLY Then
+                            ElseIf Npc(NpcNum).Behaviour = NPC_BEHAVIOUR_FRIENDLY Then
                                 ' init conversation if it's friendly
-                                If Npc(npcNum).Conv > 0 Then
+                                If Npc(NpcNum).Conv > 0 Then
                                     InitChat attacker, mapnum, mapNpcNum
-                                ElseIf Npc(npcNum).Mission > 0 Then
-                                    Call CheckHas_Mission(index, mapNpcNum)
+                                ElseIf Npc(NpcNum).Mission > 0 Then
+                                    Call CheckHas_Mission(attacker, mapNpcNum)
                                 End If
                             End If
                         End If
@@ -317,14 +317,14 @@ Public Function CanPlayerAttackNpc(ByVal attacker As Long, ByVal mapNpcNum As Lo
                 Case DIR_RIGHT, DIR_UP_RIGHT, DIR_DOWN_RIGHT
                     If MapNpc(mapnum).Npc(mapNpcNum).x - 1 = Player(attacker).x Then
                         If MapNpc(mapnum).Npc(mapNpcNum).y >= Player(attacker).y - 1 And MapNpc(mapnum).Npc(mapNpcNum).y <= Player(attacker).y + 1 Then
-                            If Npc(npcNum).Behaviour <> NPC_BEHAVIOUR_FRIENDLY And Npc(npcNum).Behaviour <> NPC_BEHAVIOUR_SHOPKEEPER Then
+                            If Npc(NpcNum).Behaviour <> NPC_BEHAVIOUR_FRIENDLY And Npc(NpcNum).Behaviour <> NPC_BEHAVIOUR_SHOPKEEPER Then
                                 CanPlayerAttackNpc = True
-                            ElseIf Npc(npcNum).Behaviour = NPC_BEHAVIOUR_FRIENDLY Then
+                            ElseIf Npc(NpcNum).Behaviour = NPC_BEHAVIOUR_FRIENDLY Then
                                 ' init conversation if it's friendly
-                                If Npc(npcNum).Conv > 0 Then
+                                If Npc(NpcNum).Conv > 0 Then
                                     InitChat attacker, mapnum, mapNpcNum
-                                ElseIf Npc(npcNum).Mission > 0 Then
-                                    Call CheckHas_Mission(index, mapNpcNum)
+                                ElseIf Npc(NpcNum).Mission > 0 Then
+                                    Call CheckHas_Mission(attacker, mapNpcNum)
                                 End If
                             End If
                         End If
@@ -338,14 +338,14 @@ End Function
 Public Sub PlayerAttackNpc(ByVal attacker As Long, ByVal mapNpcNum As Long, ByVal damage As Long, Optional ByVal spellNum As Long, Optional ByVal overTime As Boolean = False)
     Dim Name As String
     Dim exp As Long
-    Dim n As Long
+    Dim N As Long
     Dim i As Long
     Dim STR As Long
     Dim DEF As Long
     Dim mapnum As Long
-    Dim npcNum As Long
+    Dim NpcNum As Long
     Dim Mission_ID As Long
-    Dim buffer As clsBuffer
+    Dim Buffer As clsBuffer
 
     ' Check for subscript out of range
     If IsPlaying(attacker) = False Or mapNpcNum <= 0 Or mapNpcNum > MAX_MAP_NPCS Or damage < 0 Then
@@ -353,14 +353,14 @@ Public Sub PlayerAttackNpc(ByVal attacker As Long, ByVal mapNpcNum As Long, ByVa
     End If
 
     mapnum = GetPlayerMap(attacker)
-    npcNum = MapNpc(mapnum).Npc(mapNpcNum).Num
-    Name = Trim$(Npc(npcNum).Name)
+    NpcNum = MapNpc(mapnum).Npc(mapNpcNum).Num
+    Name = Trim$(Npc(NpcNum).Name)
     
     ' Check for weapon
-    n = 0
+    N = 0
 
     If GetPlayerEquipment(attacker, Weapon) > 0 Then
-        n = GetPlayerEquipment(attacker, Weapon)
+        N = GetPlayerEquipment(attacker, Weapon)
     End If
     
     ' set the regen timer
@@ -376,14 +376,14 @@ Public Sub PlayerAttackNpc(ByVal attacker As Long, ByVal mapNpcNum As Long, ByVa
         If spellNum > 0 Then SendMapSound attacker, MapNpc(mapnum).Npc(mapNpcNum).x, MapNpc(mapnum).Npc(mapNpcNum).y, SoundEntity.seSpell, spellNum
         
         ' send animation
-        If n > 0 Then
+        If N > 0 Then
             If Not overTime Then
                 If spellNum = 0 Then Call SendAnimation(mapnum, Item(GetPlayerEquipment(attacker, Weapon)).Animation, MapNpc(mapnum).Npc(mapNpcNum).x, MapNpc(mapnum).Npc(mapNpcNum).y)
             End If
         End If
 
         ' Calculate exp to give attacker
-        exp = Npc(npcNum).exp
+        exp = Npc(NpcNum).exp
 
         ' Make sure we dont get less then 0
         If exp < 0 Then
@@ -393,17 +393,17 @@ Public Sub PlayerAttackNpc(ByVal attacker As Long, ByVal mapNpcNum As Long, ByVa
         ' in party?
         If TempPlayer(attacker).inParty > 0 Then
             ' pass through party sharing function
-            Party_ShareExp TempPlayer(attacker).inParty, exp, attacker, Npc(npcNum).Level
+            Party_ShareExp TempPlayer(attacker).inParty, exp, attacker, Npc(NpcNum).Level
         Else
             ' no party - keep exp for self
-            GivePlayerEXP attacker, exp, Npc(npcNum).Level
+            GivePlayerEXP attacker, exp, Npc(NpcNum).Level
         End If
         
         'Drop the goods if they get it
-        For n = 1 To MAX_NPC_DROPS
-            If Npc(npcNum).DropItem(n) = 0 Then Exit For
-            If Rnd <= Npc(npcNum).DropChance(n) Then
-                Call SpawnItem(Npc(npcNum).DropItem(n), Npc(npcNum).DropItemValue(n), mapnum, MapNpc(mapnum).Npc(mapNpcNum).x, MapNpc(mapnum).Npc(mapNpcNum).y, GetPlayerName(attacker))
+        For N = 1 To MAX_NPC_DROPS
+            If Npc(NpcNum).DropItem(N) = 0 Then Exit For
+            If Rnd <= Npc(NpcNum).DropChance(N) Then
+                Call SpawnItem(Npc(NpcNum).DropItem(N), Npc(NpcNum).DropItemValue(N), mapnum, MapNpc(mapnum).Npc(mapNpcNum).x, MapNpc(mapnum).Npc(mapNpcNum).y, GetPlayerName(attacker))
             End If
         Next
         
@@ -452,7 +452,7 @@ Public Sub PlayerAttackNpc(ByVal attacker As Long, ByVal mapNpcNum As Long, ByVa
         Next
         
         ' Check Mission Kill NPC
-        Call Check_Mission(attacker, npcNum)
+        Call Check_Mission(attacker, NpcNum)
         
         ' send death to the map
         SendNpcDeath mapnum, mapNpcNum
@@ -483,7 +483,7 @@ Public Sub PlayerAttackNpc(ByVal attacker As Long, ByVal mapNpcNum As Long, ByVa
         If spellNum > 0 Then SendMapSound attacker, MapNpc(mapnum).Npc(mapNpcNum).x, MapNpc(mapnum).Npc(mapNpcNum).y, SoundEntity.seSpell, spellNum
         
         ' send animation
-        If n > 0 Then
+        If N > 0 Then
             If Not overTime Then
                 If spellNum = 0 Then Call SendAnimation(mapnum, Item(GetPlayerEquipment(attacker, Weapon)).Animation, 0, 0, TARGET_TYPE_NPC, mapNpcNum)
             End If
@@ -536,7 +536,7 @@ End Sub
 ' ###################################
 
 Public Sub TryPlayerAttackPlayer(ByVal attacker As Long, ByVal victim As Long)
-Dim blockAmount As Long, npcNum As Long, mapnum As Long, damage As Long, Defence As Long
+Dim blockAmount As Long, NpcNum As Long, mapnum As Long, damage As Long, Defence As Long
 
     damage = 0
 
@@ -691,9 +691,9 @@ End Function
 
 Sub PlayerAttackPlayer(ByVal attacker As Long, ByVal victim As Long, ByVal damage As Long, Optional ByVal spellNum As Long = 0)
     Dim exp As Long
-    Dim n As Long
+    Dim N As Long
     Dim i As Long
-    Dim buffer As clsBuffer
+    Dim Buffer As clsBuffer
 
     ' Check for subscript out of range
     If IsPlaying(attacker) = False Or IsPlaying(victim) = False Or damage < 0 Then
@@ -701,10 +701,10 @@ Sub PlayerAttackPlayer(ByVal attacker As Long, ByVal victim As Long, ByVal damag
     End If
 
     ' Check for weapon
-    n = 0
+    N = 0
 
     If GetPlayerEquipment(attacker, Weapon) > 0 Then
-        n = GetPlayerEquipment(attacker, Weapon)
+        N = GetPlayerEquipment(attacker, Weapon)
     End If
     
     ' set the regen timer
@@ -957,7 +957,7 @@ Public Sub CastSpell(ByVal index As Long, ByVal spellSlot As Long, ByVal target 
     Dim mapnum As Long, Vital As Long, DidCast As Boolean, ClassReq As Long
     Dim AccessReq As Long, i As Long, AoE As Long, Range As Long
     Dim vitalType As Byte, increment As Boolean, x As Long, y As Long
-    Dim buffer As clsBuffer, spellCastType As Long
+    Dim Buffer As clsBuffer, spellCastType As Long
     
     DidCast = False
 

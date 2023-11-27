@@ -1,4 +1,4 @@
-Attribute VB_Name = "modClientTCP"
+Attribute VB_Name = "Client_TCP"
 Option Explicit
 ' ******************************************
 ' ** Communcation to server, TCP          **
@@ -199,7 +199,7 @@ Public Sub SendPlayerMove()
     buffer.WriteLong CPlayerMove
     buffer.WriteLong GetPlayerDir(MyIndex)
     buffer.WriteLong Player(MyIndex).Moving
-    buffer.WriteLong Player(MyIndex).X
+    buffer.WriteLong Player(MyIndex).x
     buffer.WriteLong Player(MyIndex).y
     SendData buffer.ToArray()
     buffer.Flush: Set buffer = Nothing
@@ -224,7 +224,7 @@ Public Sub SendPlayerRequestNewMap()
 End Sub
 
 Public Sub SendMap()
-    Dim X As Long
+    Dim x As Long
     Dim y As Long
     Dim i As Long
     Dim buffer As clsBuffer
@@ -259,11 +259,11 @@ Public Sub SendMap()
         buffer.WriteLong Map.MapData.Npc(i)
     Next
 
-    For X = 0 To Map.MapData.MaxX
+    For x = 0 To Map.MapData.MaxX
         For y = 0 To Map.MapData.MaxY
-            With Map.TileData.Tile(X, y)
+            With Map.TileData.Tile(x, y)
                 For i = 1 To MapLayer.Layer_Count - 1
-                    buffer.WriteLong .Layer(i).X
+                    buffer.WriteLong .Layer(i).x
                     buffer.WriteLong .Layer(i).y
                     buffer.WriteLong .Layer(i).tileSet
                     buffer.WriteByte .Autotile(i)
@@ -590,12 +590,12 @@ Public Sub ChangeBankSlots(ByVal oldSlot As Long, ByVal newSlot As Long)
     buffer.Flush: Set buffer = Nothing
 End Sub
 
-Public Sub AdminWarp(ByVal X As Long, ByVal y As Long)
-    If X < 0 Or y < 0 Or X > Map.MapData.MaxX Or y > Map.MapData.MaxY Then Exit Sub
+Public Sub AdminWarp(ByVal x As Long, ByVal y As Long)
+    If x < 0 Or y < 0 Or x > Map.MapData.MaxX Or y > Map.MapData.MaxY Then Exit Sub
     Dim buffer As clsBuffer
     Set buffer = New clsBuffer
     buffer.WriteLong CAdminWarp
-    buffer.WriteLong X
+    buffer.WriteLong x
     buffer.WriteLong y
     SendData buffer.ToArray()
     buffer.Flush: Set buffer = Nothing
@@ -648,21 +648,21 @@ Public Sub SendHotbarChange(ByVal sType As Long, ByVal Slot As Long, ByVal hotba
 End Sub
 
 Public Sub SendHotbarUse(ByVal Slot As Long)
-    Dim buffer As clsBuffer, X As Long
+    Dim buffer As clsBuffer, x As Long
 
     ' check if spell
     If Hotbar(Slot).sType = 1 Then ' Item
-        For X = 1 To MAX_INV
+        For x = 1 To MAX_INV
             ' Is the item matching the hotbar
-            If GetPlayerInvItemNum(MyIndex, X) = Hotbar(Slot).Slot Then
-                SendUseItem X
+            If GetPlayerInvItemNum(MyIndex, x) = Hotbar(Slot).Slot Then
+                SendUseItem x
                 Exit Sub
             End If
         Next
         
-        For X = 1 To Equipment.Equipment_Count - 1
-            If Player(MyIndex).Equipment(X) = Hotbar(Slot).Slot Then
-                SendUnequip X
+        For x = 1 To Equipment.Equipment_Count - 1
+            If Player(MyIndex).Equipment(x) = Hotbar(Slot).Slot Then
+                SendUnequip x
                 Exit Sub
             End If
         Next
@@ -672,11 +672,11 @@ Public Sub SendHotbarUse(ByVal Slot As Long)
         End If
     ElseIf Hotbar(Slot).sType = 2 Then ' spell
 
-        For X = 1 To MAX_PLAYER_SPELLS
+        For x = 1 To MAX_PLAYER_SPELLS
             ' is the spell matching the hotbar?
-            If PlayerSpells(X).Spell = Hotbar(Slot).Slot Then
+            If PlayerSpells(x).Spell = Hotbar(Slot).Slot Then
                 ' found it, cast it
-                CastSpell X
+                CastSpell x
                 Exit Sub
             End If
         Next
@@ -782,7 +782,7 @@ End Sub
 Public Sub SendSaveConv(ByVal Convnum As Long)
     Dim buffer As clsBuffer
     Dim i As Long
-    Dim X As Long
+    Dim x As Long
     Set buffer = New clsBuffer
     buffer.WriteLong CSaveConv
     buffer.WriteLong Convnum
@@ -794,9 +794,9 @@ Public Sub SendSaveConv(ByVal Convnum As Long)
         For i = 1 To .chatCount
             buffer.WriteString .Conv(i).Conv
 
-            For X = 1 To 4
-                buffer.WriteString .Conv(i).rText(X)
-                buffer.WriteLong .Conv(i).rTarget(X)
+            For x = 1 To 4
+                buffer.WriteString .Conv(i).rText(x)
+                buffer.WriteLong .Conv(i).rTarget(x)
             Next
 
             buffer.WriteLong .Conv(i).Event

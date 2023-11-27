@@ -73,8 +73,8 @@ Private Type BankRec
 End Type
 
 Private Type PlayerMission
-    id As Long
-    count As Long
+    ID As Long
+    Count As Long
 End Type
 
 Private Type PlayerRec
@@ -97,7 +97,7 @@ Private Type PlayerRec
     ' Position
     Map As Long
     X As Byte
-    Y As Byte
+    y As Byte
     Dir As Byte
     ' Variables
     Variable(1 To MAX_BYTE) As Long
@@ -124,7 +124,7 @@ Private Type EventCommandRec
     TargetType As Byte
     target As Long
     X As Long
-    Y As Long
+    y As Long
 End Type
 
 Public Type EventPageRec
@@ -162,7 +162,7 @@ End Type
 Public Type EventRec
     Name As String
     X As Long
-    Y As Long
+    y As Long
     pageCount As Long
     EventPage() As EventPageRec
 End Type
@@ -203,7 +203,7 @@ End Type
 
 Private Type TileDataRec
     X As Long
-    Y As Long
+    y As Long
     tileSet As Long
 End Type
 
@@ -284,7 +284,7 @@ Private Type MapItemRec
     value As Long
     Frame As Byte
     X As Byte
-    Y As Byte
+    y As Byte
     bound As Boolean
 End Type
 
@@ -295,7 +295,7 @@ Private Type MapNpcRec
     Vital(1 To Vitals.Vital_Count - 1) As Long
     Map As Long
     X As Byte
-    Y As Byte
+    y As Byte
     Dir As Byte
     ' Client use only
     xOffset As Long
@@ -323,7 +323,7 @@ End Type
 
 Public Type MapResourceRec
     X As Long
-    Y As Long
+    y As Long
     ResourceState As Byte
 End Type
 
@@ -335,7 +335,7 @@ Private Type ActionMsgRec
     Color As Long
     Scroll As Long
     X As Long
-    Y As Long
+    y As Long
     timer As Long
     alpha As Long
 End Type
@@ -344,7 +344,7 @@ Private Type BloodRec
     sprite As Long
     timer As Long
     X As Long
-    Y As Long
+    y As Long
 End Type
 
 Public Type HotbarRec
@@ -354,7 +354,7 @@ End Type
 
 Public Type PointRec
     X As Long
-    Y As Long
+    y As Long
 End Type
 
 Public Type QuarterTileRec
@@ -408,7 +408,7 @@ End Type
 Public Type WeatherParticleRec
     Type As Long
     X As Long
-    Y As Long
+    y As Long
     Velocity As Long
     InUse As Long
 End Type
@@ -416,7 +416,7 @@ End Type
 Public Type ParticulaRec
     Type As Long
     X As Long
-    Y As Long
+    y As Long
     Movimento As Long
     InUse As Long
     Dir As Byte
@@ -431,7 +431,7 @@ End Type
 
 Public Type MapSoundRec
     X As Long
-    Y As Long
+    y As Long
     SoundHandle As Long
     InUse As Boolean
     Channel As Long

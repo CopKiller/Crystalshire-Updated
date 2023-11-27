@@ -1175,6 +1175,33 @@ Dim i As Long
     Next
 End Function
 
+Public Function IsOffer(StartX As Long, StartY As Long) As Long
+    Dim tempRec As RECT
+    Dim i As Long
+    For i = 1 To MAX_OFFER
+    
+        If inOffer(i) > 0 Then
+
+            With tempRec
+                .Top = StartY + OfferTop + ((OfferOffsetY + 45) * ((i - 1) \ OfferColumns))
+                .bottom = .Top + 45
+                .Left = StartX + OfferLeft + ((OfferOffsetX + 485) * (((i - 1) Mod OfferColumns)))
+                .Right = .Left + 485
+            End With
+            
+            If currMouseX >= tempRec.Left And currMouseX <= tempRec.Right Then
+                RenderTexture Tex_Design(4), ConvertMapX(OfferTop), ConvertMapY(OfferLeft), 0, 0, 32, 32, 32, 32
+                If currMouseY >= tempRec.Top And currMouseY <= tempRec.bottom Then
+                    IsOffer = i
+                    Exit Function
+                End If
+            End If
+        End If
+        
+    Next
+
+End Function
+
 Public Function IsBankItem(StartX As Long, StartY As Long) As Long
     Dim tempRec As RECT
     Dim i As Long
@@ -1742,18 +1769,6 @@ Dim value As Long, diaInput As String
                 ' send the deletion
                 SendDelChar diaData1
         End Select
-
-    ElseIf Index = 3 Then ' no button
-
-        ' dialogue index
-        Select Case diaIndex
-
-            Case TypeTRADE
-                SendDeclineTradeRequest
-
-            Case TypePARTY
-                SendDeclineParty
-        End Select
     End If
 
     CloseDialogue
@@ -1769,16 +1784,15 @@ Public Function ConvertMapY(ByVal y As Long) As Long
     ConvertMapY = y - (TileView.Top * PIC_Y) - Camera.Top
 End Function
 
+
 Public Sub UpdateCamera()
-    Dim offsetX As Long, StartX As Long, EndX As Long
-    Dim offsetY As Long, StartY As Long, EndY As Long
-    
     If MyIndex = 0 Then Exit Sub
+    If GettingMap Then Exit Sub
     
     offsetX = Player(MyIndex).xOffset + PIC_X
     offsetY = Player(MyIndex).yOffset + PIC_Y
-    StartX = Player(MyIndex).x - (((TileWidth + 1) \ 2) - 1)
-    StartY = GetPlayerY(MyIndex) - (((TileHeight + 1) \ 2) - 1)
+    StartX = GetPlayerX(MyIndex) - ((TileWidth + 1) \ 2) - 1
+    StartY = GetPlayerY(MyIndex) - ((TileHeight + 1) \ 2) - 1
 
     If StartX < 0 Then
         offsetX = 0
@@ -1824,8 +1838,8 @@ Public Sub UpdateCamera()
         EndY = StartY + (TileHeight + 1)
     End If
     
-    If EndX - 1 >= Map.MapData.MaxX Then
-        offsetX = 32
+    If EndX - 1 > Map.MapData.MaxX Then
+        offsetX = PIC_X
         EndX = Map.MapData.MaxX
         
         If EndX > Map.MapData.MaxX Then
@@ -1846,7 +1860,7 @@ Public Sub UpdateCamera()
     End If
     
     If EndY - 1 > Map.MapData.MaxY Then
-        offsetY = 32
+        offsetY = PIC_Y
         EndY = Map.MapData.MaxY
         
          If EndY > Map.MapData.MaxY Then
@@ -1866,24 +1880,28 @@ Public Sub UpdateCamera()
         End If
     End If
     
-    If TileWidth > Map.MapData.MaxX Then
+    If TileWidth >= Map.MapData.MaxX Then
         If EndX + 1 < TileWidth Then
             StartX = StartX + ((TileWidth - EndX) / 2)
         End If
     End If
-
-    If TileHeight > Map.MapData.MaxY Then
+    
+    If TileHeight >= Map.MapData.MaxY Then
         If EndY + 1 < TileHeight Then
             StartY = StartY + ((TileHeight - EndY) / 2)
         End If
     End If
     
     If TileWidth = Map.MapData.MaxX Then
-        offsetX = 0
+        If offsetX > PIC_X Then
+            offsetX = PIC_X
+        End If
     End If
-
+    
     If TileHeight = Map.MapData.MaxY Then
-        offsetY = 0
+        If offsetY > PIC_Y Then
+            offsetY = PIC_Y
+        End If
     End If
     
     With TileView
@@ -1892,9 +1910,6 @@ Public Sub UpdateCamera()
         .Left = StartX
         .Right = EndX
     End With
-    
-    Debug.Print StartX
-    Debug.Print EndX
     
     With Camera
         .Top = offsetY
@@ -3138,7 +3153,7 @@ Dim i As Long, Amount As Long
 End Sub
 
 Public Sub ShowInvDesc(x As Long, y As Long, invNum As Long)
-Dim soulBound As Boolean
+    Dim soulBound As Boolean
 
     ' rte9
     If invNum <= 0 Or invNum > MAX_INV Then Exit Sub
@@ -3157,7 +3172,7 @@ Public Sub ShowShopDesc(x As Long, y As Long, ItemNum As Long)
 End Sub
 
 Public Sub ShowEqDesc(x As Long, y As Long, eqNum As Long)
-Dim soulBound As Boolean
+    Dim soulBound As Boolean
 
     ' rte9
     If eqNum <= 0 Or eqNum > Equipment.Equipment_Count - 1 Then Exit Sub
@@ -3167,6 +3182,62 @@ Dim soulBound As Boolean
         If Item(Player(MyIndex).Equipment(eqNum)).BindType > 0 Then soulBound = True
         ShowItemDesc x, y, Player(MyIndex).Equipment(eqNum), soulBound
     End If
+End Sub
+
+Public Sub ShowOfferDesc(x As Long, y As Long, OfferNum As Long)
+    Dim Colour As Long, className As String, levelTxt As String, i As Long
+
+    ' set globals
+    descType = 3 ' offer
+    descItem = OfferNum
+    
+    ' set position
+    Windows(GetWindowIndex("winDescription")).Window.Left = x
+    Windows(GetWindowIndex("winDescription")).Window.Top = y
+    
+    ' show the window
+    ShowWindow GetWindowIndex("winDescription"), , False
+    
+    ' exit out early if last is same
+    If (descLastType = descType) And (descLastItem = descItem) Then Exit Sub
+    
+    ' set last to this
+    descLastType = descType
+    descLastItem = descItem
+    
+    ' clear
+    ReDim descText(1 To 1) As TextColourRec
+    
+    ' show req. labels
+    Windows(GetWindowIndex("winDescription")).Controls(GetControlIndex("winDescription", "lblClass")).visible = True
+    Windows(GetWindowIndex("winDescription")).Controls(GetControlIndex("winDescription", "lblLevel")).visible = True
+    Windows(GetWindowIndex("winDescription")).Controls(GetControlIndex("winDescription", "lblDescription")).visible = True
+    
+    ' set variables
+    Select Case inOfferType(OfferNum)
+        Case Offers.Offer_Type_Mission
+            With Windows(GetWindowIndex("winDescription"))
+                .Controls(GetControlIndex("winDescription", "lblName")).text = Trim$(Mission(inOffer(OfferNum)).Name)
+                .Controls(GetControlIndex("winDescription", "lblName")).textColour = White
+                
+                Select Case Mission(inOffer(OfferNum)).Type
+                    Case MissionType.TypeCollect
+                        .Controls(GetControlIndex("winDescription", "lblClass")).text = "Collect: " + Trim$(Item(Mission(inOffer(OfferNum)).CollectItem).Name)
+                        .Controls(GetControlIndex("winDescription", "lblLevel")).text = "Amount: " + Trim$(Mission(inOffer(OfferNum)).CollectItemAmount)
+                        .Controls(GetControlIndex("winDescription", "lblLevel")).textColour = Red
+                        .Controls(GetControlIndex("winDescription", "lblDescription")).text = Trim$(Mission(inOffer(OfferNum)).Description)
+                    Case MissionType.TypeKill
+                        .Controls(GetControlIndex("winDescription", "lblClass")).text = "Kill: " + Trim$(Item(Mission(inOffer(OfferNum)).KillNPC).Name)
+                        .Controls(GetControlIndex("winDescription", "lblLevel")).text = "Amount: " + Trim$(Mission(inOffer(OfferNum)).KillNPCAmount)
+                        .Controls(GetControlIndex("winDescription", "lblLevel")).textColour = Red
+                        .Controls(GetControlIndex("winDescription", "lblDescription")).text = Trim$(Mission(inOffer(OfferNum)).Description)
+                    Case MissionType.TypeTalk
+                
+                End Select
+                
+                '.Controls(GetControlIndex("winDescription", "lblLevel")).textColour = Colour
+            End With
+    End Select
 End Sub
 
 Public Sub ShowPlayerSpellDesc(x As Long, y As Long, slotNum As Long)
@@ -3292,9 +3363,16 @@ Dim Colour As Long, theName As String, sUse As String, i As Long, barWidth As Lo
     End Select
 End Sub
 
+Public Sub ResetControlsWinDesc()
+    Windows(GetWindowIndex("winDescription")).Controls(GetControlIndex("winDescription", "lblClass")).text = ""
+    Windows(GetWindowIndex("winDescription")).Controls(GetControlIndex("winDescription", "lblLevel")).text = ""
+    Windows(GetWindowIndex("winDescription")).Controls(GetControlIndex("winDescription", "lblDescription")).text = ""
+End Sub
+
 Public Sub ShowItemDesc(x As Long, y As Long, ItemNum As Long, soulBound As Boolean)
-Dim Colour As Long, theName As String, className As String, levelTxt As String, i As Long
+    Dim Colour As Long, theName As String, className As String, levelTxt As String, i As Long
     
+    Call ResetControlsWinDesc
     ' set globals
     descType = 1 ' inventory
     descItem = ItemNum
@@ -3354,7 +3432,7 @@ Dim Colour As Long, theName As String, className As String, levelTxt As String, 
         ElseIf Item(ItemNum).proficiency > 0 Then
             Select Case Item(ItemNum).proficiency
                 Case 1 ' Sword/Armour
-                    If Item(ItemNum).Type >= ITEM_TYPE_ARMOR And Item(ItemNum).Type <= ITEM_TYPE_SHIELD Then
+                    If Item(ItemNum).Type >= ITEM_TYPE_ARMOR And Item(ItemNum).Type <= ITEM_TYPE_FEET Then
                         className = "Heavy Armour"
                     ElseIf Item(ItemNum).Type = ITEM_TYPE_WEAPON Then
                         className = "Heavy Weapon"
@@ -3365,7 +3443,7 @@ Dim Colour As Long, theName As String, className As String, levelTxt As String, 
                         Colour = BrightRed
                     End If
                 Case 2 ' Staff/Cloth
-                    If Item(ItemNum).Type >= ITEM_TYPE_ARMOR And Item(ItemNum).Type <= ITEM_TYPE_SHIELD Then
+                    If Item(ItemNum).Type >= ITEM_TYPE_ARMOR And Item(ItemNum).Type <= ITEM_TYPE_FEET Then
                         className = "Cloth Armour"
                     ElseIf Item(ItemNum).Type = ITEM_TYPE_WEAPON Then
                         className = "Light Weapon"
@@ -3414,6 +3492,10 @@ Dim Colour As Long, theName As String, className As String, levelTxt As String, 
             AddDescInfo "Helmet"
         Case ITEM_TYPE_SHIELD
             AddDescInfo "Shield"
+        Case ITEM_TYPE_PANTS
+            AddDescInfo "Pants"
+        Case ITEM_TYPE_FEET
+            AddDescInfo "Feet"
         Case ITEM_TYPE_CONSUME
             AddDescInfo "Consume"
         Case ITEM_TYPE_KEY
@@ -3437,7 +3519,7 @@ Dim Colour As Long, theName As String, className As String, levelTxt As String, 
             End If
             ' price
             AddDescInfo "Value: " & Item(ItemNum).Price & "g"
-        Case ITEM_TYPE_WEAPON, ITEM_TYPE_ARMOR, ITEM_TYPE_HELMET, ITEM_TYPE_SHIELD
+        Case ITEM_TYPE_WEAPON, ITEM_TYPE_ARMOR, ITEM_TYPE_HELMET, ITEM_TYPE_SHIELD, ITEM_TYPE_PANTS, ITEM_TYPE_FEET
             ' damage/defence
             If Item(ItemNum).Type = ITEM_TYPE_WEAPON Then
                 AddDescInfo "Damage: " & Item(ItemNum).Data2
@@ -3975,8 +4057,8 @@ Dim Width As Long, Height As Long
     Resize Width, Height
     ScreenWidth = Width
     ScreenHeight = Height
-    TileWidth = (ScreenWidth / 32)
-    TileHeight = (ScreenHeight / 32)
+    TileWidth = Width / 32
+    TileHeight = Height / 32
     ScreenX = (TileWidth + 1) * PIC_X
     ScreenY = (TileHeight + 1) * PIC_Y
     ResetGFX

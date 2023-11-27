@@ -2,13 +2,13 @@ Attribute VB_Name = "Player_Actions"
 Option Explicit
 
 Public Sub InitChat(ByVal index As Long, ByVal mapnum As Long, ByVal mapNpcNum As Long, Optional ByVal remoteChat As Boolean = False)
-    Dim NPCNum As Long
+    Dim NpcNum As Long
     Dim Mission_ID As Long
-    NPCNum = MapNpc(mapnum).Npc(mapNpcNum).Num
+    NpcNum = MapNpc(mapnum).Npc(mapNpcNum).Num
     
     ' check if we can chat
-    If Npc(NPCNum).Conv = 0 Then Exit Sub
-    If Len(Trim$(Conv(Npc(NPCNum).Conv).Name)) = 0 Then Exit Sub
+    If Npc(NpcNum).Conv = 0 Then Exit Sub
+    If Len(Trim$(Conv(Npc(NpcNum).Conv).Name)) = 0 Then Exit Sub
     
     If Not remoteChat Then
         With MapNpc(mapnum).Npc(mapNpcNum)
@@ -29,10 +29,10 @@ Public Sub InitChat(ByVal index As Long, ByVal mapnum As Long, ByVal mapNpcNum A
     End If
     
     ' Check Mission TALK NPC
-    Call Check_Mission(index, NPCNum)
+    Call Check_Mission(index, NpcNum)
     
     ' Set chat value to Npc
-    TempPlayer(index).inChatWith = NPCNum
+    TempPlayer(index).inChatWith = NpcNum
     TempPlayer(index).c_mapNpcNum = mapNpcNum
     TempPlayer(index).c_mapNum = mapnum
     ' set to the root chat
@@ -273,7 +273,7 @@ Sub JoinGame(ByVal index As Long)
 End Sub
 
 Sub LeftGame(ByVal index As Long)
-    Dim n As Long, i As Long
+    Dim N As Long, i As Long
     Dim tradeTarget As Long
     
     If TempPlayer(index).InGame Then
@@ -672,7 +672,7 @@ End Function
 
 Function TakeInvItem(ByVal index As Long, ByVal ItemNum As Long, ByVal ItemVal As Long) As Boolean
     Dim i As Long
-    Dim n As Long
+    Dim N As Long
     
     TakeInvItem = False
 
@@ -714,7 +714,7 @@ End Function
 
 Function TakeInvSlot(ByVal index As Long, ByVal invSlot As Long, ByVal ItemVal As Long) As Boolean
     Dim i As Long
-    Dim n As Long
+    Dim N As Long
     Dim ItemNum
     
     TakeInvSlot = False
@@ -800,7 +800,7 @@ End Function
 
 Sub PlayerMapGetItem(ByVal index As Long)
     Dim i As Long
-    Dim n As Long
+    Dim N As Long
     Dim mapnum As Long
     Dim Msg As String
     Dim Mission_ID As Long
@@ -819,25 +819,25 @@ Sub PlayerMapGetItem(ByVal index As Long)
                 If (MapItem(mapnum, i).x = GetPlayerX(index)) Then
                     If (MapItem(mapnum, i).y = GetPlayerY(index)) Then
                         ' Find open slot
-                        n = FindOpenInvSlot(index, MapItem(mapnum, i).Num)
+                        N = FindOpenInvSlot(index, MapItem(mapnum, i).Num)
     
                         ' Open slot available?
-                        If n <> 0 Then
+                        If N <> 0 Then
                             ' Set item in players inventor
-                            Call SetPlayerInvItemNum(index, n, MapItem(mapnum, i).Num)
+                            Call SetPlayerInvItemNum(index, N, MapItem(mapnum, i).Num)
     
-                            If Item(GetPlayerInvItemNum(index, n)).Type = ITEM_TYPE_CURRENCY Then
-                                Call SetPlayerInvItemValue(index, n, GetPlayerInvItemValue(index, n) + MapItem(mapnum, i).Value)
-                                Msg = MapItem(mapnum, i).Value & " " & Trim$(Item(GetPlayerInvItemNum(index, n)).Name)
+                            If Item(GetPlayerInvItemNum(index, N)).Type = ITEM_TYPE_CURRENCY Then
+                                Call SetPlayerInvItemValue(index, N, GetPlayerInvItemValue(index, N) + MapItem(mapnum, i).Value)
+                                Msg = MapItem(mapnum, i).Value & " " & Trim$(Item(GetPlayerInvItemNum(index, N)).Name)
                             Else
-                                Call SetPlayerInvItemValue(index, n, 0)
-                                Msg = Trim$(Item(GetPlayerInvItemNum(index, n)).Name)
+                                Call SetPlayerInvItemValue(index, N, 0)
+                                Msg = Trim$(Item(GetPlayerInvItemNum(index, N)).Name)
                             End If
                             
                             ' is it bind on pickup?
-                            Player(index).Inv(n).Bound = 0
-                            If Item(GetPlayerInvItemNum(index, n)).BindType = 1 Or MapItem(mapnum, i).Bound Then
-                                Player(index).Inv(n).Bound = 1
+                            Player(index).Inv(N).Bound = 0
+                            If Item(GetPlayerInvItemNum(index, N)).BindType = 1 Or MapItem(mapnum, i).Bound Then
+                                Player(index).Inv(N).Bound = 1
                                 If Not Trim$(MapItem(mapnum, i).playerName) = Trim$(GetPlayerName(index)) Then
                                     PlayerMsg index, "This item is now bound to your soul.", BrightRed
                                 End If
@@ -849,7 +849,7 @@ Sub PlayerMapGetItem(ByVal index As Long)
                             ' Erase item from the map
                             ClearMapItem i, mapnum
                             
-                            Call SendInventoryUpdate(index, n)
+                            Call SendInventoryUpdate(index, N)
                             Call SpawnItemSlot(i, 0, 0, GetPlayerMap(index), 0, 0)
                             SendActionMsg GetPlayerMap(index), Msg, White, 1, (GetPlayerX(index) * 32), (GetPlayerY(index) * 32)
                             Exit For
@@ -1278,7 +1278,7 @@ Public Sub EquipItem(ByVal index As Long, ByVal invNum As Long, ByVal EquipmentS
 End Sub
 
 Public Sub UseItem(ByVal index As Long, ByVal invNum As Long)
-    Dim n As Long, i As Long
+    Dim N As Long, i As Long
     Dim tempItem As Long
     Dim x As Long, y As Long
     Dim ItemNum As Long
@@ -1289,12 +1289,12 @@ Public Sub UseItem(ByVal index As Long, ByVal invNum As Long)
     End If
 
     If (GetPlayerInvItemNum(index, invNum) > 0) And (GetPlayerInvItemNum(index, invNum) <= MAX_ITEMS) Then
-        n = Item(GetPlayerInvItemNum(index, invNum)).Data2
+        N = Item(GetPlayerInvItemNum(index, invNum)).Data2
         ItemNum = GetPlayerInvItemNum(index, invNum)
         
         ' Find out what kind of item it is
         Select Case Item(ItemNum).Type
-            Case ITEM_TYPE_WEAPON To ITEM_TYPE_SHIELD
+            Case ITEM_TYPE_WEAPON To ITEM_TYPE_FEET
                 Call EquipItem(index, invNum, Item(ItemNum).Type)
             ' consumable
             Case ITEM_TYPE_CONSUME
@@ -1505,21 +1505,21 @@ Public Sub UseItem(ByVal index As Long, ByVal invNum As Long)
                 End If
                 
                 ' Get the spell num
-                n = Item(ItemNum).Data1
+                N = Item(ItemNum).Data1
 
-                If n > 0 Then
+                If N > 0 Then
 
                     ' Make sure they are the right class
-                    If Spell(n).ClassReq = GetPlayerClass(index) Or Spell(n).ClassReq = 0 Then
+                    If Spell(N).ClassReq = GetPlayerClass(index) Or Spell(N).ClassReq = 0 Then
                     
                         ' make sure they don't already know it
                         For i = 1 To MAX_PLAYER_SPELLS
                             If Player(index).Spell(i).Spell > 0 Then
-                                If Player(index).Spell(i).Spell = n Then
+                                If Player(index).Spell(i).Spell = N Then
                                     PlayerMsg index, "You already know this spell.", BrightRed
                                     Exit Sub
                                 End If
-                                If Spell(Player(index).Spell(i).Spell).UniqueIndex = Spell(n).UniqueIndex Then
+                                If Spell(Player(index).Spell(i).Spell).UniqueIndex = Spell(N).UniqueIndex Then
                                     PlayerMsg index, "You already know this spell.", BrightRed
                                     Exit Sub
                                 End If
@@ -1527,7 +1527,7 @@ Public Sub UseItem(ByVal index As Long, ByVal invNum As Long)
                         Next
                     
                         ' Make sure they are the right level
-                        i = Spell(n).LevelReq
+                        i = Spell(N).LevelReq
 
 
                         If i <= GetPlayerLevel(index) Then
@@ -1537,11 +1537,11 @@ Public Sub UseItem(ByVal index As Long, ByVal invNum As Long)
                             If i > 0 Then
 
                                 ' Make sure they dont already have the spell
-                                If Not HasSpell(index, n) Then
-                                    Player(index).Spell(i).Spell = n
+                                If Not HasSpell(index, N) Then
+                                    Player(index).Spell(i).Spell = N
                                     Call SendAnimation(GetPlayerMap(index), Item(ItemNum).Animation, 0, 0, TARGET_TYPE_PLAYER, index)
                                     Call TakeInvItem(index, ItemNum, 0)
-                                    Call PlayerMsg(index, "You feel the rush of knowledge fill your mind. You can now use " & Trim$(Spell(n).Name) & ".", BrightGreen)
+                                    Call PlayerMsg(index, "You feel the rush of knowledge fill your mind. You can now use " & Trim$(Spell(N).Name) & ".", BrightGreen)
                                     SendPlayerSpells index
                                 Else
                                     Call PlayerMsg(index, "You already have knowledge of this skill.", BrightRed)
@@ -1556,7 +1556,7 @@ Public Sub UseItem(ByVal index As Long, ByVal invNum As Long)
                         End If
 
                     Else
-                        Call PlayerMsg(index, "This spell can only be learned by " & CheckGrammar(GetClassName(Spell(n).ClassReq)) & ".", BrightRed)
+                        Call PlayerMsg(index, "This spell can only be learned by " & CheckGrammar(GetClassName(Spell(N).ClassReq)) & ".", BrightRed)
                     End If
                 End If
                 

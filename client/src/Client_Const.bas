@@ -1,4 +1,4 @@
-Attribute VB_Name = "modConstants"
+Attribute VB_Name = "Client_Const"
 Option Explicit
 ' System of compressing
 Public Declare Function Compress Lib "zlib.dll" Alias "compress" (dest As Any, destLen As Any, src As Any, ByVal srcLen As Long) As Long
@@ -19,6 +19,12 @@ Public Const MenuMusic = "_menu.mid"
 ' GUI
 Public Const ChatBubbleWidth As Long = 200
 Public Const CHAT_TIMER As Long = 20000
+' Offer constants
+Public Const OfferTop As Long = 0
+Public Const OfferLeft As Long = 475
+Public Const OfferOffsetY As Long = 37
+Public Const OfferOffsetX As Long = 0
+Public Const OfferColumns As Long = 1
 ' Bank constants
 Public Const BankTop As Long = 28
 Public Const BankLeft As Long = 9
@@ -32,10 +38,10 @@ Public Const InvOffsetY As Long = 6
 Public Const InvOffsetX As Long = 6
 Public Const InvColumns As Long = 5
 ' Character consts
-Public Const EqTop As Long = 315
-Public Const EqLeft As Long = 11
-Public Const EqOffsetX As Long = 8
-Public Const EqColumns As Long = 4
+Public Const EqTop As Long = 86
+Public Const EqLeft As Long = 178
+Public Const EqOffsetX As Long = 6
+Public Const EqColumns As Long = 6
 ' Inventory constants
 Public Const SkillTop As Long = 28
 Public Const SkillLeft As Long = 9
@@ -108,7 +114,7 @@ Public Const PIC_Y As Long = 32
 ' ********************************************************
 ' General constants
 Public Const MAX_PLAYERS As Long = 200
-Public Const MAX_PLAYER_MISSIONS As Long = 20
+Public Const MAX_PLAYER_MISSIONS As Long = 12
 Public Const MAX_OFFER As Long = 3
 Public Const MAX_ITEMS As Long = 255
 Public Const MAX_NPCS As Long = 255
@@ -171,12 +177,14 @@ Public Const ITEM_TYPE_WEAPON As Byte = 1
 Public Const ITEM_TYPE_ARMOR As Byte = 2
 Public Const ITEM_TYPE_HELMET As Byte = 3
 Public Const ITEM_TYPE_SHIELD As Byte = 4
-Public Const ITEM_TYPE_CONSUME As Byte = 5
-Public Const ITEM_TYPE_KEY As Byte = 6
-Public Const ITEM_TYPE_CURRENCY As Byte = 7
-Public Const ITEM_TYPE_SPELL As Byte = 8
-Public Const ITEM_TYPE_UNIQUE As Byte = 9
-Public Const ITEM_TYPE_FOOD As Byte = 10
+Public Const ITEM_TYPE_PANTS As Byte = 5
+Public Const ITEM_TYPE_FEET As Byte = 6
+Public Const ITEM_TYPE_CONSUME As Byte = 7
+Public Const ITEM_TYPE_KEY As Byte = 8
+Public Const ITEM_TYPE_CURRENCY As Byte = 9
+Public Const ITEM_TYPE_SPELL As Byte = 10
+Public Const ITEM_TYPE_UNIQUE As Byte = 11
+Public Const ITEM_TYPE_FOOD As Byte = 12
 ' Direction constants
 Public Const DIR_UP As Byte = 0
 Public Const DIR_DOWN As Byte = 1

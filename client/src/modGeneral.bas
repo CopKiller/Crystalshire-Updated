@@ -75,10 +75,7 @@ Dim i As Long
     DirArrowY(4) = 12
     ' set the paperdoll order
     ReDim PaperdollOrder(1 To Equipment.Equipment_Count - 1) As Long
-    PaperdollOrder(1) = Equipment.Armor
-    PaperdollOrder(2) = Equipment.Helmet
-    PaperdollOrder(3) = Equipment.Shield
-    PaperdollOrder(4) = Equipment.Weapon
+    Call SetPaperdollOrder
     ' set status
     SetStatus vbNullString
     ' show the main menu
@@ -101,11 +98,27 @@ Dim i As Long
     MenuLoop
 End Sub
 
-Public Sub AddChar(Name As String, sex As Long, Class As Long, sprite As Long)
+Public Sub SetPaperdollOrder(Optional ByVal Swap As Boolean = False)
+    PaperdollOrder(1) = Equipment.Feet
+    PaperdollOrder(2) = Equipment.Shield
+    PaperdollOrder(3) = Equipment.Armor
+    PaperdollOrder(4) = Equipment.Pants
+    PaperdollOrder(5) = Equipment.Helmet
+    PaperdollOrder(6) = Equipment.Weapon
+    
+    If Not Swap Then Exit Sub
+    'PaperdollOrder(6) = Equipment.Glasses
+    'PaperdollOrder(7) = Equipment.Facemask
+    'PaperdollOrder(8) = Equipment.Hat
+    'PaperdollOrder(9) = Equipment.Acessory
+    'PaperdollOrder(10) = Equipment.Vest
+End Sub
+
+Public Sub AddChar(Name As String, Sex As Long, Class As Long, Sprite As Long)
 
     If ConnectToServer Then
         Call SetStatus("Sending character information.")
-        Call SendAddChar(Name, sex, Class, sprite)
+        Call SendAddChar(Name, Sex, Class, Sprite)
         Exit Sub
     Else
         ShowWindow GetWindowIndex("winLogin")

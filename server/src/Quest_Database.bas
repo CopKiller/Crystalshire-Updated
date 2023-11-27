@@ -14,7 +14,7 @@ Public Sub SaveMission(ByVal n As Long)
         Put #f, , .Name
         Put #f, , .Type
         Put #f, , .Repeatable
-        Put #f, , .Dialogue
+        Put #f, , .Description
         
         Put #f, , .KillNPC
         Put #f, , .KillNPCAmount
@@ -81,6 +81,7 @@ End Sub
 Public Sub ClearMission(ByVal index As Long)
     Mission(index) = EmptyMission
     Mission(index).Name = vbNullString
+    Mission(index).Description = vbNullString
     Mission(index).Incomplete = vbNullString
     Mission(index).Completed = vbNullString
 End Sub

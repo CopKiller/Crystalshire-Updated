@@ -359,7 +359,7 @@ Begin VB.Form frmEditor_Item
          Height          =   300
          ItemData        =   "frmEditor_Item.frx":3399
          Left            =   120
-         List            =   "frmEditor_Item.frx":33BE
+         List            =   "frmEditor_Item.frx":33C1
          Style           =   2  'Dropdown List
          TabIndex        =   21
          Top             =   1200
@@ -948,7 +948,7 @@ Private Sub cmdDelete_Click()
     ClearItem EditorIndex
     tmpIndex = lstIndex.ListIndex
     lstIndex.RemoveItem EditorIndex - 1
-    lstIndex.AddItem EditorIndex & ": " & Item(EditorIndex).name, EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Item(EditorIndex).Name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
     ItemEditorInit
 End Sub
@@ -958,9 +958,9 @@ Private Sub cmdPaste_Click()
 End Sub
 
 Private Sub Form_Load()
-    scrlPic.Max = Count_Item
-    scrlAnim.Max = MAX_ANIMATIONS
-    scrlPaperdoll.Max = Count_Paperdoll
+    scrlPic.max = Count_Item
+    scrlAnim.max = MAX_ANIMATIONS
+    scrlPaperdoll.max = Count_Paperdoll
 End Sub
 
 Private Sub cmdSave_Click()
@@ -974,7 +974,7 @@ End Sub
 Private Sub cmbType_Click()
 
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
-    If (cmbType.ListIndex >= ITEM_TYPE_WEAPON) And (cmbType.ListIndex <= ITEM_TYPE_SHIELD) Then
+    If (cmbType.ListIndex >= ITEM_TYPE_WEAPON) And (cmbType.ListIndex <= ITEM_TYPE_FEET) Then
         fraEquipment.visible = True
         'scrlDamage_Change
     Else
@@ -1050,7 +1050,7 @@ Private Sub scrlAnim_Change()
     If scrlAnim.value = 0 Then
         sString = "None"
     Else
-        sString = Trim$(Animation(scrlAnim.value).name)
+        sString = Trim$(Animation(scrlAnim.value).Name)
     End If
 
     lblAnim.caption = "Anim: " & sString
@@ -1140,10 +1140,10 @@ Private Sub scrlSpeed_Change()
     Item(EditorIndex).speed = scrlSpeed.value
 End Sub
 
-Private Sub scrlStatBonus_Change(index As Integer)
+Private Sub scrlStatBonus_Change(Index As Integer)
     Dim text As String
 
-    Select Case index
+    Select Case Index
 
         Case 1
             text = "+ Str: "
@@ -1161,14 +1161,14 @@ Private Sub scrlStatBonus_Change(index As Integer)
             text = "+ Will: "
     End Select
 
-    lblStatBonus(index).caption = text & scrlStatBonus(index).value
-    Item(EditorIndex).Add_Stat(index) = scrlStatBonus(index).value
+    lblStatBonus(Index).caption = text & scrlStatBonus(Index).value
+    Item(EditorIndex).Add_Stat(Index) = scrlStatBonus(Index).value
 End Sub
 
-Private Sub scrlStatReq_Change(index As Integer)
+Private Sub scrlStatReq_Change(Index As Integer)
     Dim text As String
 
-    Select Case index
+    Select Case Index
 
         Case 1
             text = "Str: "
@@ -1186,15 +1186,15 @@ Private Sub scrlStatReq_Change(index As Integer)
             text = "Will: "
     End Select
 
-    lblStatReq(index).caption = text & scrlStatReq(index).value
-    Item(EditorIndex).Stat_Req(index) = scrlStatReq(index).value
+    lblStatReq(Index).caption = text & scrlStatReq(Index).value
+    Item(EditorIndex).Stat_Req(Index) = scrlStatReq(Index).value
 End Sub
 
 Private Sub scrlSpell_Change()
 
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
-    If Len(Trim$(Spell(scrlSpell.value).name)) > 0 Then
-        lblSpellName.caption = "Name: " & Trim$(Spell(scrlSpell.value).name)
+    If Len(Trim$(Spell(scrlSpell.value).Name)) > 0 Then
+        lblSpellName.caption = "Name: " & Trim$(Spell(scrlSpell.value).Name)
     Else
         lblSpellName.caption = "Name: None"
     End If
@@ -1219,8 +1219,8 @@ Public Sub txtName_Validate(Cancel As Boolean)
 
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
     tmpIndex = lstIndex.ListIndex
-    Item(EditorIndex).name = Trim$(txtName.text)
+    Item(EditorIndex).Name = Trim$(txtName.text)
     lstIndex.RemoveItem EditorIndex - 1
-    lstIndex.AddItem EditorIndex & ": " & Item(EditorIndex).name, EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Item(EditorIndex).Name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
 End Sub

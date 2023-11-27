@@ -99,6 +99,8 @@ Public Sub InitMessages()
     HandleDataSub(CRequestEditMission) = GetAddress(AddressOf HandleRequestEditMission)
     HandleDataSub(CRequestMissions) = GetAddress(AddressOf HandleRequestMissions)
     HandleDataSub(CSaveMission) = GetAddress(AddressOf HandleSaveMission)
+    HandleDataSub(CAcceptMissionRequest) = GetAddress(AddressOf HandleAcceptMissionRequest)
+    HandleDataSub(CDeclineMissionRequest) = GetAddress(AddressOf HandleDeclineMissionRequest)
     HandleDataSub(CFinishTutorial) = GetAddress(AddressOf HandleFinishTutorial)
 End Sub
 
@@ -249,7 +251,7 @@ End Sub
 ' :: Warp me to packet ::
 ' :::::::::::::::::::::::
 Sub HandleWarpMeTo(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim N As Long
+    Dim n As Long
     Dim Buffer As clsBuffer
     Set Buffer = New clsBuffer
     Buffer.WriteBytes Data()
@@ -260,15 +262,15 @@ Sub HandleWarpMeTo(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As
     End If
 
     ' The player
-    N = FindPlayer(Buffer.ReadString) 'Parse(1))
+    n = FindPlayer(Buffer.ReadString) 'Parse(1))
     Buffer.Flush: Set Buffer = Nothing
 
-    If N <> index Then
-        If N > 0 Then
-            Call PlayerWarp(index, GetPlayerMap(N), GetPlayerX(N), GetPlayerY(N))
-            Call PlayerMsg(N, GetPlayerName(index) & " has warped to you.", BrightBlue)
-            Call PlayerMsg(index, "You have been warped to " & GetPlayerName(N) & ".", BrightBlue)
-            Call AddLog(GetPlayerName(index) & " has warped to " & GetPlayerName(N) & ", map #" & GetPlayerMap(N) & ".", ADMIN_LOG)
+    If n <> index Then
+        If n > 0 Then
+            Call PlayerWarp(index, GetPlayerMap(n), GetPlayerX(n), GetPlayerY(n))
+            Call PlayerMsg(n, GetPlayerName(index) & " has warped to you.", BrightBlue)
+            Call PlayerMsg(index, "You have been warped to " & GetPlayerName(n) & ".", BrightBlue)
+            Call AddLog(GetPlayerName(index) & " has warped to " & GetPlayerName(n) & ", map #" & GetPlayerMap(n) & ".", ADMIN_LOG)
         Else
             Call PlayerMsg(index, "Player is not online.", White)
         End If
@@ -283,7 +285,7 @@ End Sub
 ' :: Warp to me packet ::
 ' :::::::::::::::::::::::
 Sub HandleWarpToMe(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim N As Long
+    Dim n As Long
     Dim Buffer As clsBuffer
     Set Buffer = New clsBuffer
     Buffer.WriteBytes Data()
@@ -294,15 +296,15 @@ Sub HandleWarpToMe(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As
     End If
 
     ' The player
-    N = FindPlayer(Buffer.ReadString) 'Parse(1))
+    n = FindPlayer(Buffer.ReadString) 'Parse(1))
     Buffer.Flush: Set Buffer = Nothing
 
-    If N <> index Then
-        If N > 0 Then
-            Call PlayerWarp(N, GetPlayerMap(index), GetPlayerX(index), GetPlayerY(index))
-            Call PlayerMsg(N, "You have been summoned by " & GetPlayerName(index) & ".", BrightBlue)
-            Call PlayerMsg(index, GetPlayerName(N) & " has been summoned.", BrightBlue)
-            Call AddLog(GetPlayerName(index) & " has warped " & GetPlayerName(N) & " to self, map #" & GetPlayerMap(index) & ".", ADMIN_LOG)
+    If n <> index Then
+        If n > 0 Then
+            Call PlayerWarp(n, GetPlayerMap(index), GetPlayerX(index), GetPlayerY(index))
+            Call PlayerMsg(n, "You have been summoned by " & GetPlayerName(index) & ".", BrightBlue)
+            Call PlayerMsg(index, GetPlayerName(n) & " has been summoned.", BrightBlue)
+            Call AddLog(GetPlayerName(index) & " has warped " & GetPlayerName(n) & " to self, map #" & GetPlayerMap(index) & ".", ADMIN_LOG)
         Else
             Call PlayerMsg(index, "Player is not online.", White)
         End If
@@ -317,7 +319,7 @@ End Sub
 ' :: Warp to map packet ::
 ' ::::::::::::::::::::::::
 Sub HandleWarpTo(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim N As Long
+    Dim n As Long
     Dim Buffer As clsBuffer
     Set Buffer = New clsBuffer
     Buffer.WriteBytes Data()
@@ -328,24 +330,24 @@ Sub HandleWarpTo(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As L
     End If
 
     ' The map
-    N = Buffer.ReadLong 'CLng(Parse(1))
+    n = Buffer.ReadLong 'CLng(Parse(1))
     Buffer.Flush: Set Buffer = Nothing
 
     ' Prevent hacking
-    If N < 0 Or N > MAX_MAPS Then
+    If n < 0 Or n > MAX_MAPS Then
         Exit Sub
     End If
 
-    Call PlayerWarp(index, N, GetPlayerX(index), GetPlayerY(index))
-    Call PlayerMsg(index, "You have been warped to map #" & N, BrightBlue)
-    Call AddLog(GetPlayerName(index) & " warped to map #" & N & ".", ADMIN_LOG)
+    Call PlayerWarp(index, n, GetPlayerX(index), GetPlayerY(index))
+    Call PlayerMsg(index, "You have been warped to map #" & n, BrightBlue)
+    Call AddLog(GetPlayerName(index) & " warped to map #" & n & ".", ADMIN_LOG)
 End Sub
 
 ' :::::::::::::::::::::::
 ' :: Set sprite packet ::
 ' :::::::::::::::::::::::
 Sub HandleSetSprite(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim N As Long
+    Dim n As Long
     Dim Buffer As clsBuffer
     Set Buffer = New clsBuffer
     Buffer.WriteBytes Data()
@@ -356,9 +358,9 @@ Sub HandleSetSprite(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr A
     End If
 
     ' The sprite
-    N = Buffer.ReadLong 'CLng(Parse(1))
+    n = Buffer.ReadLong 'CLng(Parse(1))
     Buffer.Flush: Set Buffer = Nothing
-    Call SetPlayerSprite(index, N)
+    Call SetPlayerSprite(index, n)
     Call SendPlayerData(index)
     Exit Sub
 End Sub
@@ -374,7 +376,7 @@ End Sub
 ' :: Kick player packet ::
 ' ::::::::::::::::::::::::
 Sub HandleKickPlayer(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim N As Long
+    Dim n As Long
     Dim Buffer As clsBuffer
     Set Buffer = New clsBuffer
     Buffer.WriteBytes Data()
@@ -385,15 +387,15 @@ Sub HandleKickPlayer(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr 
     End If
 
     ' The player index
-    N = FindPlayer(Buffer.ReadString) 'Parse(1))
+    n = FindPlayer(Buffer.ReadString) 'Parse(1))
     Buffer.Flush: Set Buffer = Nothing
 
-    If N <> index Then
-        If N > 0 Then
-            If GetPlayerAccess(N) < GetPlayerAccess(index) Then
-                Call GlobalMsg(GetPlayerName(N) & " has been kicked from " & GAME_NAME & " by " & GetPlayerName(index) & "!", White)
-                Call AddLog(GetPlayerName(index) & " has kicked " & GetPlayerName(N) & ".", ADMIN_LOG)
-                Call AlertMsg(N, DIALOGUE_MSG_KICKED)
+    If n <> index Then
+        If n > 0 Then
+            If GetPlayerAccess(n) < GetPlayerAccess(index) Then
+                Call GlobalMsg(GetPlayerName(n) & " has been kicked from " & GAME_NAME & " by " & GetPlayerName(index) & "!", White)
+                Call AddLog(GetPlayerName(index) & " has kicked " & GetPlayerName(n) & ".", ADMIN_LOG)
+                Call AlertMsg(n, DIALOGUE_MSG_KICKED)
             Else
                 Call PlayerMsg(index, "That is a higher or same access admin then you!", White)
             End If
@@ -426,7 +428,7 @@ End Sub
 ' :: Ban player packet ::
 ' :::::::::::::::::::::::
 Sub HandleBanPlayer(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim N As Long
+    Dim n As Long
     Dim Buffer As clsBuffer
     Set Buffer = New clsBuffer
     Buffer.WriteBytes Data()
@@ -437,13 +439,13 @@ Sub HandleBanPlayer(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr A
     End If
 
     ' The player index
-    N = FindPlayer(Buffer.ReadString) 'Parse(1))
+    n = FindPlayer(Buffer.ReadString) 'Parse(1))
     Buffer.Flush: Set Buffer = Nothing
 
-    If N <> index Then
-        If N > 0 Then
-            If GetPlayerAccess(N) < GetPlayerAccess(index) Then
-                Call BanIndex(N)
+    If n <> index Then
+        If n > 0 Then
+            If GetPlayerAccess(n) < GetPlayerAccess(index) Then
+                Call BanIndex(n)
             Else
                 Call PlayerMsg(index, "That is a higher or same access admin then you!", White)
             End If
@@ -462,7 +464,7 @@ End Sub
 ' :: Set access packet ::
 ' :::::::::::::::::::::::
 Sub HandleSetAccess(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim N As Long
+    Dim n As Long
     Dim i As Long
     Dim Buffer As clsBuffer
     Set Buffer = New clsBuffer
@@ -474,7 +476,7 @@ Sub HandleSetAccess(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr A
     End If
 
     ' The index
-    N = FindPlayer(Buffer.ReadString) 'Parse(1))
+    n = FindPlayer(Buffer.ReadString) 'Parse(1))
     ' The access
     i = Buffer.ReadLong 'CLng(Parse(2))
     Buffer.Flush: Set Buffer = Nothing
@@ -483,21 +485,21 @@ Sub HandleSetAccess(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr A
     If i >= 0 Or i <= 3 Then
 
         ' Check if player is on
-        If N > 0 Then
+        If n > 0 Then
 
             'check to see if same level access is trying to change another access of the very same level and boot them if they are.
-            If GetPlayerAccess(N) = GetPlayerAccess(index) Then
+            If GetPlayerAccess(n) = GetPlayerAccess(index) Then
                 Call PlayerMsg(index, "Invalid access level.", Red)
                 Exit Sub
             End If
 
-            If GetPlayerAccess(N) <= 0 Then
-                Call GlobalMsg(GetPlayerName(N) & " has been blessed with administrative access.", BrightBlue)
+            If GetPlayerAccess(n) <= 0 Then
+                Call GlobalMsg(GetPlayerName(n) & " has been blessed with administrative access.", BrightBlue)
             End If
 
-            Call SetPlayerAccess(N, i)
-            Call SendPlayerData(N)
-            Call AddLog(GetPlayerName(index) & " has modified " & GetPlayerName(N) & "'s access.", ADMIN_LOG)
+            Call SetPlayerAccess(n, i)
+            Call SendPlayerData(n)
+            Call AddLog(GetPlayerName(index) & " has modified " & GetPlayerName(n) & "'s access.", ADMIN_LOG)
         Else
             Call PlayerMsg(index, "Player is not online.", White)
         End If
@@ -532,7 +534,7 @@ End Sub
 ' :: Check Ping ::
 ' ::::::::::::::::
 Sub HandleCheckPing(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim N As Long
+    Dim n As Long
     Dim Buffer As clsBuffer
     Set Buffer = New clsBuffer
     Buffer.WriteLong SSendPing

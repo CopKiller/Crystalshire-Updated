@@ -1,8 +1,6 @@
 Attribute VB_Name = "Player_UDT"
 Option Explicit
 
-Public Const MAX_PLAYER_MISSIONS As Long = 20
-
 Public Player(1 To MAX_PLAYERS) As PlayerRec
 Public Party(1 To MAX_PARTYS) As PartyRec
 Public TempPlayer(1 To MAX_PLAYERS) As TempPlayerRec
@@ -75,7 +73,7 @@ Public Type PlayerRec
     Map As Long
     x As Byte
     y As Byte
-    dir As Byte
+    Dir As Byte
     
     ' Variables
     Variable(1 To MAX_BYTE) As Long
@@ -118,6 +116,8 @@ Public Type TempPlayerRec
     eventNum As Long
     pageNum As Long
     commandNum As Long
+    ' mission
+    MissionRequest As Long
     ' trade
     TradeRequest As Long
     InTrade As Long

@@ -21,6 +21,7 @@ Public Sub SetPlayerName(ByVal index As Long, ByVal Name As String)
 End Sub
 
 Public Function GetPlayerClass(ByVal index As Long) As Long
+    If index <= 0 Or index > Player_HighIndex Then Exit Function
     GetPlayerClass = Player(index).Class
 End Function
 
@@ -202,11 +203,11 @@ End Sub
 Public Function GetPlayerDir(ByVal index As Long) As Long
 
     If index > MAX_PLAYERS Then Exit Function
-    GetPlayerDir = Player(index).dir
+    GetPlayerDir = Player(index).Dir
 End Function
 
-Public Sub SetPlayerDir(ByVal index As Long, ByVal dir As Long)
-    Player(index).dir = dir
+Public Sub SetPlayerDir(ByVal index As Long, ByVal Dir As Long)
+    Player(index).Dir = Dir
 End Sub
 
 Public Function GetPlayerIP(ByVal index As Long) As String
@@ -222,8 +223,8 @@ Public Function GetPlayerInvItemNum(ByVal index As Long, ByVal invSlot As Long) 
     GetPlayerInvItemNum = Player(index).Inv(invSlot).Num
 End Function
 
-Public Sub SetPlayerInvItemNum(ByVal index As Long, ByVal invSlot As Long, ByVal itemNum As Long)
-    Player(index).Inv(invSlot).Num = itemNum
+Public Sub SetPlayerInvItemNum(ByVal index As Long, ByVal invSlot As Long, ByVal ItemNum As Long)
+    Player(index).Inv(invSlot).Num = ItemNum
 End Sub
 
 Public Function GetPlayerInvItemValue(ByVal index As Long, ByVal invSlot As Long) As Long
@@ -253,9 +254,9 @@ Public Function GetPlayerBankItemNum(ByVal index As Long, ByVal BankSlot As Long
     GetPlayerBankItemNum = Player(index).Bank(BankSlot).Num
 End Function
 
-Public Sub SetPlayerBankItemNum(ByVal index As Long, ByVal BankSlot As Long, ByVal itemNum As Long)
+Public Sub SetPlayerBankItemNum(ByVal index As Long, ByVal BankSlot As Long, ByVal ItemNum As Long)
     If BankSlot = 0 Then Exit Sub
-    Player(index).Bank(BankSlot).Num = itemNum
+    Player(index).Bank(BankSlot).Num = ItemNum
 End Sub
 
 Public Function GetPlayerBankItemValue(ByVal index As Long, ByVal BankSlot As Long) As Long

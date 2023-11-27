@@ -1,4 +1,4 @@
-Attribute VB_Name = "modInput"
+Attribute VB_Name = "Client_Input"
 Option Explicit
 ' keyboard input
 Public Declare Function GetAsyncKeyState Lib "user32" (ByVal vKey As Long) As Integer

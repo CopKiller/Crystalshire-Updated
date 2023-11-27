@@ -155,7 +155,7 @@ Begin VB.Form frmEditor_Quest
          Width           =   1215
       End
       Begin VB.Label Label3 
-         Caption         =   "Dialogue:"
+         Caption         =   "Description:"
          Height          =   255
          Left            =   120
          TabIndex        =   8
@@ -409,7 +409,7 @@ Begin VB.Form frmEditor_Quest
          Left            =   120
          TabIndex        =   44
          Top             =   600
-         Width           =   1935
+         Width           =   4695
       End
       Begin VB.Label lblRewardNum 
          Caption         =   "Reward (1):"
@@ -551,7 +551,8 @@ End Sub
 
 Private Sub scrlItemNum_Change()
     If EditorIndex = 0 Or EditorIndex > MAX_MISSIONS Then Exit Sub
-    lblItemName.caption = "Item: " & Trim$(Item(scrlItemNum.value).Name)
+    
+    If scrlItemNum.value <> 0 Then lblItemName.caption = "Item: " & Trim$(Item(scrlItemNum.value).Name)
     
     ' Set
     Mission(EditorIndex).RewardItem(scrlRewardNum.value).ItemNum = scrlItemNum.value
@@ -589,7 +590,7 @@ End Sub
 
 Private Sub txtDialogue_Change()
     If EditorIndex = 0 Or EditorIndex > MAX_MISSIONS Then Exit Sub
-    Mission(EditorIndex).Dialogue = txtDialogue.text
+    Mission(EditorIndex).Description = txtDialogue.text
 End Sub
 
 Private Sub txtIncomplete_Change()

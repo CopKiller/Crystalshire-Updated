@@ -25,7 +25,7 @@ Private Type MissionRec
     Name As String * NAME_LENGTH
     Type As Long
     Repeatable As Byte
-    Dialogue As String * DESC_LENGTH
+    Description As String * DESC_LENGTH
     ' Mission Type Kill
     KillNPC As Long
     KillNPCAmount As Long

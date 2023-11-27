@@ -1,13 +1,17 @@
-Attribute VB_Name = "modGlobals"
+Attribute VB_Name = "Client_Globals"
 Option Explicit
 ' loading screen
 Public loadingText As String
+Public StartX As Long, EndX As Long, offsetX As Long
+Public StartY As Long, EndY As Long, offsetY As Long
 ' description
 Public descType As Byte
 Public descItem As Long
 Public descLastType As Byte
 Public descLastItem As Long
 Public descText() As TextColourRec
+' Window Missions
+Public btnMissionActive As Byte
 ' chars
 Public CharName(1 To MAX_CHARS) As String
 Public CharSprite(1 To MAX_CHARS) As Long

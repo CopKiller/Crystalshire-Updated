@@ -1,4 +1,4 @@
-Attribute VB_Name = "modInterface"
+Attribute VB_Name = "Client_Interface"
 Option Explicit
 
 ' Entity Types
@@ -182,7 +182,7 @@ Public Sub CreateEntity(winNum As Long, zOrder As Long, Name As String, tType As
    Optional alpha As Long = 255, Optional clickThrough As Boolean, Optional xOffset As Long, Optional yOffset As Long, Optional zChange As Byte, Optional ByVal icon As Long, _
    Optional ByVal onDraw As Long, Optional isActive As Boolean, Optional isCensor As Boolean, Optional textColour_Hover As Long, Optional textColour_Click As Long, _
    Optional tooltip As String, Optional group As Long)
-    Dim I As Long
+    Dim i As Long
 
     ' check if it's a legal number
     If winNum <= 0 Or winNum > WindowCount Then
@@ -201,10 +201,10 @@ Public Sub CreateEntity(winNum As Long, zOrder As Long, Name As String, tType As
         .Type = tType
 
         ' loop through states
-        For I = 0 To entStates.state_Count - 1
-            .design(I) = design(I)
-            .image(I) = image(I)
-            .entCallBack(I) = entCallBack(I)
+        For i = 0 To entStates.state_Count - 1
+            .design(i) = design(i)
+            .image(i) = image(i)
+            .entCallBack(i) = entCallBack(i)
         Next
 
         .Left = Left
@@ -247,7 +247,7 @@ Public Sub CreateEntity(winNum As Long, zOrder As Long, Name As String, tType As
 End Sub
 
 Public Sub UpdateZOrder(winNum As Long, Optional forced As Boolean = False)
-    Dim I As Long
+    Dim i As Long
     Dim oldZOrder As Long
 
     With Windows(winNum).Window
@@ -256,10 +256,10 @@ Public Sub UpdateZOrder(winNum As Long, Optional forced As Boolean = False)
         If .zOrder = WindowCount Then Exit Sub
         oldZOrder = .zOrder
 
-        For I = 1 To WindowCount
+        For i = 1 To WindowCount
 
-            If Windows(I).Window.zOrder > oldZOrder Then
-                Windows(I).Window.zOrder = Windows(I).Window.zOrder - 1
+            If Windows(i).Window.zOrder > oldZOrder Then
+                Windows(i).Window.zOrder = Windows(i).Window.zOrder - 1
             End If
 
         Next
@@ -271,19 +271,19 @@ End Sub
 
 Public Sub SortWindows()
     Dim tempWindow As WindowRec
-    Dim I As Long, x As Long
-    x = 1
+    Dim i As Long, X As Long
+    X = 1
 
-    While x <> 0
-        x = 0
+    While X <> 0
+        X = 0
 
-        For I = 1 To WindowCount - 1
+        For i = 1 To WindowCount - 1
 
-            If Windows(I).Window.zOrder > Windows(I + 1).Window.zOrder Then
-                tempWindow = Windows(I)
-                Windows(I) = Windows(I + 1)
-                Windows(I + 1) = tempWindow
-                x = 1
+            If Windows(i).Window.zOrder > Windows(i + 1).Window.zOrder Then
+                tempWindow = Windows(i)
+                Windows(i) = Windows(i + 1)
+                Windows(i + 1) = tempWindow
+                X = 1
             End If
 
         Next
@@ -293,7 +293,7 @@ Public Sub SortWindows()
 End Sub
 
 Public Sub RenderEntities()
-    Dim I As Long, x As Long, curZOrder As Long
+    Dim i As Long, X As Long, curZOrder As Long
 
     ' don't render anything if we don't have any containers
     If WindowCount = 0 Then Exit Sub
@@ -302,17 +302,17 @@ Public Sub RenderEntities()
 
     ' loop through windows
     Do While curZOrder <= WindowCount
-        For I = 1 To WindowCount
-            If curZOrder = Windows(I).Window.zOrder Then
+        For i = 1 To WindowCount
+            If curZOrder = Windows(i).Window.zOrder Then
                 ' increment
                 curZOrder = curZOrder + 1
                 ' make sure it's visible
-                If Windows(I).Window.visible Then
+                If Windows(i).Window.visible Then
                     ' render container
-                    RenderWindow I
+                    RenderWindow i
                     ' render controls
-                    For x = 1 To Windows(I).ControlCount
-                        If Windows(I).Controls(x).visible Then RenderEntity I, x
+                    For X = 1 To Windows(i).ControlCount
+                        If Windows(i).Controls(X).visible Then RenderEntity i, X
                     Next
                 End If
             End If
@@ -322,7 +322,7 @@ End Sub
 
 Public Sub RenderEntity(winNum As Long, entNum As Long)
     Dim Xo As Long, Yo As Long, hor_centre As Long, ver_centre As Long, Height As Long, Width As Long, Left As Long, texNum As Long, xOffset As Long
-    Dim callback As Long, taddText As String, Colour As Long, textArray() As String, count As Long, yOffset As Long, I As Long, y As Long, x As Long
+    Dim callback As Long, taddText As String, Colour As Long, textArray() As String, Count As Long, yOffset As Long, i As Long, Y As Long, X As Long
 
     ' check if the window exists
     If winNum <= 0 Or winNum > WindowCount Then
@@ -420,9 +420,9 @@ Public Sub RenderEntity(winNum As Long, entNum As Long)
                                 ' wrap text
                                 WordWrap_Array .text, .Width, textArray()
                                 ' render text
-                                count = UBound(textArray)
-                                For I = 1 To count
-                                    RenderText font(.font), textArray(I), .Left + Xo, .Top + Yo + yOffset, .textColour, .alpha
+                                Count = UBound(textArray)
+                                For i = 1 To Count
+                                    RenderText font(.font), textArray(i), .Left + Xo, .Top + Yo + yOffset, .textColour, .alpha
                                     yOffset = yOffset + 14
                                 Next
                             Else
@@ -435,10 +435,10 @@ Public Sub RenderEntity(winNum As Long, entNum As Long)
                                 ' wrap text
                                 WordWrap_Array .text, .Width, textArray()
                                 ' render text
-                                count = UBound(textArray)
-                                For I = 1 To count
-                                    Left = .Left + .Width - TextWidth(font(.font), textArray(I))
-                                    RenderText font(.font), textArray(I), Left + Xo, .Top + Yo + yOffset, .textColour, .alpha
+                                Count = UBound(textArray)
+                                For i = 1 To Count
+                                    Left = .Left + .Width - TextWidth(font(.font), textArray(i))
+                                    RenderText font(.font), textArray(i), Left + Xo, .Top + Yo + yOffset, .textColour, .alpha
                                     yOffset = yOffset + 14
                                 Next
                             Else
@@ -452,10 +452,10 @@ Public Sub RenderEntity(winNum As Long, entNum As Long)
                                 ' wrap text
                                 WordWrap_Array .text, .Width, textArray()
                                 ' render text
-                                count = UBound(textArray)
-                                For I = 1 To count
-                                    Left = .Left + (.Width \ 2) - (TextWidth(font(.font), textArray(I)) \ 2)
-                                    RenderText font(.font), textArray(I), Left + Xo, .Top + Yo + yOffset, .textColour, .alpha
+                                Count = UBound(textArray)
+                                For i = 1 To Count
+                                    Left = .Left + (.Width \ 2) - (TextWidth(font(.font), textArray(i)) \ 2)
+                                    RenderText font(.font), textArray(i), Left + Xo, .Top + Yo + yOffset, .textColour, .alpha
                                     yOffset = yOffset + 14
                                 Next
                             Else
@@ -528,7 +528,7 @@ Public Sub RenderEntity(winNum As Long, entNum As Long)
 End Sub
 
 Public Sub RenderWindow(winNum As Long)
-    Dim Width As Long, Height As Long, callback As Long, x As Long, y As Long, I As Long, Left As Long
+    Dim Width As Long, Height As Long, callback As Long, X As Long, Y As Long, i As Long, Left As Long
 
     ' check if the window exists
     If winNum <= 0 Or winNum > WindowCount Then
@@ -542,19 +542,19 @@ Public Sub RenderWindow(winNum As Long)
                 RenderTexture Tex_Blank, .Left, .Top, 0, 0, .Width, .Height, 1, 1, DX8Colour(Black, 157)
                 ' text
                 If UBound(.list) > 0 Then
-                    y = .Top + 2
-                    x = .Left
-                    For I = 1 To UBound(.list)
+                    Y = .Top + 2
+                    X = .Left
+                    For i = 1 To UBound(.list)
                         ' render select
-                        If I = .value Or I = .group Then RenderTexture Tex_Blank, x, y - 1, 0, 0, .Width, 15, 1, 1, DX8Colour(Black, 255)
+                        If i = .value Or i = .group Then RenderTexture Tex_Blank, X, Y - 1, 0, 0, .Width, 15, 1, 1, DX8Colour(Black, 255)
                         ' render text
-                        Left = x + (.Width \ 2) - (TextWidth(font(.font), .list(I)) \ 2)
-                        If I = .value Or I = .group Then
-                            RenderText font(.font), .list(I), Left, y, Yellow
+                        Left = X + (.Width \ 2) - (TextWidth(font(.font), .list(i)) \ 2)
+                        If i = .value Or i = .group Then
+                            RenderText font(.font), .list(i), Left, Y, Yellow
                         Else
-                            RenderText font(.font), .list(I), Left, y, White
+                            RenderText font(.font), .list(i), Left, Y, White
                         End If
-                        y = y + 16
+                        Y = Y + 16
                     Next
                 End If
                 Exit Sub
@@ -792,37 +792,37 @@ Public Sub RenderDesign(design As Long, Left As Long, Top As Long, Width As Long
 
 End Sub
 
-Public Sub RenderEntity_Square(texNum As Long, x As Long, y As Long, Width As Long, Height As Long, borderSize As Long, Optional alpha As Long = 255)
+Public Sub RenderEntity_Square(texNum As Long, X As Long, Y As Long, Width As Long, Height As Long, borderSize As Long, Optional alpha As Long = 255)
     Dim bs As Long, Colour As Long
     ' change colour for alpha
     Colour = DX8Colour(White, alpha)
     ' Set the border size
     bs = borderSize
     ' Draw centre
-    RenderTexture texNum, x + bs, y + bs, bs + 1, bs + 1, Width - (bs * 2), Height - (bs * 2), 1, 1, Colour
+    RenderTexture texNum, X + bs, Y + bs, bs + 1, bs + 1, Width - (bs * 2), Height - (bs * 2), 1, 1, Colour
     ' Draw top side
-    RenderTexture texNum, x + bs, y, bs, 0, Width - (bs * 2), bs, 1, bs, Colour
+    RenderTexture texNum, X + bs, Y, bs, 0, Width - (bs * 2), bs, 1, bs, Colour
     ' Draw left side
-    RenderTexture texNum, x, y + bs, 0, bs, bs, Height - (bs * 2), bs, 1, Colour
+    RenderTexture texNum, X, Y + bs, 0, bs, bs, Height - (bs * 2), bs, 1, Colour
     ' Draw right side
-    RenderTexture texNum, x + Width - bs, y + bs, bs + 3, bs, bs, Height - (bs * 2), bs, 1, Colour
+    RenderTexture texNum, X + Width - bs, Y + bs, bs + 3, bs, bs, Height - (bs * 2), bs, 1, Colour
     ' Draw bottom side
-    RenderTexture texNum, x + bs, y + Height - bs, bs, bs + 3, Width - (bs * 2), bs, 1, bs, Colour
+    RenderTexture texNum, X + bs, Y + Height - bs, bs, bs + 3, Width - (bs * 2), bs, 1, bs, Colour
     ' Draw top left corner
-    RenderTexture texNum, x, y, 0, 0, bs, bs, bs, bs, Colour
+    RenderTexture texNum, X, Y, 0, 0, bs, bs, bs, bs, Colour
     ' Draw top right corner
-    RenderTexture texNum, x + Width - bs, y, bs + 3, 0, bs, bs, bs, bs, Colour
+    RenderTexture texNum, X + Width - bs, Y, bs + 3, 0, bs, bs, bs, bs, Colour
     ' Draw bottom left corner
-    RenderTexture texNum, x, y + Height - bs, 0, bs + 3, bs, bs, bs, bs, Colour
+    RenderTexture texNum, X, Y + Height - bs, 0, bs + 3, bs, bs, bs, bs, Colour
     ' Draw bottom right corner
-    RenderTexture texNum, x + Width - bs, y + Height - bs, bs + 3, bs + 3, bs, bs, bs, bs, Colour
+    RenderTexture texNum, X + Width - bs, Y + Height - bs, bs + 3, bs + 3, bs, bs, bs, bs, Colour
 End Sub
 
 Sub Combobox_AddItem(winIndex As Long, controlIndex As Long, text As String)
-Dim count As Long
-    count = UBound(Windows(winIndex).Controls(controlIndex).list)
-    ReDim Preserve Windows(winIndex).Controls(controlIndex).list(0 To count + 1)
-    Windows(winIndex).Controls(controlIndex).list(count + 1) = text
+Dim Count As Long
+    Count = UBound(Windows(winIndex).Controls(controlIndex).list)
+    ReDim Preserve Windows(winIndex).Controls(controlIndex).list(0 To Count + 1)
+    Windows(winIndex).Controls(controlIndex).list(Count + 1) = text
 End Sub
 
 Public Sub CreateWindow(Name As String, caption As String, zOrder As Long, Left As Long, Top As Long, Width As Long, Height As Long, icon As Long, _
@@ -832,7 +832,7 @@ Public Sub CreateWindow(Name As String, caption As String, zOrder As Long, Left 
    Optional entCallBack_mousemove As Long, Optional entCallBack_dblclick As Long, Optional canDrag As Boolean = True, Optional zChange As Byte = True, Optional ByVal onDraw As Long, _
    Optional isActive As Boolean, Optional clickThrough As Boolean)
    
-    Dim I As Long
+    Dim i As Long
     Dim design(0 To entStates.state_Count - 1) As Long
     Dim image(0 To entStates.state_Count - 1) As Long
     Dim entCallBack(0 To entStates.state_Count - 1) As Long
@@ -863,10 +863,10 @@ Public Sub CreateWindow(Name As String, caption As String, zOrder As Long, Left 
         .Type = EntityTypes.entWindow
 
         ' loop through states
-        For I = 0 To entStates.state_Count - 1
-            .design(I) = design(I)
-            .image(I) = image(I)
-            .entCallBack(I) = entCallBack(I)
+        For i = 0 To entStates.state_Count - 1
+            .design(i) = design(i)
+            .image(i) = image(i)
+            .entCallBack(i) = entCallBack(i)
         Next
 
         .Left = Left
@@ -1016,12 +1016,12 @@ Public Sub CreateComboBox(winNum As Long, Name As String, Left As Long, Top As L
 End Sub
 
 Public Function GetWindowIndex(winName As String) As Long
-    Dim I As Long
+    Dim i As Long
 
-    For I = 1 To WindowCount
+    For i = 1 To WindowCount
 
-        If LCase$(Windows(I).Window.Name) = LCase$(winName) Then
-            GetWindowIndex = I
+        If LCase$(Windows(i).Window.Name) = LCase$(winName) Then
+            GetWindowIndex = i
             Exit Function
         End If
 
@@ -1031,16 +1031,16 @@ Public Function GetWindowIndex(winName As String) As Long
 End Function
 
 Public Function GetControlIndex(winName As String, controlName As String) As Long
-    Dim I As Long, winIndex As Long
+    Dim i As Long, winIndex As Long
     
     winIndex = GetWindowIndex(winName)
 
     If Not winIndex > 0 Or Not winIndex <= WindowCount Then Exit Function
 
-    For I = 1 To Windows(winIndex).ControlCount
+    For i = 1 To Windows(winIndex).ControlCount
 
-        If LCase$(Windows(winIndex).Controls(I).Name) = LCase$(controlName) Then
-            GetControlIndex = I
+        If LCase$(Windows(winIndex).Controls(i).Name) = LCase$(controlName) Then
+            GetControlIndex = i
             Exit Function
         End If
 
@@ -1068,9 +1068,9 @@ Public Sub CentraliseWindow(curWindow As Long)
 End Sub
 
 Public Sub HideWindows()
-Dim I As Long
-    For I = 1 To WindowCount
-        HideWindow I
+Dim i As Long
+    For i = 1 To WindowCount
+        HideWindow i
     Next
 End Sub
 
@@ -1092,13 +1092,13 @@ Public Sub ShowWindow(curWindow As Long, Optional forced As Boolean, Optional re
 End Sub
 
 Public Sub HideWindow(curWindow As Long)
-Dim I As Long
+Dim i As Long
     Windows(curWindow).Window.visible = False
     ' find next window to set as active
-    For I = WindowCount To 1 Step -1
-        If Windows(I).Window.visible And Windows(I).Window.zChange Then
+    For i = WindowCount To 1 Step -1
+        If Windows(i).Window.visible And Windows(i).Window.zChange Then
             'UpdateZOrder i
-            activeWindow = I
+            activeWindow = i
             Exit Sub
         End If
     Next
@@ -1395,9 +1395,6 @@ Public Sub CreateWindow_Menu()
     CreateButton WindowCount, "btnChar", 8, 1, 29, 29, , , , Tex_Item(108), , , , , , DesignTypes.desGreen, DesignTypes.desGreen_Hover, DesignTypes.desGreen_Click, , , GetAddress(AddressOf btnMenu_Char), , , -1, -2, , , "Character (C)"
     CreateButton WindowCount, "btnInv", 44, 1, 29, 29, , , , Tex_Item(1), , , , , , DesignTypes.desGreen, DesignTypes.desGreen_Hover, DesignTypes.desGreen_Click, , , GetAddress(AddressOf btnMenu_Inv), , , -1, -2, , , "Inventory (I)"
     CreateButton WindowCount, "btnSkills", 82, 1, 29, 29, , , , Tex_Item(109), , , , , , DesignTypes.desGreen, DesignTypes.desGreen_Hover, DesignTypes.desGreen_Click, , , GetAddress(AddressOf btnMenu_Skills), , , -1, -2, , , "Skills (M)"
-    'CreateButton WindowCount, "btnMap", 119, 1, 29, 29, , , , Tex_Item(106), , , , , , DesignTypes.desGreen, DesignTypes.desGreen_Hover, DesignTypes.desGreen_Click, , , GetAddress(AddressOf btnMenu_Map), , , -1, -2
-    'CreateButton WindowCount, "btnGuild", 155, 1, 29, 29, , , , Tex_Item(107), , , , , , DesignTypes.desGreen, DesignTypes.desGreen_Hover, DesignTypes.desGreen_Click, , , GetAddress(AddressOf btnMenu_Guild), , , -1, -1
-    'CreateButton WindowCount, "btnQuest", 191, 1, 29, 29, , , , Tex_Item(23), , , , , , DesignTypes.desGreen, DesignTypes.desGreen_Hover, DesignTypes.desGreen_Click, , , GetAddress(AddressOf btnMenu_Quest), , , -1, -2
     CreateButton WindowCount, "btnMap", 119, 1, 29, 29, , , , Tex_Item(106), , , , , , DesignTypes.desGrey, DesignTypes.desGrey, DesignTypes.desGrey, , , GetAddress(AddressOf btnMenu_Map), , , -1, -2
     CreateButton WindowCount, "btnGuild", 155, 1, 29, 29, , , , Tex_Item(107), , , , , , DesignTypes.desGrey, DesignTypes.desGrey, DesignTypes.desGrey, , , GetAddress(AddressOf btnMenu_Guild), , , -1, -1
     CreateButton WindowCount, "btnQuest", 191, 1, 29, 29, , , , Tex_Item(23), , , , , , DesignTypes.desGreen, DesignTypes.desGreen_Hover, DesignTypes.desGreen_Click, , , GetAddress(AddressOf btnMenu_Quest), , , -1, -2
@@ -1440,7 +1437,7 @@ End Sub
 
 Public Sub CreateWindow_Character()
     ' Create window
-    CreateWindow "winCharacter", "Character Status", zOrder_Win, 0, 0, 174, 356, Tex_Item(62), False, Fonts.rockwellDec_15, , 2, 6, DesignTypes.desWin_Empty, DesignTypes.desWin_Empty, DesignTypes.desWin_Empty, , , , , GetAddress(AddressOf Character_MouseMove), GetAddress(AddressOf Character_MouseDown), GetAddress(AddressOf Character_MouseMove), GetAddress(AddressOf Character_MouseMove), , , GetAddress(AddressOf DrawCharacter)
+    CreateWindow "winCharacter", "Character Status", zOrder_Win, 0, 0, 214, 318, Tex_Item(62), False, Fonts.rockwellDec_15, , 2, 6, DesignTypes.desWin_Empty, DesignTypes.desWin_Empty, DesignTypes.desWin_Empty, , , , , GetAddress(AddressOf Character_MouseMove), GetAddress(AddressOf Character_MouseDown), GetAddress(AddressOf Character_MouseMove), GetAddress(AddressOf Character_MouseMove), , , GetAddress(AddressOf DrawCharacter)
     ' Centralise it
     CentraliseWindow WindowCount
     
@@ -1505,6 +1502,44 @@ Public Sub CreateWindow_Character()
     CreateLabel WindowCount, "lblPoints", 18, 288, 100, , "255", rockwellDec_10
 End Sub
 
+Public Sub CreateWindow_PlayerQuest()
+    ' Create window
+    CreateWindow "winPlayerQuests", "Quests", zOrder_Win, 0, 0, 450, 412, Tex_Item(23), False, Fonts.rockwellDec_15, , 2, 7, DesignTypes.desWin_Empty, DesignTypes.desWin_Empty, DesignTypes.desWin_Empty, , , , , GetAddress(AddressOf Inventory_MouseMove), GetAddress(AddressOf Inventory_MouseDown), GetAddress(AddressOf Inventory_MouseMove), GetAddress(AddressOf Inventory_DblClick), , , GetAddress(AddressOf DrawWinQuest)
+    ' Centralise it
+    CentraliseWindow WindowCount
+    
+    ' Set the index for spawning controls
+    zOrder_Con = 1
+    
+    ' Close button
+    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.Width - 19, 6, 13, 13, , , , , , , Tex_GUI(8), Tex_GUI(9), Tex_GUI(10), , , , , , GetAddress(AddressOf btnMenu_Quest)
+    
+    CreateButton WindowCount, "btnMission1", 5, 24, 125, 30, "Quest 1", verdana_12, White, , False, , , , , DesignTypes.desMenuOption, DesignTypes.desBlackOval, DesignTypes.desBlackOval, , , GetAddress(AddressOf btnQuest1)
+    CreateButton WindowCount, "btnMission2", 5, 56, 125, 30, "Quest 2", verdana_12, White, , False, , , , , DesignTypes.desMenuOption, DesignTypes.desBlackOval, DesignTypes.desBlackOval, , , GetAddress(AddressOf btnQuest2)
+    CreateButton WindowCount, "btnMission3", 5, 88, 125, 30, "Quest 3", verdana_12, White, , False, , , , , DesignTypes.desMenuOption, DesignTypes.desBlackOval, DesignTypes.desBlackOval, , , GetAddress(AddressOf btnQuest3)
+    CreateButton WindowCount, "btnMission4", 5, 120, 125, 30, "Quest 4", verdana_12, White, , False, , , , , DesignTypes.desMenuOption, DesignTypes.desBlackOval, DesignTypes.desBlackOval, , , GetAddress(AddressOf btnQuest4)
+    CreateButton WindowCount, "btnMission5", 5, 152, 125, 30, "Quest 5", verdana_12, White, , False, , , , , DesignTypes.desMenuOption, DesignTypes.desBlackOval, DesignTypes.desBlackOval, , , GetAddress(AddressOf btnQuest5)
+    CreateButton WindowCount, "btnMission6", 5, 184, 125, 30, "Quest 6", verdana_12, White, , False, , , , , DesignTypes.desMenuOption, DesignTypes.desBlackOval, DesignTypes.desBlackOval, , , GetAddress(AddressOf btnQuest6)
+    CreateButton WindowCount, "btnMission7", 5, 216, 125, 30, "Quest 7", verdana_12, White, , False, , , , , DesignTypes.desMenuOption, DesignTypes.desBlackOval, DesignTypes.desBlackOval, , , GetAddress(AddressOf btnQuest7)
+    CreateButton WindowCount, "btnMission8", 5, 248, 125, 30, "Quest 8", verdana_12, White, , False, , , , , DesignTypes.desMenuOption, DesignTypes.desBlackOval, DesignTypes.desBlackOval, , , GetAddress(AddressOf btnQuest8)
+    CreateButton WindowCount, "btnMission9", 5, 280, 125, 30, "Quest 9", verdana_12, White, , False, , , , , DesignTypes.desMenuOption, DesignTypes.desBlackOval, DesignTypes.desBlackOval, , , GetAddress(AddressOf btnQuest9)
+    CreateButton WindowCount, "btnMission10", 5, 312, 125, 30, "Quest 10", verdana_12, White, , False, , , , , DesignTypes.desMenuOption, DesignTypes.desBlackOval, DesignTypes.desBlackOval, , , GetAddress(AddressOf btnQuest10)
+    CreateButton WindowCount, "btnMission11", 5, 344, 125, 30, "Quest 11", verdana_12, White, , False, , , , , DesignTypes.desMenuOption, DesignTypes.desBlackOval, DesignTypes.desBlackOval, , , GetAddress(AddressOf btnQuest11)
+    CreateButton WindowCount, "btnMission12", 5, 376, 125, 30, "Quest 12", verdana_12, White, , False, , , , , DesignTypes.desMenuOption, DesignTypes.desBlackOval, DesignTypes.desBlackOval, , , GetAddress(AddressOf btnQuest12)
+
+    ' Description
+    CreateLabel WindowCount, "lblDescrip", 142, 27, 150, 20, "Description:", Fonts.verdana_12, Grey, Alignment.alignLeft, True
+    CreatePictureBox WindowCount, "picDescription", 137, 43, 307, 150, True, False, , , , , , DesignTypes.desTextWhite, DesignTypes.desTextWhite, DesignTypes.desTextWhite
+    CreateLabel WindowCount, "lblDescription", 142, 47, 297, 140, "", Fonts.verdana_12, White, Alignment.alignLeft, True
+    
+    ' Goal
+    CreateLabel WindowCount, "lblGo", 142, 197, 150, 20, "Goal:", Fonts.verdana_12, Grey, Alignment.alignLeft, True
+    CreatePictureBox WindowCount, "picGoal", 137, 212, 307, 150, True, False, , , , , , DesignTypes.desTextWhite, DesignTypes.desTextWhite, DesignTypes.desTextWhite
+    CreateLabel WindowCount, "lblGoal", 142, 217, 297, 140, "", Fonts.verdana_12, White, Alignment.alignLeft, True
+    
+    CreateLabel WindowCount, "lblExp", 335, 381, 101, , "1.000.000 EXP", rockwellDec_15, LightGreen, Alignment.alignCentre
+End Sub
+
 Public Sub CreateWindow_Description()
     ' Create window
     CreateWindow "winDescription", "", zOrder_Win, 0, 0, 193, 142, 0, , , , , , DesignTypes.desWin_Desc, DesignTypes.desWin_Desc, DesignTypes.desWin_Desc, , , , , , , , , False
@@ -1521,6 +1556,7 @@ Public Sub CreateWindow_Description()
     ' Requirements
     CreateLabel WindowCount, "lblClass", 5, 102, 92, , "Warrior", verdana_12, LightGreen, Alignment.alignCentre
     CreateLabel WindowCount, "lblLevel", 5, 114, 92, , "Level 20", verdana_12, BrightRed, Alignment.alignCentre
+    CreateLabel WindowCount, "lblDescription", 100, 28, 85, 112, "Level 20", verdana_12, White, Alignment.alignCentre, False
     ' Bar
     CreatePictureBox WindowCount, "picBar", 19, 114, 66, 12, False, , , , Tex_GUI(45), Tex_GUI(45), Tex_GUI(45)
 End Sub
@@ -1668,7 +1704,7 @@ Public Sub CreateWindow_Offer()
     Dim WidthWindow As Long, HeightWindow As Long
     Dim Yo As Long, Xo As Long
     ' Create window
-    CreateWindow "winOffer", "", zOrder_Win, 10, 90, 485, 85, Tex_Item(111), False, Fonts.rockwellDec_15, , 2, 11, , , , , , , , , , , , False
+    CreateWindow "winOffer", "", zOrder_Win, 10, 90, 535, 285, Tex_Item(111), False, Fonts.rockwellDec_15, , 2, 11, , , , , , , , GetAddress(AddressOf Offer_MouseMove), , GetAddress(AddressOf Offer_MouseMove), , False, , GetAddress(AddressOf DrawInviteBackground)
         
         CreatePictureBox WindowCount, "picBGOffer1", 0, 0, 485, 45, False, , , , , , , DesignTypes.desWin_Desc, DesignTypes.desWin_Desc, DesignTypes.desWin_Desc
             WidthWindow = Windows(WindowCount).Controls(GetControlIndex("winOffer", "picBGOffer1")).Width
@@ -1678,7 +1714,7 @@ Public Sub CreateWindow_Offer()
             ' Offer BG
             CreatePictureBox WindowCount, "picOfferBG1", 10, Yo, 334, 25, False, , , , , , , DesignTypes.desTextBlack, DesignTypes.desTextBlack, DesignTypes.desTextBlack
                 ' Title Offer
-                CreateLabel WindowCount, "lblTitleOffer1", 7 + Xo + ((334 - 318) / 2), Yo + 5, 318, 25, "[Offer]", rockwellDec_15, White, Alignment.alignLeft, False
+                CreateLabel WindowCount, "lblTitleOffer1", 7 + Xo + ((334 - 318) / 2), Yo + 5, 318, 25, "[Offer]", Fonts.georgia_16, White, Alignment.alignLeft, False
                 ' Action buttons
                 CreateButton WindowCount, "btnAccept1", 349, Yo, 60, 25, "Accept", verdana_12, Grey, , False, , , , , DesignTypes.desGreen, DesignTypes.desGreen_Hover, DesignTypes.desGreen_Click, , , GetAddress(AddressOf AcceptOffer1), , , , , DarkGrey
                 CreateButton WindowCount, "btnRecuse1", 414, Yo, 60, 25, "Refuse", verdana_12, Grey, , False, , , , , DesignTypes.desRed, DesignTypes.desRed_Hover, DesignTypes.desRed_Click, , , GetAddress(AddressOf RecuseOffer1), , , , , DarkGrey
@@ -1688,7 +1724,7 @@ Public Sub CreateWindow_Offer()
             Xo = Windows(WindowCount).Controls(GetControlIndex("winOffer", "picBGOffer2")).Left
             CreatePictureBox WindowCount, "picOfferBG2", 10, Yo, 334, 25, False, , , , , , , DesignTypes.desTextBlack, DesignTypes.desTextBlack, DesignTypes.desTextBlack
                 ' Title Offer
-                CreateLabel WindowCount, "lblTitleOffer2", 7 + Xo + ((334 - 318) / 2), Yo + 5, 318, 25, "[Offer]", rockwellDec_15, White, Alignment.alignLeft, False
+                CreateLabel WindowCount, "lblTitleOffer2", 7 + Xo + ((334 - 318) / 2), Yo + 5, 318, 25, "[Offer]", Fonts.georgia_16, White, Alignment.alignLeft, False
                 ' Action buttons
                 CreateButton WindowCount, "btnAccept2", 349, Yo, 60, 25, "Accept", verdana_12, Grey, , False, , , , , DesignTypes.desGreen, DesignTypes.desGreen_Hover, DesignTypes.desGreen_Click, , , GetAddress(AddressOf AcceptOffer2), , , , , DarkGrey
                 CreateButton WindowCount, "btnRecuse2", 414, Yo, 60, 25, "Refuse", verdana_12, Grey, , False, , , , , DesignTypes.desRed, DesignTypes.desRed_Hover, DesignTypes.desRed_Click, , , GetAddress(AddressOf RecuseOffer2), , , , , DarkGrey
@@ -1698,7 +1734,7 @@ Public Sub CreateWindow_Offer()
             Xo = Windows(WindowCount).Controls(GetControlIndex("winOffer", "picBGOffer3")).Left
             CreatePictureBox WindowCount, "picOfferBG3", 10, Yo, 334, 25, False, , , , , , , DesignTypes.desTextBlack, DesignTypes.desTextBlack, DesignTypes.desTextBlack
                 ' Title Offer
-                CreateLabel WindowCount, "lblTitleOffer3", 7 + Xo + ((334 - 318) / 2), Yo + 5, 318, 25, "[Offer]", rockwellDec_15, White, Alignment.alignLeft, False
+                CreateLabel WindowCount, "lblTitleOffer3", 7 + Xo + ((334 - 318) / 2), Yo + 5, 318, 25, "[Offer]", Fonts.georgia_16, White, Alignment.alignLeft, False
                 ' Action buttons
                 CreateButton WindowCount, "btnAccept3", 349, Yo, 60, 25, "Accept", verdana_12, Grey, , False, , , , , DesignTypes.desGreen, DesignTypes.desGreen_Hover, DesignTypes.desGreen_Click, , , GetAddress(AddressOf AcceptOffer3), , , , , DarkGrey
                 CreateButton WindowCount, "btnRecuse3", 414, Yo, 60, 25, "Refuse", verdana_12, Grey, , False, , , , , DesignTypes.desRed, DesignTypes.desRed_Hover, DesignTypes.desRed_Click, , , GetAddress(AddressOf RecuseOffer3), , , , , DarkGrey
@@ -1885,6 +1921,7 @@ Public Sub InitGUI()
     CreateWindow_Hotbar
     CreateWindow_Inventory
     CreateWindow_Character
+    CreateWindow_PlayerQuest
     CreateWindow_Description
     CreateWindow_DragBox
     CreateWindow_Skills

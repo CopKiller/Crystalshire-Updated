@@ -7,11 +7,11 @@ Private Declare Function GetPrivateProfileString Lib "kernel32" Alias "GetPrivat
 Private crcTable(0 To 255) As Long
 
 Public Sub InitCRC32()
-Dim i As Long, n As Long, CRC As Long
+Dim i As Long, N As Long, CRC As Long
 
     For i = 0 To 255
         CRC = i
-        For n = 0 To 7
+        For N = 0 To 7
             If CRC And 1 Then
                 CRC = (((CRC And &HFFFFFFFE) \ 2) And &H7FFFFFFF) Xor &HEDB88320
             Else
@@ -156,7 +156,7 @@ Public Sub SaveMap(ByVal mapNum As Long)
         PutVar filename, "General", "Red", Val(.Red)
         PutVar filename, "General", "Green", Val(.Green)
         PutVar filename, "General", "Blue", Val(.Blue)
-        PutVar filename, "General", "Alpha", Val(.alpha)
+        PutVar filename, "General", "Alpha", Val(.Alpha)
         
         PutVar filename, "General", "BossNpc", Val(.BossNpc)
         For i = 1 To MAX_MAP_NPCS
@@ -257,7 +257,7 @@ Public Sub LoadMap(ByVal mapNum As Long)
         .Red = Val(GetVar(filename, "General", "Red"))
         .Green = Val(GetVar(filename, "General", "Green"))
         .Blue = Val(GetVar(filename, "General", "Blue"))
-        .alpha = Val(GetVar(filename, "General", "Alpha"))
+        .Alpha = Val(GetVar(filename, "General", "Alpha"))
         .BossNpc = Val(GetVar(filename, "General", "BossNpc"))
         For i = 1 To MAX_MAP_NPCS
             .Npc(i) = Val(GetVar(filename, "General", "Npc" & i))
@@ -381,13 +381,13 @@ End Sub
 Function GetPlayerSprite(ByVal Index As Long) As Long
 
     If Index > MAX_PLAYERS Then Exit Function
-    GetPlayerSprite = Player(Index).sprite
+    GetPlayerSprite = Player(Index).Sprite
 End Function
 
-Sub SetPlayerSprite(ByVal Index As Long, ByVal sprite As Long)
+Sub SetPlayerSprite(ByVal Index As Long, ByVal Sprite As Long)
 
     If Index > MAX_PLAYERS Then Exit Sub
-    Player(Index).sprite = sprite
+    Player(Index).Sprite = Sprite
 End Sub
 
 Function GetPlayerLevel(ByVal Index As Long) As Long
@@ -563,6 +563,7 @@ End Sub
 Function GetPlayerEquipment(ByVal Index As Long, ByVal EquipmentSlot As Equipment) As Long
 
     If Index > MAX_PLAYERS Then Exit Function
+    If EquipmentSlot <= 0 Then Exit Function
     GetPlayerEquipment = Player(Index).Equipment(EquipmentSlot)
 End Function
 

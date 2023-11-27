@@ -7,7 +7,7 @@ Public Mission_Changed(1 To MAX_MISSIONS) As Boolean
 ' // Mission Editor //
 ' ////////////////////
 Public Sub MissionEditorInit()
-    Dim i As Long, N As Long
+    Dim I As Long, N As Long
 
     If frmEditor_Quest.visible = False Then Exit Sub
     EditorIndex = frmEditor_Quest.lstIndex.ListIndex + 1
@@ -16,27 +16,41 @@ Public Sub MissionEditorInit()
         ' Set Default
         .scrlItemNum.max = MAX_ITEMS
         .scrlItemAmount.max = 32000
+        .scrlRewardNum.value = 1
         
         ' Set Attributes
         .txtName.text = Trim$(Mission(EditorIndex).Name)
-        
+        .cmbType.ListIndex = Mission(EditorIndex).Type
         ' Set Mission Type
+        ' Chain TALK NPC
+        .cmbTalkNPC.Clear
+        .cmbTalkNPC.AddItem "None"
+        For I = 1 To MAX_NPCS
+            .cmbTalkNPC.AddItem I & ": " & Trim$(Npc(I).Name)
+        Next
+        ' Chain KILL NPC
+        .cmbKillNPC.Clear
+        .cmbKillNPC.AddItem "None"
+        For I = 1 To MAX_NPCS
+            .cmbKillNPC.AddItem I & ": " & Trim$(Npc(I).Name)
+        Next
+        ' Chain Collect Itens
+        .cmbCollectItem.Clear
+        .cmbCollectItem.AddItem "None"
+        For I = 1 To MAX_ITEMS
+            .cmbCollectItem.AddItem I & ": " & Trim$(Item(I).Name)
+        Next
         If Mission(EditorIndex).Type = MissionType.TypeTalk Then
             .frmTalkQuest.visible = True
             .frmKillQuest.visible = False
             .frmCollectQuest.visible = False
+            
             .cmbTalkNPC.ListIndex = Mission(EditorIndex).TalkNPC
             
         ElseIf Mission(EditorIndex).Type = MissionType.TypeKill Then
             .frmKillQuest.visible = True
             .frmCollectQuest.visible = False
             .frmTalkQuest.visible = False
-            ' Chain Mission
-            .cmbKillNPC.Clear
-            .cmbKillNPC.AddItem "None"
-            For i = 1 To MAX_NPCS
-                .cmbKillNPC.AddItem i & ": " & Trim$(Npc(EditorIndex).Name)
-            Next
             .cmbKillNPC.ListIndex = Mission(EditorIndex).KillNPC
             .scrlKillAmount.value = Mission(EditorIndex).KillNPCAmount
             
@@ -44,6 +58,7 @@ Public Sub MissionEditorInit()
             .frmKillQuest.visible = False
             .frmCollectQuest.visible = True
             .frmTalkQuest.visible = False
+            
             .cmbCollectItem.ListIndex = Mission(EditorIndex).CollectItem
             .scrlCollectAmount.value = Mission(EditorIndex).CollectItemAmount
         End If
@@ -57,13 +72,13 @@ Public Sub MissionEditorInit()
             .optRepeatableNo.value = True
         End If
         
-        .txtDialogue.text = Mission(EditorIndex).Dialogue
+        .txtDialogue.text = Mission(EditorIndex).Description
         
         ' Chain Mission
         .cmbPreviousQuest.Clear
         .cmbPreviousQuest.AddItem "None"
-        For i = 1 To MAX_MISSIONS
-            .cmbPreviousQuest.AddItem i & ": " & Trim$(Mission(EditorIndex).Name)
+        For I = 1 To MAX_MISSIONS
+            .cmbPreviousQuest.AddItem I & ": " & Trim$(Mission(I).Name)
         Next
         .cmbPreviousQuest.ListIndex = Mission(EditorIndex).PreviousMissionComplete
 
@@ -72,10 +87,9 @@ Public Sub MissionEditorInit()
         .txtCompleted.text = Mission(EditorIndex).Completed
         
         ' Reward
-        For i = 1 To 5
-            .scrlItemNum.value = Mission(EditorIndex).RewardItem(i).ItemNum
-            .scrlItemAmount.value = Mission(EditorIndex).RewardItem(i).ItemAmount
-        Next
+        .scrlItemNum.value = Mission(EditorIndex).RewardItem(1).ItemNum
+        .scrlItemAmount.value = Mission(EditorIndex).RewardItem(1).ItemAmount
+
         .scrlRewardNum.value = 1
         .scrlRewardExperience.value = Mission(EditorIndex).RewardExperience
         .lblRewardExperience.caption = "Reward Experience: " & Mission(EditorIndex).RewardExperience
@@ -85,12 +99,12 @@ Public Sub MissionEditorInit()
 End Sub
 
 Public Sub MissionEditorOk()
-    Dim i As Long
+    Dim I As Long
 
-    For i = 1 To MAX_MISSIONS
+    For I = 1 To MAX_MISSIONS
 
-        If Mission_Changed(i) Then
-            Call SendSaveMission(i)
+        If Mission_Changed(I) Then
+            Call SendSaveMission(I)
         End If
 
     Next

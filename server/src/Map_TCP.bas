@@ -21,6 +21,8 @@ Public Sub SendMapEquipment(ByVal index As Long)
     Buffer.WriteLong GetPlayerEquipment(index, Weapon)
     Buffer.WriteLong GetPlayerEquipment(index, Helmet)
     Buffer.WriteLong GetPlayerEquipment(index, Shield)
+    Buffer.WriteLong GetPlayerEquipment(index, Pants)
+    Buffer.WriteLong GetPlayerEquipment(index, Feet)
     
     SendDataToMap GetPlayerMap(index), Buffer.ToArray()
     Buffer.Flush: Set Buffer = Nothing
@@ -36,6 +38,8 @@ Public Sub SendMapEquipmentTo(ByVal PlayerNum As Long, ByVal index As Long)
     Buffer.WriteLong GetPlayerEquipment(PlayerNum, Weapon)
     Buffer.WriteLong GetPlayerEquipment(PlayerNum, Helmet)
     Buffer.WriteLong GetPlayerEquipment(PlayerNum, Shield)
+    Buffer.WriteLong GetPlayerEquipment(PlayerNum, Pants)
+    Buffer.WriteLong GetPlayerEquipment(PlayerNum, Feet)
     
     SendDataTo index, Buffer.ToArray()
     Buffer.Flush: Set Buffer = Nothing

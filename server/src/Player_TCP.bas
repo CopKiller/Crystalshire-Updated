@@ -18,7 +18,6 @@ Public Function PlayerData(ByVal index As Long) As Byte()
     Buffer.WriteLong GetPlayerAccess(index)
     Buffer.WriteLong GetPlayerPK(index)
     Buffer.WriteLong GetPlayerClass(index)
-    Buffer.WriteLong GetPlayerClass(index)
     
     For i = 1 To Stats.Stat_Count - 1
         Buffer.WriteLong GetPlayerStat(index, i)
@@ -50,10 +49,9 @@ Public Sub SendPlayerMission(ByVal index As Long, ByVal MissionIndex As Byte)
     Buffer.WriteLong SPlayerMission
     Buffer.WriteLong index
     Buffer.WriteLong MissionIndex
-    Buffer.WriteLong Player(index).Mission(MissionIndex).ID
     Buffer.WriteLong Player(index).Mission(MissionIndex).Count
     
-    SendDatoMap GetPlayerMap(index), Buffer.ToArray()
+    SendDataToMap GetPlayerMap(index), Buffer.ToArray()
     Buffer.Flush: Set Buffer = Nothing
 End Sub
 
@@ -67,6 +65,8 @@ Public Sub OfferMission(ByVal index As Long, ByVal MissionID As Long)
     
     FreeSlot = False
     CompletedPreviousQuest = False
+    
+    If TempPlayer(index).MissionRequest <> 0 Then Exit Sub
     
     If Mission(MissionID).PreviousMissionComplete > 0 Then
         For i = 1 To MAX_MISSIONS
@@ -97,6 +97,7 @@ Public Sub OfferMission(ByVal index As Long, ByVal MissionID As Long)
     End If
     
     If FreeSlot = True Then
+        TempPlayer(index).MissionRequest = MissionID
         Set Buffer = New clsBuffer
         Buffer.WriteLong SOfferMission
         Buffer.WriteLong MissionID
@@ -118,7 +119,7 @@ Public Sub CompleteMission(ByVal index As Long, ByVal MissionSlot As Long)
     
     Call PlayerMsg(index, Mission(MissionID).Completed, Yellow)
     Player(index).Mission(MissionSlot).ID = 0
-    Player(index).Mission(MissionSlot).Counter = 0
+    Player(index).Mission(MissionSlot).Count = 0
     
     For i = 1 To MAX_MISSIONS
         If Mission(MissionID).Repeatable = 1 Then
@@ -365,6 +366,8 @@ Public Sub SendWornEquipment(ByVal index As Long)
     Buffer.WriteLong GetPlayerEquipment(index, Weapon)
     Buffer.WriteLong GetPlayerEquipment(index, Helmet)
     Buffer.WriteLong GetPlayerEquipment(index, Shield)
+    Buffer.WriteLong GetPlayerEquipment(index, Pants)
+    Buffer.WriteLong GetPlayerEquipment(index, Feet)
     
     SendDataTo index, Buffer.ToArray()
     Buffer.Flush: Set Buffer = Nothing

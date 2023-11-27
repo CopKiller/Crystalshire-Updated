@@ -6,15 +6,15 @@ Attribute VB_Name = "Quest_Handle"
 ':::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 Public Sub HandleMissionEditor()
-    Dim I As Long
+    Dim i As Long
 
     With frmEditor_Quest
         Editor = EDITOR_Mission
         .lstIndex.Clear
 
         ' Add the names
-        For I = 1 To MAX_MISSIONS
-            .lstIndex.AddItem I & ": " & Trim$(Mission(I).Name)
+        For i = 1 To MAX_MISSIONS
+            .lstIndex.AddItem i & ": " & Trim$(Mission(i).Name)
         Next
 
         .Show
@@ -62,7 +62,7 @@ Public Sub HandleOfferMission(ByVal Index As Long, ByRef Data() As Byte, ByVal S
 End Sub
 
 Public Sub UpdateWindowOffer(ByVal Index_Offer As Long)
-    Dim I As Long
+    Dim i As Long
     ' gui stuff
     With Windows(GetWindowIndex("winOffer"))
         ' set main text
@@ -74,7 +74,7 @@ Public Sub UpdateWindowOffer(ByVal Index_Offer As Long)
             .Controls(GetControlIndex("winOffer", "btnRecuse" & Index_Offer)).visible = True
             Select Case inOfferType(Index_Offer)
                 Case Offers.Offer_Type_Mission
-                    .Controls(GetControlIndex("winOffer", "lblTitleOffer" & Index_Offer)).text = "Missão: " & Mission(inOffer(Index_Offer)).Name & "?"
+                    .Controls(GetControlIndex("winOffer", "lblTitleOffer" & Index_Offer)).text = "Missão: " & Trim$(Mission(inOffer(Index_Offer)).Name) & "?"
                 Case Offers.Offer_Type_Party
                     .Controls(GetControlIndex("winOffer", "lblTitleOffer" & Index_Offer)).text = inOfferInvite(Index_Offer) & " has invited you to a party."
                 Case Offers.Offer_Type_Trade
@@ -82,12 +82,12 @@ Public Sub UpdateWindowOffer(ByVal Index_Offer As Long)
             End Select
             ShowWindow GetWindowIndex("winOffer")
         Else
-            For I = 1 To MAX_OFFER
-                .Controls(GetControlIndex("winOffer", "picBGOffer" & I)).visible = False
-                .Controls(GetControlIndex("winOffer", "picOfferBG" & I)).visible = False
-                .Controls(GetControlIndex("winOffer", "lblTitleOffer" & I)).visible = False
-                .Controls(GetControlIndex("winOffer", "btnAccept" & I)).visible = False
-                .Controls(GetControlIndex("winOffer", "btnRecuse" & I)).visible = False
+            For i = 1 To MAX_OFFER
+                .Controls(GetControlIndex("winOffer", "picBGOffer" & i)).visible = False
+                .Controls(GetControlIndex("winOffer", "picOfferBG" & i)).visible = False
+                .Controls(GetControlIndex("winOffer", "lblTitleOffer" & i)).visible = False
+                .Controls(GetControlIndex("winOffer", "btnAccept" & i)).visible = False
+                .Controls(GetControlIndex("winOffer", "btnRecuse" & i)).visible = False
             Next
             HideWindow GetWindowIndex("winOffer")
         End If
@@ -97,18 +97,18 @@ Public Sub UpdateWindowOffer(ByVal Index_Offer As Long)
 End Sub
 
 Public Sub UpdateOffers(Index_Offer)
-    Dim I As Long
+    Dim i As Long
     
     If Index_Offer <> Offer_HighIndex Then
-        For I = Index_Offer To MAX_OFFER
-            If I <> Offer_HighIndex Then
-                inOffer(I) = inOffer(I + 1)
-                inOfferType(I) = inOfferType(I + 1)
-                inOfferInvite(I) = inOfferInvite(I + 1)
+        For i = Index_Offer To MAX_OFFER
+            If i <> Offer_HighIndex And i < MAX_OFFER Then
+                inOffer(i) = inOffer(i + 1)
+                inOfferType(i) = inOfferType(i + 1)
+                inOfferInvite(i) = inOfferInvite(i + 1)
             Else
-                inOffer(I) = 0
-                inOfferType(I) = 0
-                inOfferInvite(I) = 0
+                inOffer(i) = 0
+                inOfferType(i) = 0
+                inOfferInvite(i) = 0
             End If
         Next
     Else
@@ -119,8 +119,8 @@ Public Sub UpdateOffers(Index_Offer)
     
     Call SetOfferHighIndex
     If Offer_HighIndex > 0 Then
-        For I = 1 To Offer_HighIndex
-            Call UpdateWindowOffer(I)
+        For i = 1 To Offer_HighIndex
+            Call UpdateWindowOffer(i)
         Next
     Else
         Call UpdateWindowOffer(0)
@@ -128,30 +128,31 @@ Public Sub UpdateOffers(Index_Offer)
 End Sub
 
 Function FindOpenOfferSlot() As Long
-    Dim I As Long
+    Dim i As Long
     FindOpenOfferSlot = 0
 
-    For I = 1 To MAX_OFFER
-        If inOffer(I) = 0 Then
-            FindOpenOfferSlot = I
+    For i = 1 To MAX_OFFER
+        If inOffer(i) = 0 Then
+            FindOpenOfferSlot = i
             Exit Function
         End If
     Next
 End Function
 
 Public Sub SetOfferHighIndex()
-    Dim I As Integer
-    Dim x As Integer
+    Dim i As Integer
+    Dim X As Integer
     
-    For I = 0 To MAX_OFFER
-        x = MAX_OFFER - I
-
-        If inOffer(x) <> 0 Then
-            Offer_HighIndex = x
-        Exit Sub
+    For i = 0 To MAX_OFFER
+        X = MAX_OFFER - i
+        If X > 0 Then
+            If inOffer(X) <> 0 Then
+                Offer_HighIndex = X
+            Exit Sub
+            End If
         End If
 
-    Next I
+    Next i
 
     Offer_HighIndex = 0
 End Sub

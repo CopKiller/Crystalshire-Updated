@@ -1,4 +1,4 @@
-Attribute VB_Name = "modEnumerations"
+Attribute VB_Name = "Client_Enum"
 Option Explicit
 
 ' The order of the packets must match with the server's packet enumeration
@@ -193,6 +193,8 @@ Public Enum ClientPackets
     CRequestEditMission
     CSaveMission
     CRequestMissions
+    CAcceptMissionRequest
+    CDeclineMissionRequest
     CFinishTutorial
     ' Make sure CMSG_COUNT is below everything else
     CMSG_COUNT
@@ -225,6 +227,8 @@ Public Enum Equipment
     Armor
     Helmet
     Shield
+    Pants
+    Feet
     ' Make sure Equipment_Count is below everything else
     Equipment_Count
 End Enum
