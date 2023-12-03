@@ -93,7 +93,6 @@ Public Sub InitMessages()
     HandleDataSub(SPlayerChars) = GetAddress(AddressOf HandlePlayerChars)
     HandleDataSub(SCancelAnimation) = GetAddress(AddressOf HandleCancelAnimation)
     HandleDataSub(SPlayerVariables) = GetAddress(AddressOf HandlePlayerVariables)
-    HandleDataSub(SEvent) = GetAddress(AddressOf HandleEvent)
     HandleDataSub(SMissionEditor) = GetAddress(AddressOf HandleMissionEditor)
     HandleDataSub(SUpdateMission) = GetAddress(AddressOf HandleUpdateMission)
     HandleDataSub(SUpdateMission) = GetAddress(AddressOf HandleUpdateMission)
@@ -419,9 +418,9 @@ Private Sub HandlePlayerUpdateDataMission(ByVal Index As Long, ByRef Data() As B
     buffer.WriteBytes Data()
     i = buffer.ReadLong
     MissionID = buffer.ReadLong
-    Player(i).Mission(MissionID).Count = buffer.ReadLong
+    Player(i).Mission(MissionID).count = buffer.ReadLong
     
-    Call Window_QuestUpdate
+    Call Window_QuestLabelUpdate
 End Sub
 
 Private Sub HandlePlayerData(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
@@ -447,8 +446,8 @@ Private Sub HandlePlayerData(ByVal Index As Long, ByRef Data() As Byte, ByVal St
     Next
     
     For X = 1 To MAX_PLAYER_MISSIONS
-        Player(i).Mission(X).ID = buffer.ReadLong
-        Player(i).Mission(X).Count = buffer.ReadLong
+        Player(i).Mission(X).id = buffer.ReadLong
+        Player(i).Mission(X).count = buffer.ReadLong
     Next X
     
     For X = 1 To MAX_MISSIONS
@@ -490,7 +489,7 @@ Private Sub HandlePlayerData(ByVal Index As Long, ByRef Data() As Byte, ByVal St
         End With
         
         ' Mission
-        Call Window_QuestUpdate
+        Call Window_QuestButtonUpdate
     End If
 
     ' Make sure they aren't walking
@@ -502,7 +501,7 @@ End Sub
 Private Sub HandlePlayerMove(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
     Dim i As Long
     Dim X As Long
-    Dim Y As Long
+    Dim y As Long
     Dim Dir As Long
     Dim N As Byte
     Dim buffer As clsBuffer
@@ -510,11 +509,11 @@ Private Sub HandlePlayerMove(ByVal Index As Long, ByRef Data() As Byte, ByVal St
     buffer.WriteBytes Data()
     i = buffer.ReadLong
     X = buffer.ReadLong
-    Y = buffer.ReadLong
+    y = buffer.ReadLong
     Dir = buffer.ReadLong
     N = buffer.ReadLong
     Call SetPlayerX(i, X)
-    Call SetPlayerY(i, Y)
+    Call SetPlayerY(i, y)
     Call SetPlayerDir(i, Dir)
     Player(i).xOffset = 0
     Player(i).yOffset = 0
@@ -572,16 +571,16 @@ End Sub
 
 Private Sub HandlePlayerXY(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
     Dim X As Long
-    Dim Y As Long
+    Dim y As Long
     Dim Dir As Long
     Dim buffer As clsBuffer
     Set buffer = New clsBuffer
     buffer.WriteBytes Data()
     X = buffer.ReadLong
-    Y = buffer.ReadLong
+    y = buffer.ReadLong
     Dir = buffer.ReadLong
     Call SetPlayerX(MyIndex, X)
-    Call SetPlayerY(MyIndex, Y)
+    Call SetPlayerY(MyIndex, y)
     Call SetPlayerDir(MyIndex, Dir)
     ' Make sure they aren't walking
     Player(MyIndex).Moving = 0
@@ -591,7 +590,7 @@ End Sub
 
 Private Sub HandlePlayerXYMap(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
     Dim X As Long
-    Dim Y As Long
+    Dim y As Long
     Dim Dir As Long
     Dim buffer As clsBuffer
     Dim thePlayer As Long
@@ -599,10 +598,10 @@ Private Sub HandlePlayerXYMap(ByVal Index As Long, ByRef Data() As Byte, ByVal S
     buffer.WriteBytes Data()
     thePlayer = buffer.ReadLong
     X = buffer.ReadLong
-    Y = buffer.ReadLong
+    y = buffer.ReadLong
     Dir = buffer.ReadLong
     Call SetPlayerX(thePlayer, X)
-    Call SetPlayerY(thePlayer, Y)
+    Call SetPlayerY(thePlayer, y)
     Call SetPlayerDir(thePlayer, Dir)
     ' Make sure they aren't walking
     Player(thePlayer).Moving = 0
@@ -644,7 +643,7 @@ Private Sub HandleCheckForMap(ByVal Index As Long, ByRef Data() As Byte, ByVal S
     ' clear the blood
     For i = 1 To MAX_BYTE
         Blood(i).X = 0
-        Blood(i).Y = 0
+        Blood(i).y = 0
         Blood(i).sprite = 0
         Blood(i).timer = 0
     Next
@@ -692,7 +691,7 @@ Private Sub HandleCheckForMap(ByVal Index As Long, ByRef Data() As Byte, ByVal S
 End Sub
 
 Sub HandleMapData(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim buffer As clsBuffer, mapNum As Long, i As Long, X As Long, Y As Long
+    Dim buffer As clsBuffer, mapNum As Long, i As Long, X As Long, y As Long
     
     Set buffer = New clsBuffer
     buffer.WriteBytes Data()
@@ -736,20 +735,20 @@ Sub HandleMapData(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As 
     ReDim Map.TileData.Tile(0 To Map.MapData.MaxX, 0 To Map.MapData.MaxY)
 
     For X = 0 To Map.MapData.MaxX
-        For Y = 0 To Map.MapData.MaxY
+        For y = 0 To Map.MapData.MaxY
             For i = 1 To MapLayer.Layer_Count - 1
-                Map.TileData.Tile(X, Y).Layer(i).X = buffer.ReadLong
-                Map.TileData.Tile(X, Y).Layer(i).Y = buffer.ReadLong
-                Map.TileData.Tile(X, Y).Layer(i).tileSet = buffer.ReadLong
-                Map.TileData.Tile(X, Y).Autotile(i) = buffer.ReadByte
+                Map.TileData.Tile(X, y).Layer(i).X = buffer.ReadLong
+                Map.TileData.Tile(X, y).Layer(i).y = buffer.ReadLong
+                Map.TileData.Tile(X, y).Layer(i).tileSet = buffer.ReadLong
+                Map.TileData.Tile(X, y).Autotile(i) = buffer.ReadByte
             Next
-            Map.TileData.Tile(X, Y).Type = buffer.ReadByte
-            Map.TileData.Tile(X, Y).Data1 = buffer.ReadLong
-            Map.TileData.Tile(X, Y).Data2 = buffer.ReadLong
-            Map.TileData.Tile(X, Y).Data3 = buffer.ReadLong
-            Map.TileData.Tile(X, Y).Data4 = buffer.ReadLong
-            Map.TileData.Tile(X, Y).Data5 = buffer.ReadLong
-            Map.TileData.Tile(X, Y).DirBlock = buffer.ReadByte
+            Map.TileData.Tile(X, y).Type = buffer.ReadByte
+            Map.TileData.Tile(X, y).Data1 = buffer.ReadLong
+            Map.TileData.Tile(X, y).Data2 = buffer.ReadLong
+            Map.TileData.Tile(X, y).Data3 = buffer.ReadLong
+            Map.TileData.Tile(X, y).Data4 = buffer.ReadLong
+            Map.TileData.Tile(X, y).Data5 = buffer.ReadLong
+            Map.TileData.Tile(X, y).DirBlock = buffer.ReadByte
         Next
     Next
 
@@ -790,7 +789,7 @@ Private Sub HandleMapItemData(ByVal Index As Long, ByRef Data() As Byte, ByVal S
             .num = buffer.ReadLong
             .value = buffer.ReadLong
             .X = buffer.ReadLong
-            .Y = buffer.ReadLong
+            .y = buffer.ReadLong
             tmpLong = buffer.ReadLong
 
             If tmpLong = 0 Then
@@ -921,7 +920,7 @@ Private Sub HandleSpawnItem(ByVal Index As Long, ByRef Data() As Byte, ByVal Sta
         .num = buffer.ReadLong
         .value = buffer.ReadLong
         .X = buffer.ReadLong
-        .Y = buffer.ReadLong
+        .y = buffer.ReadLong
         tmpLong = buffer.ReadLong
 
         If tmpLong = 0 Then
@@ -972,17 +971,17 @@ End Sub
 Private Sub HandleMapKey(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
     Dim N As Long
     Dim X As Long
-    Dim Y As Long
+    Dim y As Long
     Dim buffer As clsBuffer
     Set buffer = New clsBuffer
     buffer.WriteBytes Data()
     X = buffer.ReadLong
-    Y = buffer.ReadLong
+    y = buffer.ReadLong
     N = buffer.ReadByte
-    TempTile(X, Y).DoorOpen = N
+    TempTile(X, y).DoorOpen = N
 
     ' re-cache rendering
-    If Not GettingMap Then cacheRenderState X, Y, MapLayer.Mask
+    If Not GettingMap Then cacheRenderState X, y, MapLayer.Mask
 End Sub
 
 Private Sub HandleEditMap()
@@ -1004,25 +1003,25 @@ End Sub
 
 Private Sub HandleActionMsg(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
     Dim buffer As clsBuffer
-    Dim X As Long, Y As Long, message As String, Color As Long, tmpType As Long
+    Dim X As Long, y As Long, message As String, Color As Long, tmpType As Long
     Set buffer = New clsBuffer
     buffer.WriteBytes Data()
     message = buffer.ReadString
     Color = buffer.ReadLong
     tmpType = buffer.ReadLong
     X = buffer.ReadLong
-    Y = buffer.ReadLong
+    y = buffer.ReadLong
     buffer.Flush: Set buffer = Nothing
-    CreateActionMsg message, Color, tmpType, X, Y
+    CreateActionMsg message, Color, tmpType, X, y
 End Sub
 
 Private Sub HandleBlood(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
     Dim buffer As clsBuffer
-    Dim X As Long, Y As Long, sprite As Long, i As Long
+    Dim X As Long, y As Long, sprite As Long, i As Long
     Set buffer = New clsBuffer
     buffer.WriteBytes Data()
     X = buffer.ReadLong
-    Y = buffer.ReadLong
+    y = buffer.ReadLong
     buffer.Flush: Set buffer = Nothing
     ' randomise sprite
     sprite = Rand(1, BloodCount)
@@ -1030,7 +1029,7 @@ Private Sub HandleBlood(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAd
     ' make sure tile doesn't already have blood
     For i = 1 To MAX_BYTE
 
-        If Blood(i).X = X And Blood(i).Y = Y Then
+        If Blood(i).X = X And Blood(i).y = y Then
             ' already have blood :(
             Exit Sub
         End If
@@ -1044,7 +1043,7 @@ Private Sub HandleBlood(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAd
 
     With Blood(BloodIndex)
         .X = X
-        .Y = Y
+        .y = y
         .sprite = sprite
         .timer = GetTickCount
     End With
@@ -1232,14 +1231,14 @@ End Sub
 
 Private Sub HandleSound(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
     Dim buffer As clsBuffer
-    Dim X As Long, Y As Long, entityType As Long, entityNum As Long
+    Dim X As Long, y As Long, entityType As Long, entityNum As Long
     Set buffer = New clsBuffer
     buffer.WriteBytes Data()
     X = buffer.ReadLong
-    Y = buffer.ReadLong
+    y = buffer.ReadLong
     entityType = buffer.ReadLong
     entityNum = buffer.ReadLong
-    PlayMapSound X, Y, entityType, entityNum
+    PlayMapSound X, y, entityType, entityNum
 End Sub
 
 Private Sub HandleTradeRequest(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
@@ -1333,58 +1332,6 @@ Private Sub HandlePartyVitals(ByVal Index As Long, ByRef Data() As Byte, ByVal S
 
     ' update the party interface
     UpdatePartyBars
-End Sub
-
-Private Sub HandleConvEditor(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim i As Long
-
-    With frmEditor_Conv
-        Editor = EDITOR_CONV
-        .lstIndex.Clear
-
-        ' Add the names
-        For i = 1 To MAX_CONVS
-            .lstIndex.AddItem i & ": " & Trim$(Conv(i).Name)
-        Next
-
-        .Show
-        .lstIndex.ListIndex = 0
-        ConvEditorInit
-    End With
-
-End Sub
-
-Private Sub HandleUpdateConv(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim Convnum As Long
-    Dim buffer As clsBuffer
-    Dim i As Long
-    Dim X As Long
-    Set buffer = New clsBuffer
-    buffer.WriteBytes Data()
-    Convnum = buffer.ReadLong
-
-    With Conv(Convnum)
-        .Name = buffer.ReadString
-        .chatCount = buffer.ReadLong
-        ReDim Conv(Convnum).Conv(1 To .chatCount)
-
-        For i = 1 To .chatCount
-            .Conv(i).Conv = buffer.ReadString
-
-            For X = 1 To 4
-                .Conv(i).rText(X) = buffer.ReadString
-                .Conv(i).rTarget(X) = buffer.ReadLong
-            Next
-
-            .Conv(i).Event = buffer.ReadLong
-            .Conv(i).Data1 = buffer.ReadLong
-            .Conv(i).Data2 = buffer.ReadLong
-            .Conv(i).Data3 = buffer.ReadLong
-        Next
-
-    End With
-
-    buffer.Flush: Set buffer = Nothing
 End Sub
 
 Private Sub HandleChatUpdate(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
@@ -1497,24 +1444,6 @@ Dim buffer As clsBuffer, i As Long
     For i = 1 To MAX_BYTE
         Player(MyIndex).Variable(i) = buffer.ReadLong
     Next
-    
-    buffer.Flush: Set buffer = Nothing
-End Sub
-
-Private Sub HandleEvent(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-Dim buffer As clsBuffer
-
-    Set buffer = New clsBuffer
-    buffer.WriteBytes Data()
-    
-    If buffer.ReadLong = 1 Then
-        inEvent = True
-    Else
-        inEvent = False
-    End If
-    eventNum = buffer.ReadLong
-    eventPageNum = buffer.ReadLong
-    eventCommandNum = buffer.ReadLong
     
     buffer.Flush: Set buffer = Nothing
 End Sub

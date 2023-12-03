@@ -4,7 +4,7 @@ Option Explicit
 Public Conv(1 To MAX_CONVS) As ConvWrapperRec
 Public EmptyConv As ConvWrapperRec
 
-Private Type ConvRec
+Public Type ConvRec
     Conv As String
     rText(1 To 4) As String
     rTarget(1 To 4) As Long

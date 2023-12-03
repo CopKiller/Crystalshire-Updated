@@ -18,10 +18,8 @@ Public Sub SendUpdateConvTo(ByVal index As Long, ByVal convNum As Long)
                 Buffer.WriteString .Conv(i).rText(x)
                 Buffer.WriteLong .Conv(i).rTarget(x)
             Next
-            Buffer.WriteLong .Conv(i).Event
-            Buffer.WriteLong .Conv(i).Data1
-            Buffer.WriteLong .Conv(i).Data2
-            Buffer.WriteLong .Conv(i).Data3
+            Buffer.WriteLong .Conv(i).EventType
+            Buffer.WriteLong .Conv(i).eventNum
         Next
     End With
     
@@ -58,10 +56,8 @@ Public Sub SendUpdateConvToAll(ByVal convNum As Long)
                 Buffer.WriteString .Conv(i).rText(x)
                 Buffer.WriteLong .Conv(i).rTarget(x)
             Next
-            Buffer.WriteLong .Conv(i).Event
-            Buffer.WriteLong .Conv(i).Data1
-            Buffer.WriteLong .Conv(i).Data2
-            Buffer.WriteLong .Conv(i).Data3
+            Buffer.WriteLong .Conv(i).EventType
+            Buffer.WriteLong .Conv(i).eventNum
         Next
     End With
     

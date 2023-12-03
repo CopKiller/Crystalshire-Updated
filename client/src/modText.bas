@@ -7,7 +7,7 @@ Public Const FVF_Size As Long = 28
 'Point API
 Public Type POINTAPI
     X As Long
-    Y As Long
+    y As Long
 End Type
 
 Private Type CharVA
@@ -102,9 +102,9 @@ Dim Data() As Byte, f As Long, w As Long, h As Long, path As String
     Close #f
     ' get size
     font(fontNum).TextureSize.X = ByteToInt(Data(18), Data(19))
-    font(fontNum).TextureSize.Y = ByteToInt(Data(22), Data(23))
+    font(fontNum).TextureSize.y = ByteToInt(Data(22), Data(23))
     ' set to struct
-    Set font(fontNum).Texture = D3DX.CreateTextureFromFileInMemoryEx(D3DDevice, Data(0), AryCount(Data), font(fontNum).TextureSize.X, font(fontNum).TextureSize.Y, D3DX_DEFAULT, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, D3DX_FILTER_POINT, D3DX_FILTER_POINT, 0, ByVal 0, ByVal 0)
+    Set font(fontNum).Texture = D3DX.CreateTextureFromFileInMemoryEx(D3DDevice, Data(0), AryCount(Data), font(fontNum).TextureSize.X, font(fontNum).TextureSize.y, D3DX_DEFAULT, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, D3DX_FILTER_POINT, D3DX_FILTER_POINT, 0, ByVal 0, ByVal 0)
     font(fontNum).xOffset = xOffset
     font(fontNum).yOffset = yOffset
     LoadFontHeader font(fontNum), texName & ".dat"
@@ -229,34 +229,34 @@ Dim v As Single
             .Vertex(0).tu = u
             .Vertex(0).tv = v
             .Vertex(0).X = 0
-            .Vertex(0).Y = 0
+            .Vertex(0).y = 0
             .Vertex(0).z = 0
             .Vertex(1).Colour = D3DColorARGB(255, 0, 0, 0)
             .Vertex(1).RHW = 1
             .Vertex(1).tu = u + theFont.ColFactor
             .Vertex(1).tv = v
             .Vertex(1).X = theFont.HeaderInfo.CellWidth
-            .Vertex(1).Y = 0
+            .Vertex(1).y = 0
             .Vertex(1).z = 0
             .Vertex(2).Colour = D3DColorARGB(255, 0, 0, 0)
             .Vertex(2).RHW = 1
             .Vertex(2).tu = u
             .Vertex(2).tv = v + theFont.RowFactor
             .Vertex(2).X = 0
-            .Vertex(2).Y = theFont.HeaderInfo.CellHeight
+            .Vertex(2).y = theFont.HeaderInfo.CellHeight
             .Vertex(2).z = 0
             .Vertex(3).Colour = D3DColorARGB(255, 0, 0, 0)
             .Vertex(3).RHW = 1
             .Vertex(3).tu = u + theFont.ColFactor
             .Vertex(3).tv = v + theFont.RowFactor
             .Vertex(3).X = theFont.HeaderInfo.CellWidth
-            .Vertex(3).Y = theFont.HeaderInfo.CellHeight
+            .Vertex(3).y = theFont.HeaderInfo.CellHeight
             .Vertex(3).z = 0
         End With
     Next LoopChar
 End Sub
 
-Public Sub RenderText(ByRef UseFont As CustomFont, ByVal text As String, ByVal X As Long, ByVal Y As Long, ByVal Color As Long, Optional ByVal alpha As Long = 255, Optional Shadow As Boolean = True)
+Public Sub RenderText(ByRef UseFont As CustomFont, ByVal text As String, ByVal X As Long, ByVal y As Long, ByVal Color As Long, Optional ByVal alpha As Long = 255, Optional Shadow As Boolean = True)
 Dim TempVA(0 To 3) As Vertex, TempStr() As String, count As Long, Ascii() As Byte, i As Long, j As Long, TempColor As Long, yOffset As Single, ignoreChar As Long, resetColor As Long
 Dim tmpNum As Long
 
@@ -275,7 +275,7 @@ Dim tmpNum As Long
     CurrentTexture = -1
     ' set the position
     X = X - UseFont.xOffset
-    Y = Y - UseFont.yOffset
+    y = y - UseFont.yOffset
     'Loop through each line if there are line breaks (vbCrLf)
     tmpNum = UBound(TempStr)
 
@@ -307,13 +307,13 @@ Dim tmpNum As Long
                     Call CopyMemory(TempVA(0), UseFont.HeaderInfo.CharVA(Ascii(j - 1)).Vertex(0), FVF_Size * 4)
                     'Set up the verticies
                     TempVA(0).X = X + count
-                    TempVA(0).Y = Y + yOffset
+                    TempVA(0).y = y + yOffset
                     TempVA(1).X = TempVA(1).X + X + count
-                    TempVA(1).Y = TempVA(0).Y
+                    TempVA(1).y = TempVA(0).y
                     TempVA(2).X = TempVA(0).X
-                    TempVA(2).Y = TempVA(2).Y + TempVA(0).Y
+                    TempVA(2).y = TempVA(2).y + TempVA(0).y
                     TempVA(3).X = TempVA(1).X
-                    TempVA(3).Y = TempVA(2).Y
+                    TempVA(3).y = TempVA(2).y
                     'Set the colors
                     TempVA(0).Colour = TempColor
                     TempVA(1).Colour = TempColor
@@ -352,7 +352,7 @@ Public Function TextHeight(ByRef UseFont As CustomFont) As Long
 End Function
 
 Sub DrawActionMsg(ByVal Index As Integer)
-        Dim X As Long, Y As Long, i As Long, Time As Long
+        Dim X As Long, y As Long, i As Long, Time As Long
     Dim LenMsg As Long
 
     If ActionMsg(Index).message = vbNullString Then Exit Sub
@@ -364,24 +364,24 @@ Sub DrawActionMsg(ByVal Index As Integer)
             Time = 1500
             LenMsg = TextWidth(font(Fonts.rockwell_15), Trim$(ActionMsg(Index).message))
 
-            If ActionMsg(Index).Y > 0 Then
+            If ActionMsg(Index).y > 0 Then
                 X = ActionMsg(Index).X + Int(PIC_X \ 2) - (LenMsg / 2)
-                Y = ActionMsg(Index).Y + PIC_Y
+                y = ActionMsg(Index).y + PIC_Y
             Else
                 X = ActionMsg(Index).X + Int(PIC_X \ 2) - (LenMsg / 2)
-                Y = ActionMsg(Index).Y - Int(PIC_Y \ 2) + 18
+                y = ActionMsg(Index).y - Int(PIC_Y \ 2) + 18
             End If
 
         Case ACTIONMsgSCROLL
             Time = 1500
 
-            If ActionMsg(Index).Y > 0 Then
+            If ActionMsg(Index).y > 0 Then
                 X = ActionMsg(Index).X + Int(PIC_X \ 2) - ((Len(Trim$(ActionMsg(Index).message)) \ 2) * 8)
-                Y = ActionMsg(Index).Y - Int(PIC_Y \ 2) - 2 - (ActionMsg(Index).Scroll * 0.6)
+                y = ActionMsg(Index).y - Int(PIC_Y \ 2) - 2 - (ActionMsg(Index).Scroll * 0.6)
                 ActionMsg(Index).Scroll = ActionMsg(Index).Scroll + 1
             Else
                 X = ActionMsg(Index).X + Int(PIC_X \ 2) - ((Len(Trim$(ActionMsg(Index).message)) \ 2) * 8)
-                Y = ActionMsg(Index).Y - Int(PIC_Y \ 2) + 18 + (ActionMsg(Index).Scroll * 0.001)
+                y = ActionMsg(Index).y - Int(PIC_Y \ 2) + 18 + (ActionMsg(Index).Scroll * 0.001)
                 ActionMsg(Index).Scroll = ActionMsg(Index).Scroll + 1
             End If
 
@@ -405,46 +405,29 @@ Sub DrawActionMsg(ByVal Index As Integer)
             Next
 
             X = (400) - ((TextWidth(font(Fonts.rockwell_15), Trim$(ActionMsg(Index).message)) \ 2))
-            Y = 24
+            y = 24
     End Select
 
     X = ConvertMapX(X)
-    Y = ConvertMapY(Y)
+    y = ConvertMapY(y)
 
     If ActionMsg(Index).Created > 0 Then
-        RenderText font(Fonts.rockwell_15), ActionMsg(Index).message, X, Y, ActionMsg(Index).Color, ActionMsg(Index).alpha
+        RenderText font(Fonts.rockwell_15), ActionMsg(Index).message, X, y, ActionMsg(Index).Color, ActionMsg(Index).alpha
     End If
 End Sub
 
-Public Function DrawMapEvents()
-Dim X As Long, Y As Long, i As Long
-    If frmEditor_Map.optEvents.value Then
-        If Map.TileData.EventCount > 0 Then
-            For i = 1 To Map.TileData.EventCount
-                With Map.TileData.Events(i)
-                    X = ((ConvertMapX(.X * PIC_X)) - 4) + (PIC_X * 0.5)
-                    Y = ((ConvertMapY(.Y * PIC_Y)) - 7) + (PIC_Y * 0.5)
-                End With
-                RenderTexture Tex_Event, ConvertMapX(Map.TileData.Events(i).X * PIC_X), ConvertMapY(Map.TileData.Events(i).Y * PIC_Y), 0, 0, 32, 32, 32, 32
-                RenderText font(Fonts.rockwellDec_10), "E", X, Y, BrightBlue
-            Next
-        End If
-    End If
-End Function
-
 Public Function DrawMapAttributes()
-Dim X As Long, Y As Long, tx As Long, ty As Long, theFont As Long
+Dim X As Long, y As Long, tx As Long, ty As Long, theFont As Long
 
     theFont = Fonts.rockwellDec_10
 
     If frmEditor_Map.optAttribs.value Then
         For X = TileView.Left To TileView.Right
-            For Y = TileView.Top To TileView.bottom
-                If IsValidMapPoint(X, Y) Then
-                    With Map.TileData.Tile(X, Y)
+            For y = TileView.Top To TileView.bottom
+                If IsValidMapPoint(X, y) Then
+                    With Map.TileData.Tile(X, y)
                         tx = ((ConvertMapX(X * PIC_X)) - 4) + (PIC_X * 0.5)
-                        ty = ((ConvertMapY(Y * PIC_Y)) - 7) + (PIC_Y * 0.5)
-                        If .Type > 0 Then RenderTexture Tex_Event, ConvertMapX(X * PIC_X), ConvertMapY(Y * PIC_Y), 0, 0, 32, 32, 32, 32
+                        ty = ((ConvertMapY(y * PIC_Y)) - 7) + (PIC_Y * 0.5)
                         Select Case .Type
                             Case TILE_TYPE_BLOCKED
                                 RenderText font(theFont), "B", tx, ty, BrightRed
@@ -700,7 +683,7 @@ Public Sub DrawPlayerName(ByVal Index As Long)
     If GetPlayerAccess(Index) > 0 Then Colour = Pink
     If GetPlayerPK(Index) > 0 Then Colour = BrightRed
     textX = Player(Index).X * PIC_X + Player(Index).xOffset + (PIC_X \ 2) - (textSize \ 2)
-    textY = Player(Index).Y * PIC_Y + Player(Index).yOffset - 32
+    textY = Player(Index).y * PIC_Y + Player(Index).yOffset - 32
 
     If GetPlayerSprite(Index) >= 1 And GetPlayerSprite(Index) <= Count_Char Then
         textY = GetPlayerY(Index) * PIC_Y + Player(Index).yOffset - (mTexture(Tex_Char(GetPlayerSprite(Index))).h / 4) + 12
@@ -731,10 +714,10 @@ Public Sub DrawNpcName(ByVal Index As Long)
     End If
 
     textX = MapNpc(Index).X * PIC_X + MapNpc(Index).xOffset + (PIC_X \ 2) - (textSize \ 2)
-    textY = MapNpc(Index).Y * PIC_Y + MapNpc(Index).yOffset - 32
+    textY = MapNpc(Index).y * PIC_Y + MapNpc(Index).yOffset - 32
 
     If Npc(NpcNum).sprite >= 1 And Npc(NpcNum).sprite <= Count_Char Then
-        textY = MapNpc(Index).Y * PIC_Y + MapNpc(Index).yOffset - (mTexture(Tex_Char(Npc(NpcNum).sprite)).h / 4) + 12
+        textY = MapNpc(Index).y * PIC_Y + MapNpc(Index).yOffset - (mTexture(Tex_Char(Npc(NpcNum).sprite)).h / 4) + 12
     End If
 
     Call RenderText(font(Fonts.rockwell_15), text, ConvertMapX(textX), ConvertMapY(textY), Colour)

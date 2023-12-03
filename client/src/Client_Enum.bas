@@ -92,7 +92,6 @@ Public Enum ServerPackets
     SUpdateMission
     SPlayerMission
     SPlayerVariables
-    SEvent
     SOfferMission ' = 90
     ' Make sure SMsgCOUNT is below everything else
     SMsgCOUNT
@@ -242,6 +241,15 @@ Public Enum Offers
     Offer_Count
 End Enum
 
+' Usando para eventos comuns
+Public Enum EventType
+    Event_OpenShop = 1
+    Event_OpenBank
+    Event_OpenQuest
+    
+    Event_Count
+End Enum
+
 ' Layers in a map
 Public Enum MapLayer
     Ground = 1
@@ -329,50 +337,4 @@ Public Enum DialogueStyle
     StyleOKAY = 1
     StyleYESNO
     StyleINPUT
-End Enum
-
-' Event Types
-Public Enum EventType
-    ' Message
-    evAddText = 1
-    evShowText
-    evShowChatBubble
-    evShowChoices
-    evInputNumber
-    ' Game Progression
-    evPlayerVar
-    evEventSwitch
-    ' Flow Control
-    evIfElse
-    evExitProcess
-    ' Player
-    evChangeGold
-    evChangeItems
-    evChangeHP
-    evChangeMP
-    evChangeEXP
-    evChangeLevel
-    evChangeSkills
-    evChangeClass
-    evChangeSprite
-    evChangeSex
-    ' Movement
-    evWarpPlayer
-    evScrollMap
-    ' Character
-    evShowAnimation
-    evShowEmoticon
-    ' Screen Controls
-    evFadeout
-    evFadein
-    evTintScreen
-    evFlashScreen
-    evShakeScreen
-    ' Music and Sounds
-    evPlayBGM
-    evFadeoutBGM
-    evPlayBGS
-    evFadeoutBGS
-    evPlaySound
-    evStopSound
 End Enum

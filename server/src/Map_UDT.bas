@@ -22,61 +22,6 @@ Private Type Cache
     Data() As Byte
 End Type
 
-Private Type TempEventRec
-    x As Long
-    y As Long
-    SelfSwitch As Byte
-End Type
-
-Private Type EventCommandRec
-    Type As Byte
-    Text As String
-    colour As Long
-    Channel As Byte
-    targetType As Byte
-    target As Long
-End Type
-
-Private Type EventPageRec
-    chkPlayerVar As Byte
-    chkSelfSwitch As Byte
-    chkHasItem As Byte
-    
-    PlayerVarNum As Long
-    SelfSwitchNum As Long
-    HasItemNum As Long
-    
-    PlayerVariable As Long
-    
-    GraphicType As Byte
-    Graphic As Long
-    GraphicX As Long
-    GraphicY As Long
-    
-    MoveType As Byte
-    MoveSpeed As Byte
-    MoveFreq As Byte
-    
-    WalkAnim As Byte
-    StepAnim As Byte
-    DirFix As Byte
-    WalkThrough As Byte
-    
-    Priority As Byte
-    Trigger As Byte
-    
-    CommandCount As Long
-    Commands() As EventCommandRec
-End Type
-
-Private Type EventRec
-    Name As String
-    x As Long
-    y As Long
-    PageCount As Long
-    EventPage() As EventPageRec
-End Type
-
 Private Type MapDataRec
     Name As String
     Music As String
@@ -133,7 +78,6 @@ End Type
 Private Type MapTileRec
     EventCount As Long
     Tile() As TileRec
-    Events() As EventRec
 End Type
 
 Private Type MapRec

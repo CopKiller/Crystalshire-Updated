@@ -53,38 +53,21 @@ Begin VB.Form frmEditor_Conv
       TabIndex        =   6
       Top             =   1200
       Width           =   4215
-      Begin VB.HScrollBar scrlData3 
-         Height          =   255
-         Left            =   1680
-         Max             =   1000
-         TabIndex        =   30
-         Top             =   6120
-         Value           =   1
-         Width           =   2415
-      End
-      Begin VB.HScrollBar scrlData2 
-         Height          =   255
-         Left            =   1680
-         Max             =   1000
-         TabIndex        =   28
-         Top             =   5760
-         Value           =   1
-         Width           =   2415
-      End
-      Begin VB.HScrollBar scrlData1 
-         Height          =   255
-         Left            =   1680
-         Max             =   1000
-         TabIndex        =   26
-         Top             =   5400
-         Value           =   1
-         Width           =   2415
-      End
-      Begin VB.ComboBox cmbEvent 
+      Begin VB.ComboBox cmbEventNum 
          Height          =   315
          ItemData        =   "frmEditor_Conv.frx":0000
          Left            =   120
-         List            =   "frmEditor_Conv.frx":0013
+         List            =   "frmEditor_Conv.frx":0002
+         Style           =   2  'Dropdown List
+         TabIndex        =   26
+         Top             =   5640
+         Width           =   3975
+      End
+      Begin VB.ComboBox cmbEvent 
+         Height          =   315
+         ItemData        =   "frmEditor_Conv.frx":0004
+         Left            =   120
+         List            =   "frmEditor_Conv.frx":0014
          Style           =   2  'Dropdown List
          TabIndex        =   25
          Top             =   5040
@@ -176,38 +159,16 @@ Begin VB.Form frmEditor_Conv
          Top             =   840
          Width           =   3975
       End
-      Begin VB.Label lblData3 
-         AutoSize        =   -1  'True
-         Caption         =   "Data3: 0"
-         Height          =   195
-         Left            =   120
-         TabIndex        =   31
-         Top             =   6120
-         UseMnemonic     =   0   'False
-         Width           =   750
-      End
-      Begin VB.Label lblData2 
-         AutoSize        =   -1  'True
-         Caption         =   "Data2: 0"
-         Height          =   195
-         Left            =   120
-         TabIndex        =   29
-         Top             =   5760
-         UseMnemonic     =   0   'False
-         Width           =   750
-      End
-      Begin VB.Label lblData1 
-         AutoSize        =   -1  'True
-         Caption         =   "Data1: 0"
-         Height          =   195
+      Begin VB.Label Label5 
+         Caption         =   "Event Num:"
+         Height          =   255
          Left            =   120
          TabIndex        =   27
          Top             =   5400
-         UseMnemonic     =   0   'False
-         Width           =   750
+         Width           =   1815
       End
       Begin VB.Label Label4 
-         Caption         =   "Event:"
+         Caption         =   "Event Type:"
          Height          =   255
          Left            =   120
          TabIndex        =   24
@@ -307,79 +268,6 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 Dim curConv As Long
-
-Private Sub cmbEvent_Click()
-
-    Select Case cmbEvent.ListIndex
-
-        Case 0, 2 ' None, Bank
-            ' set max values
-            scrlData1.max = 1
-            scrlData2.max = 1
-            scrlData3.max = 1
-            ' hide / unhide
-            scrlData1.visible = False
-            scrlData2.visible = False
-            scrlData3.visible = False
-            lblData1.visible = False
-            lblData2.visible = False
-            lblData3.visible = False
-
-        Case 1 ' Shop
-            ' set max values
-            scrlData1.max = MAX_SHOPS
-            scrlData2.max = 1
-            scrlData3.max = 1
-            ' hide / unhide
-            scrlData1.visible = True
-            scrlData2.visible = False
-            scrlData3.visible = False
-            lblData1.visible = True
-            lblData2.visible = False
-            lblData3.visible = False
-            ' set strings
-            lblData1.caption = "Shop: None"
-
-        Case 3 ' Give Item
-            ' set max values
-            scrlData1.max = MAX_ITEMS
-            scrlData2.max = 32000
-            scrlData3.max = 1
-            ' hide / unhide
-            scrlData1.visible = True
-            scrlData2.visible = True
-            scrlData3.visible = False
-            lblData1.visible = True
-            lblData2.visible = True
-            lblData3.visible = False
-            ' set strings
-            lblData1.caption = "Item: None"
-            lblData2.caption = "Amount: " & scrlData2.value
-
-        Case 4 ' Unique
-            scrlData1.max = 32000
-            scrlData2.max = 32000
-            scrlData3.max = 32000
-            ' hide
-            scrlData1.visible = True
-            scrlData2.visible = True
-            scrlData3.visible = True
-            lblData1.visible = True
-            lblData2.visible = True
-            lblData3.visible = True
-            ' set the strings
-            lblData1.caption = "Data1: 0"
-            lblData2.caption = "Data2: 0"
-            lblData3.caption = "Data3: 0"
-    End Select
-
-    If EditorIndex > 0 And EditorIndex <= MAX_CONVS Then
-        If curConv = 0 Then Exit Sub
-        Conv(EditorIndex).Conv(curConv).Event = cmbEvent.ListIndex
-    End If
-
-End Sub
-
 Private Sub cmdDelete_Click()
     Dim tmpIndex As Long
 
@@ -409,6 +297,7 @@ Private Sub lstIndex_Click()
 End Sub
 
 Private Sub scrlChatCount_Change()
+    If EditorIndex = 0 Or EditorIndex > MAX_CONVS Then Exit Sub
     lblChatCount.caption = "Chat Count: " & scrlChatCount.value
     Conv(EditorIndex).chatCount = scrlChatCount.value
     scrlConv.max = scrlChatCount.value
@@ -417,6 +306,8 @@ End Sub
 
 Private Sub scrlConv_Change()
     Dim X As Long
+    If EditorIndex = 0 Or EditorIndex > MAX_CONVS Then Exit Sub
+    
     curConv = scrlConv.value
     fraConv.caption = "Conversation - " & curConv
 
@@ -427,68 +318,12 @@ Private Sub scrlConv_Change()
             txtReply(X).text = .rText(X)
             cmbReply(X).ListIndex = .rTarget(X)
         Next
-
-        cmbEvent.ListIndex = .Event
-        scrlData1.value = .Data1
-        scrlData2.value = .Data2
-        scrlData3.value = .Data3
     End With
 
 End Sub
 
-Private Sub scrlData1_Change()
-
-    Select Case cmbEvent.ListIndex
-
-        Case 1 ' shop
-
-            If scrlData1.value > 0 Then
-                lblData1.caption = "Shop: " & Trim$(Shop(scrlData1.value).Name)
-            Else
-                lblData1.caption = "Shop: None"
-            End If
-
-        Case 3 ' Give item
-
-            If scrlData1.value > 0 Then
-                lblData1.caption = "Item: " & Trim$(Shop(scrlData1.value).Name)
-            Else
-                lblData1.caption = "Item: None"
-            End If
-
-        Case 4 ' Unique
-            lblData1.caption = "Data1: " & scrlData1.value
-    End Select
-
-    Conv(EditorIndex).Conv(curConv).Data1 = scrlData1.value
-End Sub
-
-Private Sub scrlData2_Change()
-
-    Select Case cmbEvent.ListIndex
-
-        Case 3 ' Give item
-            lblData2.caption = "Amount: " & scrlData2.value
-
-        Case 4 ' Unique
-            lblData1.caption = "Data2: " & scrlData2.value
-    End Select
-
-    Conv(EditorIndex).Conv(curConv).Data2 = scrlData2.value
-End Sub
-
-Private Sub scrlData3_Change()
-
-    Select Case cmbEvent.ListIndex
-
-        Case 4 ' Unique
-            lblData1.caption = "Data3: " & scrlData3.value
-    End Select
-
-    Conv(EditorIndex).Conv(curConv).Data3 = scrlData3.value
-End Sub
-
 Private Sub txtConv_Change()
+    If EditorIndex = 0 Or EditorIndex > MAX_CONVS Then Exit Sub
     Conv(EditorIndex).Conv(curConv).Conv = txtConv.text
 End Sub
 
@@ -504,9 +339,48 @@ Private Sub txtName_Validate(Cancel As Boolean)
 End Sub
 
 Private Sub txtReply_Change(Index As Integer)
+    If EditorIndex = 0 Or EditorIndex > MAX_CONVS Then Exit Sub
     Conv(EditorIndex).Conv(curConv).rText(Index) = txtReply(Index).text
 End Sub
 
 Private Sub cmbReply_Click(Index As Integer)
+    If EditorIndex = 0 Or EditorIndex > MAX_CONVS Then Exit Sub
     Conv(EditorIndex).Conv(curConv).rTarget(Index) = cmbReply(Index).ListIndex
+End Sub
+
+Private Sub cmbEvent_Click()
+    Dim i As Long
+    If EditorIndex = 0 Or EditorIndex > MAX_CONVS Then Exit Sub
+    If (cmbEvent.ListIndex = EventType.Event_OpenShop) Then
+        cmbEventNum.visible = True
+        ' build EventNum combo
+        cmbEventNum.Clear
+        cmbEventNum.AddItem "None"
+
+        For i = 1 To MAX_SHOPS
+            cmbEventNum.AddItem Trim$(Shop(i).Name)
+        Next
+
+        cmbEventNum.ListIndex = 0
+    ElseIf (cmbEvent.ListIndex = EventType.Event_OpenQuest) Then
+        cmbEventNum.visible = True
+        ' build EventNum combo
+        cmbEventNum.Clear
+        cmbEventNum.AddItem "None"
+
+        For i = 1 To MAX_MISSIONS
+            cmbEventNum.AddItem Trim$(Mission(i).Name)
+        Next
+
+        cmbEventNum.ListIndex = 0
+    Else
+        cmbEventNum.visible = False
+    End If
+    
+    Conv(EditorIndex).Conv(curConv).EventType = cmbEvent.ListIndex
+End Sub
+
+Private Sub cmbEventNum_Click()
+    If EditorIndex = 0 Or EditorIndex > MAX_CONVS Then Exit Sub
+    Conv(EditorIndex).Conv(curConv).EventNum = cmbEventNum.ListIndex
 End Sub

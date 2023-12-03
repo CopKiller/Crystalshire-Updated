@@ -125,12 +125,12 @@ Dim buffer As clsBuffer
     buffer.Flush: Set buffer = Nothing
 End Sub
 
-Public Sub SendAddChar(ByVal Name As String, ByVal sex As Long, ByVal ClassNum As Long, ByVal sprite As Long)
+Public Sub SendAddChar(ByVal Name As String, ByVal Sex As Long, ByVal ClassNum As Long, ByVal sprite As Long)
     Dim buffer As clsBuffer
     Set buffer = New clsBuffer
     buffer.WriteLong CAddChar
     buffer.WriteString Name
-    buffer.WriteLong sex
+    buffer.WriteLong Sex
     buffer.WriteLong ClassNum
     buffer.WriteLong sprite
     buffer.WriteLong CharNum
@@ -199,7 +199,7 @@ Public Sub SendPlayerMove()
     buffer.WriteLong CPlayerMove
     buffer.WriteLong GetPlayerDir(MyIndex)
     buffer.WriteLong Player(MyIndex).Moving
-    buffer.WriteLong Player(MyIndex).x
+    buffer.WriteLong Player(MyIndex).X
     buffer.WriteLong Player(MyIndex).y
     SendData buffer.ToArray()
     buffer.Flush: Set buffer = Nothing
@@ -224,7 +224,7 @@ Public Sub SendPlayerRequestNewMap()
 End Sub
 
 Public Sub SendMap()
-    Dim x As Long
+    Dim X As Long
     Dim y As Long
     Dim i As Long
     Dim buffer As clsBuffer
@@ -259,11 +259,11 @@ Public Sub SendMap()
         buffer.WriteLong Map.MapData.Npc(i)
     Next
 
-    For x = 0 To Map.MapData.MaxX
+    For X = 0 To Map.MapData.MaxX
         For y = 0 To Map.MapData.MaxY
-            With Map.TileData.Tile(x, y)
+            With Map.TileData.Tile(X, y)
                 For i = 1 To MapLayer.Layer_Count - 1
-                    buffer.WriteLong .Layer(i).x
+                    buffer.WriteLong .Layer(i).X
                     buffer.WriteLong .Layer(i).y
                     buffer.WriteLong .Layer(i).tileSet
                     buffer.WriteByte .Autotile(i)
@@ -590,12 +590,12 @@ Public Sub ChangeBankSlots(ByVal oldSlot As Long, ByVal newSlot As Long)
     buffer.Flush: Set buffer = Nothing
 End Sub
 
-Public Sub AdminWarp(ByVal x As Long, ByVal y As Long)
-    If x < 0 Or y < 0 Or x > Map.MapData.MaxX Or y > Map.MapData.MaxY Then Exit Sub
+Public Sub AdminWarp(ByVal X As Long, ByVal y As Long)
+    If X < 0 Or y < 0 Or X > Map.MapData.MaxX Or y > Map.MapData.MaxY Then Exit Sub
     Dim buffer As clsBuffer
     Set buffer = New clsBuffer
     buffer.WriteLong CAdminWarp
-    buffer.WriteLong x
+    buffer.WriteLong X
     buffer.WriteLong y
     SendData buffer.ToArray()
     buffer.Flush: Set buffer = Nothing
@@ -648,21 +648,21 @@ Public Sub SendHotbarChange(ByVal sType As Long, ByVal Slot As Long, ByVal hotba
 End Sub
 
 Public Sub SendHotbarUse(ByVal Slot As Long)
-    Dim buffer As clsBuffer, x As Long
+    Dim buffer As clsBuffer, X As Long
 
     ' check if spell
     If Hotbar(Slot).sType = 1 Then ' Item
-        For x = 1 To MAX_INV
+        For X = 1 To MAX_INV
             ' Is the item matching the hotbar
-            If GetPlayerInvItemNum(MyIndex, x) = Hotbar(Slot).Slot Then
-                SendUseItem x
+            If GetPlayerInvItemNum(MyIndex, X) = Hotbar(Slot).Slot Then
+                SendUseItem X
                 Exit Sub
             End If
         Next
         
-        For x = 1 To Equipment.Equipment_Count - 1
-            If Player(MyIndex).Equipment(x) = Hotbar(Slot).Slot Then
-                SendUnequip x
+        For X = 1 To Equipment.Equipment_Count - 1
+            If Player(MyIndex).Equipment(X) = Hotbar(Slot).Slot Then
+                SendUnequip X
                 Exit Sub
             End If
         Next
@@ -672,11 +672,11 @@ Public Sub SendHotbarUse(ByVal Slot As Long)
         End If
     ElseIf Hotbar(Slot).sType = 2 Then ' spell
 
-        For x = 1 To MAX_PLAYER_SPELLS
+        For X = 1 To MAX_PLAYER_SPELLS
             ' is the spell matching the hotbar?
-            If PlayerSpells(x).Spell = Hotbar(Slot).Slot Then
+            If PlayerSpells(X).Spell = Hotbar(Slot).Slot Then
                 ' found it, cast it
-                CastSpell x
+                CastSpell X
                 Exit Sub
             End If
         Next
@@ -767,54 +767,6 @@ Sub SendDeclineParty()
     Dim buffer As clsBuffer
     Set buffer = New clsBuffer
     buffer.WriteLong CDeclineParty
-    SendData buffer.ToArray()
-    buffer.Flush: Set buffer = Nothing
-End Sub
-
-Public Sub SendRequestEditConv()
-    Dim buffer As clsBuffer
-    Set buffer = New clsBuffer
-    buffer.WriteLong CRequestEditConv
-    SendData buffer.ToArray()
-    buffer.Flush: Set buffer = Nothing
-End Sub
-
-Public Sub SendSaveConv(ByVal Convnum As Long)
-    Dim buffer As clsBuffer
-    Dim i As Long
-    Dim x As Long
-    Set buffer = New clsBuffer
-    buffer.WriteLong CSaveConv
-    buffer.WriteLong Convnum
-
-    With Conv(Convnum)
-        buffer.WriteString .Name
-        buffer.WriteLong .chatCount
-
-        For i = 1 To .chatCount
-            buffer.WriteString .Conv(i).Conv
-
-            For x = 1 To 4
-                buffer.WriteString .Conv(i).rText(x)
-                buffer.WriteLong .Conv(i).rTarget(x)
-            Next
-
-            buffer.WriteLong .Conv(i).Event
-            buffer.WriteLong .Conv(i).Data1
-            buffer.WriteLong .Conv(i).Data2
-            buffer.WriteLong .Conv(i).Data3
-        Next
-
-    End With
-
-    SendData buffer.ToArray()
-    buffer.Flush: Set buffer = Nothing
-End Sub
-
-Sub SendRequestConvs()
-    Dim buffer As clsBuffer
-    Set buffer = New clsBuffer
-    buffer.WriteLong CRequestConvs
     SendData buffer.ToArray()
     buffer.Flush: Set buffer = Nothing
 End Sub

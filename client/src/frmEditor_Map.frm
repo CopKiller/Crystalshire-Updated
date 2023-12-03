@@ -29,7 +29,7 @@ Begin VB.Form frmEditor_Map
       Caption         =   "Apply"
       Height          =   255
       Left            =   6480
-      TabIndex        =   107
+      TabIndex        =   106
       Top             =   8160
       Width           =   1335
    End
@@ -56,7 +56,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Appear"
          Height          =   1815
          Left            =   3480
-         TabIndex        =   110
+         TabIndex        =   109
          Top             =   3240
          Visible         =   0   'False
          Width           =   3375
@@ -64,7 +64,7 @@ Begin VB.Form frmEditor_Map
             Height          =   255
             Left            =   120
             Max             =   10
-            TabIndex        =   113
+            TabIndex        =   112
             Top             =   480
             Value           =   1
             Width           =   3135
@@ -73,7 +73,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Accept"
             Height          =   375
             Left            =   1080
-            TabIndex        =   112
+            TabIndex        =   111
             Top             =   1320
             Width           =   1215
          End
@@ -81,7 +81,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Bottom?"
             Height          =   255
             Left            =   2280
-            TabIndex        =   111
+            TabIndex        =   110
             Top             =   840
             Width           =   975
          End
@@ -89,7 +89,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Range: 0"
             Height          =   255
             Left            =   120
-            TabIndex        =   114
+            TabIndex        =   113
             Top             =   240
             Width           =   3135
          End
@@ -106,7 +106,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Fall?"
             Height          =   255
             Left            =   2520
-            TabIndex        =   109
+            TabIndex        =   108
             Top             =   2040
             Width           =   735
          End
@@ -238,7 +238,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Nudge"
          Height          =   2775
          Left            =   3480
-         TabIndex        =   99
+         TabIndex        =   98
          Top             =   3000
          Visible         =   0   'False
          Width           =   3255
@@ -246,7 +246,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Done"
             Height          =   375
             Left            =   1080
-            TabIndex        =   104
+            TabIndex        =   103
             Top             =   2280
             Width           =   1215
          End
@@ -254,7 +254,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Down"
             Height          =   375
             Left            =   1200
-            TabIndex        =   103
+            TabIndex        =   102
             Top             =   1440
             Width           =   855
          End
@@ -262,7 +262,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Left"
             Height          =   375
             Left            =   360
-            TabIndex        =   102
+            TabIndex        =   101
             Top             =   960
             Width           =   855
          End
@@ -270,7 +270,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Right"
             Height          =   375
             Left            =   2040
-            TabIndex        =   101
+            TabIndex        =   100
             Top             =   960
             Width           =   855
          End
@@ -278,7 +278,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Up"
             Height          =   375
             Left            =   1200
-            TabIndex        =   100
+            TabIndex        =   99
             Top             =   480
             Width           =   855
          End
@@ -587,7 +587,7 @@ Begin VB.Form frmEditor_Map
             Max             =   120
             Min             =   -1
             SmallChange     =   10
-            TabIndex        =   105
+            TabIndex        =   104
             Top             =   1560
             Width           =   3015
          End
@@ -646,7 +646,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Time: 0s"
             Height          =   255
             Left            =   120
-            TabIndex        =   106
+            TabIndex        =   105
             Top             =   1320
             Width           =   3015
          End
@@ -664,7 +664,7 @@ Begin VB.Form frmEditor_Map
       Caption         =   "Nudge"
       Height          =   255
       Left            =   5040
-      TabIndex        =   98
+      TabIndex        =   97
       Top             =   8520
       Width           =   1335
    End
@@ -691,15 +691,6 @@ Begin VB.Form frmEditor_Map
       TabIndex        =   25
       Top             =   7800
       Width           =   1455
-      Begin VB.OptionButton optEvents 
-         Alignment       =   1  'Right Justify
-         Caption         =   "Events"
-         Height          =   255
-         Left            =   360
-         TabIndex        =   97
-         Top             =   960
-         Width           =   855
-      End
       Begin VB.OptionButton optBlock 
          Alignment       =   1  'Right Justify
          Caption         =   "Block"
@@ -827,7 +818,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Appear"
          Height          =   270
          Left            =   120
-         TabIndex        =   108
+         TabIndex        =   107
          Top             =   3840
          Width           =   1215
       End
@@ -1207,11 +1198,6 @@ Private Sub optDoor_Click()
     scrlMapWarpY.max = MAX_BYTE
 End Sub
 
-Private Sub optEvents_Click()
-    selTileX = 0
-    selTileY = 0
-End Sub
-
 Private Sub optHeal_Click()
     ClearAttributeDialogue
     picAttributes.visible = True
@@ -1280,14 +1266,14 @@ Private Sub optTrap_Click()
     fraTrap.visible = True
 End Sub
 
-Private Sub picBackSelect_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    Call MapEditorChooseTile(Button, X, Y)
+Private Sub picBackSelect_MouseDown(Button As Integer, Shift As Integer, X As Single, y As Single)
+    Call MapEditorChooseTile(Button, X, y)
 End Sub
  
-Private Sub picBackSelect_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    shpLocTop = (Y \ PIC_Y) * PIC_Y
+Private Sub picBackSelect_MouseMove(Button As Integer, Shift As Integer, X As Single, y As Single)
+    shpLocTop = (y \ PIC_Y) * PIC_Y
     shpLocLeft = (X \ PIC_X) * PIC_X
-    Call MapEditorDrag(Button, X, Y)
+    Call MapEditorDrag(Button, X, y)
 End Sub
 
 Private Sub cmdSend_Click()

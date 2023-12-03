@@ -99,44 +99,11 @@ Private Sub Form_KeyUp(KeyCode As Integer, Shift As Integer)
             End If
             frmMain.caption = frmMain.caption
             Exit Sub
-        
-        ' handles delete events
-        Case vbKeyDelete
-            If InMapEditor Then DeleteEvent selTileX, selTileY
-            Exit Sub
-            
-        ' handles copy + pasting events
-        Case vbKeyC
-            If ControlDown Then
-                If InMapEditor Then
-                    CopyEvent_Map selTileX, selTileY
-                End If
-            End If
-            Exit Sub
-        
-        Case vbKeyV
-            If ControlDown Then
-                If InMapEditor Then
-                    PasteEvent_Map selTileX, selTileY
-                End If
-            End If
-            Exit Sub
     End Select
 End Sub
 
 Private Sub Form_DblClick()
     HandleGuiMouse entStates.DblClick
-    
-    ' Handle events
-    If currMouseX >= 0 And currMouseX <= frmMain.ScaleWidth Then
-        If currMouseY >= 0 And currMouseY <= frmMain.ScaleHeight Then
-            If InMapEditor Then
-                If frmEditor_Map.optEvents.value Then
-                    AddEvent CurX, CurY
-                End If
-            End If
-        End If
-    End If
 End Sub
 
 ' Winsock event

@@ -2,13 +2,13 @@ Attribute VB_Name = "Player_Actions"
 Option Explicit
 
 Public Sub InitChat(ByVal index As Long, ByVal mapnum As Long, ByVal mapNpcNum As Long, Optional ByVal remoteChat As Boolean = False)
-    Dim NpcNum As Long
+    Dim npcNum As Long
     Dim Mission_ID As Long
-    NpcNum = MapNpc(mapnum).Npc(mapNpcNum).Num
+    npcNum = MapNpc(mapnum).Npc(mapNpcNum).Num
     
     ' check if we can chat
-    If Npc(NpcNum).Conv = 0 Then Exit Sub
-    If Len(Trim$(Conv(Npc(NpcNum).Conv).Name)) = 0 Then Exit Sub
+    If Npc(npcNum).Conv = 0 Then Exit Sub
+    If Len(Trim$(Conv(Npc(npcNum).Conv).Name)) = 0 Then Exit Sub
     
     If Not remoteChat Then
         With MapNpc(mapnum).Npc(mapNpcNum)
@@ -29,10 +29,10 @@ Public Sub InitChat(ByVal index As Long, ByVal mapnum As Long, ByVal mapNpcNum A
     End If
     
     ' Check Mission TALK NPC
-    Call Check_Mission(index, NpcNum)
+    Call Check_Mission(index, npcNum)
     
     ' Set chat value to Npc
-    TempPlayer(index).inChatWith = NpcNum
+    TempPlayer(index).inChatWith = npcNum
     TempPlayer(index).c_mapNpcNum = mapNpcNum
     TempPlayer(index).c_mapNum = mapnum
     ' set to the root chat
@@ -85,37 +85,6 @@ Public Sub chatOption(ByVal index As Long, ByVal chatOption As Long)
     sendChat index
 End Sub
 
-Public Sub chat_Unique(ByVal index As Long)
-Dim convNum As Long
-Dim curChat As Long
-Dim ItemAmount As Long
-    
-    If TempPlayer(index).inChatWith > 0 Then
-        convNum = Npc(TempPlayer(index).inChatWith).Conv
-        curChat = TempPlayer(index).curChat
-        
-        ' is unique?
-        If Conv(convNum).Conv(curChat).Event = 4 Then ' unique
-            ' which unique event?
-            Select Case Conv(convNum).Conv(curChat).Data1
-                Case 1 ' Little Boy
-                    ' check has the gold
-                    ItemAmount = HasItem(index, 1)
-                    If ItemAmount = 0 Or ItemAmount < 50 Then
-                        PlayerMsg index, "You do not have enough gold.", BrightRed
-                        Exit Sub
-                    Else
-                        PlayerWarp index, 15, 33, 32
-                        SetPlayerDir index, DIR_LEFT
-                        TakeInvItem index, 1, 50
-                        PlayerMsg index, "The boy takes your money then pushes you head first through the hole.", BrightGreen
-                        Exit Sub
-                    End If
-            End Select
-        End If
-    End If
-End Sub
-
 Public Sub sendChat(ByVal index As Long)
     Dim convNum As Long
     Dim curChat As Long
@@ -129,34 +98,6 @@ Public Sub sendChat(ByVal index As Long)
     If TempPlayer(index).inChatWith > 0 Then
         convNum = Npc(TempPlayer(index).inChatWith).Conv
         curChat = TempPlayer(index).curChat
-        
-        ' check for unique events and trigger them early
-        If Conv(convNum).Conv(curChat).Event > 0 Then
-            Select Case Conv(convNum).Conv(curChat).Event
-                Case 1 ' Open Shop
-                    If Conv(convNum).Conv(curChat).Data1 > 0 Then ' shop exists?
-                        SendOpenShop index, Conv(convNum).Conv(curChat).Data1
-                        TempPlayer(index).InShop = Conv(convNum).Conv(curChat).Data1 ' stops movement and the like
-                    End If
-                    ' exit out early so we don't send chat update twice
-                    ClosePlayerChat index
-                    Exit Sub
-                Case 2 ' Open Bank
-                    SendBank index
-                    TempPlayer(index).InBank = True
-                    ' exit out early
-                    ClosePlayerChat index
-                    Exit Sub
-                Case 3 ' Give Item
-                    ' exit out early
-                    ClosePlayerChat index
-                    Exit Sub
-                Case 4 ' Unique event
-                    chat_Unique index
-                    ClosePlayerChat index
-                    Exit Sub
-            End Select
-        End If
 
 continue:
         ' cache player's details
@@ -543,45 +484,11 @@ Public Sub PlayerMove(ByVal index As Long, ByVal Dir As Long, ByVal movement As 
             moved = YES
         End If
     End With
-    
-    ' check for events
-    If Map(GetPlayerMap(index)).TileData.EventCount > 0 Then
-        For i = 1 To Map(GetPlayerMap(index)).TileData.EventCount
-            CheckPlayerEvent index, i
-        Next
-    End If
 
     ' They tried to hack
     If moved = NO And canMoveResult <> 2 Then
         PlayerWarp index, GetPlayerMap(index), GetPlayerX(index), GetPlayerY(index)
     End If
-End Sub
-
-Public Sub EventLogic(index As Long)
-    Dim eventNum As Long, pageNum As Long, commandNum As Long
-    eventNum = TempPlayer(index).eventNum
-    pageNum = TempPlayer(index).pageNum
-    commandNum = TempPlayer(index).commandNum
-    ' carry out the command
-    With Map(GetPlayerMap(index)).TileData.Events(eventNum).EventPage(pageNum)
-        ' server-side processing
-        Select Case .Commands(commandNum).Type
-            Case EventType.evPlayerVar
-                If .Commands(commandNum).target > 0 Then Player(index).Variable(.Commands(commandNum).target) = .Commands(commandNum).colour
-        End Select
-        ' increment commands
-        If commandNum < .CommandCount Then
-            TempPlayer(index).commandNum = TempPlayer(index).commandNum + 1
-            Exit Sub
-        End If
-    End With
-    ' we're done - close event
-    TempPlayer(index).eventNum = 0
-    TempPlayer(index).pageNum = 0
-    TempPlayer(index).commandNum = 0
-    TempPlayer(index).inEvent = False
-    ' send it to the player
-    'SendEvent index
 End Sub
 
 Public Sub ForcePlayerMove(ByVal index As Long, ByVal movement As Long, ByVal direction As Long)

@@ -112,10 +112,6 @@ Public Type TempPlayerRec
     StunTimer As Long
     StunDuration As Long
     InBank As Boolean
-    inEvent As Boolean
-    eventNum As Long
-    pageNum As Long
-    commandNum As Long
     ' mission
     MissionRequest As Long
     ' trade

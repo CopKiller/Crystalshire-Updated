@@ -21,10 +21,8 @@ Public Sub SaveConv(ByVal convNum As Long)
                 Put #f, , .Conv(i).rText(x)
                 Put #f, , .Conv(i).rTarget(x)
             Next
-            Put #f, , .Conv(i).Event
-            Put #f, , .Conv(i).Data1
-            Put #f, , .Conv(i).Data2
-            Put #f, , .Conv(i).Data3
+            Put #f, , .Conv(i).EventType
+            Put #f, , .Conv(i).eventNum
         Next
     End With
     Close #f
@@ -73,10 +71,8 @@ Public Sub LoadConvs()
                     Get #f, , .Conv(N).rText(x)
                     Get #f, , .Conv(N).rTarget(x)
                 Next
-                Get #f, , .Conv(N).Event
-                Get #f, , .Conv(N).Data1
-                Get #f, , .Conv(N).Data2
-                Get #f, , .Conv(N).Data3
+                Get #f, , .Conv(N).EventType
+                Get #f, , .Conv(N).eventNum
             Next
         End With
         Close #f

@@ -12,7 +12,6 @@ Public Class() As ClassRec
 Public Item(1 To MAX_ITEMS) As ItemRec
 Public MapItem(1 To MAX_MAP_ITEMS) As MapItemRec
 Public MapNpc(1 To MAX_MAP_NPCS) As MapNpcRec
-Public Conv(1 To MAX_CONVS) As ConvWrapperRec
 Public ActionMsg(1 To MAX_BYTE) As ActionMsgRec
 Public Blood(1 To MAX_BYTE) As BloodRec
 Public Party As PartyRec
@@ -26,7 +25,6 @@ Public EmptyPlayer As PlayerRec
 Public EmptyItem As ItemRec
 Public EmptyMapItem As MapItemRec
 Public EmptyMapNpc As MapNpcRec
-Public EmptyConv As ConvWrapperRec
 Public EmptyActionMsg As ActionMsgRec
 
 'Client
@@ -73,8 +71,8 @@ Private Type BankRec
 End Type
 
 Private Type PlayerMission
-    ID As Long
-    Count As Long
+    id As Long
+    count As Long
 End Type
 
 Private Type PlayerRec
@@ -366,22 +364,6 @@ End Type
 
 Public Type AutotileRec
     Layer(1 To MapLayer.Layer_Count - 1) As QuarterTileRec
-End Type
-
-Public Type ConvRec
-    Conv As String
-    rText(1 To 4) As String
-    rTarget(1 To 4) As Long
-    Event As Long
-    Data1 As Long
-    Data2 As Long
-    Data3 As Long
-End Type
-
-Private Type ConvWrapperRec
-    Name As String * NAME_LENGTH
-    chatCount As Long
-    Conv() As ConvRec
 End Type
 
 Public Type ChatBubbleRec

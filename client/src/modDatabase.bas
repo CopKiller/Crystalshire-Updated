@@ -123,7 +123,7 @@ errorhandler:
 End Sub
 
 Public Sub SaveMap(ByVal mapNum As Long)
-    Dim filename As String, f As Long, x As Long, y As Long, i As Long
+    Dim filename As String, f As Long, X As Long, y As Long, i As Long
     
     ' save map data
     filename = App.path & MAP_PATH & mapNum & "_.dat"
@@ -156,7 +156,7 @@ Public Sub SaveMap(ByVal mapNum As Long)
         PutVar filename, "General", "Red", Val(.Red)
         PutVar filename, "General", "Green", Val(.Green)
         PutVar filename, "General", "Blue", Val(.Blue)
-        PutVar filename, "General", "Alpha", Val(.Alpha)
+        PutVar filename, "General", "Alpha", Val(.alpha)
         
         PutVar filename, "General", "BossNpc", Val(.BossNpc)
         For i = 1 To MAX_MAP_NPCS
@@ -173,20 +173,20 @@ Public Sub SaveMap(ByVal mapNum As Long)
     f = FreeFile
     With Map
         Open filename For Binary As #f
-            For x = 0 To .MapData.MaxX
+            For X = 0 To .MapData.MaxX
                 For y = 0 To .MapData.MaxY
-                    Put #f, , .TileData.Tile(x, y).Type
-                    Put #f, , .TileData.Tile(x, y).Data1
-                    Put #f, , .TileData.Tile(x, y).Data2
-                    Put #f, , .TileData.Tile(x, y).Data3
-                    Put #f, , .TileData.Tile(x, y).Data4
-                    Put #f, , .TileData.Tile(x, y).Data5
-                    Put #f, , .TileData.Tile(x, y).Autotile
-                    Put #f, , .TileData.Tile(x, y).DirBlock
+                    Put #f, , .TileData.Tile(X, y).Type
+                    Put #f, , .TileData.Tile(X, y).Data1
+                    Put #f, , .TileData.Tile(X, y).Data2
+                    Put #f, , .TileData.Tile(X, y).Data3
+                    Put #f, , .TileData.Tile(X, y).Data4
+                    Put #f, , .TileData.Tile(X, y).Data5
+                    Put #f, , .TileData.Tile(X, y).Autotile
+                    Put #f, , .TileData.Tile(X, y).DirBlock
                     For i = 1 To MapLayer.Layer_Count - 1
-                        Put #f, , .TileData.Tile(x, y).Layer(i).tileSet
-                        Put #f, , .TileData.Tile(x, y).Layer(i).x
-                        Put #f, , .TileData.Tile(x, y).Layer(i).y
+                        Put #f, , .TileData.Tile(X, y).Layer(i).tileSet
+                        Put #f, , .TileData.Tile(X, y).Layer(i).X
+                        Put #f, , .TileData.Tile(X, y).Layer(i).y
                     Next
                 Next
             Next
@@ -227,7 +227,7 @@ Dim Data() As Byte, filename As String, f As Long
 End Sub
 
 Public Sub LoadMap(ByVal mapNum As Long)
-    Dim filename As String, i As Long, f As Long, x As Long, y As Long
+    Dim filename As String, i As Long, f As Long, X As Long, y As Long
     
     ' load map data
     filename = App.path & MAP_PATH & mapNum & "_.dat"
@@ -257,7 +257,7 @@ Public Sub LoadMap(ByVal mapNum As Long)
         .Red = Val(GetVar(filename, "General", "Red"))
         .Green = Val(GetVar(filename, "General", "Green"))
         .Blue = Val(GetVar(filename, "General", "Blue"))
-        .Alpha = Val(GetVar(filename, "General", "Alpha"))
+        .alpha = Val(GetVar(filename, "General", "Alpha"))
         .BossNpc = Val(GetVar(filename, "General", "BossNpc"))
         For i = 1 To MAX_MAP_NPCS
             .Npc(i) = Val(GetVar(filename, "General", "Npc" & i))
@@ -272,20 +272,20 @@ Public Sub LoadMap(ByVal mapNum As Long)
     
     With Map
         Open filename For Binary As #f
-            For x = 0 To .MapData.MaxX
+            For X = 0 To .MapData.MaxX
                 For y = 0 To .MapData.MaxY
-                    Get #f, , .TileData.Tile(x, y).Type
-                    Get #f, , .TileData.Tile(x, y).Data1
-                    Get #f, , .TileData.Tile(x, y).Data2
-                    Get #f, , .TileData.Tile(x, y).Data3
-                    Get #f, , .TileData.Tile(x, y).Data4
-                    Get #f, , .TileData.Tile(x, y).Data5
-                    Get #f, , .TileData.Tile(x, y).Autotile
-                    Get #f, , .TileData.Tile(x, y).DirBlock
+                    Get #f, , .TileData.Tile(X, y).Type
+                    Get #f, , .TileData.Tile(X, y).Data1
+                    Get #f, , .TileData.Tile(X, y).Data2
+                    Get #f, , .TileData.Tile(X, y).Data3
+                    Get #f, , .TileData.Tile(X, y).Data4
+                    Get #f, , .TileData.Tile(X, y).Data5
+                    Get #f, , .TileData.Tile(X, y).Autotile
+                    Get #f, , .TileData.Tile(X, y).DirBlock
                     For i = 1 To MapLayer.Layer_Count - 1
-                        Get #f, , .TileData.Tile(x, y).Layer(i).tileSet
-                        Get #f, , .TileData.Tile(x, y).Layer(i).x
-                        Get #f, , .TileData.Tile(x, y).Layer(i).y
+                        Get #f, , .TileData.Tile(X, y).Layer(i).tileSet
+                        Get #f, , .TileData.Tile(X, y).Layer(i).X
+                        Get #f, , .TileData.Tile(X, y).Layer(i).y
                     Next
                 Next
             Next
@@ -381,13 +381,13 @@ End Sub
 Function GetPlayerSprite(ByVal Index As Long) As Long
 
     If Index > MAX_PLAYERS Then Exit Function
-    GetPlayerSprite = Player(Index).Sprite
+    GetPlayerSprite = Player(Index).sprite
 End Function
 
-Sub SetPlayerSprite(ByVal Index As Long, ByVal Sprite As Long)
+Sub SetPlayerSprite(ByVal Index As Long, ByVal sprite As Long)
 
     If Index > MAX_PLAYERS Then Exit Sub
-    Player(Index).Sprite = Sprite
+    Player(Index).sprite = sprite
 End Sub
 
 Function GetPlayerLevel(ByVal Index As Long) As Long
@@ -502,13 +502,13 @@ End Sub
 Function GetPlayerX(ByVal Index As Long) As Long
 
     If Index > MAX_PLAYERS Then Exit Function
-    GetPlayerX = Player(Index).x
+    GetPlayerX = Player(Index).X
 End Function
 
-Sub SetPlayerX(ByVal Index As Long, ByVal x As Long)
+Sub SetPlayerX(ByVal Index As Long, ByVal X As Long)
 
     If Index > MAX_PLAYERS Then Exit Sub
-    Player(Index).x = x
+    Player(Index).X = X
 End Sub
 
 Function GetPlayerY(ByVal Index As Long) As Long
@@ -571,19 +571,4 @@ Sub SetPlayerEquipment(ByVal Index As Long, ByVal invNum As Long, ByVal Equipmen
 
     If Index < 1 Or Index > MAX_PLAYERS Then Exit Sub
     Player(Index).Equipment(EquipmentSlot) = invNum
-End Sub
-
-Sub ClearConv(ByVal Index As Long)
-    Conv(Index) = EmptyConv
-    Conv(Index).Name = vbNullString
-    ReDim Conv(Index).Conv(1)
-End Sub
-
-Sub ClearConvs()
-    Dim i As Long
-
-    For i = 1 To MAX_CONVS
-        Call ClearConv(i)
-    Next
-
 End Sub

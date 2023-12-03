@@ -715,21 +715,3 @@ Public Sub SendCheckForMap(index As Long, mapnum As Long)
     SendDataTo index, Buffer.ToArray()
     Buffer.Flush: Set Buffer = Nothing
 End Sub
-
-Public Sub SendEvent(index As Long)
-    Dim Buffer As clsBuffer
-    Set Buffer = New clsBuffer
-    
-    Buffer.WriteLong SEvent
-    If TempPlayer(index).inEvent Then
-        Buffer.WriteLong 1
-    Else
-        Buffer.WriteLong 0
-    End If
-    Buffer.WriteLong TempPlayer(index).eventNum
-    Buffer.WriteLong TempPlayer(index).pageNum
-    Buffer.WriteLong TempPlayer(index).commandNum
-    
-    SendDataTo index, Buffer.ToArray()
-    Buffer.Flush: Set Buffer = Nothing
-End Sub

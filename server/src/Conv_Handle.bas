@@ -54,10 +54,8 @@ Public Sub HandleSaveConv(ByVal index As Long, ByRef Data() As Byte, ByVal Start
                 .Conv(i).rText(x) = Buffer.ReadString
                 .Conv(i).rTarget(x) = Buffer.ReadLong
             Next
-            .Conv(i).Event = Buffer.ReadLong
-            .Conv(i).Data1 = Buffer.ReadLong
-            .Conv(i).Data2 = Buffer.ReadLong
-            .Conv(i).Data3 = Buffer.ReadLong
+            .Conv(i).EventType = Buffer.ReadLong
+            .Conv(i).eventNum = Buffer.ReadLong
         Next
     End With
     

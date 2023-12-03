@@ -211,7 +211,6 @@ Public AnimationIndex As Byte
 Public FPS_Lock As Boolean
 ' Editor edited items array
 Public Item_Changed(1 To MAX_ITEMS) As Boolean
-Public Conv_Changed(1 To MAX_CONVS) As Boolean
 ' New char
 Public newCharSprite As Long
 Public newCharClass As Long
@@ -243,10 +242,6 @@ Public ChatButtonDown As Boolean
 ' Events
 Public selTileX As Long
 Public selTileY As Long
-Public inEvent As Boolean
-Public eventNum As Long
-Public eventPageNum As Long
-Public eventCommandNum As Long
 ' Map
 Public applyingMap As Boolean
 Public MapEditorAppearDistance As Long

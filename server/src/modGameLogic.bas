@@ -158,7 +158,7 @@ End Function
 
 Public Sub SpawnNpc(ByVal mapNpcNum As Long, ByVal mapnum As Long)
     Dim Buffer As clsBuffer
-    Dim NpcNum As Long
+    Dim npcNum As Long
     Dim i As Long
     Dim x As Long
     Dim y As Long
@@ -166,16 +166,16 @@ Public Sub SpawnNpc(ByVal mapNpcNum As Long, ByVal mapnum As Long)
 
     ' Check for subscript out of range
     If mapNpcNum <= 0 Or mapNpcNum > MAX_MAP_NPCS Or mapnum <= 0 Or mapnum > MAX_MAPS Then Exit Sub
-    NpcNum = Map(mapnum).MapData.Npc(mapNpcNum)
+    npcNum = Map(mapnum).MapData.Npc(mapNpcNum)
 
-    If NpcNum > 0 Then
+    If npcNum > 0 Then
     
         With MapNpc(mapnum).Npc(mapNpcNum)
-            .Num = NpcNum
+            .Num = npcNum
             .target = 0
             .targetType = 0 ' clear
-            .Vital(Vitals.HP) = GetNpcMaxVital(NpcNum, Vitals.HP)
-            .Vital(Vitals.MP) = GetNpcMaxVital(NpcNum, Vitals.MP)
+            .Vital(Vitals.HP) = GetNpcMaxVital(npcNum, Vitals.HP)
+            .Vital(Vitals.MP) = GetNpcMaxVital(npcNum, Vitals.MP)
             .Dir = Int(Rnd * 4)
             .spellBuffer.Spell = 0
             .spellBuffer.Timer = 0
@@ -1296,36 +1296,4 @@ Public Function hasProficiency(ByVal index As Long, ByVal proficiency As Long) A
             End If
     End Select
     hasProficiency = False
-End Function
-
-Function ActiveEventPage(ByVal index As Long, ByVal eventNum As Long) As Long
-Dim x As Long, mapnum As Long, process As Boolean
-    mapnum = GetPlayerMap(index)
-    For x = Map(mapnum).TileData.Events(eventNum).PageCount To 1 Step -1
-        ' check if we match
-        With Map(mapnum).TileData.Events(eventNum).EventPage(x)
-            process = True
-            ' player var check
-            If .chkPlayerVar Then
-                If .PlayerVarNum > 0 Then
-                    If Player(index).Variable(.PlayerVarNum) < .PlayerVariable Then
-                        process = False
-                    End If
-                End If
-            End If
-            ' has item check
-            If .chkHasItem Then
-                If .HasItemNum > 0 Then
-                    If HasItem(index, .HasItemNum) = 0 Then
-                        process = False
-                    End If
-                End If
-            End If
-            ' this page
-            If process = True Then
-                ActiveEventPage = x
-                Exit Function
-            End If
-        End With
-    Next
 End Function

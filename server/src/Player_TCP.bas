@@ -115,11 +115,18 @@ Public Sub CompleteMission(ByVal index As Long, ByVal MissionSlot As Long)
     
     Count = 0
     MissionID = Player(index).Mission(MissionSlot).ID
-    
-    
     Call PlayerMsg(index, Mission(MissionID).Completed, Yellow)
+    
+    ' Zerando informações sobre missões ativas
     Player(index).Mission(MissionSlot).ID = 0
     Player(index).Mission(MissionSlot).Count = 0
+    
+    For i = MissionSlot To MAX_PLAYER_MISSIONS
+        If i < MAX_PLAYER_MISSIONS Then
+            Player(index).Mission(i).ID = Player(index).Mission(i + 1).ID
+            Player(index).Mission(i).Count = Player(index).Mission(i + 1).Count
+        End If
+    Next
     
     For i = 1 To MAX_MISSIONS
         If Mission(MissionID).Repeatable = 1 Then
