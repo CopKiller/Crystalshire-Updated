@@ -50,6 +50,8 @@ Public Enum Fonts
     verdana_12
     verdanaBold_12
     verdana_13
+    
+    Default
     ' count value
     Fonts_Count
 End Enum
@@ -88,6 +90,7 @@ Sub LoadFonts()
     SetFont Fonts.verdana_12, "verdana_12", 256
     SetFont Fonts.verdanaBold_12, "verdanaBold_12", 256
     SetFont Fonts.rockwellDec_10, "rockwellDec_10", 256, 2, 2
+    SetFont Fonts.Default, "default", 256
 End Sub
 
 Sub SetFont(ByVal fontNum As Long, ByVal texName As String, ByVal Size As Long, Optional ByVal xOffset As Long, Optional ByVal yOffset As Long)
