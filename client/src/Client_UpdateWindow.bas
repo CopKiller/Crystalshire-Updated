@@ -33,15 +33,15 @@ Public Sub UpdateWindowOffer(ByVal Index_Offer As Long)
 End Sub
 
 Public Sub Window_QuestButtonUpdate()
-    Dim X As Long
+    Dim x As Long
     Dim isActive As Boolean
     
     With Windows(GetWindowIndex("winPlayerQuests"))
-        For X = 1 To MAX_PLAYER_MISSIONS
-            If Player(MyIndex).Mission(X).ID <> 0 Then
+        For x = 1 To MAX_PLAYER_MISSIONS
+            If Player(MyIndex).Mission(x).ID <> 0 Then
                 isActive = True
-                .Controls(GetControlIndex("winPlayerQuests", "btnMission" & X)).visible = True
-                .Controls(GetControlIndex("winPlayerQuests", "btnMission" & X)).text = Trim$(Mission(Player(MyIndex).Mission(X).ID).Name)
+                .Controls(GetControlIndex("winPlayerQuests", "btnMission" & x)).visible = True
+                .Controls(GetControlIndex("winPlayerQuests", "btnMission" & x)).text = Trim$(Mission(Player(MyIndex).Mission(x).ID).Name)
             End If
         Next
         If isActive Then
@@ -49,9 +49,9 @@ Public Sub Window_QuestButtonUpdate()
             Window_QuestLabelUpdate
         Else
             Button_MissionActive = 0
-            For X = 1 To MAX_PLAYER_MISSIONS
-                If Player(MyIndex).Mission(X).ID = 0 Then
-                    .Controls(GetControlIndex("winPlayerQuests", "btnMission" & X)).visible = False
+            For x = 1 To MAX_PLAYER_MISSIONS
+                If Player(MyIndex).Mission(x).ID = 0 Then
+                    .Controls(GetControlIndex("winPlayerQuests", "btnMission" & x)).visible = False
                 End If
             Next
         End If
@@ -65,17 +65,20 @@ Public Sub Window_QuestLabelUpdate()
             .Controls(GetControlIndex("winPlayerQuests", "lblDescription")).text = Trim$(Mission(Player(MyIndex).Mission(Button_MissionActive).ID).Description)
             Select Case Mission(Player(MyIndex).Mission(Button_MissionActive).ID).Type
                 Case MissionType.Mission_TypeCollect
+                If Mission(Player(MyIndex).Mission(Button_MissionActive).ID).CollectItemAmount = 0 Then Exit Sub
                     .Controls(GetControlIndex("winPlayerQuests", "lblGoal")).text = "You must collect " & Trim$(Item(Mission(Player(MyIndex).Mission(Button_MissionActive).ID).CollectItem).Name) & " (" & Player(MyIndex).Mission(Button_MissionActive).Count & "/" & Mission(Player(MyIndex).Mission(Button_MissionActive).ID).CollectItemAmount & ")"
                 Case MissionType.Mission_TypeKill
-                    '.Controls(GetControlIndex("winPlayerQuests", "lblGoal")).text = "You must kill " & Trim$(Npc(Mission(Player(MyIndex).Mission(Button_MissionActive).ID).KillNPC).Name) & " (" & Player(MyIndex).Mission(Button_MissionActive).Count & "/" & Mission(Player(MyIndex).Mission(Button_MissionActive).ID).KillNPCAmount & ")"
+                    If Mission(Player(MyIndex).Mission(Button_MissionActive).ID).KillNPC = 0 Then Exit Sub
+                    .Controls(GetControlIndex("winPlayerQuests", "lblGoal")).text = "You must kill " & Trim$(Npc(Mission(Player(MyIndex).Mission(Button_MissionActive).ID).KillNPC).Name) & " (" & Player(MyIndex).Mission(Button_MissionActive).Count & "/" & Mission(Player(MyIndex).Mission(Button_MissionActive).ID).KillNPCAmount & ")"
                 Case MissionType.Mission_TypeTalk
+                    If Mission(Player(MyIndex).Mission(Button_MissionActive).ID).TalkNPC = 0 Then Exit Sub
                     .Controls(GetControlIndex("winPlayerQuests", "lblGoal")).text = "You should talk to " & Trim$(Npc(Mission(Player(MyIndex).Mission(Button_MissionActive).ID).TalkNPC).Name)
             End Select
             
             .Controls(GetControlIndex("winPlayerQuests", "lblEXP")).text = Str(Mission(Player(MyIndex).Mission(Button_MissionActive).ID).RewardExperience) & " EXP"
         Else
-            For X = 1 To MAX_PLAYER_MISSIONS
-                .Controls(GetControlIndex("winPlayerQuests", "btnMission" & X)).visible = False
+            For x = 1 To MAX_PLAYER_MISSIONS
+                .Controls(GetControlIndex("winPlayerQuests", "btnMission" & x)).visible = False
             Next
             .Controls(GetControlIndex("winPlayerQuests", "lblDescription")).text = ""
             .Controls(GetControlIndex("winPlayerQuests", "lblGoal")).text = ""
