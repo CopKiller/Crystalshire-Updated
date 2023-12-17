@@ -65,7 +65,7 @@ Public Type ChatStruct
     timer As Long
     Channel As Byte
 End Type
-Public Const ColourChar As String * 1 = "½"
+Public Const ColourChar As String * 1 = "Â½"
 Public Const ChatLines As Long = 200
 Public Const ChatWidth As Long = 316
 Public Chat(1 To ChatLines) As ChatStruct

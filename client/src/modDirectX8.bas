@@ -19,6 +19,7 @@ Public Const PathProjectile As String = "\data files\graphics\projectiles\"
 Public Const PathSurface As String = "\data files\graphics\surfaces\"
 Public Const PathFog As String = "\data files\graphics\fog\"
 Public Const PathCaptcha As String = "\data files\graphics\captchas\"
+
 Public Const GFX_EXT As String = ".png"
 
 ' Texture wrapper
@@ -824,6 +825,7 @@ Public Sub GDIRenderSpell(ByRef picBox As PictureBox, ByVal sprite As Long)
     Height = mTexture(TextureSpellicon(sprite)).RealHeight
     Width = mTexture(TextureSpellicon(sprite)).RealWidth
 
+
     If Height = 0 Or Width = 0 Then
         Height = 1
         Width = 1
@@ -897,6 +899,7 @@ End Sub
 
 Public Sub DrawFog()
     Dim fogNum As Long, Colour As Long, X As Long, Y As Long, RenderState As Long
+
     fogNum = CurrentFog
 
     If fogNum <= 0 Or fogNum > CountFog Then Exit Sub
@@ -1063,6 +1066,7 @@ Public Sub DrawHotbar()
         RenderTexture TextureGUI(35), Xo - 2, Yo - 2, 0, 0, Width, Height, Width, Height
         ' render icon
         If Not (DragBox.Origin = OriginHotbar And DragBox.Slot = i) Then
+
             Select Case Hotbar(i).sType
                 Case 1 ' inventory
                     If Len(Item(Hotbar(i).Slot).Name) > 0 And Item(Hotbar(i).Slot).pic > 0 Then
@@ -1168,6 +1172,7 @@ Public Sub DrawSkills()
         RenderTexture TextureGUI(38), Xo + 4, Y, 0, 0, Width, Height, Width, Height
         RenderTexture TextureGUI(38), Xo + 80, Y, 0, 0, Width, Height, Width, Height
         RenderTexture TextureGUI(38), Xo + 156, Y, 0, 0, 42, Height, 42, Height
+
         Y = Y + 76
     Next
     
@@ -1177,6 +1182,7 @@ Public Sub DrawSkills()
         If spellnum > 0 And spellnum <= MAX_SPELLS Then
             ' not dragging?
             If Not (DragBox.Origin = OriginSpells And DragBox.Slot = i) Then
+
                 spellPic = Spell(spellnum).icon
     
                 If spellPic > 0 And spellPic <= CountSpellicon Then
@@ -1273,6 +1279,7 @@ Dim Xo As Long, Yo As Long, ItemPic As Long, ItemNum As Long, Amount As Long, i 
             Left = Xo + ShopLeft + ((ShopOffsetX + 32) * (((i - 1) Mod ShopColumns)))
             ' draw selected square
             If shopSelectedSlot = i Then RenderTexture TextureGUI(35), Left, Top, 0, 0, 32, 32, 32, 32
+
             
             If ItemNum > 0 And ItemNum <= MAX_ITEMS Then
                 ItemPic = Item(ItemNum).pic
@@ -1366,6 +1373,7 @@ Sub DrawTrade()
         RenderTexture TextureGUI(38), Xo + 4 + 205, Y, 0, 0, Width, Height, Width, Height
         RenderTexture TextureGUI(38), Xo + 80 + 205, Y, 0, 0, Width, Height, Width, Height
         RenderTexture TextureGUI(38), Xo + 156 + 205, Y, 0, 0, 42, Height, 42, Height
+
         Y = Y + 76
     Next
 End Sub
@@ -1593,6 +1601,7 @@ Public Sub DrawInventory()
                         If GetPlayerInvItemValue(MyIndex, i) > 1 Then
                             Y = Top + 21
                             X = Left + 1
+
                             Amount = GetPlayerInvItemValue(MyIndex, i) - amountModifier
                             
                             ' Draw currency but with k, m, b etc. using a convertion function
@@ -1605,6 +1614,7 @@ Public Sub DrawInventory()
                             End If
                             
                             RenderText font(Fonts.verdana_12), ConvertCurrency(Amount), X, Y, Colour
+
                         End If
                     End If
                 End If
@@ -1667,6 +1677,7 @@ Public Sub DrawWinQuest()
                         End If
 
                         RenderText font(Fonts.verdana_12), ConvertCurrency(Amount), X, Y, Colour
+
                     End If
                 End If
             End If
@@ -1679,6 +1690,8 @@ End Sub
 
 Public Sub DrawChatBubble(ByVal Index As Long)
     Dim theArray() As String, X As Long, Y As Long, i As Long, MaxWidth As Long, X2 As Long, Y2 As Long, Colour As Long, tmpNum As Long
+
+
     
     With chatBubble(Index)
         ' exit out early
@@ -1741,6 +1754,7 @@ Public Sub DrawChatBubble(ByVal Index As Long)
         For i = 1 To tmpNum
             RenderText font(Fonts.georgia_16), theArray(i), X - (TextWidth(font(Fonts.georgiaDec_16), theArray(i)) / 2), Y2, Colour
             Y2 = Y2 + 12
+
         Next
 
         ' check if it's timed out - close it if so
@@ -1776,6 +1790,7 @@ Public Sub DrawPlayer(ByVal Index As Long)
     Dim Anim As Byte, i As Long
     Dim X As Long
     Dim Y As Long
+
     Dim sprite As Long, SpriteTop As Long
     Dim rec As GeomRec
     Dim attackspeed As Long
@@ -1889,7 +1904,6 @@ Public Sub DrawPlayer(ByVal Index As Long)
     End If
 
     RenderTexture TextureChar(sprite), ConvertMapX(X), ConvertMapY(Y), rec.Left, rec.Top, rec.Width, rec.Height, rec.Width, rec.Height
-    
     ' check for paperdolling
     For i = 1 To UBound(PaperdollOrder)
         If GetPlayerEquipment(Index, PaperdollOrder(i)) > 0 Then
@@ -2074,7 +2088,8 @@ Public Sub DrawProjectile(ByVal i As Long)
             End If
         End If
         
-        ' VERIFICAR SE É UMA TRAP E O TEMPO DE SPAWN ACABOU
+
+        ' VERIFICAR SE Ã‰ UMA TRAP E O TEMPO DE SPAWN ACABOU
         If MapProjectile(i).Speed >= 5000 Then
             If Tick >= MapProjectile(i).Duration Then
                 Call ClearProjectile(i)
@@ -2088,6 +2103,7 @@ Public Sub DrawNpc(ByVal MapNpcNum As Long)
     Dim Anim As Byte
     Dim X As Long
     Dim Y As Long
+
     Dim sprite As Long, SpriteTop As Long
     Dim rec As GeomRec
     Dim attackspeed As Long
@@ -2309,6 +2325,7 @@ Public Sub DrawResource(ByVal Resource_num As Long)
     Height = rec.Bottom - rec.Top
     'EngineRenderRectangle TextureResource(Resource_sprite), ConvertMapX(x), ConvertMapY(y), 0, 0, width, height, width, height, width, height
     RenderTexture TextureResource(Resource_sprite), ConvertMapX(X), ConvertMapY(Y), 0, 0, Width, Height, Width, Height
+
 End Sub
 
 Public Sub DrawItem(ByVal ItemNum As Long)
@@ -2452,6 +2469,7 @@ Public Sub DrawAnimation(ByVal Index As Long, ByVal Layer As Long)
     Dim sprite As Integer, sRECT As GeomRec, Width As Long, Height As Long, FrameCount As Long
     Dim X As Long, Y As Long, lockindex As Long
 
+
     If AnimInstance(Index).Animation = 0 Then
         ClearAnimInstance Index
         Exit Sub
@@ -2472,6 +2490,7 @@ Public Sub DrawAnimation(ByVal Index As Long, ByVal Layer As Long)
         .Height = Height
         .Left = (Width * (((AnimInstance(Index).frameIndex(Layer) - 1) Mod AnimColumns)))
         .Width = Width
+
     End With
 
     ' change x or y if locked
@@ -2490,6 +2509,7 @@ Public Sub DrawAnimation(ByVal Index As Long, ByVal Layer As Long)
                     ' is on map, is playing, set x & y
                     X = (GetPlayerX(lockindex) * PIC_X) + 16 - (Width / 2) + Player(lockindex).xOffset
                     Y = (GetPlayerY(lockindex) * PIC_Y) + 16 - (Height / 2) + Player(lockindex).yOffset
+
                 End If
             End If
 
@@ -2505,6 +2525,7 @@ Public Sub DrawAnimation(ByVal Index As Long, ByVal Layer As Long)
                     ' exists, is alive, set x & y
                     X = (MapNpc(lockindex).X * PIC_X) + 16 - (Width / 2) + MapNpc(lockindex).xOffset
                     Y = (MapNpc(lockindex).Y * PIC_Y) + 16 - (Height / 2) + MapNpc(lockindex).yOffset
+
                 Else
                     ' npc not alive anymore, kill the animation
                     ClearAnimInstance Index
@@ -2628,7 +2649,6 @@ Public Sub Render_Graphics()
                 End If
             End If
         End If
-
         If CountChar > 0 Then
             ' shadows - Players
             For i = 1 To Player_HighIndex
@@ -2800,7 +2820,6 @@ Public Sub Render_Graphics()
         RenderText font(Fonts.georgiaDec_16), Trim$("loc x: " & GetPlayerX(MyIndex) & " y: " & GetPlayerY(MyIndex)), 260, 22, Yellow
         RenderText font(Fonts.georgiaDec_16), Trim$(" (map #" & GetPlayerMap(MyIndex) & ")"), 260, 38, Yellow
     End If
-        
     ' draw map name
     RenderMapName
 

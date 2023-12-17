@@ -547,6 +547,7 @@ Sub CheckMapGetItem()
         ' find out if we want to pick it up
         For i = 1 To MAX_MAP_ITEMS
 
+
             If MapItem(i).X = Player(MyIndex).X And MapItem(i).Y = Player(MyIndex).Y Then
                 If MapItem(i).Num > 0 Then
                     If Item(MapItem(i).Num).BindType = 1 Then
@@ -968,6 +969,7 @@ Function CanMove() As Boolean
 End Function
 
 Function CheckDirection(ByVal Direction As Byte) As Boolean
+
     Dim X As Long, Y As Long, i As Long
     
     CheckDirection = False
@@ -1055,6 +1057,7 @@ Function CheckDirection(ByVal Direction As Byte) As Boolean
     If Map.MapData.Moral = 0 Then
         For i = 1 To Player_HighIndex
             If IsPlaying(i) And GetPlayerMap(i) = GetPlayerMap(MyIndex) Then
+
                 If GetPlayerX(i) = X Then
                     If GetPlayerY(i) = Y Then
                         CheckDirection = True
@@ -1229,6 +1232,7 @@ Public Function IsOffer(StartX As Long, StartY As Long) As Long
             
             If currMouseX >= tempRec.Left And currMouseX <= tempRec.Right Then
                 RenderTexture TextureDesign(7), ConvertMapX(OfferTop), ConvertMapY(OfferLeft), 0, 0, 32, 32, 32, 32
+
                 If currMouseY >= tempRec.Top And currMouseY <= tempRec.Bottom Then
                     IsOffer = i
                     Exit Function
@@ -1656,6 +1660,7 @@ Public Function isDirBlocked(ByRef blockvar As Byte, ByRef Dir As Byte) As Boole
 End Function
 
 Public Sub PlayMapSound(ByVal X As Long, ByVal Y As Long, ByVal entityType As Long, ByVal entityNum As Long)
+
     Dim soundName As String
 
     If entityNum <= 0 Then Exit Sub
@@ -1820,6 +1825,7 @@ End Function
 
 Public Function ConvertMapY(ByVal Y As Long) As Long
     ConvertMapY = Y - (TileView.Top * PIC_Y) - Camera.Top
+
 End Function
 
 Public Sub UpdateCamera()
@@ -2274,6 +2280,7 @@ Public Sub CalculateNE_normal(ByVal layernum As Long, ByVal X As Long, ByVal Y A
     Dim situation As Byte
 
     ' North
+
     If checkTileMatch(layernum, X, Y, X, Y - 1) Then tmpTile(1) = True
 
     ' North East
@@ -2319,6 +2326,7 @@ Public Sub CalculateNE_normal(ByVal layernum As Long, ByVal X As Long, ByVal Y A
 End Sub
 
 Public Sub CalculateSW_normal(ByVal layernum As Long, ByVal X As Long, ByVal Y As Long)
+
     Dim tmpTile(1 To 3) As Boolean
     Dim situation As Byte
 
@@ -2368,6 +2376,7 @@ Public Sub CalculateSW_normal(ByVal layernum As Long, ByVal X As Long, ByVal Y A
 End Sub
 
 Public Sub CalculateSE_normal(ByVal layernum As Long, ByVal X As Long, ByVal Y As Long)
+
     Dim tmpTile(1 To 3) As Boolean
     Dim situation As Byte
 

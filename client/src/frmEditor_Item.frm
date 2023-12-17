@@ -948,7 +948,7 @@ Private Sub cmdDelete_Click()
     ClearItem EditorIndex
     tmpIndex = lstIndex.ListIndex
     lstIndex.RemoveItem EditorIndex - 1
-    lstIndex.AddItem EditorIndex & ": " & Item(EditorIndex).Name, EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Item(EditorIndex).name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
     ItemEditorInit
 End Sub
@@ -1006,7 +1006,7 @@ Private Sub cmbType_Click()
         fraFood.visible = False
     End If
 
-    Item(EditorIndex).Type = cmbType.ListIndex
+    Item(EditorIndex).type = cmbType.ListIndex
 End Sub
 
 Private Sub lstIndex_Click()
@@ -1051,6 +1051,7 @@ Private Sub scrlAnim_Change()
         sString = "None"
     Else
         sString = Trim$(Animation(scrlAnim.Value).Name)
+
     End If
 
     lblAnim.caption = "Anim: " & sString
@@ -1195,6 +1196,7 @@ Private Sub scrlSpell_Change()
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
     If Len(Trim$(Spell(scrlSpell.Value).Name)) > 0 Then
         lblSpellName.caption = "Name: " & Trim$(Spell(scrlSpell.Value).Name)
+
     Else
         lblSpellName.caption = "Name: None"
     End If
@@ -1219,8 +1221,8 @@ Public Sub txtName_Validate(Cancel As Boolean)
 
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
     tmpIndex = lstIndex.ListIndex
-    Item(EditorIndex).Name = Trim$(txtName.text)
+    Item(EditorIndex).name = Trim$(txtName.text)
     lstIndex.RemoveItem EditorIndex - 1
-    lstIndex.AddItem EditorIndex & ": " & Item(EditorIndex).Name, EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Item(EditorIndex).name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
 End Sub

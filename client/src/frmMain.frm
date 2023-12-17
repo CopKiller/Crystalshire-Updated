@@ -104,6 +104,7 @@ End Sub
 
 Private Sub Form_DoubleClick()
     HandleGuiMouse entStates.DoubleClick
+
 End Sub
 
 ' Winsock event

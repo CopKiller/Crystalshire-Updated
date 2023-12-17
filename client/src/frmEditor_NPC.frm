@@ -632,7 +632,7 @@ Private Sub cmdDelete_Click()
     ClearNPC EditorIndex
     tmpIndex = lstIndex.ListIndex
     lstIndex.RemoveItem EditorIndex - 1
-    lstIndex.AddItem EditorIndex & ": " & Npc(EditorIndex).Name, EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Npc(EditorIndex).name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
     NpcEditorInit
 End Sub
@@ -651,6 +651,7 @@ Private Sub scrlConv_Change()
 
     If scrlConv.Value > 0 Then
         lblConv.caption = "Conv: " & Trim$(Conv(scrlConv.Value).Name)
+
     Else
         lblConv.caption = "Conv: None"
     End If
@@ -674,6 +675,7 @@ Private Sub scrlAnimation_Change()
     Dim sString As String
 
     If scrlAnimation.Value = 0 Then sString = "None" Else sString = Trim$(Animation(scrlAnimation.Value).Name)
+
     lblAnimation.caption = "Anim: " & sString
     Npc(EditorIndex).Animation = scrlAnimation.Value
 End Sub
@@ -697,6 +699,7 @@ Private Sub scrlSpellNum_Change()
 
     If scrlSpellNum.Value > 0 Then
         lblSpellName.caption = "Spell: " & Trim$(Spell(scrlSpellNum.Value).Name)
+
     Else
         lblSpellName.caption = "Spell: None"
     End If
@@ -719,6 +722,7 @@ Private Sub scrlNum_Change()
 
     If scrlNum.Value > 0 Then
         lblItemName.caption = "Item: " & Trim$(Item(scrlNum.Value).Name)
+
     End If
 
     Npc(EditorIndex).DropItem(DropIndex) = scrlNum.Value
@@ -770,7 +774,7 @@ Private Sub txtChance_Validate(Cancel As Boolean)
     End If
 
     If Right$(txtChance.text, 1) = "%" Then
-        txtChance.text = Left$(txtChance.text, Len(txtChance.text) - 1) / 100
+        txtChance.text = left$(txtChance.text, Len(txtChance.text) - 1) / 100
     ElseIf InStr(1, txtChance.text, "/") > 0 Then
         Dim i() As String
         i = Split(txtChance.text, "/")
@@ -818,9 +822,9 @@ Public Sub txtName_Validate(Cancel As Boolean)
 
     If EditorIndex = 0 Then Exit Sub
     tmpIndex = lstIndex.ListIndex
-    Npc(EditorIndex).Name = Trim$(txtName.text)
+    Npc(EditorIndex).name = Trim$(txtName.text)
     lstIndex.RemoveItem EditorIndex - 1
-    lstIndex.AddItem EditorIndex & ": " & Npc(EditorIndex).Name, EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Npc(EditorIndex).name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
 End Sub
 
