@@ -109,13 +109,13 @@ End Enum
 ' Entity UDT
 Public Type EntityRec
     ' constants
-    name As String
+    Name As String
     ' values
-    type As Byte
-    top As Long
-    left As Long
-    width As Long
-    height As Long
+    Type As Byte
+    Top As Long
+    Left As Long
+    Width As Long
+    Height As Long
     enabled As Boolean
     visible As Boolean
     canDrag As Boolean
@@ -158,9 +158,9 @@ End Type
 
 ' For small parts
 Public Type EntityPartRec
-    type As PartType
+    Type As PartType
     origin As PartTypeOrigins
-    value As Long
+    Value As Long
     Slot As Long
 End Type
 
@@ -182,9 +182,9 @@ Public DragBox As EntityPartRec
 Private zOrder_Win As Long
 Private zOrder_Con As Long
 
-Public Sub CreateEntity(winNum As Long, zOrder As Long, name As String, tType As EntityTypes, ByRef design() As Long, ByRef image() As Long, ByRef entCallBack() As Long, _
-                        Optional left As Long, Optional top As Long, Optional width As Long, Optional height As Long, Optional visible As Boolean = True, Optional canDrag As Boolean, Optional max As Long, _
-                        Optional min As Long, Optional value As Long, Optional text As String, Optional align As Byte, Optional font As Long = Fonts.georgia_16, Optional textColour As Long = White, _
+Public Sub CreateEntity(winNum As Long, zOrder As Long, Name As String, tType As EntityTypes, ByRef design() As Long, ByRef image() As Long, ByRef entCallBack() As Long, _
+                        Optional Left As Long, Optional Top As Long, Optional Width As Long, Optional Height As Long, Optional visible As Boolean = True, Optional canDrag As Boolean, Optional max As Long, _
+                        Optional min As Long, Optional Value As Long, Optional text As String, Optional align As Byte, Optional font As Long = Fonts.georgia_16, Optional textColour As Long = White, _
                         Optional alpha As Long = 255, Optional clickThrough As Boolean, Optional xOffset As Long, Optional yOffset As Long, Optional zChange As Byte, Optional ByVal icon As Long, _
                         Optional ByVal onDraw As Long, Optional isActive As Boolean, Optional isCensor As Boolean, Optional textColourHover As Long, Optional textColourClick As Long, _
                         Optional tooltip As String, Optional group As Long)
@@ -204,22 +204,22 @@ Public Sub CreateEntity(winNum As Long, zOrder As Long, name As String, tType As
 
     ' Set the new control values
     With Windows(winNum).Controls(Windows(winNum).ControlCount)
-        .name = name
-        .type = tType
+        .Name = Name
+        .Type = tType
 
         ' loop through states
         For i = 0 To EntityStates.enumCount - 1
             .design(i) = design(i)
-            .Image(i) = Image(i)
+            .image(i) = image(i)
             .entCallBack(i) = entCallBack(i)
         Next
 
-        .left = left
-        .top = top
-        .origLeft = left
-        .origTop = top
-        .width = width
-        .height = height
+        .Left = Left
+        .Top = Top
+        .origLeft = Left
+        .origTop = Top
+        .Width = Width
+        .Height = Height
         .visible = visible
         .canDrag = canDrag
         .max = max
@@ -278,11 +278,11 @@ End Sub
 
 Public Sub SortWindows()
     Dim tempWindow As WindowRec
-    Dim i As Long, x As Long
-    x = 1
+    Dim i As Long, X As Long
+    X = 1
 
-    While x <> 0
-        x = 0
+    While X <> 0
+        X = 0
 
         For i = 1 To WindowCount - 1
 
@@ -290,7 +290,7 @@ Public Sub SortWindows()
                 tempWindow = Windows(i)
                 Windows(i) = Windows(i + 1)
                 Windows(i + 1) = tempWindow
-                x = 1
+                X = 1
             End If
 
         Next
@@ -300,7 +300,7 @@ Public Sub SortWindows()
 End Sub
 
 Public Sub RenderEntities()
-    Dim i As Long, x As Long, curZOrder As Long
+    Dim i As Long, X As Long, curZOrder As Long
 
     ' don't render anything if we don't have any containers
     If WindowCount = 0 Then Exit Sub
@@ -318,8 +318,8 @@ Public Sub RenderEntities()
                     ' render container
                     RenderWindow i
                     ' render controls
-                    For x = 1 To Windows(i).ControlCount
-                        If Windows(i).Controls(x).visible Then RenderEntity i, x
+                    For X = 1 To Windows(i).ControlCount
+                        If Windows(i).Controls(X).visible Then RenderEntity i, X
                     Next
                 End If
             End If
@@ -328,8 +328,8 @@ Public Sub RenderEntities()
 End Sub
 
 Public Sub RenderEntity(winNum As Long, entNum As Long)
-    Dim Xo As Long, Yo As Long, hor_centre As Long, ver_centre As Long, height As Long, width As Long, left As Long, texNum As Long, xOffset As Long
-    Dim callback As Long, taddText As String, Colour As Long, textArray() As String, count As Long, yOffset As Long, i As Long, y As Long, x As Long
+    Dim Xo As Long, Yo As Long, hor_centre As Long, ver_centre As Long, Height As Long, Width As Long, Left As Long, texNum As Long, xOffset As Long
+    Dim Callback As Long, taddText As String, Colour As Long, textArray() As String, Count As Long, yOffset As Long, i As Long, Y As Long, X As Long
 
     ' check if the window exists
     If winNum <= 0 Or winNum > WindowCount Then
@@ -342,33 +342,33 @@ Public Sub RenderEntity(winNum As Long, entNum As Long)
     End If
 
     ' check the container's position
-    Xo = Windows(winNum).Window.left
-    Yo = Windows(winNum).Window.top
+    Xo = Windows(winNum).Window.Left
+    Yo = Windows(winNum).Window.Top
 
     With Windows(winNum).Controls(entNum)
 
         ' find the control type
-        Select Case .type
+        Select Case .Type
             ' picture box
         Case EntityTypes.entityPictureBox
             ' render specific designs
-            If .design(.state) > 0 Then RenderDesign .design(.state), .left + Xo, .top + Yo, .width, .height, .alpha
+            If .design(.state) > 0 Then RenderDesign .design(.state), .Left + Xo, .Top + Yo, .Width, .Height, .alpha
             ' render image
-            If .image(.state) > 0 Then RenderTexture .image(.state), .left + Xo, .top + Yo, 0, 0, .width, .height, .width, .height, DX8Colour(White, .alpha)
+            If .image(.state) > 0 Then RenderTexture .image(.state), .Left + Xo, .Top + Yo, 0, 0, .Width, .Height, .Width, .Height, DX8Colour(White, .alpha)
 
             ' textbox
         Case EntityTypes.entityTextBox
             ' render specific designs
-            If .design(.state) > 0 Then RenderDesign .design(.state), .left + Xo, .top + Yo, .width, .height, .alpha
+            If .design(.state) > 0 Then RenderDesign .design(.state), .Left + Xo, .Top + Yo, .Width, .Height, .alpha
             ' render image
-            If .image(.state) > 0 Then RenderTexture .image(.state), .left + Xo, .top + Yo, 0, 0, .width, .height, .width, .height, DX8Colour(White, .alpha)
+            If .image(.state) > 0 Then RenderTexture .image(.state), .Left + Xo, .Top + Yo, 0, 0, .Width, .Height, .Width, .Height, DX8Colour(White, .alpha)
             ' render text
             If activeWindow = winNum And Windows(winNum).activeControl = entNum Then taddText = chatShowLine
             ' if it's censored then render censored
             If Not .isCensor Then
-                RenderText font(.font), .text & taddText, .left + Xo + .xOffset, .top + Yo + .yOffset, .textColour
+                RenderText font(.font), .text & taddText, .Left + Xo + .xOffset, .Top + Yo + .yOffset, .textColour
             Else
-                RenderText font(.font), CensorWord(.text) & taddText, .left + Xo + .xOffset, .top + Yo + .yOffset, .textColour
+                RenderText font(.font), CensorWord(.text) & taddText, .Left + Xo + .xOffset, .Top + Yo + .yOffset, .textColour
             End If
 
             ' buttons
@@ -376,12 +376,12 @@ Public Sub RenderEntity(winNum As Long, entNum As Long)
             ' render specific designs
             If .design(.state) > 0 Then
                 If .design(.state) > 0 Then
-                    RenderDesign .design(.state), .left + Xo, .top + Yo, .width, .height
+                    RenderDesign .design(.state), .Left + Xo, .Top + Yo, .Width, .Height
                 End If
                 ' render image
-                If .Image(.state) > 0 Then
-                    If .Image(.state) > 0 Then
-                        RenderTexture .Image(.state), .Left + Xo, .Top + Yo, 0, 0, .Width, .Height, .Width, .Height
+                If .image(.state) > 0 Then
+                    If .image(.state) > 0 Then
+                        RenderTexture .image(.state), .Left + Xo, .Top + Yo, 0, 0, .Width, .Height, .Width, .Height
                     End If
                 End If
                 ' render icon
@@ -409,25 +409,25 @@ Public Sub RenderEntity(winNum As Long, entNum As Long)
             End If
             ' render icon
             If .icon > 0 Then
-                width = mTexture(.icon).w
-                height = mTexture(.icon).h
-                RenderTexture .icon, .left + Xo + .xOffset, .top + Yo + .yOffset, 0, 0, width, height, width, height
+                Width = mTexture(.icon).Width
+                Height = mTexture(.icon).Height
+                RenderTexture .icon, .Left + Xo + .xOffset, .Top + Yo + .yOffset, 0, 0, Width, Height, Width, Height
             End If
             ' for changing the text space
-            xOffset = width
+            xOffset = Width
             ' calculate the vertical centre
-            height = TextHeight(font(Fonts.georgiaDec_16))
-            If height > .height Then
-                ver_centre = .top + Yo
+            Height = TextHeight(font(Fonts.georgiaDec_16))
+            If Height > .Height Then
+                ver_centre = .Top + Yo
             Else
-                ver_centre = .top + Yo + ((.height - height) \ 2) + 1
+                ver_centre = .Top + Yo + ((.Height - Height) \ 2) + 1
             End If
             ' calculate the horizontal centre
-            width = TextWidth(font(.font), .text)
-            If width > .width Then
-                hor_centre = .left + Xo + xOffset
+            Width = TextWidth(font(.font), .text)
+            If Width > .Width Then
+                hor_centre = .Left + Xo + xOffset
             Else
-                hor_centre = .left + Xo + xOffset + ((.width - width - xOffset) \ 2)
+                hor_centre = .Left + Xo + xOffset + ((.Width - Width - xOffset) \ 2)
             End If
             ' get the colour
             If .state = Hover Then
@@ -445,52 +445,52 @@ Public Sub RenderEntity(winNum As Long, entNum As Long)
                 Select Case .align
                 Case Alignment.alignLeft
                     ' check if need to word wrap
-                    If TextWidth(font(.font), .text) > .width Then
+                    If TextWidth(font(.font), .text) > .Width Then
                         ' wrap text
-                        WordWrap_Array .text, .width, textArray()
+                        WordWrap_Array .text, .Width, textArray()
                         ' render text
-                        count = UBound(textArray)
-                        For i = 1 To count
-                            RenderText font(.font), textArray(i), .left + Xo, .top + Yo + yOffset, .textColour, .alpha
+                        Count = UBound(textArray)
+                        For i = 1 To Count
+                            RenderText font(.font), textArray(i), .Left + Xo, .Top + Yo + yOffset, .textColour, .alpha
                             yOffset = yOffset + 14
                         Next
                     Else
                         ' just one line
-                        RenderText font(.font), .text, .left + Xo, .top + Yo, .textColour, .alpha
+                        RenderText font(.font), .text, .Left + Xo, .Top + Yo, .textColour, .alpha
                     End If
                 Case Alignment.alignRight
                     ' check if need to word wrap
-                    If TextWidth(font(.font), .text) > .width Then
+                    If TextWidth(font(.font), .text) > .Width Then
                         ' wrap text
-                        WordWrap_Array .text, .width, textArray()
+                        WordWrap_Array .text, .Width, textArray()
                         ' render text
-                        count = UBound(textArray)
-                        For i = 1 To count
-                            left = .left + .width - TextWidth(font(.font), textArray(i))
-                            RenderText font(.font), textArray(i), left + Xo, .top + Yo + yOffset, .textColour, .alpha
+                        Count = UBound(textArray)
+                        For i = 1 To Count
+                            Left = .Left + .Width - TextWidth(font(.font), textArray(i))
+                            RenderText font(.font), textArray(i), Left + Xo, .Top + Yo + yOffset, .textColour, .alpha
                             yOffset = yOffset + 14
                         Next
                     Else
                         ' just one line
-                        left = .left + .width - TextWidth(font(.font), .text)
-                        RenderText font(.font), .text, left + Xo, .top + Yo, .textColour, .alpha
+                        Left = .Left + .Width - TextWidth(font(.font), .text)
+                        RenderText font(.font), .text, Left + Xo, .Top + Yo, .textColour, .alpha
                     End If
                 Case Alignment.alignCentre
                     ' check if need to word wrap
-                    If TextWidth(font(.font), .text) > .width Then
+                    If TextWidth(font(.font), .text) > .Width Then
                         ' wrap text
-                        WordWrap_Array .text, .width, textArray()
+                        WordWrap_Array .text, .Width, textArray()
                         ' render text
-                        count = UBound(textArray)
-                        For i = 1 To count
-                            left = .left + (.width \ 2) - (TextWidth(font(.font), textArray(i)) \ 2)
-                            RenderText font(.font), textArray(i), left + Xo, .top + Yo + yOffset, .textColour, .alpha
+                        Count = UBound(textArray)
+                        For i = 1 To Count
+                            Left = .Left + (.Width \ 2) - (TextWidth(font(.font), textArray(i)) \ 2)
+                            RenderText font(.font), textArray(i), Left + Xo, .Top + Yo + yOffset, .textColour, .alpha
                             yOffset = yOffset + 14
                         Next
                     Else
                         ' just one line
-                        left = .left + (.width \ 2) - (TextWidth(font(.font), .text) \ 2)
-                        RenderText font(.font), .text, left + Xo, .top + Yo, .textColour, .alpha
+                        Left = .Left + (.Width \ 2) - (TextWidth(font(.font), .text) \ 2)
+                        RenderText font(.font), .text, Left + Xo, .Top + Yo, .textColour, .alpha
                     End If
                 End Select
             End If
@@ -501,49 +501,49 @@ Public Sub RenderEntity(winNum As Long, entNum As Long)
             Select Case .design(0)
             Case DesignTypes.designCheckbox
                 ' empty?
-                If .value = 0 Then texNum = TextureGUI(32) Else texNum = TextureGUI(33)
+                If .Value = 0 Then texNum = TextureGUI(32) Else texNum = TextureGUI(33)
                 ' render box
-                RenderTexture texNum, .left + Xo, .top + Yo, 0, 0, 14, 14, 14, 14
+                RenderTexture texNum, .Left + Xo, .Top + Yo, 0, 0, 14, 14, 14, 14
                 ' find text position
                 Select Case .align
                 Case Alignment.alignLeft
-                    left = .left + 18 + Xo
+                    Left = .Left + 18 + Xo
                 Case Alignment.alignRight
-                    left = .left + 18 + (.width - 18) - TextWidth(font(.font), .text) + Xo
+                    Left = .Left + 18 + (.Width - 18) - TextWidth(font(.font), .text) + Xo
                 Case Alignment.alignCentre
-                    left = .left + 18 + ((.width - 18) / 2) - (TextWidth(font(.font), .text) / 2) + Xo
+                    Left = .Left + 18 + ((.Width - 18) / 2) - (TextWidth(font(.font), .text) / 2) + Xo
                 End Select
                 ' render text
-                RenderText font(.font), .text, left, .top + Yo, .textColour, .alpha
+                RenderText font(.font), .text, Left, .Top + Yo, .textColour, .alpha
             Case DesignTypes.designCheckChat
-                If .value = 0 Then .alpha = 150 Else .alpha = 255
+                If .Value = 0 Then .alpha = 150 Else .alpha = 255
 
                 ' render box
-                RenderEntity_Square TextureDesign(1), .left + Xo, .top + Yo, 49, 23, 4, .alpha
+                RenderEntity_Square TextureDesign(1), .Left + Xo, .Top + Yo, 49, 23, 4, .alpha
 
                 '
-                left = .left + (49 / 2) - (TextWidth(font(.font), .text) / 2) + Xo
+                Left = .Left + (49 / 2) - (TextWidth(font(.font), .text) / 2) + Xo
                 ' render text
 
-                RenderText font(.font), .text, left, .top + Yo + 4, .textColour, .alpha
+                RenderText font(.font), .text, Left, .Top + Yo + 4, .textColour, .alpha
             Case DesignTypes.designCheckBuy
 
-                If .value = 0 Then texNum = TextureGradient(1) Else texNum = TextureGradient(2)
-                RenderEntity_Square TextureDesign(9), .left + Xo, .top + Yo, 49, 20, 2, 255
+                If .Value = 0 Then texNum = TextureGradient(1) Else texNum = TextureGradient(2)
+                RenderEntity_Square TextureDesign(9), .Left + Xo, .Top + Yo, 49, 20, 2, 255
 
-                RenderTexture texNum, .left + Xo + 2, .top + Yo + 2, 0, 0, 45, 16, 45, 16
+                RenderTexture texNum, .Left + Xo + 2, .Top + Yo + 2, 0, 0, 45, 16, 45, 16
 
-                left = .left + (49 / 2) - (TextWidth(font(.font), .text) / 2) + Xo
-                RenderText font(.font), .text, left, .top + Yo + 4, .textColour, .alpha
+                Left = .Left + (49 / 2) - (TextWidth(font(.font), .text) / 2) + Xo
+                RenderText font(.font), .text, Left, .Top + Yo + 4, .textColour, .alpha
             Case DesignTypes.designCheckSell
 
-                If .value = 0 Then texNum = TextureGradient(4) Else texNum = TextureGradient(5)
-                RenderEntity_Square TextureDesign(10), .left + Xo, .top + Yo, 49, 20, 2, 255
+                If .Value = 0 Then texNum = TextureGradient(4) Else texNum = TextureGradient(5)
+                RenderEntity_Square TextureDesign(10), .Left + Xo, .Top + Yo, 49, 20, 2, 255
 
-                RenderTexture texNum, .left + Xo + 2, .top + Yo + 2, 0, 0, 45, 16, 45, 16
+                RenderTexture texNum, .Left + Xo + 2, .Top + Yo + 2, 0, 0, 45, 16, 45, 16
 
-                left = .left + (49 / 2) - (TextWidth(font(.font), .text) / 2) + Xo
-                RenderText font(.font), .text, left, .top + Yo + 4, .textColour, .alpha
+                Left = .Left + (49 / 2) - (TextWidth(font(.font), .text) / 2) + Xo
+                RenderText font(.font), .text, Left, .Top + Yo + 4, .textColour, .alpha
 
             End Select
 
@@ -552,15 +552,15 @@ Public Sub RenderEntity(winNum As Long, entNum As Long)
             Select Case .design(0)
             Case DesignTypes.designCombo
                 ' draw the background
-                RenderDesign DesignTypes.designBlackParchment, .left + Xo, .top + Yo, .width, .height
+                RenderDesign DesignTypes.designBlackParchment, .Left + Xo, .Top + Yo, .Width, .Height
                 ' render the text
-                If .value > 0 Then
-                    If .value <= UBound(.list) Then
-                        RenderText font(.font), .list(.value), .left + Xo + 5, .top + Yo + 3, White
+                If .Value > 0 Then
+                    If .Value <= UBound(.list) Then
+                        RenderText font(.font), .list(.Value), .Left + Xo + 5, .Top + Yo + 3, White
                     End If
                 End If
                 ' draw the little arow
-                RenderTexture TextureGUI(5), .left + Xo + .width - 11, .top + Yo + 7, 0, 0, 5, 4, 5, 4
+                RenderTexture TextureGUI(5), .Left + Xo + .Width - 11, .Top + Yo + 7, 0, 0, 5, 4, 5, 4
             End Select
         End Select
 
@@ -573,7 +573,7 @@ Public Sub RenderEntity(winNum As Long, entNum As Long)
 End Sub
 
 Public Sub RenderWindow(winNum As Long)
-    Dim width As Long, height As Long, callback As Long, x As Long, y As Long, i As Long, left As Long
+    Dim Width As Long, Height As Long, Callback As Long, X As Long, Y As Long, i As Long, Left As Long
 
     ' check if the window exists
     If winNum <= 0 Or winNum > WindowCount Then
@@ -585,23 +585,23 @@ Public Sub RenderWindow(winNum As Long)
         Select Case .design(0)
         Case DesignTypes.designComboBackground
 
-            RenderDesign DesignTypes.designBlackParchment, .left, .top + 2, .width, .height
+            RenderDesign DesignTypes.designBlackParchment, .Left, .Top + 2, .Width, .Height
 
             ' text
             If UBound(.list) > 0 Then
-                y = .top + 4
-                x = .left
+                Y = .Top + 4
+                X = .Left
                 For i = 1 To UBound(.list)
                     ' render select
-                    If i = .value Or i = .group Then RenderDesign DesignTypes.designBlackParchment, x, y - 1, .width, 15
+                    If i = .Value Or i = .group Then RenderDesign DesignTypes.designBlackParchment, X, Y - 1, .Width, 15
                     ' render text
-                    left = x + (.width \ 2) - (TextWidth(font(.font), .list(i)) \ 2)
-                    If i = .value Or i = .group Then
-                        RenderText font(.font), .list(i), left, y, Yellow
+                    Left = X + (.Width \ 2) - (TextWidth(font(.font), .list(i)) \ 2)
+                    If i = .Value Or i = .group Then
+                        RenderText font(.font), .list(i), Left, Y, Yellow
                     Else
-                        RenderText font(.font), .list(i), left, y, White
+                        RenderText font(.font), .list(i), Left, Y, White
                     End If
-                    y = y + 16
+                    Y = Y + 16
                 Next
             End If
             Exit Sub
@@ -611,36 +611,36 @@ Public Sub RenderWindow(winNum As Long)
 
         Case DesignTypes.designWindowNormal
             ' Render do background da janela
-            RenderDesign DesignTypes.designWoodNormal, .left, .top, .width, .height
+            RenderDesign DesignTypes.designWoodNormal, .Left, .Top, .Width, .Height
 
             ' Render da top bar da janela
-            RenderDesign DesignTypes.designGreenNormal, .left + 2, .top + 2, .width - 4, 40
+            RenderDesign DesignTypes.designGreenNormal, .Left + 2, .Top + 2, .Width - 4, 40
 
             ' render the caption
-            RenderText font(.font), Trim$(.text), .left + height + 20, .top + 15, .textColour
+            RenderText font(.font), Trim$(.text), .Left + Height + 20, .Top + 15, .textColour
 
         Case DesignTypes.designWindowWithoutBar
             ' render window
-            RenderDesign DesignTypes.designWoodNormal, .left, .top, .width, .height
+            RenderDesign DesignTypes.designWoodNormal, .Left, .Top, .Width, .Height
 
         Case DesignTypes.designWindowClear
             ' render window
-            RenderDesign DesignTypes.designWoodEmpty, .left, .top, .width, .height
-            RenderDesign DesignTypes.designGreenNormal, .left + 2, .top + 2, .width - 4, 21
+            RenderDesign DesignTypes.designWoodEmpty, .Left, .Top, .Width, .Height
+            RenderDesign DesignTypes.designGreenNormal, .Left + 2, .Top + 2, .Width - 4, 21
             ' render the icon
-            width = mTexture(.icon).w
-            height = mTexture(.icon).h
-            RenderTexture .icon, .left + .xOffset, .top - (width - 18) + .yOffset, 0, 0, width, height, width, height
+            Width = mTexture(.icon).Width
+            Height = mTexture(.icon).Height
+            RenderTexture .icon, .Left + .xOffset, .Top - (Width - 18) + .yOffset, 0, 0, Width, Height, Width, Height
             ' render the caption
-            RenderText font(.font), Trim$(.text), .left + height + 2, .top + 5, .textColour
+            RenderText font(.font), Trim$(.text), .Left + Height + 2, .Top + 5, .textColour
 
         Case DesignTypes.designWindowDescription
             ' render window
-            RenderDesign DesignTypes.designWindowDescription, .left, .top, .width, .height
+            RenderDesign DesignTypes.designWindowDescription, .Left, .Top, .Width, .Height
 
         Case designWindowShadow
             ' render window
-            RenderDesign DesignTypes.designWindowShadow, .left, .top, .width, .height
+            RenderDesign DesignTypes.designWindowShadow, .Left, .Top, .Width, .Height
         End Select
 
         ' OnDraw call back
@@ -651,7 +651,7 @@ Public Sub RenderWindow(winNum As Long)
 
 End Sub
 
-Public Sub RenderDesign(design As Long, left As Long, top As Long, width As Long, height As Long, Optional alpha As Long = 255)
+Public Sub RenderDesign(design As Long, Left As Long, Top As Long, Width As Long, Height As Long, Optional alpha As Long = 255)
     Dim bs As Long, Colour As Long
     ' change colour for alpha
     Colour = DX8Colour(White, alpha)
@@ -660,182 +660,182 @@ Public Sub RenderDesign(design As Long, left As Long, top As Long, width As Long
 
     Case DesignTypes.designMenuHeader
         ' render the header
-        RenderTexture TextureBlank, left, top, 0, 0, width, height, 32, 32, D3DColorARGB(200, 47, 77, 29)
+        RenderTexture TextureBlank, Left, Top, 0, 0, Width, Height, 32, 32, D3DColorARGB(200, 47, 77, 29)
 
     Case DesignTypes.designMenuHover
         ' render the option
-        RenderTexture TextureBlank, left, top, 0, 0, width, height, 32, 32, D3DColorARGB(200, 98, 98, 98)
+        RenderTexture TextureBlank, Left, Top, 0, 0, Width, Height, 32, 32, D3DColorARGB(200, 98, 98, 98)
 
     Case DesignTypes.designWoodNormal
         bs = 4
         ' render the wood box
-        RenderEntity_Square TextureDesign(1), left, top, width, height, bs, alpha
+        RenderEntity_Square TextureDesign(1), Left, Top, Width, Height, bs, alpha
         ' render wood texture
-        RenderTexture TextureGUI(1), left + bs, top + bs, 100, 100, width - (bs * 2), height - (bs * 2), width - (bs * 2), height - (bs * 2), Colour
+        RenderTexture TextureGUI(1), Left + bs, Top + bs, 100, 100, Width - (bs * 2), Height - (bs * 2), Width - (bs * 2), Height - (bs * 2), Colour
 
     Case DesignTypes.designWoodEmpty
         bs = 4
         ' render the wood box
-        RenderEntity_Square TextureDesign(2), left, top, width, height, bs, alpha
+        RenderEntity_Square TextureDesign(2), Left, Top, Width, Height, bs, alpha
 
     Case DesignTypes.designGreenNormal
         bs = 2
         ' render the green box
-        RenderEntity_Square TextureDesign(9), left, top, width, height, bs, alpha
+        RenderEntity_Square TextureDesign(9), Left, Top, Width, Height, bs, alpha
         ' render green gradient overlay
-        RenderTexture TextureGradient(1), left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, Colour
+        RenderTexture TextureGradient(1), Left + bs, Top + bs, 0, 0, Width - (bs * 2), Height - (bs * 2), 128, 128, Colour
 
     Case DesignTypes.designGreenHover
         bs = 2
         ' render the green box
-        RenderEntity_Square TextureDesign(9), left, top, width, height, bs, alpha
+        RenderEntity_Square TextureDesign(9), Left, Top, Width, Height, bs, alpha
         ' render green gradient overlay
-        RenderTexture TextureGradient(2), left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, Colour
+        RenderTexture TextureGradient(2), Left + bs, Top + bs, 0, 0, Width - (bs * 2), Height - (bs * 2), 128, 128, Colour
 
     Case DesignTypes.designGreenClick
         bs = 2
         ' render the green box
-        RenderEntity_Square TextureDesign(9), left, top, width, height, bs, alpha
+        RenderEntity_Square TextureDesign(9), Left, Top, Width, Height, bs, alpha
         ' render green gradient overlay
-        RenderTexture TextureGradient(3), left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, Colour
+        RenderTexture TextureGradient(3), Left + bs, Top + bs, 0, 0, Width - (bs * 2), Height - (bs * 2), 128, 128, Colour
 
     Case DesignTypes.designRedNormal
         bs = 2
         ' render the red box
-        RenderEntity_Square TextureDesign(10), left, top, width, height, bs, alpha
+        RenderEntity_Square TextureDesign(10), Left, Top, Width, Height, bs, alpha
         ' render red gradient overlay
-        RenderTexture TextureGradient(4), left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, Colour
+        RenderTexture TextureGradient(4), Left + bs, Top + bs, 0, 0, Width - (bs * 2), Height - (bs * 2), 128, 128, Colour
 
     Case DesignTypes.designRedHover
         bs = 2
         ' render the red box
-        RenderEntity_Square TextureDesign(10), left, top, width, height, bs, alpha
+        RenderEntity_Square TextureDesign(10), Left, Top, Width, Height, bs, alpha
         ' render red gradient overlay
-        RenderTexture TextureGradient(5), left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, Colour
+        RenderTexture TextureGradient(5), Left + bs, Top + bs, 0, 0, Width - (bs * 2), Height - (bs * 2), 128, 128, Colour
 
     Case DesignTypes.designRedClick
         bs = 2
         ' render the red box
-        RenderEntity_Square TextureDesign(10), left, top, width, height, bs, alpha
+        RenderEntity_Square TextureDesign(10), Left, Top, Width, Height, bs, alpha
         ' render red gradient overlay
-        RenderTexture TextureGradient(6), left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, Colour
+        RenderTexture TextureGradient(6), Left + bs, Top + bs, 0, 0, Width - (bs * 2), Height - (bs * 2), 128, 128, Colour
 
     Case DesignTypes.designBlueNormal
         bs = 2
         ' render the Blue box
-        RenderEntity_Square TextureDesign(11), left, top, width, height, bs, alpha
+        RenderEntity_Square TextureDesign(11), Left, Top, Width, Height, bs, alpha
         ' render Blue gradient overlay
-        RenderTexture TextureGradient(7), left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, Colour
+        RenderTexture TextureGradient(7), Left + bs, Top + bs, 0, 0, Width - (bs * 2), Height - (bs * 2), 128, 128, Colour
 
     Case DesignTypes.designBlueHover
         bs = 2
         ' render the Blue box
-        RenderEntity_Square TextureDesign(11), left, top, width, height, bs, alpha
+        RenderEntity_Square TextureDesign(11), Left, Top, Width, Height, bs, alpha
         ' render Blue gradient overlay
-        RenderTexture TextureGradient(8), left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, Colour
+        RenderTexture TextureGradient(8), Left + bs, Top + bs, 0, 0, Width - (bs * 2), Height - (bs * 2), 128, 128, Colour
 
     Case DesignTypes.designBlueClick
         bs = 2
         ' render the Blue box
-        RenderEntity_Square TextureDesign(11), left, top, width, height, bs, alpha
+        RenderEntity_Square TextureDesign(11), Left, Top, Width, Height, bs, alpha
         ' render Blue gradient overlay
-        RenderTexture TextureGradient(9), left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, Colour
+        RenderTexture TextureGradient(9), Left + bs, Top + bs, 0, 0, Width - (bs * 2), Height - (bs * 2), 128, 128, Colour
 
     Case DesignTypes.designGoldNormal
         bs = 2
         ' render the Orange box
-        RenderEntity_Square TextureDesign(12), left, top, width, height, bs, alpha
+        RenderEntity_Square TextureDesign(12), Left, Top, Width, Height, bs, alpha
         ' render Orange gradient overlay
-        RenderTexture TextureGradient(10), left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, Colour
+        RenderTexture TextureGradient(10), Left + bs, Top + bs, 0, 0, Width - (bs * 2), Height - (bs * 2), 128, 128, Colour
 
     Case DesignTypes.designGoldHover
         bs = 2
         ' render the Orange box
-        RenderEntity_Square TextureDesign(12), left, top, width, height, bs, alpha
+        RenderEntity_Square TextureDesign(12), Left, Top, Width, Height, bs, alpha
         ' render Orange gradient overlay
-        RenderTexture TextureGradient(11), left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, Colour
+        RenderTexture TextureGradient(11), Left + bs, Top + bs, 0, 0, Width - (bs * 2), Height - (bs * 2), 128, 128, Colour
 
     Case DesignTypes.designGoldClick
         bs = 2
         ' render the Orange box
-        RenderEntity_Square TextureDesign(12), left, top, width, height, bs, alpha
+        RenderEntity_Square TextureDesign(12), Left, Top, Width, Height, bs, alpha
         ' render Orange gradient overlay
-        RenderTexture TextureGradient(12), left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, Colour
+        RenderTexture TextureGradient(12), Left + bs, Top + bs, 0, 0, Width - (bs * 2), Height - (bs * 2), 128, 128, Colour
 
     Case DesignTypes.designGrey
         bs = 2
         ' render the Orange box
-        RenderEntity_Square TextureDesign(13), left, top, width, height, bs, alpha
+        RenderEntity_Square TextureDesign(13), Left, Top, Width, Height, bs, alpha
         ' render Orange gradient overlay
-        RenderTexture TextureGradient(13), left + bs, top + bs, 0, 0, width - (bs * 2), height - (bs * 2), 128, 128, Colour
+        RenderTexture TextureGradient(13), Left + bs, Top + bs, 0, 0, Width - (bs * 2), Height - (bs * 2), 128, 128, Colour
 
     Case DesignTypes.designParchment
         bs = 20
         ' render the parchment box
-        RenderEntity_Square TextureDesign(7), left, top, width, height, bs, alpha
+        RenderEntity_Square TextureDesign(7), Left, Top, Width, Height, bs, alpha
 
     Case DesignTypes.designBlackParchment
         bs = 4
         ' render the black oval
-        RenderEntity_Square TextureDesign(5), left, top, width, height, bs, alpha
+        RenderEntity_Square TextureDesign(5), Left, Top, Width, Height, bs, alpha
 
     Case DesignTypes.designTextInput
         bs = 5
         ' render the black oval
-        RenderEntity_Square TextureDesign(6), left, top, width, height, bs, alpha
+        RenderEntity_Square TextureDesign(6), Left, Top, Width, Height, bs, alpha
 
     Case DesignTypes.designWindowDescription
         bs = 8
         ' render black square
-        RenderEntity_Square TextureDesign(3), left, top, width, height, bs, alpha
+        RenderEntity_Square TextureDesign(3), Left, Top, Width, Height, bs, alpha
 
     Case DesignTypes.designWindowShadow
         bs = 35
         ' render the green box
-        RenderEntity_Square TextureDesign(4), left - bs, top - bs, width + (bs * 2), height + (bs * 2), bs, alpha
+        RenderEntity_Square TextureDesign(4), Left - bs, Top - bs, Width + (bs * 2), Height + (bs * 2), bs, alpha
 
     Case DesignTypes.designTilesetGrid
         bs = 16
         ' render box
-        RenderEntity_Square TextureDesign(8), left, top, width, height, bs, alpha
+        RenderEntity_Square TextureDesign(8), Left, Top, Width, Height, bs, alpha
     End Select
 
 End Sub
 
-Public Sub RenderEntity_Square(texNum As Long, x As Long, y As Long, width As Long, height As Long, borderSize As Long, Optional alpha As Long = 255)
+Public Sub RenderEntity_Square(texNum As Long, X As Long, Y As Long, Width As Long, Height As Long, borderSize As Long, Optional alpha As Long = 255)
     Dim bs As Long, Colour As Long
     ' change colour for alpha
     Colour = DX8Colour(White, alpha)
     ' Set the border size
     bs = borderSize
     ' Draw centre
-    RenderTexture texNum, x + bs, y + bs, bs + 1, bs + 1, width - (bs * 2), height - (bs * 2), 1, 1, Colour
+    RenderTexture texNum, X + bs, Y + bs, bs + 1, bs + 1, Width - (bs * 2), Height - (bs * 2), 1, 1, Colour
     ' Draw top side
-    RenderTexture texNum, x + bs, y, bs, 0, width - (bs * 2), bs, 1, bs, Colour
+    RenderTexture texNum, X + bs, Y, bs, 0, Width - (bs * 2), bs, 1, bs, Colour
     ' Draw left side
-    RenderTexture texNum, x, y + bs, 0, bs, bs, height - (bs * 2), bs, 1, Colour
+    RenderTexture texNum, X, Y + bs, 0, bs, bs, Height - (bs * 2), bs, 1, Colour
     ' Draw right side
-    RenderTexture texNum, x + width - bs, y + bs, bs + 3, bs, bs, height - (bs * 2), bs, 1, Colour
+    RenderTexture texNum, X + Width - bs, Y + bs, bs + 3, bs, bs, Height - (bs * 2), bs, 1, Colour
     ' Draw bottom side
-    RenderTexture texNum, x + bs, y + height - bs, bs, bs + 3, width - (bs * 2), bs, 1, bs, Colour
+    RenderTexture texNum, X + bs, Y + Height - bs, bs, bs + 3, Width - (bs * 2), bs, 1, bs, Colour
     ' Draw top left corner
-    RenderTexture texNum, x, y, 0, 0, bs, bs, bs, bs, Colour
+    RenderTexture texNum, X, Y, 0, 0, bs, bs, bs, bs, Colour
     ' Draw top right corner
-    RenderTexture texNum, x + width - bs, y, bs + 3, 0, bs, bs, bs, bs, Colour
+    RenderTexture texNum, X + Width - bs, Y, bs + 3, 0, bs, bs, bs, bs, Colour
     ' Draw bottom left corner
-    RenderTexture texNum, x, y + height - bs, 0, bs + 3, bs, bs, bs, bs, Colour
+    RenderTexture texNum, X, Y + Height - bs, 0, bs + 3, bs, bs, bs, bs, Colour
     ' Draw bottom right corner
-    RenderTexture texNum, x + width - bs, y + height - bs, bs + 3, bs + 3, bs, bs, bs, bs, Colour
+    RenderTexture texNum, X + Width - bs, Y + Height - bs, bs + 3, bs + 3, bs, bs, bs, bs, Colour
 End Sub
 
 Sub Combobox_AddItem(winIndex As Long, controlIndex As Long, text As String)
-    Dim count As Long
-    count = UBound(Windows(winIndex).Controls(controlIndex).list)
-    ReDim Preserve Windows(winIndex).Controls(controlIndex).list(0 To count + 1)
-    Windows(winIndex).Controls(controlIndex).list(count + 1) = text
+    Dim Count As Long
+    Count = UBound(Windows(winIndex).Controls(controlIndex).list)
+    ReDim Preserve Windows(winIndex).Controls(controlIndex).list(0 To Count + 1)
+    Windows(winIndex).Controls(controlIndex).list(Count + 1) = text
 End Sub
 
-Public Sub CreateWindow(name As String, caption As String, zOrder As Long, left As Long, top As Long, width As Long, height As Long, icon As Long, _
+Public Sub CreateWindow(Name As String, caption As String, zOrder As Long, Left As Long, Top As Long, Width As Long, Height As Long, icon As Long, _
                         Optional visible As Boolean = True, Optional font As Long = Fonts.georgia_16, Optional textColour As Long = White, Optional xOffset As Long, _
                         Optional yOffset As Long, Optional design_norm As Long, Optional design_hover As Long, Optional design_mousedown As Long, Optional image_norm As Long, _
                         Optional image_hover As Long, Optional image_mousedown As Long, Optional entCallBack_norm As Long, Optional entCallBack_hover As Long, Optional entCallBack_mousedown As Long, _
@@ -869,22 +869,22 @@ Public Sub CreateWindow(name As String, caption As String, zOrder As Long, left 
 
     ' set the properties
     With Windows(WindowCount).Window
-        .name = name
-        .type = EntityTypes.entityWindow
+        .Name = Name
+        .Type = EntityTypes.entityWindow
 
         ' loop through states
         For i = 0 To EntityStates.enumCount - 1
             .design(i) = design(i)
-            .Image(i) = Image(i)
+            .image(i) = image(i)
             .entCallBack(i) = entCallBack(i)
         Next
 
-        .left = left
-        .top = top
-        .origLeft = left
-        .origTop = top
-        .width = width
-        .height = height
+        .Left = Left
+        .Top = Top
+        .origLeft = Left
+        .origTop = Top
+        .Width = Width
+        .Height = Height
         .visible = visible
         .canDrag = canDrag
         .text = caption
@@ -906,7 +906,7 @@ Public Sub CreateWindow(name As String, caption As String, zOrder As Long, left 
     zOrder_Win = zOrder_Win + 1
 End Sub
 
-Public Sub CreateTextbox(winNum As Long, name As String, left As Long, top As Long, width As Long, height As Long, Optional text As String, Optional font As Long = Fonts.georgia_16, _
+Public Sub CreateTextbox(winNum As Long, Name As String, Left As Long, Top As Long, Width As Long, Height As Long, Optional text As String, Optional font As Long = Fonts.georgia_16, _
                          Optional textColour As Long = White, Optional align As Byte = Alignment.alignLeft, Optional visible As Boolean = True, Optional alpha As Long = 255, Optional image_norm As Long, _
                          Optional image_hover As Long, Optional image_mousedown As Long, Optional design_norm As Long, Optional design_hover As Long, Optional design_mousedown As Long, _
                          Optional entCallBack_norm As Long, Optional entCallBack_hover As Long, Optional entCallBack_mousedown As Long, Optional entCallBack_mousemove As Long, Optional entCallBack_doubleClick As Long, _
@@ -928,10 +928,10 @@ Public Sub CreateTextbox(winNum As Long, name As String, left As Long, top As Lo
     entCallBack(EntityStates.doubleClick) = entCallBack_doubleClick
     entCallBack(EntityStates.Enter) = entCallBack_enter
     ' create the textbox
-    CreateEntity winNum, zOrder_Con, name, entityTextBox, design(), image(), entCallBack(), left, top, width, height, visible, , , , , text, align, font, textColour, alpha, , xOffset, yOffset, , , , isActive, isCensor
+    CreateEntity winNum, zOrder_Con, Name, entityTextBox, design(), image(), entCallBack(), Left, Top, Width, Height, visible, , , , , text, align, font, textColour, alpha, , xOffset, yOffset, , , , isActive, isCensor
 End Sub
 
-Public Sub CreatePictureBox(winNum As Long, name As String, left As Long, top As Long, width As Long, height As Long, Optional visible As Boolean = True, Optional canDrag As Boolean, _
+Public Sub CreatePictureBox(winNum As Long, Name As String, Left As Long, Top As Long, Width As Long, Height As Long, Optional visible As Boolean = True, Optional canDrag As Boolean, _
                             Optional alpha As Long = 255, Optional clickThrough As Boolean, Optional image_norm As Long, Optional image_hover As Long, Optional image_mousedown As Long, Optional design_norm As Long, _
                             Optional design_hover As Long, Optional design_mousedown As Long, Optional entCallBack_norm As Long, Optional entCallBack_hover As Long, Optional entCallBack_mousedown As Long, _
                             Optional entCallBack_mousemove As Long, Optional entCallBack_doubleClick As Long, Optional onDraw As Long)
@@ -951,10 +951,10 @@ Public Sub CreatePictureBox(winNum As Long, name As String, left As Long, top As
     entCallBack(EntityStates.MouseMove) = entCallBack_mousemove
     entCallBack(EntityStates.doubleClick) = entCallBack_doubleClick
     ' create the box
-    CreateEntity winNum, zOrder_Con, name, entityPictureBox, design(), image(), entCallBack(), left, top, width, height, visible, canDrag, , , , , , , , alpha, clickThrough, , , , , onDraw
+    CreateEntity winNum, zOrder_Con, Name, entityPictureBox, design(), image(), entCallBack(), Left, Top, Width, Height, visible, canDrag, , , , , , , , alpha, clickThrough, , , , , onDraw
 End Sub
 
-Public Sub CreateButton(winNum As Long, name As String, left As Long, top As Long, width As Long, height As Long, Optional text As String, Optional font As Fonts = Fonts.georgia_16, _
+Public Sub CreateButton(winNum As Long, Name As String, Left As Long, Top As Long, Width As Long, Height As Long, Optional text As String, Optional font As Fonts = Fonts.georgia_16, _
                         Optional textColour As Long = White, Optional icon As Long, Optional visible As Boolean = True, Optional alpha As Long = 255, Optional image_norm As Long, Optional image_hover As Long, _
                         Optional image_mousedown As Long, Optional design_norm As Long, Optional design_hover As Long, Optional design_mousedown As Long, Optional entCallBack_norm As Long, _
                         Optional entCallBack_hover As Long, Optional entCallBack_mousedown As Long, Optional entCallBack_mousemove As Long, Optional entCallBack_doubleClick As Long, Optional xOffset As Long, _
@@ -978,10 +978,10 @@ Public Sub CreateButton(winNum As Long, name As String, left As Long, top As Lon
     entCallBack(EntityStates.MouseMove) = entCallBack_mousemove
     entCallBack(EntityStates.doubleClick) = entCallBack_doubleClick
     ' create the box
-    CreateEntity winNum, zOrder_Con, name, entityButton, design(), image(), entCallBack(), left, top, width, height, visible, , , , , text, , font, textColour, alpha, , xOffset, yOffset, , icon, , , , textColourHover, textColourClick, tooltip
+    CreateEntity winNum, zOrder_Con, Name, entityButton, design(), image(), entCallBack(), Left, Top, Width, Height, visible, , , , , text, , font, textColour, alpha, , xOffset, yOffset, , icon, , , , textColourHover, textColourClick, tooltip
 End Sub
 
-Public Sub CreateLabel(winNum As Long, name As String, left As Long, top As Long, width As Long, Optional height As Long, Optional text As String, Optional font As Fonts = Fonts.georgia_16, _
+Public Sub CreateLabel(winNum As Long, Name As String, Left As Long, Top As Long, Width As Long, Optional Height As Long, Optional text As String, Optional font As Fonts = Fonts.georgia_16, _
                        Optional textColour As Long = White, Optional align As Byte = Alignment.alignLeft, Optional visible As Boolean = True, Optional alpha As Long = 255, Optional clickThrough As Boolean, _
                        Optional entCallBack_norm As Long, Optional entCallBack_hover As Long, Optional entCallBack_mousedown As Long, Optional entCallBack_mousemove As Long, Optional entCallBack_doubleClick As Long)
     Dim design(0 To EntityStates.enumCount - 1) As Long
@@ -994,10 +994,10 @@ Public Sub CreateLabel(winNum As Long, name As String, left As Long, top As Long
     entCallBack(EntityStates.MouseMove) = entCallBack_mousemove
     entCallBack(EntityStates.doubleClick) = entCallBack_doubleClick
     ' create the box
-    CreateEntity winNum, zOrder_Con, name, entityLabel, design(), image(), entCallBack(), left, top, width, height, visible, , , , , text, align, font, textColour, alpha, clickThrough
+    CreateEntity winNum, zOrder_Con, Name, entityLabel, design(), image(), entCallBack(), Left, Top, Width, Height, visible, , , , , text, align, font, textColour, alpha, clickThrough
 End Sub
 
-Public Sub CreateCheckbox(winNum As Long, name As String, left As Long, top As Long, width As Long, Optional height As Long = 15, Optional value As Long, Optional text As String, _
+Public Sub CreateCheckbox(winNum As Long, Name As String, Left As Long, Top As Long, Width As Long, Optional Height As Long = 15, Optional Value As Long, Optional text As String, _
                           Optional font As Fonts = Fonts.georgia_16, Optional textColour As Long = White, Optional align As Byte = Alignment.alignLeft, Optional visible As Boolean = True, Optional alpha As Long = 255, _
                           Optional theDesign As Long, Optional entCallBack_norm As Long, Optional entCallBack_hover As Long, Optional entCallBack_mousedown As Long, Optional entCallBack_mousemove As Long, _
                           Optional entCallBack_doubleClick As Long, Optional group As Long)
@@ -1013,16 +1013,16 @@ Public Sub CreateCheckbox(winNum As Long, name As String, left As Long, top As L
     ' fill temp array
     design(0) = theDesign
     ' create the box
-    CreateEntity winNum, zOrder_Con, name, entityCheckbox, design(), image(), entCallBack(), left, top, width, height, visible, , , , value, text, align, font, textColour, alpha, , , , , , , , , , , , group
+    CreateEntity winNum, zOrder_Con, Name, entityCheckbox, design(), image(), entCallBack(), Left, Top, Width, Height, visible, , , , Value, text, align, font, textColour, alpha, , , , , , , , , , , , group
 End Sub
 
-Public Sub CreateComboBox(winNum As Long, name As String, left As Long, top As Long, width As Long, height As Long, design As Long, Optional font As Fonts = Fonts.georgia_16)
+Public Sub CreateComboBox(winNum As Long, Name As String, Left As Long, Top As Long, Width As Long, Height As Long, design As Long, Optional font As Fonts = Fonts.georgia_16)
     Dim theDesign(0 To EntityStates.enumCount - 1) As Long
     Dim image(0 To EntityStates.enumCount - 1) As Long
     Dim entCallBack(0 To EntityStates.enumCount - 1) As Long
     theDesign(0) = design
     ' create the box
-    CreateEntity winNum, zOrder_Con, name, entityCombo, theDesign(), image(), entCallBack(), left, top, width, height, , , , , , , , font
+    CreateEntity winNum, zOrder_Con, Name, entityCombo, theDesign(), image(), entCallBack(), Left, Top, Width, Height, , , , , , , , font
 End Sub
 
 Public Function GetWindowIndex(winName As String) As Long
@@ -1030,7 +1030,7 @@ Public Function GetWindowIndex(winName As String) As Long
 
     For i = 1 To WindowCount
 
-        If LCase$(Windows(i).Window.name) = LCase$(winName) Then
+        If LCase$(Windows(i).Window.Name) = LCase$(winName) Then
             GetWindowIndex = i
             Exit Function
         End If
@@ -1049,7 +1049,7 @@ Public Function GetControlIndex(winName As String, controlName As String) As Lon
 
     For i = 1 To Windows(winIndex).ControlCount
 
-        If LCase$(Windows(winIndex).Controls(i).name) = LCase$(controlName) Then
+        If LCase$(Windows(winIndex).Controls(i).Name) = LCase$(controlName) Then
             GetControlIndex = i
             Exit Function
         End If
@@ -1061,7 +1061,7 @@ End Function
 
 Public Function SetActiveControl(curWindow As Long, curControl As Long) As Boolean
 ' make sure it's something which CAN be active
-    Select Case Windows(curWindow).Controls(curControl).type
+    Select Case Windows(curWindow).Controls(curControl).Type
     Case EntityTypes.entityTextBox
         Windows(curWindow).activeControl = curControl
         SetActiveControl = True
@@ -1070,10 +1070,10 @@ End Function
 
 Public Sub CentraliseWindow(curWindow As Long)
     With Windows(curWindow).Window
-        .left = (ScreenWidth / 2) - (.width / 2)
-        .top = (ScreenHeight / 2) - (.height / 2)
-        .origLeft = .left
-        .origTop = .top
+        .Left = (ScreenWidth / 2) - (.Width / 2)
+        .Top = (ScreenHeight / 2) - (.Height / 2)
+        .origLeft = .Left
+        .origTop = .Top
     End With
 End Sub
 
@@ -1095,8 +1095,8 @@ Public Sub ShowWindow(curWindow As Long, Optional forced As Boolean, Optional re
     End If
     If resetPosition Then
         With Windows(curWindow).Window
-            .left = .origLeft
-            .top = .origTop
+            .Left = .origLeft
+            .Top = .origTop
         End With
     End If
 End Sub
@@ -1125,7 +1125,7 @@ Public Sub CreateWindow_Login()
     zOrder_Con = 1
 
     ' Close button
-    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf DestroyGame)
+    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.Width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf DestroyGame)
 
     ' Parchment
     CreatePictureBox WindowCount, "picParchment", 6, 26, 264, 180, , , , , , , , DesignTypes.designParchment, DesignTypes.designParchment, DesignTypes.designParchment
@@ -1145,7 +1145,7 @@ Public Sub CreateWindow_Login()
     CreateCheckbox WindowCount, "chkSaveUser", 67, 114, 142, , Options.SaveUser, "Save Username?", rockwell_15, , , , , DesignTypes.designCheckbox, , , GetAddress(AddressOf chkSaveUser_Click)
 
     ' Register Button
-    CreateButton WindowCount, "btnRegister", 12, Windows(WindowCount).Window.height - 35, 252, 22, "Create Account", rockwellDec_15, White, , , , , , , DesignTypes.designGreenNormal, DesignTypes.designGreenHover, DesignTypes.designGreenClick, , , GetAddress(AddressOf btnRegister_Click)
+    CreateButton WindowCount, "btnRegister", 12, Windows(WindowCount).Window.Height - 35, 252, 22, "Create Account", rockwellDec_15, White, , , , , , , DesignTypes.designGreenNormal, DesignTypes.designGreenHover, DesignTypes.designGreenClick, , , GetAddress(AddressOf btnRegister_Click)
 
     ' Set the active control
     If Not Len(Windows(GetWindowIndex("winLogin")).Controls(GetControlIndex("winLogin", "txtUser")).text) > 0 Then
@@ -1166,7 +1166,7 @@ Public Sub CreateWindow_Register()
     zOrder_Con = 1
 
     ' Close button
-    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnReturnMain_Click)
+    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.Width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnReturnMain_Click)
     ' Parchment
     CreatePictureBox WindowCount, "picParchment", 6, 26, 264, 270, , , , , , , , DesignTypes.designParchment, DesignTypes.designParchment, DesignTypes.designParchment
 
@@ -1210,7 +1210,7 @@ Public Sub CreateWindow_Characters()
     zOrder_Con = 1
 
     ' Close button
-    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnCharacters_Close)
+    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.Width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnCharacters_Close)
     ' Parchment
     CreatePictureBox WindowCount, "picParchment", 6, 26, 352, 197, , , , , , , , DesignTypes.designParchment, DesignTypes.designParchment, DesignTypes.designParchment
     ' Names
@@ -1265,7 +1265,7 @@ Public Sub CreateWindow_Dialogue()
     zOrder_Con = 1
 
     ' Close button
-    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnDialogue_Close)
+    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.Width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnDialogue_Close)
     
     ' Parchment
     CreatePictureBox WindowCount, "picParchment", 6, 26, 335, 113, , , , , , , , DesignTypes.designParchment, DesignTypes.designParchment, DesignTypes.designParchment
@@ -1295,7 +1295,7 @@ Public Sub CreateWindow_Classes()
     zOrder_Con = 1
 
     ' Close button
-    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnClasses_Close)
+    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.Width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnClasses_Close)
     ' Parchment
     CreatePictureBox WindowCount, "picParchment", 6, 26, 352, 197, , , , , , , , DesignTypes.designParchment, DesignTypes.designParchment, DesignTypes.designParchment, , , , , , GetAddress(AddressOf Classes_DrawFace)
     ' Class Name
@@ -1322,7 +1322,7 @@ Public Sub CreateWindow_NewChar()
     zOrder_Con = 1
 
     ' Close button
-    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnNewChar_Cancel)
+    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.Width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnNewChar_Cancel)
     ' Parchment
     CreatePictureBox WindowCount, "picParchment", 6, 26, 278, 140, , , , , , , , DesignTypes.designParchment, DesignTypes.designParchment, DesignTypes.designParchment
     ' Name
@@ -1425,7 +1425,7 @@ Public Sub CreateWindow_Bank()
 
     ' Set the index for spawning controls
     zOrder_Con = 1
-    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnMenu_Bank)
+    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.Width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnMenu_Bank)
 
 End Sub
 
@@ -1440,7 +1440,7 @@ Public Sub CreateWindow_Inventory()
     zOrder_Con = 1
 
     ' Close button
-    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnMenu_Inv)
+    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.Width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnMenu_Inv)
     ' Gold amount
     CreateLabel WindowCount, "lblGold", 42, 296, 100, , "0g", verdana_12
 End Sub
@@ -1455,7 +1455,7 @@ Public Sub CreateWindow_Character()
     zOrder_Con = 1
 
     ' Close button
-    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnMenu_Char)
+    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.Width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnMenu_Char)
     
     ' Parchment
     CreatePictureBox WindowCount, "picParchment", 6, 26, 162, 287, , , , , , , , DesignTypes.designParchment, DesignTypes.designParchment, DesignTypes.designParchment
@@ -1523,7 +1523,7 @@ Public Sub CreateWindow_PlayerQuest()
     zOrder_Con = 1
 
     ' Close button
-    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnMenu_Quest)
+    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.Width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnMenu_Quest)
 
     CreateButton WindowCount, "btnMission1", 5, 24, 125, 30, "Quest 1", verdana_12, White, , False, , , , , DesignTypes.designMenuHover, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, , , GetAddress(AddressOf btnQuest1)
     CreateButton WindowCount, "btnMission2", 5, 56, 125, 30, "Quest 2", verdana_12, White, , False, , , , , DesignTypes.designMenuHover, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, , , GetAddress(AddressOf btnQuest2)
@@ -1589,7 +1589,7 @@ Public Sub CreateWindow_Skills()
     zOrder_Con = 1
 
     ' Close button
-    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnMenu_Skills)
+    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.Width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnMenu_Skills)
 End Sub
 
 Public Sub CreateWindow_Chat()
@@ -1690,7 +1690,7 @@ Public Sub CreateWindow_Shop()
     CentraliseWindow WindowCount
 
     ' Close button
-    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnShop_Close)
+    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.Width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnShop_Close)
     ' Parchment
     CreatePictureBox WindowCount, "picParchment", 6, 215, 266, 50, , , , , , , , DesignTypes.designParchment, DesignTypes.designParchment, DesignTypes.designParchment, , , , , , GetAddress(AddressOf DrawShop)
     ' Picture Box
@@ -1718,10 +1718,10 @@ Public Sub CreateWindow_Offer()
     CreateWindow "winOffer", "", zOrder_Win, 10, 90, 535, 285, TextureItem(111), False, Fonts.rockwellDec_15, , 2, 11, , , , , , , , GetAddress(AddressOf Offer_MouseMove), , GetAddress(AddressOf Offer_MouseMove), , False, , GetAddress(AddressOf DrawInviteBackground)
 
     CreatePictureBox WindowCount, "picBGOffer1", 0, 0, 485, 45, False, , , , , , , DesignTypes.designWindowDescription, DesignTypes.designWindowDescription, DesignTypes.designWindowDescription
-    WidthWindow = Windows(WindowCount).Controls(GetControlIndex("winOffer", "picBGOffer1")).width
-    HeightWindow = Windows(WindowCount).Controls(GetControlIndex("winOffer", "picBGOffer1")).height - 18
-    Yo = Windows(WindowCount).Controls(GetControlIndex("winOffer", "picBGOffer1")).top + 10
-    Xo = Windows(WindowCount).Controls(GetControlIndex("winOffer", "picBGOffer1")).left
+    WidthWindow = Windows(WindowCount).Controls(GetControlIndex("winOffer", "picBGOffer1")).Width
+    HeightWindow = Windows(WindowCount).Controls(GetControlIndex("winOffer", "picBGOffer1")).Height - 18
+    Yo = Windows(WindowCount).Controls(GetControlIndex("winOffer", "picBGOffer1")).Top + 10
+    Xo = Windows(WindowCount).Controls(GetControlIndex("winOffer", "picBGOffer1")).Left
     ' Offer BG
     CreatePictureBox WindowCount, "picOfferBG1", 10, Yo, 334, 25, False, , , , , , , DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment
     ' Title Offer
@@ -1731,8 +1731,8 @@ Public Sub CreateWindow_Offer()
     CreateButton WindowCount, "btnRecuse1", 414, Yo, 60, 25, "Refuse", verdana_12, Grey, , False, , , , , DesignTypes.designRedNormal, DesignTypes.designRedHover, DesignTypes.designRedClick, , , GetAddress(AddressOf RecuseOffer1), , , , , DarkGrey
     ' Offer BG#################################################################################
     CreatePictureBox WindowCount, "picBGOffer2", 0, Yo + HeightWindow, 485, 45, False, , , , , , , DesignTypes.designWindowDescription, DesignTypes.designWindowDescription, DesignTypes.designWindowDescription
-    Yo = Windows(WindowCount).Controls(GetControlIndex("winOffer", "picBGOffer2")).top + 10
-    Xo = Windows(WindowCount).Controls(GetControlIndex("winOffer", "picBGOffer2")).left
+    Yo = Windows(WindowCount).Controls(GetControlIndex("winOffer", "picBGOffer2")).Top + 10
+    Xo = Windows(WindowCount).Controls(GetControlIndex("winOffer", "picBGOffer2")).Left
     CreatePictureBox WindowCount, "picOfferBG2", 10, Yo, 334, 25, False, , , , , , , DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment
     ' Title Offer
     CreateLabel WindowCount, "lblTitleOffer2", 7 + Xo + ((334 - 318) / 2), Yo + 5, 318, 25, "[Offer]", Fonts.georgia_16, White, Alignment.alignLeft, False
@@ -1741,8 +1741,8 @@ Public Sub CreateWindow_Offer()
     CreateButton WindowCount, "btnRecuse2", 414, Yo, 60, 25, "Refuse", verdana_12, Grey, , False, , , , , DesignTypes.designRedNormal, DesignTypes.designRedHover, DesignTypes.designRedClick, , , GetAddress(AddressOf RecuseOffer2), , , , , DarkGrey
     ' Offer BG#################################################################################
     CreatePictureBox WindowCount, "picBGOffer3", 0, Yo + HeightWindow, 485, 45, False, , , , , , , DesignTypes.designWindowDescription, DesignTypes.designWindowDescription, DesignTypes.designWindowDescription
-    Yo = Windows(WindowCount).Controls(GetControlIndex("winOffer", "picBGOffer3")).top + 10
-    Xo = Windows(WindowCount).Controls(GetControlIndex("winOffer", "picBGOffer3")).left
+    Yo = Windows(WindowCount).Controls(GetControlIndex("winOffer", "picBGOffer3")).Top + 10
+    Xo = Windows(WindowCount).Controls(GetControlIndex("winOffer", "picBGOffer3")).Left
     CreatePictureBox WindowCount, "picOfferBG3", 10, Yo, 334, 25, False, , , , , , , DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment
     ' Title Offer
     CreateLabel WindowCount, "lblTitleOffer3", 7 + Xo + ((334 - 318) / 2), Yo + 5, 318, 25, "[Offer]", Fonts.georgia_16, White, Alignment.alignLeft, False
@@ -1758,7 +1758,7 @@ Public Sub CreateWindow_NpcChat()
     CentraliseWindow WindowCount
 
     ' Close Button
-    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnNpcChat_Close)
+    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.Width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnNpcChat_Close)
     
     ' Parchment
     CreatePictureBox WindowCount, "picParchment", 6, 26, 468, 198, , , , , , , , DesignTypes.designParchment, DesignTypes.designParchment, DesignTypes.designParchment
@@ -1847,7 +1847,7 @@ Public Sub CreateWindow_Trade()
     CentraliseWindow WindowCount
 
     ' Close Button
-    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnTrade_Close)
+    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.Width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnTrade_Close)
     ' Parchment
     CreatePictureBox WindowCount, "picParchment", 10, 312, 392, 66, , , , , , , , DesignTypes.designParchment, DesignTypes.designParchment, DesignTypes.designParchment
     ' Labels
@@ -1890,7 +1890,7 @@ Public Sub CreateWindow_Guild()
     zOrder_Con = 1
 
     ' Close button
-    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnMenu_Guild)
+    CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.Width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnMenu_Guild)
     ' Parchment
     CreatePictureBox WindowCount, "picParchment", 6, 26, 162, 287, , , , , , , , DesignTypes.designParchment, DesignTypes.designParchment, DesignTypes.designParchment
     ' Attributes

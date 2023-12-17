@@ -10,12 +10,12 @@ Public Const Path_Design As String = "\data files\graphics\gui\designs\"
 Public Const Path_Gradient As String = "\data files\graphics\gui\gradients\"
 Public Const Path_Item As String = "\data files\graphics\items\"
 Public Const Path_Paperdoll As String = "\data files\graphics\paperdolls\"
+Public Const Path_Projectile As String = "\data files\graphics\projectiles\"
 Public Const Path_Resource As String = "\data files\graphics\resources\"
 Public Const Path_Spellicon As String = "\data files\graphics\spellicons\"
 Public Const Path_Tileset As String = "\data files\graphics\tilesets\"
 Public Const Path_Font As String = "\data files\graphics\fonts\"
 Public Const Path_Graphics As String = "\data files\graphics\"
-Public Const Path_Projectile As String = "\data files\graphics\projectiles\"
 Public Const Path_Surface As String = "\data files\graphics\surfaces\"
 Public Const Path_Fog As String = "\data files\graphics\fog\"
 Public Const Path_Captcha As String = "\data files\graphics\captchas\"
@@ -64,7 +64,6 @@ Public CountTileset As Long
 Public CountFog As Long
 Public CountSurface As Long
 Public CountCaptcha As Long
-Public CountProjectile As Long
 
 ' Variables
 Public DX8 As DirectX8
@@ -249,6 +248,7 @@ Dim i As Long
     TextureFace = LoadTextureFiles(CountFace, App.Path & Path_Face)
     TextureItem = LoadTextureFiles(CountItem, App.Path & Path_Item)
     TexturePaperdoll = LoadTextureFiles(CountPaperdoll, App.Path & Path_Paperdoll)
+    TextureProjectile = LoadTextureFiles(CountProjectile, App.Path & Path_Projectile)
     TextureResource = LoadTextureFiles(CountResource, App.Path & Path_Resource)
     TextureSpellIcon = LoadTextureFiles(CountSpellicon, App.Path & Path_Spellicon)
     TextureGUI = LoadTextureFiles(CountGUI, App.Path & Path_GUI)
@@ -1227,7 +1227,7 @@ Public Sub DrawInviteBackground()
     
     For i = 1 To 3
         If inOffer(i) > 0 Then
-            RenderDesign DesignTypes.desWin_Desc, Xo, Y, Width, Height
+            RenderDesign DesignTypes.designWindowDescription, Xo, Y, Width, Height
             RenderText font(Fonts.georgia_16), "i", Xo + 21, Y + 15, Grey
             Y = Y + 37
         End If
@@ -1495,7 +1495,7 @@ Public Sub DrawBank()
 
         If ItemNum > 0 And ItemNum <= MAX_ITEMS Then
             ' not dragging?
-            If Not (DragBox.origin = origin_Bank And DragBox.Slot = i) Then
+            If Not (DragBox.origin = originBank And DragBox.Slot = i) Then
                 ItemPic = Item(ItemNum).pic
 
 
@@ -2199,7 +2199,7 @@ Public Sub DrawNpc(ByVal MapNpcNum As Long)
     With rec
         .Top = (mTexture(TextureChar(sprite)).RealHeight / 4) * SpriteTop
         .Height = mTexture(TextureChar(sprite)).RealHeight / 4
-        .Left = Anim * (TextureChar(TextureChar(sprite)).RealWidth / 4)
+        .Left = Anim * (mTexture(TextureChar(sprite)).RealWidth / 4)
         .Width = (mTexture(TextureChar(sprite)).RealWidth / 4)
     End With
 
@@ -2413,7 +2413,7 @@ Dim partyIndex As Long
             tmpY = GetPlayerY(MyIndex) * PIC_Y + Player(MyIndex).yOffset + 35 + Height + 1
             
             ' calculate the width to fill
-            If Width > 0 Then barWidth = (GetTickCount - SpellBufferTimer) / ((Spell(PlayerSpells(SpellBuffer).Spell).CastTime * 1000)) * Width
+            If Width > 0 Then barWidth = (getTime - SpellBufferTimer) / ((Spell(PlayerSpells(SpellBuffer).Spell).CastTime * 1000)) * Width
             
             ' draw bar background
             Top = Height * 3 ' cooldown bar background
