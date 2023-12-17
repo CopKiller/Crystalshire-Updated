@@ -1004,7 +1004,7 @@ Dim invNum As Long, winIndex As Long, i As Long
     Inventory_MouseMove
 End Sub
 
-Public Sub Inventory_DoubleClick()
+Public Sub Inventory_DblClick()
 
 Dim ItemNum As Long, i As Long
 
@@ -1464,7 +1464,7 @@ Dim slotNum As Long, winIndex As Long
 End Sub
 
 
-Public Sub Skills_DoubleClick()
+Public Sub Skills_DblClick()
 
 Dim slotNum As Long
 
@@ -1544,7 +1544,7 @@ Dim slotNum As Long, winIndex As Long
     Hotbar_MouseMove
 End Sub
 
-Public Sub Hotbar_DoubleClick()
+Public Sub Hotbar_DblClick()
 
 Dim slotNum As Long
 

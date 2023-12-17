@@ -75,7 +75,7 @@ Public Sub SetMoveDirection()
 End Sub
 
 Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)
-    Dim chatText As String, name As String, i As Long, N As Long, Command() As String, buffer As clsBuffer, tmpNum As Long
+    Dim chatText As String, Name As String, i As Long, N As Long, Command() As String, buffer As clsBuffer, tmpNum As Long
 
     
     ' check if we're skipping video
@@ -120,7 +120,7 @@ Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)
                     Select Case KeyAscii
                         Case vbKeyBack
                             If LenB(.text) > 0 Then
-                                .text = left$(.text, Len(.text) - 1)
+                                .text = Left$(.text, Len(.text) - 1)
                             End If
                         Case vbKeyReturn
                             ' override for function callbacks
@@ -128,26 +128,26 @@ Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)
                                 entCallBack .entCallBack(EntityStates.Enter), activeWindow, Windows(activeWindow).activeControl, 0, 0
                                 Exit Sub
                             Else
-                                n = 0
+                                N = 0
                                 For i = Windows(activeWindow).ControlCount To 1 Step -1
                                     If i > Windows(activeWindow).activeControl Then
-                                        If SetActiveControl(activeWindow, i) Then n = i
+                                        If SetActiveControl(activeWindow, i) Then N = i
                                     End If
                                 Next
-                                If n = 0 Then
+                                If N = 0 Then
                                     For i = Windows(activeWindow).ControlCount To 1 Step -1
                                         SetActiveControl activeWindow, i
                                     Next
                                 End If
                             End If
                         Case vbKeyTab
-                            n = 0
+                            N = 0
                             For i = 1 To Windows(activeWindow).ControlCount
                                 If i > Windows(activeWindow).activeControl Then
-                                    If SetActiveControl(activeWindow, i) Then n = i: Exit Sub
+                                    If SetActiveControl(activeWindow, i) Then N = i: Exit Sub
                                 End If
                             Next
-                            If n = 0 Then
+                            If N = 0 Then
                                 For i = Windows(activeWindow).ControlCount To 1 Step -1
                                     SetActiveControl activeWindow, i
                                 Next
@@ -156,7 +156,7 @@ Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)
                             .text = .text & ChrW$(KeyAscii)
                     End Select
                     ' exit out early - if not chatting
-                    If Windows(activeWindow).Window.name <> "winChat" Then Exit Sub
+                    If Windows(activeWindow).Window.Name <> "winChat" Then Exit Sub
                 End With
             End If
         End If
@@ -219,7 +219,7 @@ Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)
         End If
     
         ' Broadcast message
-        If left$(chatText, 1) = "'" Then
+        If Left$(chatText, 1) = "'" Then
             chatText = Mid$(chatText, 2, Len(chatText) - 1)
 
             If Len(chatText) > 0 Then
@@ -232,7 +232,7 @@ Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)
         End If
 
         ' Emote message
-        If left$(chatText, 1) = "-" Then
+        If Left$(chatText, 1) = "-" Then
             chatText = Mid$(chatText, 2, Len(chatText) - 1)
 
             If Len(chatText) > 0 Then
@@ -245,17 +245,17 @@ Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)
         End If
 
         ' Player message
-        If left$(chatText, 1) = "!" Then
+        If Left$(chatText, 1) = "!" Then
             Exit Sub
             chatText = Mid$(chatText, 2, Len(chatText) - 1)
-            name = vbNullString
+            Name = vbNullString
             ' Get the desired player from the user text
             tmpNum = Len(chatText)
 
             For i = 1 To tmpNum
 
                 If Mid$(chatText, i, 1) <> Space$(1) Then
-                    name = name & Mid$(chatText, i, 1)
+                    Name = Name & Mid$(chatText, i, 1)
                 Else
                     Exit For
                 End If
@@ -268,7 +268,7 @@ Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)
             If Len(chatText) - i > 0 Then
                 chatText = Mid$(chatText, i + 1, Len(chatText) - i)
                 ' Send the message to the player
-                Call PlayerMsg(chatText, name)
+                Call PlayerMsg(chatText, Name)
             Else
                 Call AddText("Usage: !playername (message)", AlertColor)
             End If
@@ -278,7 +278,7 @@ Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)
             Exit Sub
         End If
 
-        If left$(chatText, 1) = "/" Then
+        If Left$(chatText, 1) = "/" Then
             Command = Split(chatText, Space$(1))
 
             Select Case Command(0)
@@ -412,12 +412,12 @@ Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)
                         GoTo continue
                     End If
 
-                    n = CLng(Command(1))
+                    N = CLng(Command(1))
 
                     ' Check to make sure its a valid map #
-                    If n > 0 And n <= MAX_MAPS Then
+                    If N > 0 And N <= MAX_MAPS Then
                         GettingMap = True
-                        Call WarpTo(n)
+                        Call WarpTo(N)
                     Else
                         Call AddText("Invalid map number.", Red)
                     End If

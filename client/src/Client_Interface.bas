@@ -279,11 +279,11 @@ End Sub
 
 Public Sub SortWindows()
     Dim tempWindow As WindowRec
-    Dim i As Long, x As Long
-    x = 1
+    Dim i As Long, X As Long
+    X = 1
 
-    While x <> 0
-        x = 0
+    While X <> 0
+        X = 0
 
         For i = 1 To WindowCount - 1
 
@@ -291,7 +291,7 @@ Public Sub SortWindows()
                 tempWindow = Windows(i)
                 Windows(i) = Windows(i + 1)
                 Windows(i + 1) = tempWindow
-                x = 1
+                X = 1
             End If
 
         Next
@@ -301,7 +301,7 @@ Public Sub SortWindows()
 End Sub
 
 Public Sub RenderEntities()
-    Dim i As Long, x As Long, curZOrder As Long
+    Dim i As Long, X As Long, curZOrder As Long
 
     ' don't render anything if we don't have any containers
     If WindowCount = 0 Then Exit Sub
@@ -319,8 +319,8 @@ Public Sub RenderEntities()
                     ' render container
                     RenderWindow i
                     ' render controls
-                    For x = 1 To Windows(i).ControlCount
-                        If Windows(i).Controls(x).visible Then RenderEntity i, x
+                    For X = 1 To Windows(i).ControlCount
+                        If Windows(i).Controls(X).visible Then RenderEntity i, X
                     Next
                 End If
             End If
@@ -330,7 +330,7 @@ End Sub
 
 Public Sub RenderEntity(winNum As Long, entNum As Long)
     Dim Xo As Long, Yo As Long, hor_centre As Long, ver_centre As Long, Height As Long, Width As Long, Left As Long, texNum As Long, xOffset As Long
-    Dim Callback As Long, taddText As String, Colour As Long, textArray() As String, Count As Long, yOffset As Long, i As Long, y As Long, x As Long
+    Dim Callback As Long, taddText As String, Colour As Long, textArray() As String, Count As Long, yOffset As Long, i As Long, Y As Long, X As Long
 
     ' check if the window exists
     If winNum <= 0 Or winNum > WindowCount Then
@@ -560,7 +560,7 @@ Public Sub RenderEntity(winNum As Long, entNum As Long)
 End Sub
 
 Public Sub RenderWindow(winNum As Long)
-    Dim Width As Long, Height As Long, Callback As Long, x As Long, y As Long, i As Long, Left As Long
+    Dim Width As Long, Height As Long, Callback As Long, X As Long, Y As Long, i As Long, Left As Long
 
     ' check if the window exists
     If winNum <= 0 Or winNum > WindowCount Then
@@ -577,20 +577,20 @@ Public Sub RenderWindow(winNum As Long)
 
             ' text
             If UBound(.list) > 0 Then
-                y = .Top + 2
+                Y = .Top + 2
 
-                x = .Left
+                X = .Left
                 For i = 1 To UBound(.list)
                     ' render select
-                    If i = .Value Or i = .group Then RenderDesign DesignTypes.DesignBlackParchment, x, y - 1, .Width, 15
+                    If i = .Value Or i = .group Then RenderDesign DesignTypes.DesignBlackParchment, X, Y - 1, .Width, 15
                     ' render text
-                    Left = x + (.Width \ 2) - (TextWidth(font(.font), .list(i)) \ 2)
+                    Left = X + (.Width \ 2) - (TextWidth(font(.font), .list(i)) \ 2)
                     If i = .Value Or i = .group Then
-                        RenderText font(.font), .list(i), Left, y, Yellow
+                        RenderText font(.font), .list(i), Left, Y, Yellow
                     Else
-                        RenderText font(.font), .list(i), Left, y, White
+                        RenderText font(.font), .list(i), Left, Y, White
                     End If
-                    y = y + 16
+                    Y = Y + 16
                 Next
             End If
             Exit Sub
@@ -801,30 +801,30 @@ Public Sub RenderDesign(design As Long, Left As Long, Top As Long, Width As Long
 
 End Sub
 
-Public Sub RenderEntity_Square(texNum As Long, x As Long, y As Long, Width As Long, Height As Long, borderSize As Long, Optional alpha As Long = 255)
+Public Sub RenderEntity_Square(texNum As Long, X As Long, Y As Long, Width As Long, Height As Long, borderSize As Long, Optional alpha As Long = 255)
     Dim bs As Long, Colour As Long
     ' change colour for alpha
     Colour = DX8Colour(White, alpha)
     ' Set the border size
     bs = borderSize
     ' Draw centre
-    RenderTexture texNum, x + bs, y + bs, bs + 1, bs + 1, Width - (bs * 2), Height - (bs * 2), 1, 1, Colour
+    RenderTexture texNum, X + bs, Y + bs, bs + 1, bs + 1, Width - (bs * 2), Height - (bs * 2), 1, 1, Colour
     ' Draw top side
-    RenderTexture texNum, x + bs, y, bs, 0, Width - (bs * 2), bs, 1, bs, Colour
+    RenderTexture texNum, X + bs, Y, bs, 0, Width - (bs * 2), bs, 1, bs, Colour
     ' Draw left side
-    RenderTexture texNum, x, y + bs, 0, bs, bs, Height - (bs * 2), bs, 1, Colour
+    RenderTexture texNum, X, Y + bs, 0, bs, bs, Height - (bs * 2), bs, 1, Colour
     ' Draw right side
-    RenderTexture texNum, x + Width - bs, y + bs, bs + 3, bs, bs, Height - (bs * 2), bs, 1, Colour
+    RenderTexture texNum, X + Width - bs, Y + bs, bs + 3, bs, bs, Height - (bs * 2), bs, 1, Colour
     ' Draw bottom side
-    RenderTexture texNum, x + bs, y + Height - bs, bs, bs + 3, Width - (bs * 2), bs, 1, bs, Colour
+    RenderTexture texNum, X + bs, Y + Height - bs, bs, bs + 3, Width - (bs * 2), bs, 1, bs, Colour
     ' Draw top left corner
-    RenderTexture texNum, x, y, 0, 0, bs, bs, bs, bs, Colour
+    RenderTexture texNum, X, Y, 0, 0, bs, bs, bs, bs, Colour
     ' Draw top right corner
-    RenderTexture texNum, x + Width - bs, y, bs + 3, 0, bs, bs, bs, bs, Colour
+    RenderTexture texNum, X + Width - bs, Y, bs + 3, 0, bs, bs, bs, bs, Colour
     ' Draw bottom left corner
-    RenderTexture texNum, x, y + Height - bs, 0, bs + 3, bs, bs, bs, bs, Colour
+    RenderTexture texNum, X, Y + Height - bs, 0, bs + 3, bs, bs, bs, bs, Colour
     ' Draw bottom right corner
-    RenderTexture texNum, x + Width - bs, y + Height - bs, bs + 3, bs + 3, bs, bs, bs, bs, Colour
+    RenderTexture texNum, X + Width - bs, Y + Height - bs, bs + 3, bs + 3, bs, bs, bs, bs, Colour
 End Sub
 
 Sub Combobox_AddItem(winIndex As Long, controlIndex As Long, text As String)
@@ -838,7 +838,7 @@ Public Sub CreateWindow(Name As String, caption As String, zOrder As Long, Left 
                         Optional visible As Boolean = True, Optional font As Long = Fonts.georgia_16, Optional textColour As Long = White, Optional xOffset As Long, _
                         Optional yOffset As Long, Optional design_norm As Long, Optional design_hover As Long, Optional design_mousedown As Long, Optional image_norm As Long, _
                         Optional image_hover As Long, Optional image_mousedown As Long, Optional entCallBack_norm As Long, Optional entCallBack_hover As Long, Optional entCallBack_mousedown As Long, _
-                        Optional entCallBack_mousemove As Long, Optional entCallBack_DoubleClick As Long, Optional canDrag As Boolean = True, Optional zChange As Byte = True, Optional ByVal onDraw As Long, _
+                        Optional entCallBack_mousemove As Long, Optional entCallBack_DblClick As Long, Optional canDrag As Boolean = True, Optional zChange As Byte = True, Optional ByVal onDraw As Long, _
                         Optional isActive As Boolean, Optional clickThrough As Boolean)
 
     Dim i As Long
@@ -861,7 +861,7 @@ Public Sub CreateWindow(Name As String, caption As String, zOrder As Long, Left 
     entCallBack(EntityStates.Hover) = entCallBack_hover
     entCallBack(EntityStates.MouseDown) = entCallBack_mousedown
     entCallBack(EntityStates.MouseMove) = entCallBack_mousemove
-    entCallBack(EntityStates.DoubleClick) = entCallBack_DoubleClick
+    entCallBack(EntityStates.DoubleClick) = entCallBack_DblClick
     ' redim the windows
     WindowCount = WindowCount + 1
     ReDim Preserve Windows(1 To WindowCount) As WindowRec
@@ -909,7 +909,7 @@ End Sub
 Public Sub CreateTextbox(winNum As Long, Name As String, Left As Long, Top As Long, Width As Long, Height As Long, Optional text As String, Optional font As Long = Fonts.georgia_16, _
                          Optional textColour As Long = White, Optional align As Byte = Alignment.AlignLeft, Optional visible As Boolean = True, Optional alpha As Long = 255, Optional image_norm As Long, _
                          Optional image_hover As Long, Optional image_mousedown As Long, Optional design_norm As Long, Optional design_hover As Long, Optional design_mousedown As Long, _
-                         Optional entCallBack_norm As Long, Optional entCallBack_hover As Long, Optional entCallBack_mousedown As Long, Optional entCallBack_mousemove As Long, Optional entCallBack_DoubleClick As Long, _
+                         Optional entCallBack_norm As Long, Optional entCallBack_hover As Long, Optional entCallBack_mousedown As Long, Optional entCallBack_mousemove As Long, Optional entCallBack_DblClick As Long, _
                          Optional isActive As Boolean, Optional xOffset As Long, Optional yOffset As Long, Optional isCensor As Boolean, Optional entCallBack_enter As Long)
     Dim design(0 To EntityStates.StateCount - 1) As Long
     Dim image(0 To EntityStates.StateCount - 1) As Long
@@ -925,7 +925,7 @@ Public Sub CreateTextbox(winNum As Long, Name As String, Left As Long, Top As Lo
     entCallBack(EntityStates.Hover) = entCallBack_hover
     entCallBack(EntityStates.MouseDown) = entCallBack_mousedown
     entCallBack(EntityStates.MouseMove) = entCallBack_mousemove
-    entCallBack(EntityStates.DoubleClick) = entCallBack_DoubleClick
+    entCallBack(EntityStates.DoubleClick) = entCallBack_DblClick
     entCallBack(EntityStates.Enter) = entCallBack_enter
     ' create the textbox
     CreateEntity winNum, zOrder_Con, Name, EntityTextBox, design(), image(), entCallBack(), Left, Top, Width, Height, visible, , , , , text, align, font, textColour, alpha, , xOffset, yOffset, , , , isActive, isCensor
@@ -934,7 +934,7 @@ End Sub
 Public Sub CreatePictureBox(winNum As Long, Name As String, Left As Long, Top As Long, Width As Long, Height As Long, Optional visible As Boolean = True, Optional canDrag As Boolean, _
                             Optional alpha As Long = 255, Optional clickThrough As Boolean, Optional image_norm As Long, Optional image_hover As Long, Optional image_mousedown As Long, Optional design_norm As Long, _
                             Optional design_hover As Long, Optional design_mousedown As Long, Optional entCallBack_norm As Long, Optional entCallBack_hover As Long, Optional entCallBack_mousedown As Long, _
-                            Optional entCallBack_mousemove As Long, Optional entCallBack_DoubleClick As Long, Optional onDraw As Long)
+                            Optional entCallBack_mousemove As Long, Optional entCallBack_DblClick As Long, Optional onDraw As Long)
     Dim design(0 To EntityStates.StateCount - 1) As Long
     Dim image(0 To EntityStates.StateCount - 1) As Long
     Dim entCallBack(0 To EntityStates.StateCount - 1) As Long
@@ -949,7 +949,7 @@ Public Sub CreatePictureBox(winNum As Long, Name As String, Left As Long, Top As
     entCallBack(EntityStates.Hover) = entCallBack_hover
     entCallBack(EntityStates.MouseDown) = entCallBack_mousedown
     entCallBack(EntityStates.MouseMove) = entCallBack_mousemove
-    entCallBack(EntityStates.DoubleClick) = entCallBack_DoubleClick
+    entCallBack(EntityStates.DoubleClick) = entCallBack_DblClick
     ' create the box
     CreateEntity winNum, zOrder_Con, Name, EntityPictureBox, design(), image(), entCallBack(), Left, Top, Width, Height, visible, canDrag, , , , , , , , alpha, clickThrough, , , , , onDraw
 
@@ -958,7 +958,7 @@ End Sub
 Public Sub CreateButton(winNum As Long, Name As String, Left As Long, Top As Long, Width As Long, Height As Long, Optional text As String, Optional font As Fonts = Fonts.georgia_16, _
                         Optional textColour As Long = White, Optional icon As Long, Optional visible As Boolean = True, Optional alpha As Long = 255, Optional image_norm As Long, Optional image_hover As Long, _
                         Optional image_mousedown As Long, Optional design_norm As Long, Optional design_hover As Long, Optional design_mousedown As Long, Optional entCallBack_norm As Long, _
-                        Optional entCallBack_hover As Long, Optional entCallBack_mousedown As Long, Optional entCallBack_mousemove As Long, Optional entCallBack_DoubleClick As Long, Optional xOffset As Long, _
+                        Optional entCallBack_hover As Long, Optional entCallBack_mousedown As Long, Optional entCallBack_mousemove As Long, Optional entCallBack_DblClick As Long, Optional xOffset As Long, _
                         Optional yOffset As Long, Optional textColourHover As Long = -1, Optional textColourClick As Long = -1, Optional tooltip As String)
     Dim design(0 To EntityStates.StateCount - 1) As Long
     Dim image(0 To EntityStates.StateCount - 1) As Long
@@ -978,14 +978,14 @@ Public Sub CreateButton(winNum As Long, Name As String, Left As Long, Top As Lon
     entCallBack(EntityStates.Hover) = entCallBack_hover
     entCallBack(EntityStates.MouseDown) = entCallBack_mousedown
     entCallBack(EntityStates.MouseMove) = entCallBack_mousemove
-    entCallBack(EntityStates.DoubleClick) = entCallBack_DoubleClick
+    entCallBack(EntityStates.DoubleClick) = entCallBack_DblClick
     ' create the box
     CreateEntity winNum, zOrder_Con, Name, EntityButton, design(), image(), entCallBack(), Left, Top, Width, Height, visible, , , , , text, , font, textColour, alpha, , xOffset, yOffset, , icon, , , , textColourHover, textColourClick, tooltip
 End Sub
 
 Public Sub CreateLabel(winNum As Long, Name As String, Left As Long, Top As Long, Width As Long, Optional Height As Long, Optional text As String, Optional font As Fonts = Fonts.georgia_16, _
                        Optional textColour As Long = White, Optional align As Byte = Alignment.AlignLeft, Optional visible As Boolean = True, Optional alpha As Long = 255, Optional clickThrough As Boolean, _
-                       Optional entCallBack_norm As Long, Optional entCallBack_hover As Long, Optional entCallBack_mousedown As Long, Optional entCallBack_mousemove As Long, Optional entCallBack_DoubleClick As Long)
+                       Optional entCallBack_norm As Long, Optional entCallBack_hover As Long, Optional entCallBack_mousedown As Long, Optional entCallBack_mousemove As Long, Optional entCallBack_DblClick As Long)
     Dim design(0 To EntityStates.StateCount - 1) As Long
     Dim image(0 To EntityStates.StateCount - 1) As Long
     Dim entCallBack(0 To EntityStates.StateCount - 1) As Long
@@ -994,7 +994,7 @@ Public Sub CreateLabel(winNum As Long, Name As String, Left As Long, Top As Long
     entCallBack(EntityStates.Hover) = entCallBack_hover
     entCallBack(EntityStates.MouseDown) = entCallBack_mousedown
     entCallBack(EntityStates.MouseMove) = entCallBack_mousemove
-    entCallBack(EntityStates.DoubleClick) = entCallBack_DoubleClick
+    entCallBack(EntityStates.DoubleClick) = entCallBack_DblClick
     ' create the box
     CreateEntity winNum, zOrder_Con, Name, EntityLabel, design(), image(), entCallBack(), Left, Top, Width, Height, visible, , , , , text, align, font, textColour, alpha, clickThrough
 End Sub
@@ -1002,7 +1002,7 @@ End Sub
 Public Sub CreateCheckbox(winNum As Long, Name As String, Left As Long, Top As Long, Width As Long, Optional Height As Long = 15, Optional Value As Long, Optional text As String, _
                           Optional font As Fonts = Fonts.georgia_16, Optional textColour As Long = White, Optional align As Byte = Alignment.AlignLeft, Optional visible As Boolean = True, Optional alpha As Long = 255, _
                           Optional theDesign As Long, Optional entCallBack_norm As Long, Optional entCallBack_hover As Long, Optional entCallBack_mousedown As Long, Optional entCallBack_mousemove As Long, _
-                          Optional entCallBack_DoubleClick As Long, Optional group As Long)
+                          Optional entCallBack_DblClick As Long, Optional group As Long)
     Dim design(0 To EntityStates.StateCount - 1) As Long
     Dim image(0 To EntityStates.StateCount - 1) As Long
     Dim entCallBack(0 To EntityStates.StateCount - 1) As Long
@@ -1011,7 +1011,7 @@ Public Sub CreateCheckbox(winNum As Long, Name As String, Left As Long, Top As L
     entCallBack(EntityStates.Hover) = entCallBack_hover
     entCallBack(EntityStates.MouseDown) = entCallBack_mousedown
     entCallBack(EntityStates.MouseMove) = entCallBack_mousemove
-    entCallBack(EntityStates.DoubleClick) = entCallBack_DoubleClick
+    entCallBack(EntityStates.DoubleClick) = entCallBack_DblClick
     ' fill temp array
     design(0) = theDesign
     ' create the box
@@ -1158,10 +1158,10 @@ Public Sub CreateWindow_Login()
 End Sub
 
 Public Sub StrongPassword()
-Dim x, y, passwordLenght, Colour As Long
+Dim X, Y, passwordLenght, Colour As Long
     
-    x = Windows(GetWindowIndex("winRegister")).Window.Left
-    y = Windows(GetWindowIndex("winRegister")).Window.Top
+    X = Windows(GetWindowIndex("winRegister")).Window.Left
+    Y = Windows(GetWindowIndex("winRegister")).Window.Top
     passwordLenght = Len(Windows(GetWindowIndex("winRegister")).Controls(GetControlIndex("winRegister", "txtPass2")).text)
     
     If passwordLenght <= 6 Then
@@ -1172,7 +1172,7 @@ Dim x, y, passwordLenght, Colour As Long
         Colour = D3DColorARGB(200, 80, 220, 50)
     End If
     
-    RenderDesign DesignTypes.DesignColor, x + 15, y + (WindowTopBar + 136), 242, 4, , Colour
+    RenderDesign DesignTypes.DesignColor, X + 15, Y + (WindowTopBar + 136), 242, 4, , Colour
 End Sub
 
 Public Sub CreateWindow_Register()
@@ -1440,7 +1440,7 @@ End Sub
 
 Public Sub CreateWindow_Hotbar()
 ' Create window
-    CreateWindow "winHotbar", "", zOrder_Win, 372, 10, 418, 36, 0, , , , , , , , , , , , , GetAddress(AddressOf Hotbar_MouseMove), GetAddress(AddressOf Hotbar_MouseDown), GetAddress(AddressOf Hotbar_MouseMove), GetAddress(AddressOf Hotbar_DoubleClick), False, False, GetAddress(AddressOf DrawHotbar)
+    CreateWindow "winHotbar", "", zOrder_Win, 372, 10, 418, 36, 0, , , , , , , , , , , , , GetAddress(AddressOf Hotbar_MouseMove), GetAddress(AddressOf Hotbar_MouseDown), GetAddress(AddressOf Hotbar_MouseMove), GetAddress(AddressOf Hotbar_DblClick), False, False, GetAddress(AddressOf DrawHotbar)
 End Sub
 
 Public Sub CreateWindow_Bank()
@@ -1458,7 +1458,7 @@ End Sub
 
 Public Sub CreateWindow_Inventory()
 ' Create window
-    CreateWindow "winInventory", "Inventory", zOrder_Win, 0, 0, 202, 319, TextureItem(1), False, Fonts.rockwellDec_15, , 2, 7, DesignTypes.DesignWindowClear, DesignTypes.DesignWindowClear, DesignTypes.DesignWindowClear, , , , , GetAddress(AddressOf Inventory_MouseMove), GetAddress(AddressOf Inventory_MouseDown), GetAddress(AddressOf Inventory_MouseMove), GetAddress(AddressOf Inventory_DoubleClick), , , GetAddress(AddressOf DrawInventory)
+    CreateWindow "winInventory", "Inventory", zOrder_Win, 0, 0, 202, 319, TextureItem(1), False, Fonts.rockwellDec_15, , 2, 7, DesignTypes.DesignWindowClear, DesignTypes.DesignWindowClear, DesignTypes.DesignWindowClear, , , , , GetAddress(AddressOf Inventory_MouseMove), GetAddress(AddressOf Inventory_MouseDown), GetAddress(AddressOf Inventory_MouseMove), GetAddress(AddressOf Inventory_DblClick), , , GetAddress(AddressOf DrawInventory)
 
     ' Centralise it
     CentraliseWindow WindowCount
@@ -1542,7 +1542,7 @@ End Sub
 
 Public Sub CreateWindow_PlayerQuest()
 ' Create window
-    CreateWindow "winPlayerQuests", "Quests", zOrder_Win, 0, 0, 450, 412, TextureItem(23), False, Fonts.rockwellDec_15, , 2, 7, DesignTypes.DesignWindowClear, DesignTypes.DesignWindowClear, DesignTypes.DesignWindowClear, , , , , GetAddress(AddressOf Inventory_MouseMove), GetAddress(AddressOf Inventory_MouseDown), GetAddress(AddressOf Inventory_MouseMove), GetAddress(AddressOf Inventory_DoubleClick), , , GetAddress(AddressOf DrawWinQuest)
+    CreateWindow "winPlayerQuests", "Quests", zOrder_Win, 0, 0, 450, 412, TextureItem(23), False, Fonts.rockwellDec_15, , 2, 7, DesignTypes.DesignWindowClear, DesignTypes.DesignWindowClear, DesignTypes.DesignWindowClear, , , , , GetAddress(AddressOf Inventory_MouseMove), GetAddress(AddressOf Inventory_MouseDown), GetAddress(AddressOf Inventory_MouseMove), GetAddress(AddressOf Inventory_DblClick), , , GetAddress(AddressOf DrawWinQuest)
 
     ' Centralise it
     CentraliseWindow WindowCount
@@ -1609,7 +1609,7 @@ End Sub
 
 Public Sub CreateWindow_Skills()
 ' Create window
-    CreateWindow "winSkills", "Skills", zOrder_Win, 0, 0, 202, 297, TextureItem(109), False, Fonts.rockwellDec_15, , 2, 7, DesignTypes.DesignWindowClear, DesignTypes.DesignWindowClear, DesignTypes.DesignWindowClear, , , , , GetAddress(AddressOf Skills_MouseMove), GetAddress(AddressOf Skills_MouseDown), GetAddress(AddressOf Skills_MouseMove), GetAddress(AddressOf Skills_DoubleClick), , , GetAddress(AddressOf DrawSkills)
+    CreateWindow "winSkills", "Skills", zOrder_Win, 0, 0, 202, 297, TextureItem(109), False, Fonts.rockwellDec_15, , 2, 7, DesignTypes.DesignWindowClear, DesignTypes.DesignWindowClear, DesignTypes.DesignWindowClear, , , , , GetAddress(AddressOf Skills_MouseMove), GetAddress(AddressOf Skills_MouseDown), GetAddress(AddressOf Skills_MouseMove), GetAddress(AddressOf Skills_DblClick), , , GetAddress(AddressOf DrawSkills)
 
     ' Centralise it
     CentraliseWindow WindowCount
