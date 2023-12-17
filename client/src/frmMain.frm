@@ -103,7 +103,7 @@ Private Sub Form_KeyUp(KeyCode As Integer, Shift As Integer)
 End Sub
 
 Private Sub Form_DoubleClick()
-    HandleGuiMouse entStates.DoubleClick
+    HandleGuiMouse EntityStates.DoubleClick
 
 End Sub
 
