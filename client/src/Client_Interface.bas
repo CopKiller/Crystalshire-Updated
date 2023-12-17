@@ -9,7 +9,7 @@ Public Enum EntityTypes
     EntityTextBox
     EntityPictureBox
     EntityCheckbox
-    EntityCombo
+    entityCombo
 End Enum
 
 ' Design Types
@@ -41,8 +41,8 @@ Public Enum DesignTypes
     DesignWindowNormal
     DesignWindowWithoutBar
     DesignWindowClear
-    DesignWindowDescription
-    DesignWindowShadow
+    designWindowDescription
+    designWindowShadow
 
     DesignParchment
     DesignBlackParchment
@@ -65,7 +65,7 @@ Public Enum DesignTypes
     DesignComboBackground
 
     ' tile Selection
-    DesignTilesetGrid
+    designTilesetGrid
 End Enum
 
 ' Button States
@@ -532,7 +532,7 @@ Public Sub RenderEntity(winNum As Long, entNum As Long)
             End Select
 
             ' comboboxes
-        Case EntityTypes.EntityCombo
+        Case EntityTypes.entityCombo
             Select Case .design(0)
             Case DesignTypes.DesignCombo
                 ' draw the background
@@ -618,13 +618,13 @@ Public Sub RenderWindow(winNum As Long)
             ' render the caption
             RenderText font(.font), Trim$(.text), .Left + Height + 20, .Top + 15, .textColour
                             
-        Case DesignTypes.DesignWindowDescription
+        Case DesignTypes.designWindowDescription
             ' render window
-            RenderDesign DesignTypes.DesignWindowDescription, .Left, .Top, .Width, .Height
+            RenderDesign DesignTypes.designWindowDescription, .Left, .Top, .Width, .Height
 
-        Case DesignWindowShadow
+        Case designWindowShadow
             ' render window
-            RenderDesign DesignTypes.DesignWindowShadow, .Left, .Top, .Width, .Height
+            RenderDesign DesignTypes.designWindowShadow, .Left, .Top, .Width, .Height
                             
         End Select
 
@@ -771,17 +771,17 @@ Public Sub RenderDesign(design As Long, Left As Long, Top As Long, Width As Long
         ' render the black oval
         RenderEntity_Square TextureDesign(6), Left, Top, Width, Height, bs, alpha
 
-    Case DesignTypes.DesignWindowDescription
+    Case DesignTypes.designWindowDescription
         bs = 8
         ' render black square
         RenderEntity_Square TextureDesign(3), Left, Top, Width, Height, bs, alpha
 
-    Case DesignTypes.DesignWindowShadow
+    Case DesignTypes.designWindowShadow
         bs = 35
         ' render the green box
         RenderEntity_Square TextureDesign(4), Left - bs, Top - bs, Width + (bs * 2), Height + (bs * 2), bs, alpha
 
-    Case DesignTypes.DesignTilesetGrid
+    Case DesignTypes.designTilesetGrid
         bs = 16
         ' render box
         RenderEntity_Square TextureDesign(8), Left, Top, Width, Height, bs, alpha
@@ -1012,7 +1012,7 @@ Public Sub CreateComboBox(winNum As Long, Name As String, Left As Long, Top As L
     Dim entCallBack(0 To EntityStates.StateCount - 1) As Long
     theDesign(0) = design
     ' create the box
-    CreateEntity winNum, zOrder_Con, Name, EntityCombo, theDesign(), image(), entCallBack(), Left, Top, Width, Height, , , , , , , , font
+    CreateEntity winNum, zOrder_Con, Name, entityCombo, theDesign(), image(), entCallBack(), Left, Top, Width, Height, , , , , , , , font
 End Sub
 
 Public Function GetWindowIndex(winName As String) As Long
@@ -1131,7 +1131,7 @@ Public Sub CreateWindow_Login()
     
     ' Textboxes
     CreateTextbox WindowCount, "txtUser", 15, WindowTopBar + 27, 242, 24, Options.Username, Fonts.Default, DarkGrey, Alignment.AlignLeft, , , , , , DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, , , , , , , 6, 4
-    CreateTextbox WindowCount, "txtPass", 15, WindowTopBar + 69, 242, 24, vbNullString, Fonts.Default, DarkGrey, Alignment.AlignLeft, , , , , , DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, , , , , , , 5, 3, True, GetAddress(AddressOf btnLogin_Click)
+    CreateTextbox WindowCount, "txtPass", 15, WindowTopBar + 69, 242, 24, vbNullString, Fonts.Default, DarkGrey, Alignment.AlignLeft, , , , , , DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, , , , , , , 6, 4, True, GetAddress(AddressOf btnLogin_Click)
     
     ' Botões
     CreateButton WindowCount, "btnAccept", 15, WindowTopBar + 108, 242, 30, "Acessar", Default, White, , , , , , , DesignTypes.DesignGreenNormal, DesignTypes.DesignGreenHover, DesignTypes.DesignGreenClick, , , GetAddress(AddressOf btnLogin_Click)
@@ -1147,46 +1147,48 @@ End Sub
 
 Public Sub CreateWindow_Register()
 
-' Create the window
-    CreateWindow "winRegister", "Register", zOrder_Win, 0, 0, 276, 302, TextureItem(45), , Fonts.rockwellDec_15, , 3, 5, DesignTypes.DesignWindowNormal, DesignTypes.DesignWindowNormal, DesignTypes.DesignWindowNormal
+    ' Definição da Janela
+    CreateWindow "winRegister", "Registras", zOrder_Win, 0, 0, 272, 359, TextureItem(45), , Fonts.Default, , 3, 5, DesignTypes.DesignWindowNormal, DesignTypes.DesignWindowNormal, DesignTypes.DesignWindowNormal
 
-    ' Centralise it
+    ' Centralizar a Janela
     CentraliseWindow WindowCount
 
-    ' Set the index for spawning controls
+    ' Ordem da Janela
     zOrder_Con = 1
 
-    ' Close button
+    ' Botão de Fechar
     CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.Width - 39, 2, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnReturnMain_Click)
-    ' Parchment
-    CreatePictureBox WindowCount, "picParchment", 6, 26, 264, 270, , , , , , , , DesignTypes.DesignParchment, DesignTypes.DesignParchment, DesignTypes.DesignParchment
+    
+    ' Pergaminho
+    CreatePictureBox WindowCount, "picParchment", 8, WindowTopBar + 6, 256, 305, , , , , , , , DesignTypes.DesignParchment, DesignTypes.DesignParchment, DesignTypes.DesignParchment
 
-    ' Shadows
-    CreatePictureBox WindowCount, "picShadow_1", 67, 43, 142, 9, , , , , , , , DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment
-    CreatePictureBox WindowCount, "picShadow_2", 67, 79, 142, 9, , , , , , , , DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment
-    CreatePictureBox WindowCount, "picShadow_3", 67, 115, 142, 9, , , , , , , , DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment
-    CreatePictureBox WindowCount, "picShadow_4", 67, 151, 142, 9, , , , , , , , DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment
-    CreatePictureBox WindowCount, "picShadow_5", 67, 187, 142, 9, , , , , , , , DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment
-
-    ' Buttons
-    CreateButton WindowCount, "btnAccept", 68, 262, 67, 22, "Create", rockwellDec_15, White, , , , , , , DesignTypes.DesignGreenNormal, DesignTypes.DesignGreenHover, DesignTypes.DesignGreenClick, , , GetAddress(AddressOf btnSendRegister_Click)
-    CreateButton WindowCount, "btnExit", 142, 262, 67, 22, "Back", rockwellDec_15, White, , , , , , , DesignTypes.DesignRedNormal, DesignTypes.DesignRedHover, DesignTypes.DesignRedClick, , , GetAddress(AddressOf btnReturnMain_Click)
-
-    ' Labels
-    CreateLabel WindowCount, "lblUsername", 66, 39, 142, , "Username", rockwellDec_15, White, Alignment.AlignCentre
-    CreateLabel WindowCount, "lblPassword", 66, 75, 142, , "Password", rockwellDec_15, White, Alignment.AlignCentre
-    CreateLabel WindowCount, "lblPassword2", 66, 111, 142, , "Retype Password", rockwellDec_15, White, Alignment.AlignCentre
-    CreateLabel WindowCount, "lblCode", 66, 147, 142, , "Secret Code", rockwellDec_15, White, Alignment.AlignCentre
-    CreateLabel WindowCount, "lblCaptcha", 66, 183, 142, , "Captcha", rockwellDec_15, White, Alignment.AlignCentre
+    ' Sombras
+    CreatePictureBox WindowCount, "picShadow_1", 15, WindowTopBar + 14, 242, 9, , , , , , , , DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment
+    CreatePictureBox WindowCount, "picShadow_2", 15, WindowTopBar + 56, 242, 9, , , , , , , , DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment
+    CreatePictureBox WindowCount, "picShadow_3", 15, WindowTopBar + 98, 242, 9, , , , , , , , DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment
+    CreatePictureBox WindowCount, "picShadow_4", 15, WindowTopBar + 146, 242, 9, , , , , , , , DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment
+    CreatePictureBox WindowCount, "picShadow_5", 15, WindowTopBar + 188, 242, 9, , , , , , , , DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment
+    
+    ' Textos
+    CreateLabel WindowCount, "lblUsername", 15, (WindowTopBar + 14) - 4, 242, , "Usuário", Fonts.Default, White, Alignment.AlignCentre
+    CreateLabel WindowCount, "lblPassword", 15, (WindowTopBar + 56) - 4, 242, , "Senha", Fonts.Default, White, Alignment.AlignCentre
+    CreateLabel WindowCount, "lblPassword2", 15, (WindowTopBar + 98) - 4, 242, , "Repetir Senha", Fonts.Default, White, Alignment.AlignCentre
+    CreateLabel WindowCount, "lblCode", 15, (WindowTopBar + 146) - 4, 242 - 4, , "Código Secreto", Fonts.Default, White, Alignment.AlignCentre
+    CreateLabel WindowCount, "lblCaptcha", 15, (WindowTopBar + 188) - 4, 242, , "Captcha", Fonts.Default, White, Alignment.AlignCentre
 
     ' Textboxes
-    CreateTextbox WindowCount, "txtAccount", 67, 55, 142, 19, vbNullString, Fonts.rockwell_15, , Alignment.AlignLeft, , , , , , DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, , , , , , , 5, 3, False, GetAddress(AddressOf btnSendRegister_Click)
-    CreateTextbox WindowCount, "txtPass", 67, 91, 142, 19, vbNullString, Fonts.rockwell_15, , Alignment.AlignLeft, , , , , , DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, , , , , , , 5, 3, True, GetAddress(AddressOf btnSendRegister_Click)
-    CreateTextbox WindowCount, "txtPass2", 67, 127, 142, 19, vbNullString, Fonts.rockwell_15, , Alignment.AlignLeft, , , , , , DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, , , , , , , 5, 3, True, GetAddress(AddressOf btnSendRegister_Click)
-    CreateTextbox WindowCount, "txtCode", 67, 163, 142, 19, vbNullString, Fonts.rockwell_15, , Alignment.AlignLeft, , , , , , DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, , , , , , , 5, 3, False, GetAddress(AddressOf btnSendRegister_Click)
-    CreateTextbox WindowCount, "txtCaptcha", 67, 235, 142, 19, vbNullString, Fonts.rockwell_15, , Alignment.AlignLeft, , , , , , DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, , , , , , , 5, 3, False, GetAddress(AddressOf btnSendRegister_Click)
+    CreateTextbox WindowCount, "txtAccount", 15, WindowTopBar + 27, 242, 23, vbNullString, Fonts.Default, DarkGrey, Alignment.AlignLeft, , , , , , DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, , , , , , , 6, 4, False, GetAddress(AddressOf btnSendRegister_Click)
+    CreateTextbox WindowCount, "txtPass", 15, WindowTopBar + 69, 242, 23, vbNullString, Fonts.Default, DarkGrey, Alignment.AlignLeft, , , , , , DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, , , , , , , 6, 4, True, GetAddress(AddressOf btnSendRegister_Click)
+    CreateTextbox WindowCount, "txtPass2", 15, WindowTopBar + 111, 242, 23, vbNullString, Fonts.Default, DarkGrey, Alignment.AlignLeft, , , , , , DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, , , , , , , 6, 4, True, GetAddress(AddressOf btnSendRegister_Click)
+    CreateTextbox WindowCount, "txtCode", 15, WindowTopBar + 160, 242, 23, vbNullString, Fonts.Default, DarkGrey, Alignment.AlignLeft, , , , , , DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, , , , , , , 6, 4, False, GetAddress(AddressOf btnSendRegister_Click)
+    CreateTextbox WindowCount, "txtCaptcha", 15, WindowTopBar + 235, 242, 23, vbNullString, Fonts.Default, DarkGrey, Alignment.AlignLeft, , , , , , DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, , , , , , , 6, 4, False, GetAddress(AddressOf btnSendRegister_Click)
 
-    CreatePictureBox WindowCount, "picCaptcha", 67, 199, 156, 30, , , , , TextureCaptcha(GlobalCaptcha), TextureCaptcha(GlobalCaptcha), TextureCaptcha(GlobalCaptcha), DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment
+    ' Captcha
+    CreatePictureBox WindowCount, "picCaptcha", 15, WindowTopBar + 201, 242, 30, , , , , TextureCaptcha(GlobalCaptcha), TextureCaptcha(GlobalCaptcha), TextureCaptcha(GlobalCaptcha), DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment
+    
+    ' Botões
+    CreateButton WindowCount, "btnAccept", 15, WindowTopBar + 274, 242, 30, "Criar a Conta", Fonts.Default, White, , , , , , , DesignTypes.DesignGreenNormal, DesignTypes.DesignGreenHover, DesignTypes.DesignGreenClick, , , GetAddress(AddressOf btnSendRegister_Click)
+
 
     SetActiveControl GetWindowIndex("winRegister"), GetControlIndex("winRegister", "txtAccount")
 End Sub
@@ -1246,7 +1248,7 @@ End Sub
 
 Public Sub CreateWindow_Dialogue()
 ' Create black background
-    CreateWindow "winBlank", "", zOrder_Win, 0, 0, 800, 600, 0, , , , , , DesignTypes.DesignWindowDescription, DesignTypes.DesignWindowDescription, DesignTypes.DesignWindowDescription, , , , , , , , , False, False
+    CreateWindow "winBlank", "", zOrder_Win, 0, 0, 800, 600, 0, , , , , , DesignTypes.designWindowDescription, DesignTypes.designWindowDescription, DesignTypes.designWindowDescription, , , , , , , , , False, False
     ' Create dialogue window
     CreateWindow "winDialogue", "Warning", zOrder_Win, 0, 0, 348, 145, TextureItem(38), , Fonts.rockwellDec_15, , 3, 5, DesignTypes.DesignWindowNormal, DesignTypes.DesignWindowNormal, DesignTypes.DesignWindowNormal, , , , , , , , , , False
     ' Centralise it
@@ -1546,7 +1548,7 @@ End Sub
 
 Public Sub CreateWindow_Description()
 ' Create window
-    CreateWindow "winDescription", "", zOrder_Win, 0, 0, 193, 142, 0, , , , , , DesignTypes.DesignWindowDescription, DesignTypes.DesignWindowDescription, DesignTypes.DesignWindowDescription, , , , , , , , , False
+    CreateWindow "winDescription", "", zOrder_Win, 0, 0, 193, 142, 0, , , , , , DesignTypes.designWindowDescription, DesignTypes.designWindowDescription, DesignTypes.designWindowDescription, , , , , , , , , False
 
     ' Set the index for spawning controls
     zOrder_Con = 1
@@ -1714,7 +1716,7 @@ Public Sub CreateWindow_Offer()
     ' Create window
     CreateWindow "winOffer", "", zOrder_Win, 10, 90, 535, 285, TextureItem(111), False, Fonts.rockwellDec_15, , 2, 11, , , , , , , , GetAddress(AddressOf Offer_MouseMove), , GetAddress(AddressOf Offer_MouseMove), , False, , GetAddress(AddressOf DrawInviteBackground)
 
-    CreatePictureBox WindowCount, "picBGOffer1", 0, 0, 485, 45, False, , , , , , , DesignTypes.DesignWindowDescription, DesignTypes.DesignWindowDescription, DesignTypes.DesignWindowDescription
+    CreatePictureBox WindowCount, "picBGOffer1", 0, 0, 485, 45, False, , , , , , , DesignTypes.designWindowDescription, DesignTypes.designWindowDescription, DesignTypes.designWindowDescription
     WidthWindow = Windows(WindowCount).Controls(GetControlIndex("winOffer", "picBGOffer1")).Width
     HeightWindow = Windows(WindowCount).Controls(GetControlIndex("winOffer", "picBGOffer1")).Height - 18
     Yo = Windows(WindowCount).Controls(GetControlIndex("winOffer", "picBGOffer1")).Top + 10
@@ -1727,7 +1729,7 @@ Public Sub CreateWindow_Offer()
     CreateButton WindowCount, "btnAccept1", 349, Yo, 60, 25, "Accept", verdana_12, Grey, , False, , , , , DesignTypes.DesignGreenNormal, DesignTypes.DesignGreenHover, DesignTypes.DesignGreenClick, , , GetAddress(AddressOf AcceptOffer1), , , , , DarkGrey
     CreateButton WindowCount, "btnRecuse1", 414, Yo, 60, 25, "Refuse", verdana_12, Grey, , False, , , , , DesignTypes.DesignRedNormal, DesignTypes.DesignRedHover, DesignTypes.DesignRedClick, , , GetAddress(AddressOf RecuseOffer1), , , , , DarkGrey
     ' Offer BG#################################################################################
-    CreatePictureBox WindowCount, "picBGOffer2", 0, Yo + HeightWindow, 485, 45, False, , , , , , , DesignTypes.DesignWindowDescription, DesignTypes.DesignWindowDescription, DesignTypes.DesignWindowDescription
+    CreatePictureBox WindowCount, "picBGOffer2", 0, Yo + HeightWindow, 485, 45, False, , , , , , , DesignTypes.designWindowDescription, DesignTypes.designWindowDescription, DesignTypes.designWindowDescription
     Yo = Windows(WindowCount).Controls(GetControlIndex("winOffer", "picBGOffer2")).Top + 10
     Xo = Windows(WindowCount).Controls(GetControlIndex("winOffer", "picBGOffer2")).Left
     CreatePictureBox WindowCount, "picOfferBG2", 10, Yo, 334, 25, False, , , , , , , DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment
@@ -1737,7 +1739,7 @@ Public Sub CreateWindow_Offer()
     CreateButton WindowCount, "btnAccept2", 349, Yo, 60, 25, "Accept", verdana_12, Grey, , False, , , , , DesignTypes.DesignGreenNormal, DesignTypes.DesignGreenHover, DesignTypes.DesignGreenClick, , , GetAddress(AddressOf AcceptOffer2), , , , , DarkGrey
     CreateButton WindowCount, "btnRecuse2", 414, Yo, 60, 25, "Refuse", verdana_12, Grey, , False, , , , , DesignTypes.DesignRedNormal, DesignTypes.DesignRedHover, DesignTypes.DesignRedClick, , , GetAddress(AddressOf RecuseOffer2), , , , , DarkGrey
     ' Offer BG#################################################################################
-    CreatePictureBox WindowCount, "picBGOffer3", 0, Yo + HeightWindow, 485, 45, False, , , , , , , DesignTypes.DesignWindowDescription, DesignTypes.DesignWindowDescription, DesignTypes.DesignWindowDescription
+    CreatePictureBox WindowCount, "picBGOffer3", 0, Yo + HeightWindow, 485, 45, False, , , , , , , DesignTypes.designWindowDescription, DesignTypes.designWindowDescription, DesignTypes.designWindowDescription
     Yo = Windows(WindowCount).Controls(GetControlIndex("winOffer", "picBGOffer3")).Top + 10
     Xo = Windows(WindowCount).Controls(GetControlIndex("winOffer", "picBGOffer3")).Left
     CreatePictureBox WindowCount, "picOfferBG3", 10, Yo, 334, 25, False, , , , , , , DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment
@@ -1792,7 +1794,7 @@ End Sub
 
 Public Sub CreateWindow_PlayerMenu()
 ' Create window
-    CreateWindow "winPlayerMenu", "", zOrder_Win, 0, 0, 110, 106, 0, , , , , , DesignTypes.DesignWindowDescription, DesignTypes.DesignWindowDescription, DesignTypes.DesignWindowDescription, , , , , , GetAddress(AddressOf RightClick_Close), , , False
+    CreateWindow "winPlayerMenu", "", zOrder_Win, 0, 0, 110, 106, 0, , , , , , DesignTypes.designWindowDescription, DesignTypes.designWindowDescription, DesignTypes.designWindowDescription, , , , , , GetAddress(AddressOf RightClick_Close), , , False
     ' Centralise it
     CentraliseWindow WindowCount
 
@@ -1808,7 +1810,7 @@ End Sub
 
 Public Sub CreateWindow_Party()
 ' Create window
-    CreateWindow "winParty", "", zOrder_Win, 4, 78, 252, 158, 0, , , , , , DesignTypes.DesignWindowDescription, DesignTypes.DesignWindowDescription, DesignTypes.DesignWindowDescription, , , , , , , , , False
+    CreateWindow "winParty", "", zOrder_Win, 4, 78, 252, 158, 0, , , , , , DesignTypes.designWindowDescription, DesignTypes.designWindowDescription, DesignTypes.designWindowDescription, , , , , , , , , False
 
     ' Name labels
     CreateLabel WindowCount, "lblName1", 60, 20, 173, , "Richard - Level 10", rockwellDec_10
