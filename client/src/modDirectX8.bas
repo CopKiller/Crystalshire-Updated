@@ -2637,6 +2637,16 @@ Public Sub Render_Graphics()
 
     ' Y-based render. Renders Players, Npcs and Resources based on Y-axis.
     For Y = TileView.Top To TileView.Bottom + 5
+        ' draw traps on map
+        For i = 1 To LastProjectile
+            If MapProjectile(i).Owner > 0 Then
+                If MapProjectile(i).Speed >= 5000 Then
+                    If Int(MapProjectile(i).Y / PIC_Y) = Y Then
+                        Call DrawProjectile(i)
+                    End If
+                End If
+            End If
+        Next
         ' Resources
         If CountResource > 0 Then
             If Resources_Init Then
@@ -2689,17 +2699,6 @@ Public Sub Render_Graphics()
         For i = 1 To LastProjectile
             If MapProjectile(i).Owner > 0 Then
                 If MapProjectile(i).Speed < 5000 Then
-                    If Int(MapProjectile(i).Y / PIC_Y) = Y Then
-                        Call DrawProjectile(i)
-                    End If
-                End If
-            End If
-        Next
-        
-        ' draw traps on map
-        For i = 1 To LastProjectile
-            If MapProjectile(i).Owner > 0 Then
-                If MapProjectile(i).Speed >= 5000 Then
                     If Int(MapProjectile(i).Y / PIC_Y) = Y Then
                         Call DrawProjectile(i)
                     End If

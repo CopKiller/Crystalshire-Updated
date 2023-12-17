@@ -118,7 +118,7 @@ Public Sub SpellEditorInit()
             .scrlProjectileRange.Value = Spell(EditorIndex).Range
             .scrlProjectileRotation.Value = Spell(EditorIndex).Projectile.Rotation
             .scrlProjectileAmmo.Value = Spell(EditorIndex).Projectile.Ammo
-            .scrlDurationProjectile.Value = Spell(EditorIndex).Projectile.Despawn
+            .scrlDurationProjectile.Value = Int(Spell(EditorIndex).Projectile.Despawn / 100)
             .scrlProjectileAnimOnHit.Value = Spell(EditorIndex).Projectile.AnimOnHit
             
             .lblX0.caption = "X Offset: 0"
@@ -129,7 +129,7 @@ Public Sub SpellEditorInit()
             .scrlOffsetProjectileX.enabled = False
             .scrlOffsetProjectileY.enabled = False
             
-            .lblAoEProjectile.caption = "Sem configurações de dano AoE"
+            .lblAoEProjectile.caption = "No AoE damage settings"
             .scrlProjectileRadiusX = 0
             .scrlProjectileRadiusY = 0
             .scrlProjectileRadiusX.enabled = False

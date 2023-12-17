@@ -334,9 +334,9 @@ Begin VB.Form frmEditor_Spell
          Begin VB.CheckBox chkTrap 
             Caption         =   "Is Trap?"
             Height          =   255
-            Left            =   840
+            Left            =   120
             TabIndex        =   97
-            Top             =   225
+            Top             =   200
             Width           =   1215
          End
          Begin VB.HScrollBar scrlDurationProjectile 
@@ -354,16 +354,15 @@ Begin VB.Form frmEditor_Spell
             Left            =   120
             SmallChange     =   50
             TabIndex        =   95
-            Top             =   480
+            Top             =   630
             Width           =   1695
          End
          Begin VB.HScrollBar scrlDamageProjectile 
             Height          =   255
-            LargeChange     =   100
+            LargeChange     =   5
             Left            =   120
-            SmallChange     =   50
             TabIndex        =   94
-            Top             =   960
+            Top             =   1110
             Width           =   1695
          End
          Begin VB.CheckBox chkRecuringDamage 
@@ -371,7 +370,7 @@ Begin VB.Form frmEditor_Spell
             Height          =   255
             Left            =   120
             TabIndex        =   73
-            Top             =   1230
+            Top             =   1400
             Width           =   1455
          End
          Begin VB.CheckBox chkProjectileAoE 
@@ -451,7 +450,7 @@ Begin VB.Form frmEditor_Spell
             Left            =   120
             Max             =   255
             TabIndex        =   63
-            Top             =   1800
+            Top             =   1835
             Width           =   1695
          End
          Begin VB.HScrollBar scrlProjectileRotation 
@@ -460,7 +459,7 @@ Begin VB.Form frmEditor_Spell
             Left            =   120
             Max             =   100
             TabIndex        =   62
-            Top             =   2280
+            Top             =   2315
             Value           =   1
             Width           =   1695
          End
@@ -494,7 +493,7 @@ Begin VB.Form frmEditor_Spell
             Width           =   960
          End
          Begin VB.Label lblAoEProjectile 
-            Caption         =   "Sem configurações de dano AoE"
+            Caption         =   "No AoE damage settings"
             Height          =   255
             Left            =   120
             TabIndex        =   84
@@ -523,11 +522,11 @@ Begin VB.Form frmEditor_Spell
          End
          Begin VB.Label lblDamageProjectile 
             BackStyle       =   0  'Transparent
-            Caption         =   "Base Damage:"
+            Caption         =   "Base Damage: 0"
             Height          =   255
             Left            =   120
             TabIndex        =   81
-            Top             =   750
+            Top             =   900
             Width           =   1575
          End
          Begin VB.Label lblAnimOnHit 
@@ -541,20 +540,20 @@ Begin VB.Form frmEditor_Spell
          Begin VB.Label lblProjectileDuration 
             AutoSize        =   -1  'True
             BackStyle       =   0  'Transparent
-            Caption         =   "Duration:"
-            Height          =   255
+            Caption         =   "Duration: 0 (seg)"
+            Height          =   180
             Left            =   120
             TabIndex        =   79
             Top             =   3000
-            Width           =   1695
+            Width           =   1290
          End
          Begin VB.Label lblProjectileSpeed 
             BackStyle       =   0  'Transparent
-            Caption         =   "Speed:"
+            Caption         =   "Speed: 0"
             Height          =   255
             Left            =   120
             TabIndex        =   78
-            Top             =   240
+            Top             =   420
             Width           =   1575
          End
          Begin VB.Label lblProjectilePic 
@@ -571,7 +570,7 @@ Begin VB.Form frmEditor_Spell
             Height          =   255
             Left            =   120
             TabIndex        =   76
-            Top             =   1560
+            Top             =   1635
             Width           =   1695
          End
          Begin VB.Label lblProjectileRotation 
@@ -579,15 +578,15 @@ Begin VB.Form frmEditor_Spell
             Height          =   255
             Left            =   120
             TabIndex        =   75
-            Top             =   2070
-            Width           =   1575
+            Top             =   2100
+            Width           =   1815
          End
          Begin VB.Label lblProjectileAmmo 
             Caption         =   "Item: 0"
             Height          =   255
             Left            =   120
             TabIndex        =   74
-            Top             =   2535
+            Top             =   2570
             Width           =   1335
          End
       End
@@ -1066,6 +1065,12 @@ End Sub
 Private Sub scrlDamageProjectile_Change()
     If EditorIndex = 0 Or EditorIndex > MAX_SPELLS Then Exit Sub
     
+    If scrlDamageProjectile.Value > 0 Then
+        lblDamageProjectile.caption = "Base Damage: " & scrlDamageProjectile.Value
+    Else
+        lblDamageProjectile.caption = "Base Damage: 0"
+    End If
+    
     Spell(EditorIndex).Vital = scrlDamageProjectile.Value
 End Sub
 
@@ -1097,7 +1102,20 @@ Private Sub scrlDuration_Change()
 End Sub
 
 Private Sub scrlDurationProjectile_Change()
-    Spell(EditorIndex).Projectile.Despawn = scrlDurationProjectile.Value
+    Dim DurationText As String, Duration As Long
+    If EditorIndex = 0 Or EditorIndex > MAX_SPELLS Then Exit Sub
+    Duration = scrlDurationProjectile.Value
+    If Duration > 0 Then
+        If Int(Duration * 100) / 1000 < 60 Then
+            lblProjectileDuration.caption = "Duration: " & (Duration * 100) / 1000 & " (seg)"
+        Else
+            lblProjectileDuration.caption = "Duration: " & (Duration * 100) / 60000 & " (min)"
+        End If
+    Else
+        lblProjectileDuration.caption = "Duration: 0 seg"
+    End If
+    
+    Spell(EditorIndex).Projectile.Despawn = (Duration * 100)
 End Sub
 
 Private Sub scrlIcon_Change()
@@ -1202,7 +1220,7 @@ Private Sub scrlProjectileRadiusX_Change()
         If scrlProjectileRadiusX.Value > 0 Or scrlRadiusY.Value > 0 Then
             lblAoEProjectile.caption = "Radius X: " & scrlProjectileRadiusX.Value & " Radius Y: " & scrlProjectileRadiusY.Value & " tiles."
         Else
-            lblAoEProjectile.caption = "Dano Simples"
+            lblAoEProjectile.caption = "Damage Default"
         End If
     Else
         lblAoEProjectile.caption = cmbDirection.list(cmbDirection.ListIndex) & " Radius X: " & scrlProjectileRadiusX.Value & " and Radius Y: " & scrlProjectileRadiusY.Value
@@ -1215,7 +1233,7 @@ Private Sub scrlProjectileRadiusY_Change()
         If scrlProjectileRadiusX.Value > 0 Or scrlRadiusY.Value > 0 Then
             lblAoEProjectile.caption = "Radius X: " & scrlProjectileRadiusX.Value & " Radius Y: " & scrlProjectileRadiusY.Value & " tiles."
         Else
-            lblAoEProjectile.caption = "Dano Simples"
+            lblAoEProjectile.caption = "Damage Default"
         End If
     Else
         lblAoEProjectile.caption = cmbDirection.list(cmbDirection.ListIndex) & " Radius X: " & scrlProjectileRadiusX.Value & " and Radius Y: " & scrlProjectileRadiusY.Value
@@ -1237,12 +1255,18 @@ End Sub
 
 Private Sub scrlProjectileRotation_Change()
     If EditorIndex = 0 Or EditorIndex > MAX_SPELLS Then Exit Sub
-    lblProjectileRotation.caption = "Rotation: " & scrlProjectileRotation.Value / 2
+    lblProjectileRotation.caption = "Rotation Projectile: " & scrlProjectileRotation.Value / 2
     Spell(EditorIndex).Projectile.Rotation = scrlProjectileRotation.Value
 End Sub
 
 Private Sub scrlProjectileSpeed_Change()
     If EditorIndex = 0 Or EditorIndex > MAX_SPELLS Then Exit Sub
+    
+    If scrlProjectileSpeed.Value > 0 Then
+        lblProjectileSpeed.caption = "Speed: " & scrlProjectileSpeed.Value
+    Else
+        lblProjectileSpeed.caption = "Speed: 0"
+    End If
     
     Spell(EditorIndex).Projectile.Speed = scrlProjectileSpeed.Value
 End Sub
