@@ -197,9 +197,9 @@ Public Sub ClearMaps()
     Next
 End Sub
 
-Public Sub ClearMapItem(ByVal index As Long, ByVal mapnum As Long)
-    MapItem(mapnum, index) = EmptyMapItem
-    MapItem(mapnum, index).playerName = vbNullString
+Public Sub ClearMapItem(ByVal Index As Long, ByVal mapnum As Long)
+    MapItem(mapnum, Index) = EmptyMapItem
+    MapItem(mapnum, Index).playerName = vbNullString
 End Sub
 
 Public Sub ClearMapItems()
@@ -214,7 +214,7 @@ Public Sub ClearMapItems()
 
 End Sub
 
-Public Sub ClearMapNpc(ByVal index As Long, ByVal mapnum As Long)
+Public Sub ClearMapNpc(ByVal Index As Long, ByVal mapnum As Long)
     MapNpc(mapnum) = EmptyMapNpc
 End Sub
 
@@ -259,3 +259,9 @@ Public Sub GetMapCRC32(mapnum As Long)
         MapCRC32(mapnum).MapTileCRC = 0
     End If
 End Sub
+
+Public Sub ClearProjectile(IndexProjectile As Long)
+    If IndexProjectile < 0 Or IndexProjectile > MAX_PROJECTILE_MAP Then Exit Sub
+    MapProjectile(IndexProjectile) = EmptyMapProjectile
+End Sub
+

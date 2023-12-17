@@ -297,11 +297,34 @@ Private Sub lstIndex_Click()
 End Sub
 
 Private Sub scrlChatCount_Change()
+    Dim N As Long, i As Long
+    
     If EditorIndex = 0 Or EditorIndex > MAX_CONVS Then Exit Sub
+    If curConv <= 0 Then Exit Sub
+    
     lblChatCount.caption = "Chat Count: " & scrlChatCount.value
     Conv(EditorIndex).chatCount = scrlChatCount.value
     scrlConv.max = scrlChatCount.value
     ReDim Preserve Conv(EditorIndex).Conv(1 To scrlChatCount.value) As ConvRec
+    
+    For N = 1 To 4
+        cmbReply(N).Clear
+        cmbReply(N).AddItem "None"
+
+        For i = 1 To Conv(EditorIndex).chatCount
+            cmbReply(N).AddItem i
+        Next
+        
+        With Conv(EditorIndex).Conv(curConv)
+            txtConv.text = .Conv
+    
+            For i = 1 To 4
+                txtReply(i).text = .rText(i)
+                cmbReply(i).ListIndex = .rTarget(i)
+            Next
+        End With
+
+    Next
 End Sub
 
 Private Sub scrlConv_Change()
@@ -351,7 +374,7 @@ End Sub
 Private Sub cmbEvent_Click()
     Dim i As Long
     If EditorIndex = 0 Or EditorIndex > MAX_CONVS Then Exit Sub
-    
+    If curConv = 0 Then Exit Sub
     If (cmbEvent.ListIndex = EventType.Event_OpenShop) Then
         cmbEventNum.visible = True
         ' build EventNum combo

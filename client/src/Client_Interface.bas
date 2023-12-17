@@ -121,7 +121,7 @@ Public Type EntityRec
     canDrag As Boolean
     max As Long
     min As Long
-    value As Long
+    Value As Long
     text As String
     image(0 To EntityStates.enumCount - 1) As Long
     design(0 To EntityStates.enumCount - 1) As Long
@@ -188,6 +188,7 @@ Public Sub CreateEntity(winNum As Long, zOrder As Long, name As String, tType As
                         Optional alpha As Long = 255, Optional clickThrough As Boolean, Optional xOffset As Long, Optional yOffset As Long, Optional zChange As Byte, Optional ByVal icon As Long, _
                         Optional ByVal onDraw As Long, Optional isActive As Boolean, Optional isCensor As Boolean, Optional textColourHover As Long, Optional textColourClick As Long, _
                         Optional tooltip As String, Optional group As Long)
+
     Dim i As Long
 
     ' check if it's a legal number
@@ -209,7 +210,7 @@ Public Sub CreateEntity(winNum As Long, zOrder As Long, name As String, tType As
         ' loop through states
         For i = 0 To EntityStates.enumCount - 1
             .design(i) = design(i)
-            .image(i) = image(i)
+            .Image(i) = Image(i)
             .entCallBack(i) = entCallBack(i)
         Next
 
@@ -223,7 +224,7 @@ Public Sub CreateEntity(winNum As Long, zOrder As Long, name As String, tType As
         .canDrag = canDrag
         .max = max
         .min = min
-        .value = value
+        .Value = Value
         .text = text
         .align = align
         .font = font
@@ -377,11 +378,33 @@ Public Sub RenderEntity(winNum As Long, entNum As Long)
                 If .design(.state) > 0 Then
                     RenderDesign .design(.state), .left + Xo, .top + Yo, .width, .height
                 End If
-            End If
-            ' render image
-            If .image(.state) > 0 Then
-                If .image(.state) > 0 Then
-                    RenderTexture .image(.state), .left + Xo, .top + Yo, 0, 0, .width, .height, .width, .height
+                ' render image
+                If .Image(.state) > 0 Then
+                    If .Image(.state) > 0 Then
+                        RenderTexture .Image(.state), .Left + Xo, .Top + Yo, 0, 0, .Width, .Height, .Width, .Height
+                    End If
+                End If
+                ' render icon
+                If .icon > 0 Then
+                    Width = mTexture(.icon).Width
+                    Height = mTexture(.icon).Height
+                    RenderTexture .icon, .Left + Xo + .xOffset, .Top + Yo + .yOffset, 0, 0, Width, Height, Width, Height
+                End If
+                ' for changing the text space
+                xOffset = Width
+                ' calculate the vertical centre
+                Height = TextHeight(font(Fonts.georgiaDec_16))
+                If Height > .Height Then
+                    ver_centre = .Top + Yo
+                Else
+                    ver_centre = .Top + Yo + ((.Height - Height) \ 2) + 1
+                End If
+                ' calculate the horizontal centre
+                Width = TextWidth(font(.font), .text)
+                If Width > .Width Then
+                    hor_centre = .Left + Xo + xOffset
+                Else
+                    hor_centre = .Left + Xo + xOffset + ((.Width - Width - xOffset) \ 2)
                 End If
             End If
             ' render icon
@@ -542,9 +565,9 @@ Public Sub RenderEntity(winNum As Long, entNum As Long)
         End Select
 
         ' callback draw
-        callback = .onDraw
+        Callback = .onDraw
 
-        If callback <> 0 Then entCallBack callback, winNum, entNum, 0, 0
+        If Callback <> 0 Then entCallBack Callback, winNum, entNum, 0, 0
     End With
 
 End Sub
@@ -618,13 +641,12 @@ Public Sub RenderWindow(winNum As Long)
         Case designWindowShadow
             ' render window
             RenderDesign DesignTypes.designWindowShadow, .left, .top, .width, .height
-
         End Select
 
         ' OnDraw call back
-        callback = .onDraw
+        Callback = .onDraw
 
-        If callback <> 0 Then entCallBack callback, winNum, 0, 0, 0
+        If Callback <> 0 Then entCallBack Callback, winNum, 0, 0, 0
     End With
 
 End Sub
@@ -853,7 +875,7 @@ Public Sub CreateWindow(name As String, caption As String, zOrder As Long, left 
         ' loop through states
         For i = 0 To EntityStates.enumCount - 1
             .design(i) = design(i)
-            .image(i) = image(i)
+            .Image(i) = Image(i)
             .entCallBack(i) = entCallBack(i)
         Next
 
@@ -1603,12 +1625,12 @@ Public Sub CreateWindow_Chat()
 
     ' sort out the tabs
     With Windows(GetWindowIndex("winChat"))
-        .Controls(GetControlIndex("winChat", "chkGame")).value = Options.channelState(ChatChannel.chGame)
-        .Controls(GetControlIndex("winChat", "chkMap")).value = Options.channelState(ChatChannel.chMap)
-        .Controls(GetControlIndex("winChat", "chkGlobal")).value = Options.channelState(ChatChannel.chGlobal)
-        .Controls(GetControlIndex("winChat", "chkParty")).value = Options.channelState(ChatChannel.chParty)
-        .Controls(GetControlIndex("winChat", "chkGuild")).value = Options.channelState(ChatChannel.chGuild)
-        .Controls(GetControlIndex("winChat", "chkPrivate")).value = Options.channelState(ChatChannel.chPrivate)
+        .Controls(GetControlIndex("winChat", "chkGame")).Value = Options.channelState(ChatChannel.chGame)
+        .Controls(GetControlIndex("winChat", "chkMap")).Value = Options.channelState(ChatChannel.chMap)
+        .Controls(GetControlIndex("winChat", "chkGlobal")).Value = Options.channelState(ChatChannel.chGlobal)
+        .Controls(GetControlIndex("winChat", "chkParty")).Value = Options.channelState(ChatChannel.chParty)
+        .Controls(GetControlIndex("winChat", "chkGuild")).Value = Options.channelState(ChatChannel.chGuild)
+        .Controls(GetControlIndex("winChat", "chkPrivate")).Value = Options.channelState(ChatChannel.chPrivate)
     End With
 End Sub
 

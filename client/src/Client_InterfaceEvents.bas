@@ -356,7 +356,7 @@ Public Sub btnSendRegister_Click()
     End With
 
     If Trim$(Pass) <> Trim$(pass2) Then
-       Call Dialogue("Register", "Falha ao criar conta.", "A confirmaÁ„o n„o confere com a senha!", TypeDELCHAR, StyleOKAY, 1)
+       Call Dialogue("Register", "Falha ao criar conta.", "A confirma√ß√£o n√£o confere com a senha!", TypeDELCHAR, StyleOKAY, 1)
         Exit Sub
     End If
     
@@ -783,7 +783,7 @@ Public Sub btnMenu_Quest()
     
     If Not Windows(GetWindowIndex("winPlayerQuests")).Window.visible Then
         If IsActiveBtn Then
-            btnMissionActive = 1
+            Button_MissionActive = 1
             Call Window_QuestButtonUpdate
         End If
     End If
@@ -796,62 +796,62 @@ End Sub
 ' #########################################################################################################################
 
 Public Sub btnQuest1()
-    btnMissionActive = 1
+    Button_MissionActive = 1
     Call Window_QuestLabelUpdate
 End Sub
 
 Public Sub btnQuest2()
-    btnMissionActive = 2
+    Button_MissionActive = 2
     Call Window_QuestLabelUpdate
 End Sub
 
 Public Sub btnQuest3()
-    btnMissionActive = 3
+    Button_MissionActive = 3
     Call Window_QuestLabelUpdate
 End Sub
 
 Public Sub btnQuest4()
-    btnMissionActive = 4
+    Button_MissionActive = 4
     Call Window_QuestLabelUpdate
 End Sub
 
 Public Sub btnQuest5()
-    btnMissionActive = 5
+    Button_MissionActive = 5
     Call Window_QuestLabelUpdate
 End Sub
 
 Public Sub btnQuest6()
-    btnMissionActive = 6
+    Button_MissionActive = 6
     Call Window_QuestLabelUpdate
 End Sub
 
 Public Sub btnQuest7()
-    btnMissionActive = 7
+    Button_MissionActive = 7
     Call Window_QuestLabelUpdate
 End Sub
 
 Public Sub btnQuest8()
-    btnMissionActive = 8
+    Button_MissionActive = 8
     Call Window_QuestLabelUpdate
 End Sub
 
 Public Sub btnQuest9()
-    btnMissionActive = 9
+    Button_MissionActive = 9
     Call Window_QuestLabelUpdate
 End Sub
 
 Public Sub btnQuest10()
-    btnMissionActive = 10
+    Button_MissionActive = 10
     Call Window_QuestLabelUpdate
 End Sub
 
 Public Sub btnQuest11()
-    btnMissionActive = 11
+    Button_MissionActive = 11
     Call Window_QuestLabelUpdate
 End Sub
 
 Public Sub btnQuest12()
-    btnMissionActive = 12
+    Button_MissionActive = 12
     Call Window_QuestLabelUpdate
 End Sub
 
@@ -1140,11 +1140,11 @@ Public Sub Description_OnDraw()
                     Windows(GetWindowIndex("winDescription")).Controls(GetControlIndex("winDescription", "lblDescription")).width = 192
                     
                     Select Case Mission(inOffer(descItem)).type
-                        Case MissionType.TypeCollect
+                        Case MissionType.Mission_TypeCollect
                             texNum = TextureItem(Item(Mission(inOffer(descItem)).CollectItem).Pic)
-                        Case MissionType.TypeKill
+                        Case MissionType.Mission_TypeKill
                             texNum = TextureChar(Npc(Mission(inOffer(descItem)).KillNPC).sprite)
-                        Case MissionType.TypeTalk
+                        Case MissionType.Mission_TypeTalk
                             texNum = TextureChar(Npc(Mission(inOffer(descItem)).TalkNPC).sprite)
                     End Select
                     
@@ -1270,7 +1270,7 @@ Dim winIndex As Long, i As Long, curWindow As Long, curControl As Long, tmpRec A
                         If Item(GetPlayerInvItemNum(MyIndex, DragBox.Slot)).type <> ITEM_TYPE_CURRENCY Then
                             DepositItem DragBox.Slot, 1
                         Else
-                            Dialogue "Depositar Item", "Insira a quantidade para depÛsito.", "", TypeDEPOSITITEM, StyleINPUT, DragBox.Slot
+                            Dialogue "Depositar Item", "Insira a quantidade para dep√≥sito.", "", TypeDEPOSITITEM, StyleINPUT, DragBox.Slot
                         End If
     
                     End If

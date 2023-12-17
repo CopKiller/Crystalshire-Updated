@@ -2,13 +2,13 @@ Attribute VB_Name = "Player_Actions"
 Option Explicit
 
 Public Sub InitChat(ByVal index As Long, ByVal mapnum As Long, ByVal mapNpcNum As Long, Optional ByVal remoteChat As Boolean = False)
-    Dim npcNum As Long
+    Dim NpcNum As Long
     Dim Mission_ID As Long
-    npcNum = MapNpc(mapnum).Npc(mapNpcNum).Num
+    NpcNum = MapNpc(mapnum).Npc(mapNpcNum).Num
     
     ' check if we can chat
-    If Npc(npcNum).Conv = 0 Then Exit Sub
-    If Len(Trim$(Conv(Npc(npcNum).Conv).Name)) = 0 Then Exit Sub
+    If Npc(NpcNum).Conv = 0 Then Exit Sub
+    If Len(Trim$(Conv(Npc(NpcNum).Conv).Name)) = 0 Then Exit Sub
     
     If Not remoteChat Then
         With MapNpc(mapnum).Npc(mapNpcNum)
@@ -29,10 +29,10 @@ Public Sub InitChat(ByVal index As Long, ByVal mapnum As Long, ByVal mapNpcNum A
     End If
     
     ' Check Mission TALK NPC
-    Call Check_Mission(index, npcNum)
+    Call Check_Mission(index, NpcNum)
     
     ' Set chat value to Npc
-    TempPlayer(index).inChatWith = npcNum
+    TempPlayer(index).inChatWith = NpcNum
     TempPlayer(index).c_mapNpcNum = mapNpcNum
     TempPlayer(index).c_mapNum = mapnum
     ' set to the root chat
@@ -751,7 +751,7 @@ Sub PlayerMapGetItem(ByVal index As Long)
                             End If
                             
                             ' Check Mission Collect Item
-                            Call Check_Mission(index, i)
+                            Call Check_Mission(index, i, MapItem(mapnum, i).Value)
 
                             ' Erase item from the map
                             ClearMapItem i, mapnum

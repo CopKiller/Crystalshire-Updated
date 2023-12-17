@@ -1,5 +1,6 @@
 Attribute VB_Name = "Client_Globals"
 Option Explicit
+Public GDIToken As cGDIpToken
 ' loading screen
 Public loadingText As String
 Public StartX As Long, EndX As Long, offsetX As Long
@@ -11,7 +12,7 @@ Public descLastType As Byte
 Public descLastItem As Long
 Public descText() As TextColourRec
 ' Window Missions
-Public btnMissionActive As Byte
+Public Button_MissionActive As Byte
 ' chars
 Public CharName(1 To MAX_CHARS) As String
 Public CharSprite(1 To MAX_CHARS) As Long
@@ -207,8 +208,6 @@ Public Ping As Long
 Public ActionMsgIndex As Byte
 Public BloodIndex As Byte
 Public AnimationIndex As Byte
-' fps lock
-Public FPS_Lock As Boolean
 ' Editor edited items array
 Public Item_Changed(1 To MAX_ITEMS) As Boolean
 ' New char
@@ -219,6 +218,7 @@ Public newCharGender As Long
 Public Player_HighIndex As Long
 Public Npc_HighIndex As Long
 Public Action_HighIndex As Long
+Public Projectile_HighIndex As Byte
 ' fading
 Public fadeAlpha As Long
 ' screenshot mode
@@ -245,3 +245,24 @@ Public selTileY As Long
 ' Map
 Public applyingMap As Boolean
 Public MapEditorAppearDistance As Long
+
+' Timers
+Public Tick As Single
+Public FrameTime As Long
+Public TickFPS As Long
+Public FPS As Long
+Public WalkTimer As Long
+Public tmr25 As Long
+Public tmr45 As Long
+Public tmr100 As Long
+Public tmr10000 As Long
+Public mapTimer As Long
+Public chatTmr As Long
+Public targetTmr As Long
+Public fogTmr As Long
+Public barTmr As Long
+Public Loops As Long
+Public GameLooptmr As Long
+Public Thread As Boolean
+' Projectile
+Public LastProjectile As Integer

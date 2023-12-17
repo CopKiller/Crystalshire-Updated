@@ -93,6 +93,7 @@ Public Enum ServerPackets
     SPlayerMission
     SPlayerVariables
     SOfferMission ' = 90
+    SProjectileAttack
     ' Make sure SMsgCOUNT is below everything else
     SMsgCOUNT
 End Enum

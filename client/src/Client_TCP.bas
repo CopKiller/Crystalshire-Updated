@@ -54,13 +54,13 @@ Public Function ConnectToServer() As Boolean
         Exit Function
     End If
 
-    Wait = GetTickCount
+    Wait = getTime
     frmMain.Socket.Close
     frmMain.Socket.Connect
     SetStatus "Connecting to server."
 
     ' Wait until connected or 3 seconds have passed and report the server being down
-    Do While (Not IsConnected) And (GetTickCount <= Wait + 3000)
+    Do While (Not IsConnected) And (getTime <= Wait + 3000)
         DoEvents
     Loop
 
@@ -200,7 +200,7 @@ Public Sub SendPlayerMove()
     buffer.WriteLong GetPlayerDir(MyIndex)
     buffer.WriteLong Player(MyIndex).Moving
     buffer.WriteLong Player(MyIndex).X
-    buffer.WriteLong Player(MyIndex).y
+    buffer.WriteLong Player(MyIndex).Y
     SendData buffer.ToArray()
     buffer.Flush: Set buffer = Nothing
 End Sub
@@ -225,7 +225,7 @@ End Sub
 
 Public Sub SendMap()
     Dim X As Long
-    Dim y As Long
+    Dim Y As Long
     Dim i As Long
     Dim buffer As clsBuffer
     Set buffer = New clsBuffer
@@ -260,11 +260,11 @@ Public Sub SendMap()
     Next
 
     For X = 0 To Map.MapData.MaxX
-        For y = 0 To Map.MapData.MaxY
-            With Map.TileData.Tile(X, y)
+        For Y = 0 To Map.MapData.MaxY
+            With Map.TileData.Tile(X, Y)
                 For i = 1 To MapLayer.Layer_Count - 1
                     buffer.WriteLong .Layer(i).X
-                    buffer.WriteLong .Layer(i).y
+                    buffer.WriteLong .Layer(i).Y
                     buffer.WriteLong .Layer(i).tileSet
                     buffer.WriteByte .Autotile(i)
                 Next
@@ -402,9 +402,9 @@ Public Sub SendDropItem(ByVal invNum As Long, ByVal Amount As Long)
 
     ' do basic checks
     If invNum < 1 Or invNum > MAX_INV Then Exit Sub
-    If PlayerInv(invNum).num < 1 Or PlayerInv(invNum).num > MAX_ITEMS Then Exit Sub
+    If PlayerInv(invNum).Num < 1 Or PlayerInv(invNum).Num > MAX_ITEMS Then Exit Sub
     If Item(GetPlayerInvItemNum(MyIndex, invNum)).Type = ITEM_TYPE_CURRENCY Then
-        If Amount < 1 Or Amount > PlayerInv(invNum).value Then Exit Sub
+        If Amount < 1 Or Amount > PlayerInv(invNum).Value Then Exit Sub
     End If
 
     Set buffer = New clsBuffer
@@ -474,7 +474,7 @@ End Sub
 
 Sub GetPing()
     Dim buffer As clsBuffer
-    PingStart = GetTickCount
+    PingStart = getTime
     Set buffer = New clsBuffer
     buffer.WriteLong CCheckPing
     SendData buffer.ToArray()
@@ -590,13 +590,13 @@ Public Sub ChangeBankSlots(ByVal oldSlot As Long, ByVal newSlot As Long)
     buffer.Flush: Set buffer = Nothing
 End Sub
 
-Public Sub AdminWarp(ByVal X As Long, ByVal y As Long)
-    If X < 0 Or y < 0 Or X > Map.MapData.MaxX Or y > Map.MapData.MaxY Then Exit Sub
+Public Sub AdminWarp(ByVal X As Long, ByVal Y As Long)
+    If X < 0 Or Y < 0 Or X > Map.MapData.MaxX Or Y > Map.MapData.MaxY Then Exit Sub
     Dim buffer As clsBuffer
     Set buffer = New clsBuffer
     buffer.WriteLong CAdminWarp
     buffer.WriteLong X
-    buffer.WriteLong y
+    buffer.WriteLong Y
     SendData buffer.ToArray()
     buffer.Flush: Set buffer = Nothing
 End Sub
@@ -792,6 +792,24 @@ Sub SendCloseShop()
     Dim buffer As clsBuffer
     Set buffer = New clsBuffer
     buffer.WriteLong CCloseShop
+    SendData buffer.ToArray()
+    buffer.Flush: Set buffer = Nothing
+End Sub
+
+Public Sub SendTarget(ByVal target As Long, ByVal TargetType As Long)
+    Dim buffer As clsBuffer
+
+    If myTargetType = TargetType And myTarget = target Then
+        Exit Sub
+    Else
+        myTarget = target
+        myTargetType = TargetType
+    End If
+
+    Set buffer = New clsBuffer
+    buffer.WriteLong CTarget
+    buffer.WriteLong target
+    buffer.WriteLong TargetType
     SendData buffer.ToArray()
     buffer.Flush: Set buffer = Nothing
 End Sub

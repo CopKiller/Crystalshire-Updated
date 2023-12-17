@@ -8,9 +8,9 @@ Public Sub HandleMapNpcData(ByVal Index As Long, ByRef Data() As Byte, ByVal Sta
     For i = 1 To MAX_MAP_NPCS
 
         With MapNpc(i)
-            .num = buffer.ReadLong
-            .x = buffer.ReadLong
-            .y = buffer.ReadLong
+            .Num = buffer.ReadLong
+            .X = buffer.ReadLong
+            .Y = buffer.ReadLong
             .Dir = buffer.ReadLong
             .Vital(HP) = buffer.ReadLong
         End With
@@ -21,22 +21,22 @@ End Sub
 
 Public Sub HandleNpcMove(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
     Dim MapNpcNum As Long
-    Dim x As Long
-    Dim y As Long
+    Dim X As Long
+    Dim Y As Long
     Dim Dir As Long
     Dim Movement As Long
     Dim buffer As clsBuffer
     Set buffer = New clsBuffer
     buffer.WriteBytes Data()
     MapNpcNum = buffer.ReadLong
-    x = buffer.ReadLong
-    y = buffer.ReadLong
+    X = buffer.ReadLong
+    Y = buffer.ReadLong
     Dir = buffer.ReadLong
     Movement = buffer.ReadLong
 
     With MapNpc(MapNpcNum)
-        .x = x
-        .y = y
+        .X = X
+        .Y = Y
         .Dir = Dir
         .xOffset = 0
         .yOffset = 0
@@ -96,20 +96,20 @@ Public Sub HandleNpcAttack(ByVal Index As Long, ByRef Data() As Byte, ByVal Star
     i = buffer.ReadLong
     ' Set player to attacking
     MapNpc(i).Attacking = 1
-    MapNpc(i).AttackTimer = GetTickCount
+    MapNpc(i).AttackTimer = getTime
 End Sub
 
 Public Sub HandleSpawnNpc(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim n As Long
+    Dim N As Long
     Dim buffer As clsBuffer
     Set buffer = New clsBuffer
     buffer.WriteBytes Data()
-    n = buffer.ReadLong
+    N = buffer.ReadLong
 
-    With MapNpc(n)
-        .num = buffer.ReadLong
-        .x = buffer.ReadLong
-        .y = buffer.ReadLong
+    With MapNpc(N)
+        .Num = buffer.ReadLong
+        .X = buffer.ReadLong
+        .Y = buffer.ReadLong
         .Dir = buffer.ReadLong
         ' Client use only
         .xOffset = 0
@@ -135,12 +135,12 @@ Public Sub HandleMapNpcVitals(ByVal Index As Long, ByRef Data() As Byte, ByVal S
 End Sub
 
 Public Sub HandleNpcDead(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim n As Long
+    Dim N As Long
     Dim buffer As clsBuffer
     Set buffer = New clsBuffer
     buffer.WriteBytes Data()
-    n = buffer.ReadLong
-    Call ClearMapNpc(n)
+    N = buffer.ReadLong
+    Call ClearMapNpc(N)
 End Sub
 
 ':::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -169,16 +169,16 @@ Public Sub HandleNpcEditor()
 End Sub
 
 Public Sub HandleUpdateNpc(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim n As Long
+    Dim N As Long
     Dim buffer As clsBuffer
     Dim NpcSize As Long
     Dim NpcData() As Byte
     Set buffer = New clsBuffer
     buffer.WriteBytes Data()
-    n = buffer.ReadLong
-    NpcSize = LenB(Npc(n))
+    N = buffer.ReadLong
+    NpcSize = LenB(Npc(N))
     ReDim NpcData(NpcSize - 1)
     NpcData = buffer.ReadBytes(NpcSize)
-    CopyMemory ByVal VarPtr(Npc(n)), ByVal VarPtr(NpcData(0)), NpcSize
+    CopyMemory ByVal VarPtr(Npc(N)), ByVal VarPtr(NpcData(0)), NpcSize
     buffer.Flush: Set buffer = Nothing
 End Sub

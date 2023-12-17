@@ -7,7 +7,7 @@ Public Mission_Changed(1 To MAX_MISSIONS) As Boolean
 ' // Mission Editor //
 ' ////////////////////
 Public Sub MissionEditorInit()
-    Dim I As Long, N As Long
+    Dim i As Long, N As Long
 
     If frmEditor_Quest.visible = False Then Exit Sub
     EditorIndex = frmEditor_Quest.lstIndex.ListIndex + 1
@@ -25,36 +25,36 @@ Public Sub MissionEditorInit()
         ' Chain TALK NPC
         .cmbTalkNPC.Clear
         .cmbTalkNPC.AddItem "None"
-        For I = 1 To MAX_NPCS
-            .cmbTalkNPC.AddItem I & ": " & Trim$(Npc(I).Name)
+        For i = 1 To MAX_NPCS
+            .cmbTalkNPC.AddItem i & ": " & Trim$(Npc(i).Name)
         Next
         ' Chain KILL NPC
         .cmbKillNPC.Clear
         .cmbKillNPC.AddItem "None"
-        For I = 1 To MAX_NPCS
-            .cmbKillNPC.AddItem I & ": " & Trim$(Npc(I).Name)
+        For i = 1 To MAX_NPCS
+            .cmbKillNPC.AddItem i & ": " & Trim$(Npc(i).Name)
         Next
         ' Chain Collect Itens
         .cmbCollectItem.Clear
         .cmbCollectItem.AddItem "None"
-        For I = 1 To MAX_ITEMS
-            .cmbCollectItem.AddItem I & ": " & Trim$(Item(I).Name)
+        For i = 1 To MAX_ITEMS
+            .cmbCollectItem.AddItem i & ": " & Trim$(Item(i).Name)
         Next
-        If Mission(EditorIndex).Type = MissionType.TypeTalk Then
+        If Mission(EditorIndex).Type = MissionType.Mission_TypeTalk Then
             .frmTalkQuest.visible = True
             .frmKillQuest.visible = False
             .frmCollectQuest.visible = False
             
             .cmbTalkNPC.ListIndex = Mission(EditorIndex).TalkNPC
             
-        ElseIf Mission(EditorIndex).Type = MissionType.TypeKill Then
+        ElseIf Mission(EditorIndex).Type = MissionType.Mission_TypeKill Then
             .frmKillQuest.visible = True
             .frmCollectQuest.visible = False
             .frmTalkQuest.visible = False
             .cmbKillNPC.ListIndex = Mission(EditorIndex).KillNPC
             .scrlKillAmount.value = Mission(EditorIndex).KillNPCAmount
             
-        ElseIf Mission(EditorIndex).Type = MissionType.TypeCollect Then
+        ElseIf Mission(EditorIndex).Type = MissionType.Mission_TypeCollect Then
             .frmKillQuest.visible = False
             .frmCollectQuest.visible = True
             .frmTalkQuest.visible = False
@@ -77,8 +77,8 @@ Public Sub MissionEditorInit()
         ' Chain Mission
         .cmbPreviousQuest.Clear
         .cmbPreviousQuest.AddItem "None"
-        For I = 1 To MAX_MISSIONS
-            .cmbPreviousQuest.AddItem I & ": " & Trim$(Mission(I).Name)
+        For i = 1 To MAX_MISSIONS
+            .cmbPreviousQuest.AddItem i & ": " & Trim$(Mission(i).Name)
         Next
         .cmbPreviousQuest.ListIndex = Mission(EditorIndex).PreviousMissionComplete
 
@@ -99,12 +99,12 @@ Public Sub MissionEditorInit()
 End Sub
 
 Public Sub MissionEditorOk()
-    Dim I As Long
+    Dim i As Long
 
-    For I = 1 To MAX_MISSIONS
+    For i = 1 To MAX_MISSIONS
 
-        If Mission_Changed(I) Then
-            Call SendSaveMission(I)
+        If Mission_Changed(i) Then
+            Call SendSaveMission(i)
         End If
 
     Next

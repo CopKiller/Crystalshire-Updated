@@ -1,6 +1,6 @@
 Attribute VB_Name = "Animation_Handle"
 Public Sub HandleAnimation(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim buffer As clsBuffer, x As Long, y As Long, isCasting As Byte
+    Dim buffer As clsBuffer, X As Long, Y As Long, isCasting As Byte
     Set buffer = New clsBuffer
     buffer.WriteBytes Data()
     AnimationIndex = AnimationIndex + 1
@@ -9,8 +9,8 @@ Public Sub HandleAnimation(ByVal Index As Long, ByRef Data() As Byte, ByVal Star
 
     With AnimInstance(AnimationIndex)
         .Animation = buffer.ReadLong
-        .x = buffer.ReadLong
-        .y = buffer.ReadLong
+        .X = buffer.ReadLong
+        .Y = buffer.ReadLong
         .LockType = buffer.ReadByte
         .lockindex = buffer.ReadLong
         .isCasting = buffer.ReadByte
@@ -24,19 +24,19 @@ Public Sub HandleAnimation(ByVal Index As Long, ByRef Data() As Byte, ByVal Star
     With AnimInstance(AnimationIndex)
 
         If .LockType = 0 Then
-            x = AnimInstance(AnimationIndex).x
-            y = AnimInstance(AnimationIndex).y
+            X = AnimInstance(AnimationIndex).X
+            Y = AnimInstance(AnimationIndex).Y
         ElseIf .LockType = TARGET_TYPE_PLAYER Then
-            x = GetPlayerX(.lockindex)
-            y = GetPlayerY(.lockindex)
+            X = GetPlayerX(.lockindex)
+            Y = GetPlayerY(.lockindex)
         ElseIf .LockType = TARGET_TYPE_NPC Then
-            x = MapNpc(.lockindex).x
-            y = MapNpc(.lockindex).y
+            X = MapNpc(.lockindex).X
+            Y = MapNpc(.lockindex).Y
         End If
 
     End With
 
-    PlayMapSound x, y, SoundEntity.seAnimation, AnimInstance(AnimationIndex).Animation
+    PlayMapSound X, Y, SoundEntity.seAnimation, AnimInstance(AnimationIndex).Animation
 End Sub
 
 Public Sub HandleCancelAnimation(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
@@ -60,16 +60,16 @@ End Sub
 
 Public Sub HandleDoorAnimation(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
     Dim buffer As clsBuffer
-    Dim x As Long, y As Long
+    Dim X As Long, Y As Long
     Set buffer = New clsBuffer
     buffer.WriteBytes Data()
-    x = buffer.ReadLong
-    y = buffer.ReadLong
+    X = buffer.ReadLong
+    Y = buffer.ReadLong
 
-    With TempTile(x, y)
+    With TempTile(X, Y)
         .DoorFrame = 1
         .DoorAnimate = 1 ' 0 = nothing| 1 = opening | 2 = closing
-        .DoorTimer = GetTickCount
+        .DoorTimer = getTime
     End With
 
     buffer.Flush: Set buffer = Nothing
@@ -101,17 +101,17 @@ Public Sub HandleAnimationEditor()
 End Sub
 
 Public Sub HandleUpdateAnimation(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim n As Long
+    Dim N As Long
     Dim buffer As clsBuffer
     Dim AnimationSize As Long
     Dim AnimationData() As Byte
     Set buffer = New clsBuffer
     buffer.WriteBytes Data()
-    n = buffer.ReadLong
+    N = buffer.ReadLong
     ' Update the Animation
-    AnimationSize = LenB(Animation(n))
+    AnimationSize = LenB(Animation(N))
     ReDim AnimationData(AnimationSize - 1)
     AnimationData = buffer.ReadBytes(AnimationSize)
-    CopyMemory ByVal VarPtr(Animation(n)), ByVal VarPtr(AnimationData(0)), AnimationSize
+    CopyMemory ByVal VarPtr(Animation(N)), ByVal VarPtr(AnimationData(0)), AnimationSize
     buffer.Flush: Set buffer = Nothing
 End Sub

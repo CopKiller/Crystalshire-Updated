@@ -457,17 +457,17 @@ End Sub
 Private Sub cmbType_Click()
     If EditorIndex = 0 Or EditorIndex > MAX_MISSIONS Then Exit Sub
     Mission(EditorIndex).Type = cmbType.ListIndex
-    If Mission(EditorIndex).Type = MissionType.TypeKill Then
+    If Mission(EditorIndex).Type = MissionType.Mission_TypeKill Then
         frmKillQuest.visible = True
         frmCollectQuest.visible = False
         frmTalkQuest.visible = False
     End If
-    If Mission(EditorIndex).Type = MissionType.TypeCollect Then
+    If Mission(EditorIndex).Type = MissionType.Mission_TypeCollect Then
         frmKillQuest.visible = False
         frmCollectQuest.visible = True
         frmTalkQuest.visible = False
     End If
-    If Mission(EditorIndex).Type = MissionType.TypeTalk Then
+    If Mission(EditorIndex).Type = MissionType.Mission_TypeTalk Then
         frmKillQuest.visible = False
         frmCollectQuest.visible = True
         frmTalkQuest.visible = True
@@ -494,15 +494,15 @@ End Sub
 Private Sub cmdSave_Click()
     If EditorIndex = 0 Or EditorIndex > MAX_MISSIONS Then Exit Sub
     'If it's a kill quest, we want to set null values for a collect quest
-    If cmbType.ListIndex = MissionType.TypeKill Then
+    If cmbType.ListIndex = MissionType.Mission_TypeKill Then
         Mission(EditorIndex).CollectItem = 0
         Mission(EditorIndex).CollectItemAmount = 0
         Mission(EditorIndex).TalkNPC = 0
-    ElseIf cmbType.ListIndex = MissionType.TypeCollect Then
+    ElseIf cmbType.ListIndex = MissionType.Mission_TypeCollect Then
         Mission(EditorIndex).KillNPC = 0
         Mission(EditorIndex).KillNPCAmount = 0
         Mission(EditorIndex).TalkNPC = 0
-    ElseIf cmbType.ListIndex = MissionType.TypeTalk Then
+    ElseIf cmbType.ListIndex = MissionType.Mission_TypeTalk Then
         Mission(EditorIndex).KillNPC = 0
         Mission(EditorIndex).KillNPCAmount = 0
         Mission(EditorIndex).CollectItem = 0

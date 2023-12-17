@@ -477,7 +477,7 @@ Public Function CanPlayerBlockHit(ByVal index As Long) As Boolean
 End Function
 
 Public Sub CheckHas_Mission(ByVal index As Long, ByVal NpcIndex As Long)
-    Dim MissionID As Long, npcNum As Long
+    Dim MissionID As Long, NpcNum As Long
     Dim AlreadyOnMission As Boolean
     Dim HasCompletedMission As Boolean
     Dim AlreadyCompletedMission As Boolean
@@ -493,7 +493,7 @@ Public Sub CheckHas_Mission(ByVal index As Long, ByVal NpcIndex As Long)
         Exit Sub
     End If
     
-    npcNum = MapNpc(mapnum).Npc(NpcIndex).Num
+    NpcNum = MapNpc(mapnum).Npc(NpcIndex).Num
 '    'Before we bother checking the main Mission variables, if we are on a Mission to talk to this NPC, let's do that first!
 '    For i = 1 To MAX_PLAYER_MISSIONS
 '        MissionID = Player(index).Mission(i).ID
@@ -509,12 +509,12 @@ Public Sub CheckHas_Mission(ByVal index As Long, ByVal NpcIndex As Long)
 '    Next i
     
     'Exit out if it's not a Mission giver
-    If Npc(npcNum).Behaviour <> NPC_BEHAVIOUR_FRIENDLY Then
+    If Npc(NpcNum).Behaviour <> NPC_BEHAVIOUR_FRIENDLY Then
         Exit Sub
     End If
     
-    If Npc(npcNum).Mission <> 0 Then
-        MissionID = Npc(npcNum).Mission
+    If Npc(NpcNum).Mission <> 0 Then
+        MissionID = Npc(NpcNum).Mission
         For i = 1 To MAX_PLAYER_MISSIONS
             'Toggle flags to false, this will be modified further down as we run if statements
             AlreadyOnMission = False
@@ -549,7 +549,7 @@ Public Sub CheckHas_Mission(ByVal index As Long, ByVal NpcIndex As Long)
             ' AlreadyOnMission = True
             
                 'if it's a kill Mission
-                If Mission(MissionID).Type = MissionType.TypeKill Then
+                If Mission(MissionID).Type = MissionType.Mission_TypeKill Then
                 'We have completed the objective...
                     If Player(index).Mission(MissionSlot).Count >= Mission(MissionID).KillNPCAmount Then
                         HasCompletedMission = True
@@ -557,7 +557,7 @@ Public Sub CheckHas_Mission(ByVal index As Long, ByVal NpcIndex As Long)
                         HasCompletedMission = False
                     End If
                 'if it's a collect Mission
-                ElseIf Mission(MissionID).Type = MissionType.TypeCollect Then
+                ElseIf Mission(MissionID).Type = MissionType.Mission_TypeCollect Then
                     'We have completed the objective
                     If HasItem(index, Mission(MissionID).CollectItem) >= Mission(MissionID).CollectItemAmount Then
                         HasCompletedMission = True
@@ -565,7 +565,7 @@ Public Sub CheckHas_Mission(ByVal index As Long, ByVal NpcIndex As Long)
                         HasCompletedMission = False
                     End If
                 'if it's a talk Mission
-                ElseIf Mission(MissionID).Type = MissionType.TypeTalk Then
+                ElseIf Mission(MissionID).Type = MissionType.Mission_TypeTalk Then
                     'We flag this as incomplete because we're not going to have a Mission to talk to the same person...or we shouldn't anyways, that'd bad dialogue..
                     HasCompletedMission = False
                 End If
@@ -577,7 +577,7 @@ Public Sub CheckHas_Mission(ByVal index As Long, ByVal NpcIndex As Long)
                 Exit Sub
             End If
             If IsRepeatable = True And AlreadyOnMission = True And AlreadyCompletedMission = True And HasCompletedMission = False Then
-                Call SendChatBubble(GetPlayerMap(index), npcNum, TARGET_TYPE_NPC, Mission(MissionID).Incomplete, White)
+                Call SendChatBubble(GetPlayerMap(index), NpcNum, TARGET_TYPE_NPC, Mission(MissionID).Incomplete, White)
                 Exit Sub
             End If
             If IsRepeatable = True And AlreadyOnMission = True And AlreadyCompletedMission = True And HasCompletedMission = True Then
@@ -592,7 +592,7 @@ Public Sub CheckHas_Mission(ByVal index As Long, ByVal NpcIndex As Long)
             End If
             If AlreadyOnMission = True And HasCompletedMission = False And AlreadyCompletedMission = False Then
                 Call PlayerMsg(index, Mission(MissionID).Incomplete, BrightRed)
-                Call SendChatBubble(GetPlayerMap(index), npcNum, TARGET_TYPE_NPC, Mission(MissionID).Incomplete, White)
+                Call SendChatBubble(GetPlayerMap(index), NpcNum, TARGET_TYPE_NPC, Mission(MissionID).Incomplete, White)
                 Exit Sub
             End If
             If AlreadyOnMission = False And HasCompletedMission = False And AlreadyCompletedMission = False And Player(index).Mission(i).ID = 0 Then
@@ -604,7 +604,7 @@ Public Sub CheckHas_Mission(ByVal index As Long, ByVal NpcIndex As Long)
 End Sub
 
 
-Public Sub Check_Mission(ByVal Player_Index As Long, ByVal Target_Index As Long)
+Public Sub Check_Mission(ByVal Player_Index As Long, ByVal Target_Index As Long, Optional ByVal ItemAmount As Long = 0)
     Dim Missin_ID As Long, i As Long
     Dim mapnum As Long
     
@@ -613,7 +613,7 @@ Public Sub Check_Mission(ByVal Player_Index As Long, ByVal Target_Index As Long)
     For i = 1 To MAX_PLAYER_MISSIONS
         Mission_ID = Player(Player_Index).Mission(i).ID
         If Mission_ID > 0 Then
-            If Mission(Mission_ID).Type = MissionType.TypeKill And Mission(Mission_ID).KillNPC = Target_Index Then
+            If Mission(Mission_ID).Type = MissionType.Mission_TypeKill And Mission(Mission_ID).KillNPC = Target_Index Then
                 If TempPlayer(Player_Index).inParty > 0 Then
                     'Party_ShareNPCKill TempPlayer(Player_Index).inParty, Player_Index, GetPlayerMap(Player_Index), Player(Player_Index).Mission(i).ID
                 Else
@@ -630,9 +630,9 @@ Public Sub Check_Mission(ByVal Player_Index As Long, ByVal Target_Index As Long)
                     End If
                 End If
                 
-            ElseIf Mission(Mission_ID).Type = MissionType.TypeCollect And Mission(Mission_ID).CollectItem = MapItem(mapnum, Target_Index).Num Then
+            ElseIf Mission(Mission_ID).Type = MissionType.Mission_TypeCollect And Mission(Mission_ID).CollectItem = MapItem(mapnum, Target_Index).Num Then
                 If Player(Player_Index).Mission(i).Count < Mission(Mission_ID).CollectItemAmount Then
-                    Player(Player_Index).Mission(i).Count = Player(Player_Index).Mission(i).Count + 1
+                    Player(Player_Index).Mission(i).Count = Player(Player_Index).Mission(i).Count + ItemAmount
                     If Player(Player_Index).Mission(i).Count Mod 5 = 0 Then
                         Call PlayerMsg(Player_Index, "(" & Player(Player_Index).Mission(i).Count & "/" & Mission(Mission_ID).CollectItemAmount & ") " & Item(MapItem(mapnum, Target_Index).Num).Name, Yellow)
                     End If
@@ -642,7 +642,7 @@ Public Sub Check_Mission(ByVal Player_Index As Long, ByVal Target_Index As Long)
                         Call PlayerMsg(Player_Index, "(" & Player(Player_Index).Mission(i).Count & "/" & Mission(Mission_ID).CollectItemAmount & ") " & Item(MapItem(mapnum, Target_Index).Num).Name, Yellow)
                     End If
                 End If
-            ElseIf Mission(Mission_ID).Type = MissionType.TypeTalk And Mission(Mission_ID).TalkNPC = Target_Index Then
+            ElseIf Mission(Mission_ID).Type = MissionType.Mission_TypeTalk And Mission(Mission_ID).TalkNPC = Target_Index Then
                 If Player(Player_Index).Mission(i).Count = 0 Then
                     Player(Player_Index).Mission(i).Count = Player(Player_Index).Mission(i).Count + 1
                     If Player(Player_Index).Mission(i).Count <> 0 Then

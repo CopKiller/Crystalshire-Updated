@@ -57,25 +57,26 @@ Public Sub CheckInputKeys()
 End Sub
 
 Public Sub SetMoveDirection()
-    If GetAsyncKeyState(VK_UP) < 0 Then
+    If GetKeyState(VK_UP) < 0 Then
         DirUp = True
     End If
     
-    If GetAsyncKeyState(VK_DOWN) < 0 Then
+    If GetKeyState(VK_DOWN) < 0 Then
         DirDown = True
     End If
     
-    If GetAsyncKeyState(VK_LEFT) < 0 Then
+    If GetKeyState(VK_LEFT) < 0 Then
         DirLeft = True
     End If
     
-    If GetAsyncKeyState(VK_RIGHT) < 0 Then
+    If GetKeyState(VK_RIGHT) < 0 Then
         DirRight = True
     End If
 End Sub
 
 Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)
     Dim chatText As String, name As String, i As Long, N As Long, Command() As String, buffer As clsBuffer, tmpNum As Long
+
     
     ' check if we're skipping video
     If KeyAscii = vbKeyEscape Then
@@ -127,26 +128,26 @@ Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)
                                 entCallBack .entCallBack(EntityStates.Enter), activeWindow, Windows(activeWindow).activeControl, 0, 0
                                 Exit Sub
                             Else
-                                N = 0
+                                n = 0
                                 For i = Windows(activeWindow).ControlCount To 1 Step -1
                                     If i > Windows(activeWindow).activeControl Then
-                                        If SetActiveControl(activeWindow, i) Then N = i
+                                        If SetActiveControl(activeWindow, i) Then n = i
                                     End If
                                 Next
-                                If N = 0 Then
+                                If n = 0 Then
                                     For i = Windows(activeWindow).ControlCount To 1 Step -1
                                         SetActiveControl activeWindow, i
                                     Next
                                 End If
                             End If
                         Case vbKeyTab
-                            N = 0
-                            For i = Windows(activeWindow).ControlCount To 1 Step -1
+                            n = 0
+                            For i = 1 To Windows(activeWindow).ControlCount
                                 If i > Windows(activeWindow).activeControl Then
-                                    If SetActiveControl(activeWindow, i) Then N = i
+                                    If SetActiveControl(activeWindow, i) Then n = i: Exit Sub
                                 End If
                             Next
-                            If N = 0 Then
+                            If n = 0 Then
                                 For i = Windows(activeWindow).ControlCount To 1 Step -1
                                     SetActiveControl activeWindow, i
                                 Next
@@ -324,7 +325,8 @@ Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)
 
                     ' toggle fps lock
                 Case "/fpslock"
-                    FPS_Lock = Not FPS_Lock
+                    Options.FPSLock = Not Options.FPSLock
+                    SaveOptions
 
                     ' Request stats
                 Case "/stats"
@@ -410,12 +412,12 @@ Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)
                         GoTo continue
                     End If
 
-                    N = CLng(Command(1))
+                    n = CLng(Command(1))
 
                     ' Check to make sure its a valid map #
-                    If N > 0 And N <= MAX_MAPS Then
+                    If n > 0 And n <= MAX_MAPS Then
                         GettingMap = True
-                        Call WarpTo(N)
+                        Call WarpTo(n)
                     Else
                         Call AddText("Invalid map number.", Red)
                     End If
