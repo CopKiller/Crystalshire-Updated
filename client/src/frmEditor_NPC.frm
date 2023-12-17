@@ -632,7 +632,7 @@ Private Sub cmdDelete_Click()
     ClearNPC EditorIndex
     tmpIndex = lstIndex.ListIndex
     lstIndex.RemoveItem EditorIndex - 1
-    lstIndex.AddItem EditorIndex & ": " & Npc(EditorIndex).Name, EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Npc(EditorIndex).name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
     NpcEditorInit
 End Sub
@@ -642,7 +642,7 @@ Private Sub cmdPaste_Click()
 End Sub
 
 Private Sub Form_Load()
-    scrlSprite.max = Count_Char
+    scrlSprite.max = CountChar
     scrlAnimation.max = MAX_ANIMATIONS
     scrlConv.max = MAX_CONVS
 End Sub
@@ -650,7 +650,7 @@ End Sub
 Private Sub scrlConv_Change()
 
     If scrlConv.value > 0 Then
-        lblConv.caption = "Conv: " & Trim$(Conv(scrlConv.value).Name)
+        lblConv.caption = "Conv: " & Trim$(Conv(scrlConv.value).name)
     Else
         lblConv.caption = "Conv: None"
     End If
@@ -673,7 +673,7 @@ End Sub
 Private Sub scrlAnimation_Change()
     Dim sString As String
 
-    If scrlAnimation.value = 0 Then sString = "None" Else sString = Trim$(Animation(scrlAnimation.value).Name)
+    If scrlAnimation.value = 0 Then sString = "None" Else sString = Trim$(Animation(scrlAnimation.value).name)
     lblAnimation.caption = "Anim: " & sString
     Npc(EditorIndex).Animation = scrlAnimation.value
 End Sub
@@ -696,7 +696,7 @@ Private Sub scrlSpellNum_Change()
     lblSpellNum.caption = "Num: " & scrlSpellNum.value
 
     If scrlSpellNum.value > 0 Then
-        lblSpellName.caption = "Spell: " & Trim$(Spell(scrlSpellNum.value).Name)
+        lblSpellName.caption = "Spell: " & Trim$(Spell(scrlSpellNum.value).name)
     Else
         lblSpellName.caption = "Spell: None"
     End If
@@ -718,7 +718,7 @@ Private Sub scrlNum_Change()
     lblNum.caption = "Num: " & scrlNum.value
 
     If scrlNum.value > 0 Then
-        lblItemName.caption = "Item: " & Trim$(Item(scrlNum.value).Name)
+        lblItemName.caption = "Item: " & Trim$(Item(scrlNum.value).name)
     End If
 
     Npc(EditorIndex).DropItem(DropIndex) = scrlNum.value
@@ -770,7 +770,7 @@ Private Sub txtChance_Validate(Cancel As Boolean)
     End If
 
     If Right$(txtChance.text, 1) = "%" Then
-        txtChance.text = Left$(txtChance.text, Len(txtChance.text) - 1) / 100
+        txtChance.text = left$(txtChance.text, Len(txtChance.text) - 1) / 100
     ElseIf InStr(1, txtChance.text, "/") > 0 Then
         Dim i() As String
         i = Split(txtChance.text, "/")
@@ -818,9 +818,9 @@ Public Sub txtName_Validate(Cancel As Boolean)
 
     If EditorIndex = 0 Then Exit Sub
     tmpIndex = lstIndex.ListIndex
-    Npc(EditorIndex).Name = Trim$(txtName.text)
+    Npc(EditorIndex).name = Trim$(txtName.text)
     lstIndex.RemoveItem EditorIndex - 1
-    lstIndex.AddItem EditorIndex & ": " & Npc(EditorIndex).Name, EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Npc(EditorIndex).name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
 End Sub
 

@@ -65,7 +65,7 @@ Public Type ChatStruct
     timer As Long
     Channel As Byte
 End Type
-Public Const ColourChar As String * 1 = "½"
+Public Const ColourChar As String * 1 = "Â½"
 Public Const ChatLines As Long = 200
 Public Const ChatWidth As Long = 316
 Public Chat(1 To ChatLines) As ChatStruct
@@ -358,7 +358,7 @@ Sub DrawActionMsg(ByVal Index As Integer)
     If ActionMsg(Index).message = vbNullString Then Exit Sub
 
     ' how long we want each message to appear
-    Select Case ActionMsg(Index).Type
+    Select Case ActionMsg(Index).type
 
         Case ACTIONMsgSTATIC
             Time = 1500
@@ -395,7 +395,7 @@ Sub DrawActionMsg(ByVal Index As Integer)
             ' This will kill any action screen messages that there in the system
             For i = MAX_BYTE To 1 Step -1
 
-                If ActionMsg(i).Type = ACTIONMsgSCREEN Then
+                If ActionMsg(i).type = ACTIONMsgSCREEN Then
                     If i <> Index Then
                         ClearActionMsg Index
                         Index = i
@@ -482,7 +482,7 @@ End Sub
 
 Sub RenderChat()
 Dim Xo As Long, Yo As Long, Colour As Long, yOffset As Long, rLines As Long, lineCount As Long
-Dim tmpText As String, i As Long, isVisible As Boolean, topWidth As Long, tmpArray() As String, X As Long
+Dim tmpText As String, i As Long, isVisible As Boolean, topWidth As Long, tmpArray() As String, x As Long
     
     ' set the position
     Xo = 19
@@ -518,8 +518,8 @@ Dim tmpText As String, i As Long, isVisible As Boolean, topWidth As Long, tmpArr
                 rLines = rLines + lineCount
                 ' set the top width
                 tmpArray = Split(tmpText, vbNewLine)
-                For X = 0 To UBound(tmpArray)
-                    If TextWidth(font(Fonts.verdana_12), tmpArray(X)) > topWidth Then topWidth = TextWidth(font(Fonts.verdana_12), tmpArray(X))
+                For x = 0 To UBound(tmpArray)
+                    If TextWidth(font(Fonts.verdana_12), tmpArray(x)) > topWidth Then topWidth = TextWidth(font(Fonts.verdana_12), tmpArray(x))
                 Next
             Else
                 ' normal
