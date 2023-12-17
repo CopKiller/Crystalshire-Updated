@@ -359,7 +359,7 @@ Private Sub cmdDelete_Click()
     ClearAnimation EditorIndex
     tmpIndex = lstIndex.ListIndex
     lstIndex.RemoveItem EditorIndex - 1
-    lstIndex.AddItem EditorIndex & ": " & Animation(EditorIndex).name, EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Animation(EditorIndex).Name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
     AnimationEditorInit
 End Sub
@@ -384,27 +384,27 @@ Private Sub lstIndex_Click()
     AnimationEditorInit
 End Sub
 
-Private Sub scrlFrameCount_Change(Index As Integer)
-    lblFrameCount(Index).caption = "Frame Count: " & scrlFrameCount(Index).value
-    Animation(EditorIndex).Frames(Index) = scrlFrameCount(Index).value
+Private Sub scrlFrameCountChange(Index As Integer)
+    lblFrameCount(Index).caption = "Frame Count: " & scrlFrameCount(Index).Value
+    Animation(EditorIndex).Frames(Index) = scrlFrameCount(Index).Value
 End Sub
 
-Private Sub scrlFrameCount_Scroll(Index As Integer)
-    scrlFrameCount_Change Index
+Private Sub scrlFrameCountScroll(Index As Integer)
+    scrlFrameCountChange Index
 End Sub
 
-Private Sub scrlLoopCount_Change(Index As Integer)
-    lblLoopCount(Index).caption = "Loop Count: " & scrlLoopCount(Index).value
-    Animation(EditorIndex).LoopCount(Index) = scrlLoopCount(Index).value
+Private Sub scrlLoopCountChange(Index As Integer)
+    lblLoopCount(Index).caption = "Loop Count: " & scrlLoopCount(Index).Value
+    Animation(EditorIndex).LoopCount(Index) = scrlLoopCount(Index).Value
 End Sub
 
-Private Sub scrlLoopCount_Scroll(Index As Integer)
-    scrlLoopCount_Change Index
+Private Sub scrlLoopCountScroll(Index As Integer)
+    scrlLoopCountChange Index
 End Sub
 
 Private Sub scrlLoopTime_Change(Index As Integer)
-    lblLoopTime(Index).caption = "Loop Time: " & scrlLoopTime(Index).value
-    Animation(EditorIndex).looptime(Index) = scrlLoopTime(Index).value
+    lblLoopTime(Index).caption = "Loop Time: " & scrlLoopTime(Index).Value
+    Animation(EditorIndex).looptime(Index) = scrlLoopTime(Index).Value
 End Sub
 
 Private Sub scrlLoopTime_Scroll(Index As Integer)
@@ -412,8 +412,8 @@ Private Sub scrlLoopTime_Scroll(Index As Integer)
 End Sub
 
 Private Sub scrlSprite_Change(Index As Integer)
-    lblSprite(Index).caption = "Sprite: " & scrlSprite(Index).value
-    Animation(EditorIndex).sprite(Index) = scrlSprite(Index).value
+    lblSprite(Index).caption = "Sprite: " & scrlSprite(Index).Value
+    Animation(EditorIndex).sprite(Index) = scrlSprite(Index).Value
 End Sub
 
 Private Sub scrlSprite_Scroll(Index As Integer)
@@ -425,8 +425,8 @@ Private Sub txtName_Validate(Cancel As Boolean)
 
     If EditorIndex = 0 Or EditorIndex > MAX_ANIMATIONS Then Exit Sub
     tmpIndex = lstIndex.ListIndex
-    Animation(EditorIndex).name = Trim$(txtName.text)
+    Animation(EditorIndex).Name = Trim$(txtName.text)
     lstIndex.RemoveItem EditorIndex - 1
-    lstIndex.AddItem EditorIndex & ": " & Animation(EditorIndex).name, EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Animation(EditorIndex).Name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
 End Sub

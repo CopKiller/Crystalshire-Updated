@@ -358,7 +358,7 @@ Sub DrawActionMsg(ByVal Index As Integer)
     If ActionMsg(Index).message = vbNullString Then Exit Sub
 
     ' how long we want each message to appear
-    Select Case ActionMsg(Index).type
+    Select Case ActionMsg(Index).Type
 
         Case ACTIONMsgSTATIC
             Time = 1500
@@ -395,7 +395,7 @@ Sub DrawActionMsg(ByVal Index As Integer)
             ' This will kill any action screen messages that there in the system
             For i = MAX_BYTE To 1 Step -1
 
-                If ActionMsg(i).type = ACTIONMsgSCREEN Then
+                If ActionMsg(i).Type = ACTIONMsgSCREEN Then
                     If i <> Index Then
                         ClearActionMsg Index
                         Index = i
@@ -482,7 +482,7 @@ End Sub
 
 Sub RenderChat()
 Dim Xo As Long, Yo As Long, Colour As Long, yOffset As Long, rLines As Long, lineCount As Long
-Dim tmpText As String, i As Long, isVisible As Boolean, topWidth As Long, tmpArray() As String, x As Long
+Dim tmpText As String, i As Long, isVisible As Boolean, topWidth As Long, tmpArray() As String, X As Long
     
     ' set the position
     Xo = 19
@@ -518,8 +518,8 @@ Dim tmpText As String, i As Long, isVisible As Boolean, topWidth As Long, tmpArr
                 rLines = rLines + lineCount
                 ' set the top width
                 tmpArray = Split(tmpText, vbNewLine)
-                For x = 0 To UBound(tmpArray)
-                    If TextWidth(font(Fonts.verdana_12), tmpArray(x)) > topWidth Then topWidth = TextWidth(font(Fonts.verdana_12), tmpArray(x))
+                For X = 0 To UBound(tmpArray)
+                    If TextWidth(font(Fonts.verdana_12), tmpArray(X)) > topWidth Then topWidth = TextWidth(font(Fonts.verdana_12), tmpArray(X))
                 Next
             Else
                 ' normal
@@ -685,8 +685,8 @@ Public Sub DrawPlayerName(ByVal Index As Long)
     textX = Player(Index).X * PIC_X + Player(Index).xOffset + (PIC_X \ 2) - (textSize \ 2)
     textY = Player(Index).Y * PIC_Y + Player(Index).yOffset - 32
 
-    If GetPlayerSprite(Index) >= 1 And GetPlayerSprite(Index) <= Count_Char Then
-        textY = GetPlayerY(Index) * PIC_Y + Player(Index).yOffset - (mTexture(Tex_Char(GetPlayerSprite(Index))).RealHeight / 4) + 12
+    If GetPlayerSprite(Index) >= 1 And GetPlayerSprite(Index) <= CountChar Then
+        textY = GetPlayerY(Index) * PIC_Y + Player(Index).yOffset - (mTexture(TextureChar(GetPlayerSprite(Index))).RealHeight / 4) + 12
     End If
 
     Call RenderText(font(Fonts.rockwell_15), text, ConvertMapX(textX), ConvertMapY(textY), Colour)
@@ -716,8 +716,8 @@ Public Sub DrawNpcName(ByVal Index As Long)
     textX = MapNpc(Index).X * PIC_X + MapNpc(Index).xOffset + (PIC_X \ 2) - (textSize \ 2)
     textY = MapNpc(Index).Y * PIC_Y + MapNpc(Index).yOffset - 32
 
-    If Npc(NpcNum).sprite >= 1 And Npc(NpcNum).sprite <= Count_Char Then
-        textY = MapNpc(Index).Y * PIC_Y + MapNpc(Index).yOffset - (mTexture(Tex_Char(Npc(NpcNum).sprite)).RealHeight / 4) + 12
+    If Npc(NpcNum).sprite >= 1 And Npc(NpcNum).sprite <= CountChar Then
+        textY = MapNpc(Index).Y * PIC_Y + MapNpc(Index).yOffset - (mTexture(TextureChar(Npc(NpcNum).sprite)).RealHeight / 4) + 12
     End If
 
     Call RenderText(font(Fonts.rockwell_15), text, ConvertMapX(textX), ConvertMapY(textY), Colour)
