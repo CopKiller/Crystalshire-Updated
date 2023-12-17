@@ -309,3 +309,5 @@ Public CurrentTintG As Long
 Public CurrentTintB As Long
 Public CurrentTintA As Long
 Public DrawThunder As Long
+
+Public Const WindowTopBar As Byte = 40
