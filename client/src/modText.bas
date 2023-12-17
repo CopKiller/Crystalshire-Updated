@@ -93,7 +93,7 @@ End Sub
 Sub SetFont(ByVal fontNum As Long, ByVal texName As String, ByVal Size As Long, Optional ByVal xOffset As Long, Optional ByVal yOffset As Long)
 Dim Data() As Byte, f As Long, w As Long, h As Long, Path As String
     ' set the path
-    Path = App.Path & Path_Font & texName & GFX_EXT
+    Path = App.Path & PathFont & texName & GFX_EXT
     ' load the texture
     f = FreeFile
     Open Path For Binary As #f
@@ -205,7 +205,7 @@ Dim v As Single
 
     'Load the header information
     FileNum = FreeFile
-    Open App.Path & Path_Font & FileName For Binary As #FileNum
+    Open App.Path & PathFont & FileName For Binary As #FileNum
     Get #FileNum, , theFont.HeaderInfo
     Close #FileNum
     

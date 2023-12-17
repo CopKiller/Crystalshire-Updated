@@ -102,8 +102,9 @@ Private Sub Form_KeyUp(KeyCode As Integer, Shift As Integer)
     End Select
 End Sub
 
-Private Sub Form_doubleClick()
-    HandleGuiMouse EntityStates.doubleClick
+Private Sub Form_DoubleClick()
+    HandleGuiMouse entStates.DoubleClick
+
 End Sub
 
 ' Winsock event

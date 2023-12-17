@@ -113,11 +113,11 @@ Private Declare Function StringFromGUID2 Lib "ole32.dll" (ByVal rguid As Long, B
 Private Declare Function lstrlenW Lib "kernel32" (ByVal psString As Any) As Long
 Private Declare Function CLSIDFromString Lib "ole32" (ByVal lpszProgID As Long, pCLSID As Any) As Long
 
-Private Declare Function GdipDisposeImage Lib "gdiplus" (ByVal Image As Long) As Long
-Private Declare Function GdipLoadImageFromStream Lib "gdiplus" (ByVal Stream As IUnknown, Image As Long) As Long
+Private Declare Function GdipDisposeImage Lib "gdiplus" (ByVal image As Long) As Long
+Private Declare Function GdipLoadImageFromStream Lib "gdiplus" (ByVal Stream As IUnknown, image As Long) As Long
 Private Declare Function GdipCreateBitmapFromScan0 Lib "gdiplus" (ByVal Width As Long, ByVal Height As Long, ByVal Stride As Long, ByVal PixelFormat As Long, scan0 As Any, BITMAP As Long) As Long
 Private Declare Function GdipGetImageBounds Lib "GdiPlus.dll" (ByVal nImage As Long, srcRect As RECTF, srcUnit As Long) As Long
-Private Declare Function GdipImageRotateFlip Lib "gdiplus" (ByVal Image As Long, ByVal rfType As Long) As Long
+Private Declare Function GdipImageRotateFlip Lib "gdiplus" (ByVal image As Long, ByVal rfType As Long) As Long
 Private Declare Function GdipDisposeImageAttributes Lib "gdiplus" (ByVal imgAttr As Long) As Long
 Private Declare Function GdipCreateImageAttributes Lib "gdiplus" (ByRef imgAttr As Long) As Long
 Private Declare Function GdipSetImageAttributesColorMatrix Lib "gdiplus" (ByVal imgAttr As Long, ByVal clrAdjust As Long, ByVal clrAdjustEnabled As Long, ByRef clrMatrix As Any, ByRef grayMatrix As Any, ByVal clrMatrixFlags As Long) As Long
@@ -126,7 +126,7 @@ Private Declare Function GdipGetImageRawFormat Lib "gdiplus" (ByVal hImage As Lo
 Private Declare Function GdipGetImagePixelFormat Lib "gdiplus" (ByVal hImage As Long, PixelFormat As Long) As Long
 Private Declare Function GdipGetImageEncodersSize Lib "gdiplus" (numEncoders As Long, Size As Long) As Long
 Private Declare Function GdipGetImageEncoders Lib "gdiplus" (ByVal numEncoders As Long, ByVal Size As Long, Encoders As Any) As Long
-Private Declare Function GdipSaveImageToStream Lib "gdiplus" (ByVal Image As Long, ByVal Stream As IUnknown, clsidEncoder As Any, encoderParams As Any) As Long
+Private Declare Function GdipSaveImageToStream Lib "gdiplus" (ByVal image As Long, ByVal Stream As IUnknown, clsidEncoder As Any, encoderParams As Any) As Long
 Private Declare Function GdipSaveAddImage Lib "gdiplus" (ByVal pImage As Long, ByVal newImage As Long, ByRef encoderParams As Any) As Long
 Private Declare Function GdipSaveAdd Lib "GdiPlus.dll" (ByVal mImage As Long, ByRef mEncoderParams As Any) As Long
 Private Declare Function GdipBitmapLockBits Lib "GdiPlus.dll" (ByVal mBitmap As Long, ByRef mRect As RECTI, ByVal mFlags As Long, ByVal mPixelFormat As Long, ByRef mLockedBitmapData As BitmapData) As Long
@@ -696,14 +696,14 @@ Public Function LoadPicture_FileName(FileName As String, TokenClass As cGDIpToke
     Const FILE_ATTRIBUTE_HIDDEN As Long = &H2
     Const FILE_ATTRIBUTE_READONLY As Long = &H1
     Const FILE_ATTRIBUTE_SYSTEM As Long = &H4
-    Const FILE_ATTRIBUTE_NORMAL = &H80&
+    Const FILE_ATTRIBUTE_normal = &H80&
     Const INVALID_HANDLE_VALUE As Long = -1&
     
     Dim hImage As Long, IStream As IUnknown
     Dim Flags As Long, hFile As Long, bData() As Byte
     
     On Error GoTo ExitRoutine
-    Flags = FILE_ATTRIBUTE_ARCHIVE Or FILE_ATTRIBUTE_HIDDEN Or FILE_ATTRIBUTE_NORMAL _
+    Flags = FILE_ATTRIBUTE_ARCHIVE Or FILE_ATTRIBUTE_HIDDEN Or FILE_ATTRIBUTE_normal _
             Or FILE_ATTRIBUTE_READONLY Or FILE_ATTRIBUTE_SYSTEM
     If IsWindowUnicode(GetDesktopWindow()) = 0& Then
         hFile = CreateFileA(FileName, GENERIC_READ, FILE_SHARE_READ, ByVal 0&, OPEN_EXISTING, Flags, 0&)
@@ -736,7 +736,7 @@ Public Function LoadPicture_FromNothing(Width As Long, Height As Long, graphics 
     Const FILE_ATTRIBUTE_HIDDEN As Long = &H2
     Const FILE_ATTRIBUTE_READONLY As Long = &H1
     Const FILE_ATTRIBUTE_SYSTEM As Long = &H4
-    Const FILE_ATTRIBUTE_NORMAL = &H80&
+    Const FILE_ATTRIBUTE_normal = &H80&
     Const INVALID_HANDLE_VALUE As Long = -1&
     
     Dim hImage As Long, IStream As IUnknown
@@ -949,14 +949,14 @@ Public Function LockImageBits(ByVal LockMode As LockModeConstants, _
     ' and supply a pointer to your updated array in the ScanPtr parameter if updating pixels: i.e., VarPtr(myPixels(0,0))
     
     If m_Image(m_SourceIndex) Then
-        Dim BD As BitmapData, R As RECTI
-        With R
+        Dim BD As BitmapData, r As RECTI
+        With r
             .nHeight = Height
             .nLeft = X
             .nTop = Y
             .nWidth = Width
         End With
-        If GdipBitmapLockBits(m_Image(m_SourceIndex), R, LockMode, PixelFormat, BD) = 0& Then
+        If GdipBitmapLockBits(m_Image(m_SourceIndex), r, LockMode, PixelFormat, BD) = 0& Then
             With BD
                 PixelFormat = .PixelFormat
                 Width = .Width
@@ -1471,7 +1471,7 @@ Private Function pvByteAlignOnWord(ByVal bitDepth As Byte, ByVal Width As Long) 
     pvByteAlignOnWord = (((Width * bitDepth) + &H1F&) And Not &H1F&) \ &H8&
 End Function
 
-Private Sub pvCleanUp(Mode As pvCleanUpEnum)
+Private Sub pvCleanUp(mode As pvCleanUpEnum)
     ' m_Image & m_Source usage for clarification
     ' Image Type        m_Image(0)  m_Source(0)     m_Image(1)  m_Source(1)
     '   PNG             yes         never           never       never
@@ -1492,17 +1492,17 @@ Private Sub pvCleanUp(Mode As pvCleanUpEnum)
     ' (**2) When multiple images exist in resource, a clone (PNG format) is created if to be rendered with attributes.
     '       Any created clone is destroyed when the attributes are reset
     
-    If (Mode And cuResetAttrs) Then
+    If (mode And cuResetAttrs) Then
         If m_Attr Then                  ' destroy GDI+ attributes object
             GdipDisposeImageAttributes m_Attr
             m_Attr = 0&
         End If
-        If (Mode And cuDestroyImage) = 0& Then ' not a full pvCleanUp?
+        If (mode And cuDestroyImage) = 0& Then ' not a full pvCleanUp?
             If m_Mirror Then            ' if mirrored & not cloned, then unmirror
                 If m_Image(1) = 0& Then GdipImageRotateFlip m_Image(0), m_Mirror
             End If
         End If
-        Mode = Mode Or cuDestroyClone   ' get rid of clone if needed
+        mode = mode Or cuDestroyClone   ' get rid of clone if needed
         m_Lightness = 0!                ' reset all attributes
         m_Alpha = 0!
         m_Angle = 0!
@@ -1511,7 +1511,7 @@ Private Sub pvCleanUp(Mode As pvCleanUpEnum)
         m_GrayScale = attrGrayNone
     End If
     
-    If (Mode And cuDestroyClone) Then   ' destroy clone if it exists
+    If (mode And cuDestroyClone) Then   ' destroy clone if it exists
         If m_Image(1) Then
             GdipDisposeImage m_Image(1)
             m_Image(1) = 0&
@@ -1520,7 +1520,7 @@ Private Sub pvCleanUp(Mode As pvCleanUpEnum)
         End If
     End If
     
-    If (Mode And cuDestroyImage) Then   ' destroy core image
+    If (mode And cuDestroyImage) Then   ' destroy core image
         If m_Image(0) Then
             GdipDisposeImage m_Image(0)
             m_Image(0) = 0&
@@ -1528,7 +1528,7 @@ Private Sub pvCleanUp(Mode As pvCleanUpEnum)
         End If
         m_Size.nHeight = 0!             ' reset its properties
         m_Size.nWidth = 0!
-        If (Mode And cuDestroyMultiImage) Then
+        If (mode And cuDestroyMultiImage) Then
             Set m_MultiImage = Nothing
             m_ImageType = imageUnknown
         End If
@@ -2194,7 +2194,7 @@ End Function
 Private Sub pvModifyAttributes()
     
     Dim clrMatrix(0 To 4, 0 To 4) As Single
-    Dim R As Single, G As Single, B As Single
+    Dim r As Single, G As Single, B As Single
     Const ColorAdjustTypeBitmap As Long = &H1&
     
     ' about attributes.
@@ -2214,24 +2214,24 @@ Private Sub pvModifyAttributes()
         If m_GrayScale > attrGrayNone Then ' apply grayscale ratios
             Select Case m_GrayScale
             Case attrGrayNTSCPAL
-                R = 0.299: G = 0.587: B = 0.114 ' standard weighted average
+                r = 0.299: G = 0.587: B = 0.114 ' standard weighted average
             Case attrGraySimpleAverage
-                R = 0.333: G = 0.334: B = R     ' pure average
+                r = 0.333: G = 0.334: B = r     ' pure average
             Case attrGrayCCIR709
-                R = 0.213: G = 0.715: B = 0.072 ' CCIR709
+                r = 0.213: G = 0.715: B = 0.072 ' CCIR709
             Case attrGrayRedMask
-                R = 0.8: G = 0.1: B = G     ' personal preferences: could be r=1:g=0:b=0 or other weights
+                r = 0.8: G = 0.1: B = G     ' personal preferences: could be r=1:g=0:b=0 or other weights
             Case attrGrayGreenMask
-                R = 0.1: G = 0.8: B = R     ' personal preferences: could be r=0:g=1:b=0 or other weights
+                r = 0.1: G = 0.8: B = r     ' personal preferences: could be r=0:g=1:b=0 or other weights
             Case attrGrayBlueMask
-                R = 0.1: G = R: B = 0.8     ' personal preferences: could be r=0:g=0:b=1 or other weights
+                r = 0.1: G = r: B = 0.8     ' personal preferences: could be r=0:g=0:b=1 or other weights
             Case attrGrayBlueGreenMask
-                R = 0.1: G = 0.45: B = G    ' personal preferences: could be r=0:g=.5:b=.5 or other weights
+                r = 0.1: G = 0.45: B = G    ' personal preferences: could be r=0:g=.5:b=.5 or other weights
             Case attrGrayRedGreenMask
-                R = 0.45: G = R: B = 0.1    ' personal preferences: could be r=.5:g=.5:b=0 or other weights
+                r = 0.45: G = r: B = 0.1    ' personal preferences: could be r=.5:g=.5:b=0 or other weights
             End Select
             ' grayscale the image
-            clrMatrix(0, 0) = R: clrMatrix(1, 0) = R: clrMatrix(2, 0) = R
+            clrMatrix(0, 0) = r: clrMatrix(1, 0) = r: clrMatrix(2, 0) = r
             clrMatrix(0, 1) = G: clrMatrix(1, 1) = G: clrMatrix(2, 1) = G
             clrMatrix(0, 2) = B: clrMatrix(1, 2) = B: clrMatrix(2, 2) = B
             clrMatrix(3, 3) = CSng((100! - m_Alpha) / 100!)  ' global blending; value between 0 & 1

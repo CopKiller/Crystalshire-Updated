@@ -3,12 +3,12 @@ Option Explicit
 
 ' Entity Types
 Public Enum EntityTypes
-    entityLabel = 1
-    entityWindow
-    entityButton
-    entityTextBox
-    entityPictureBox
-    entityCheckbox
+    EntityLabel = 1
+    EntityWindow
+    EntityButton
+    EntityTextBox
+    EntityPictureBox
+    EntityCheckbox
     entityCombo
 End Enum
 
@@ -44,7 +44,6 @@ Public Enum DesignTypes
     designWindowDescription
     designWindowShadow
 
-    ' Parchment
     designParchment
     designBlackParchment
 
@@ -76,11 +75,11 @@ Public Enum EntityStates
     MouseDown
     MouseMove
     MouseUp
-    doubleClick
+    DoubleClick
     Enter
 
     ' Count
-    enumCount
+    State_Count
 End Enum
 
 ' Alignment
@@ -92,18 +91,18 @@ End Enum
 
 ' Part Types
 Public Enum PartType
-    partNone = 0
-    partItem
-    partISpell
+    PartNone = 0
+    PartItem
+    Partspell
 End Enum
 
 ' Origins
 Public Enum PartTypeOrigins
-    originNone = 0
-    originInventory
-    originHotbar
-    originSpells
-    originBank
+    OriginNone = 0
+    OriginInventory
+    OriginHotbar
+    OriginSpells
+    OriginBank
 End Enum
 
 ' Entity UDT
@@ -111,7 +110,7 @@ Public Type EntityRec
     ' constants
     Name As String
     ' values
-    Type As Byte
+Type As Byte
     Top As Long
     Left As Long
     Width As Long
@@ -123,9 +122,9 @@ Public Type EntityRec
     min As Long
     Value As Long
     text As String
-    image(0 To EntityStates.enumCount - 1) As Long
-    design(0 To EntityStates.enumCount - 1) As Long
-    entCallBack(0 To EntityStates.enumCount - 1) As Long
+    image(0 To entStates.State_Count - 1) As Long
+    design(0 To entStates.State_Count - 1) As Long
+    entCallBack(0 To entStates.State_Count - 1) As Long
     alpha As Long
     clickThrough As Boolean
     xOffset As Long
@@ -159,7 +158,7 @@ End Type
 ' For small parts
 Public Type EntityPartRec
     Type As PartType
-    origin As PartTypeOrigins
+    Origin As PartTypeOrigins
     Value As Long
     Slot As Long
 End Type
@@ -186,9 +185,8 @@ Public Sub CreateEntity(winNum As Long, zOrder As Long, Name As String, tType As
                         Optional Left As Long, Optional Top As Long, Optional Width As Long, Optional Height As Long, Optional visible As Boolean = True, Optional canDrag As Boolean, Optional max As Long, _
                         Optional min As Long, Optional Value As Long, Optional text As String, Optional align As Byte, Optional font As Long = Fonts.georgia_16, Optional textColour As Long = White, _
                         Optional alpha As Long = 255, Optional clickThrough As Boolean, Optional xOffset As Long, Optional yOffset As Long, Optional zChange As Byte, Optional ByVal icon As Long, _
-                        Optional ByVal onDraw As Long, Optional isActive As Boolean, Optional isCensor As Boolean, Optional textColourHover As Long, Optional textColourClick As Long, _
+                        Optional ByVal onDraw As Long, Optional isActive As Boolean, Optional isCensor As Boolean, Optional textColour_Hover As Long, Optional textColour_Click As Long, _
                         Optional tooltip As String, Optional group As Long)
-
     Dim i As Long
 
     ' check if it's a legal number
@@ -208,7 +206,7 @@ Public Sub CreateEntity(winNum As Long, zOrder As Long, Name As String, tType As
         .Type = tType
 
         ' loop through states
-        For i = 0 To EntityStates.enumCount - 1
+        For i = 0 To entStates.State_Count - 1
             .design(i) = design(i)
             .image(i) = image(i)
             .entCallBack(i) = entCallBack(i)
@@ -350,15 +348,18 @@ Public Sub RenderEntity(winNum As Long, entNum As Long)
         ' find the control type
         Select Case .Type
             ' picture box
-        Case EntityTypes.entityPictureBox
+
+        Case EntityTypes.EntityPictureBox
+
             ' render specific designs
             If .design(.state) > 0 Then RenderDesign .design(.state), .Left + Xo, .Top + Yo, .Width, .Height, .alpha
             ' render image
             If .image(.state) > 0 Then RenderTexture .image(.state), .Left + Xo, .Top + Yo, 0, 0, .Width, .Height, .Width, .Height, DX8Colour(White, .alpha)
 
             ' textbox
-        Case EntityTypes.entityTextBox
-            ' render specific designs
+        Case EntityTypes.EntityTextBox
+           ' render specific designs
+
             If .design(.state) > 0 Then RenderDesign .design(.state), .Left + Xo, .Top + Yo, .Width, .Height, .alpha
             ' render image
             If .image(.state) > 0 Then RenderTexture .image(.state), .Left + Xo, .Top + Yo, 0, 0, .Width, .Height, .Width, .Height, DX8Colour(White, .alpha)
@@ -372,39 +373,18 @@ Public Sub RenderEntity(winNum As Long, entNum As Long)
             End If
 
             ' buttons
-        Case EntityTypes.entityButton
+        Case EntityTypes.EntityButton
+
             ' render specific designs
             If .design(.state) > 0 Then
                 If .design(.state) > 0 Then
                     RenderDesign .design(.state), .Left + Xo, .Top + Yo, .Width, .Height
                 End If
-                ' render image
+            End If
+            ' render image
+            If .image(.state) > 0 Then
                 If .image(.state) > 0 Then
-                    If .image(.state) > 0 Then
-                        RenderTexture .image(.state), .Left + Xo, .Top + Yo, 0, 0, .Width, .Height, .Width, .Height
-                    End If
-                End If
-                ' render icon
-                If .icon > 0 Then
-                    Width = mTexture(.icon).Width
-                    Height = mTexture(.icon).Height
-                    RenderTexture .icon, .Left + Xo + .xOffset, .Top + Yo + .yOffset, 0, 0, Width, Height, Width, Height
-                End If
-                ' for changing the text space
-                xOffset = Width
-                ' calculate the vertical centre
-                Height = TextHeight(font(Fonts.georgiaDec_16))
-                If Height > .Height Then
-                    ver_centre = .Top + Yo
-                Else
-                    ver_centre = .Top + Yo + ((.Height - Height) \ 2) + 1
-                End If
-                ' calculate the horizontal centre
-                Width = TextWidth(font(.font), .text)
-                If Width > .Width Then
-                    hor_centre = .Left + Xo + xOffset
-                Else
-                    hor_centre = .Left + Xo + xOffset + ((.Width - Width - xOffset) \ 2)
+                    RenderTexture .image(.state), .Left + Xo, .Top + Yo, 0, 0, .Width, .Height, .Width, .Height
                 End If
             End If
             ' render icon
@@ -431,16 +411,18 @@ Public Sub RenderEntity(winNum As Long, entNum As Long)
             End If
             ' get the colour
             If .state = Hover Then
-                Colour = .textColourHover
+                Colour = .textColour_Hover
             ElseIf .state = MouseDown Then
-                Colour = .textColourClick
+                Colour = .textColour_Click
+
             Else
                 Colour = .textColour
             End If
             RenderText font(.font), .text, hor_centre, ver_centre, Colour
 
             ' labels
-        Case EntityTypes.entityLabel
+        Case EntityTypes.EntityLabel
+
             If Len(.text) > 0 Then
                 Select Case .align
                 Case Alignment.alignLeft
@@ -496,10 +478,11 @@ Public Sub RenderEntity(winNum As Long, entNum As Long)
             End If
 
             ' checkboxes
-        Case EntityTypes.entityCheckbox
+        Case EntityTypes.EntityCheckbox
 
             Select Case .design(0)
-            Case DesignTypes.designCheckbox
+            Case DesignTypes.DesignCheckbox
+
                 ' empty?
                 If .Value = 0 Then texNum = TextureGUI(32) Else texNum = TextureGUI(33)
                 ' render box
@@ -515,7 +498,8 @@ Public Sub RenderEntity(winNum As Long, entNum As Long)
                 End Select
                 ' render text
                 RenderText font(.font), .text, Left, .Top + Yo, .textColour, .alpha
-            Case DesignTypes.designCheckChat
+            Case DesignTypes.DesignCheckChat
+
                 If .Value = 0 Then .alpha = 150 Else .alpha = 255
 
                 ' render box
@@ -526,7 +510,8 @@ Public Sub RenderEntity(winNum As Long, entNum As Long)
                 ' render text
 
                 RenderText font(.font), .text, Left, .Top + Yo + 4, .textColour, .alpha
-            Case DesignTypes.designCheckBuy
+
+            Case DesignTypes.DesignCheckBuy
 
                 If .Value = 0 Then texNum = TextureGradient(1) Else texNum = TextureGradient(2)
                 RenderEntity_Square TextureDesign(9), .Left + Xo, .Top + Yo, 49, 20, 2, 255
@@ -535,7 +520,7 @@ Public Sub RenderEntity(winNum As Long, entNum As Long)
 
                 Left = .Left + (49 / 2) - (TextWidth(font(.font), .text) / 2) + Xo
                 RenderText font(.font), .text, Left, .Top + Yo + 4, .textColour, .alpha
-            Case DesignTypes.designCheckSell
+            Case DesignTypes.DesignCheckSell
 
                 If .Value = 0 Then texNum = TextureGradient(4) Else texNum = TextureGradient(5)
                 RenderEntity_Square TextureDesign(10), .Left + Xo, .Top + Yo, 49, 20, 2, 255
@@ -544,7 +529,6 @@ Public Sub RenderEntity(winNum As Long, entNum As Long)
 
                 Left = .Left + (49 / 2) - (TextWidth(font(.font), .text) / 2) + Xo
                 RenderText font(.font), .text, Left, .Top + Yo + 4, .textColour, .alpha
-
             End Select
 
             ' comboboxes
@@ -583,13 +567,15 @@ Public Sub RenderWindow(winNum As Long)
     With Windows(winNum).Window
 
         Select Case .design(0)
-        Case DesignTypes.designComboBackground
+        Case DesignTypes.DesignComboBackground
+
 
             RenderDesign DesignTypes.designBlackParchment, .Left, .Top + 2, .Width, .Height
 
             ' text
             If UBound(.list) > 0 Then
-                Y = .Top + 4
+                Y = .Top + 2
+
                 X = .Left
                 For i = 1 To UBound(.list)
                     ' render select
@@ -609,7 +595,8 @@ Public Sub RenderWindow(winNum As Long)
 
         Select Case .design(.state)
 
-        Case DesignTypes.designWindowNormal
+        Case DesignTypes.DesignWindowNormal
+
             ' Render do background da janela
             RenderDesign DesignTypes.designWoodNormal, .Left, .Top, .Width, .Height
 
@@ -619,21 +606,21 @@ Public Sub RenderWindow(winNum As Long)
             ' render the caption
             RenderText font(.font), Trim$(.text), .Left + Height + 20, .Top + 15, .textColour
 
-        Case DesignTypes.designWindowWithoutBar
+        Case DesignTypes.DesignWindowWithoutBar
             ' render window
             RenderDesign DesignTypes.designWoodNormal, .Left, .Top, .Width, .Height
 
-        Case DesignTypes.designWindowClear
+        Case DesignTypes.DesignWindowClear
             ' render window
-            RenderDesign DesignTypes.designWoodEmpty, .Left, .Top, .Width, .Height
-            RenderDesign DesignTypes.designGreenNormal, .Left + 2, .Top + 2, .Width - 4, 21
-            ' render the icon
-            Width = mTexture(.icon).Width
-            Height = mTexture(.icon).Height
-            RenderTexture .icon, .Left + .xOffset, .Top - (Width - 18) + .yOffset, 0, 0, Width, Height, Width, Height
-            ' render the caption
-            RenderText font(.font), Trim$(.text), .Left + Height + 2, .Top + 5, .textColour
+            RenderDesign DesignTypes.DesignWoodEmpty, .Left, .Top, .Width, .Height
+            RenderDesign DesignTypes.designGreenNormal, .Left + 2, .Top + 2, .Width - 4, 40
 
+            ' Render da top bar da janela
+            RenderDesign DesignTypes.designGreenNormal, .Left + 2, .Top + 2, .Width - 4, 40
+
+            ' render the caption
+            RenderText font(.font), Trim$(.text), .Left + Height + 20, .Top + 15, .textColour
+                            
         Case DesignTypes.designWindowDescription
             ' render window
             RenderDesign DesignTypes.designWindowDescription, .Left, .Top, .Width, .Height
@@ -641,6 +628,7 @@ Public Sub RenderWindow(winNum As Long)
         Case designWindowShadow
             ' render window
             RenderDesign DesignTypes.designWindowShadow, .Left, .Top, .Width, .Height
+                            
         End Select
 
         ' OnDraw call back
@@ -658,11 +646,12 @@ Public Sub RenderDesign(design As Long, Left As Long, Top As Long, Width As Long
 
     Select Case design
 
-    Case DesignTypes.designMenuHeader
+    Case DesignTypes.DesignMenuHeader
         ' render the header
         RenderTexture TextureBlank, Left, Top, 0, 0, Width, Height, 32, 32, D3DColorARGB(200, 47, 77, 29)
 
-    Case DesignTypes.designMenuHover
+    Case DesignTypes.DesignMenuHover
+
         ' render the option
         RenderTexture TextureBlank, Left, Top, 0, 0, Width, Height, 32, 32, D3DColorARGB(200, 98, 98, 98)
 
@@ -673,7 +662,8 @@ Public Sub RenderDesign(design As Long, Left As Long, Top As Long, Width As Long
         ' render wood texture
         RenderTexture TextureGUI(1), Left + bs, Top + bs, 100, 100, Width - (bs * 2), Height - (bs * 2), Width - (bs * 2), Height - (bs * 2), Colour
 
-    Case DesignTypes.designWoodEmpty
+    Case DesignTypes.DesignWoodEmpty
+
         bs = 4
         ' render the wood box
         RenderEntity_Square TextureDesign(2), Left, Top, Width, Height, bs, alpha
@@ -839,30 +829,30 @@ Public Sub CreateWindow(Name As String, caption As String, zOrder As Long, Left 
                         Optional visible As Boolean = True, Optional font As Long = Fonts.georgia_16, Optional textColour As Long = White, Optional xOffset As Long, _
                         Optional yOffset As Long, Optional design_norm As Long, Optional design_hover As Long, Optional design_mousedown As Long, Optional image_norm As Long, _
                         Optional image_hover As Long, Optional image_mousedown As Long, Optional entCallBack_norm As Long, Optional entCallBack_hover As Long, Optional entCallBack_mousedown As Long, _
-                        Optional entCallBack_mousemove As Long, Optional entCallBack_doubleClick As Long, Optional canDrag As Boolean = True, Optional zChange As Byte = True, Optional ByVal onDraw As Long, _
+                        Optional entCallBack_mousemove As Long, Optional entCallBack_DoubleClick As Long, Optional canDrag As Boolean = True, Optional zChange As Byte = True, Optional ByVal onDraw As Long, _
                         Optional isActive As Boolean, Optional clickThrough As Boolean)
 
     Dim i As Long
-    Dim design(0 To EntityStates.enumCount - 1) As Long
-    Dim image(0 To EntityStates.enumCount - 1) As Long
-    Dim entCallBack(0 To EntityStates.enumCount - 1) As Long
+    Dim design(0 To entStates.State_Count - 1) As Long
+    Dim image(0 To entStates.State_Count - 1) As Long
+    Dim entCallBack(0 To entStates.State_Count - 1) As Long
 
     ' fill temp arrays
-    design(EntityStates.Normal) = design_norm
-    design(EntityStates.Hover) = design_hover
-    design(EntityStates.MouseDown) = design_mousedown
-    design(EntityStates.doubleClick) = design_norm
-    design(EntityStates.MouseUp) = design_norm
-    image(EntityStates.Normal) = image_norm
-    image(EntityStates.Hover) = image_hover
-    image(EntityStates.MouseDown) = image_mousedown
-    image(EntityStates.doubleClick) = image_norm
-    image(EntityStates.MouseUp) = image_norm
-    entCallBack(EntityStates.Normal) = entCallBack_norm
-    entCallBack(EntityStates.Hover) = entCallBack_hover
-    entCallBack(EntityStates.MouseDown) = entCallBack_mousedown
-    entCallBack(EntityStates.MouseMove) = entCallBack_mousemove
-    entCallBack(EntityStates.doubleClick) = entCallBack_doubleClick
+    design(entStates.Normal) = design_norm
+    design(entStates.Hover) = design_hover
+    design(entStates.MouseDown) = design_mousedown
+    design(entStates.DoubleClick) = design_norm
+    design(entStates.MouseUp) = design_norm
+    image(entStates.Normal) = image_norm
+    image(entStates.Hover) = image_hover
+    image(entStates.MouseDown) = image_mousedown
+    image(entStates.DoubleClick) = image_norm
+    image(entStates.MouseUp) = image_norm
+    entCallBack(entStates.Normal) = entCallBack_norm
+    entCallBack(entStates.Hover) = entCallBack_hover
+    entCallBack(entStates.MouseDown) = entCallBack_mousedown
+    entCallBack(entStates.MouseMove) = entCallBack_mousemove
+    entCallBack(entStates.DoubleClick) = entCallBack_DoubleClick
     ' redim the windows
     WindowCount = WindowCount + 1
     ReDim Preserve Windows(1 To WindowCount) As WindowRec
@@ -870,10 +860,11 @@ Public Sub CreateWindow(Name As String, caption As String, zOrder As Long, Left 
     ' set the properties
     With Windows(WindowCount).Window
         .Name = Name
-        .Type = EntityTypes.entityWindow
+        .Type = EntityTypes.EntityWindow
 
         ' loop through states
-        For i = 0 To EntityStates.enumCount - 1
+        For i = 0 To entStates.State_Count - 1
+
             .design(i) = design(i)
             .image(i) = image(i)
             .entCallBack(i) = entCallBack(i)
@@ -909,117 +900,119 @@ End Sub
 Public Sub CreateTextbox(winNum As Long, Name As String, Left As Long, Top As Long, Width As Long, Height As Long, Optional text As String, Optional font As Long = Fonts.georgia_16, _
                          Optional textColour As Long = White, Optional align As Byte = Alignment.alignLeft, Optional visible As Boolean = True, Optional alpha As Long = 255, Optional image_norm As Long, _
                          Optional image_hover As Long, Optional image_mousedown As Long, Optional design_norm As Long, Optional design_hover As Long, Optional design_mousedown As Long, _
-                         Optional entCallBack_norm As Long, Optional entCallBack_hover As Long, Optional entCallBack_mousedown As Long, Optional entCallBack_mousemove As Long, Optional entCallBack_doubleClick As Long, _
+                         Optional entCallBack_norm As Long, Optional entCallBack_hover As Long, Optional entCallBack_mousedown As Long, Optional entCallBack_mousemove As Long, Optional entCallBack_DoubleClick As Long, _
                          Optional isActive As Boolean, Optional xOffset As Long, Optional yOffset As Long, Optional isCensor As Boolean, Optional entCallBack_enter As Long)
-    Dim design(0 To EntityStates.enumCount - 1) As Long
-    Dim image(0 To EntityStates.enumCount - 1) As Long
-    Dim entCallBack(0 To EntityStates.enumCount - 1) As Long
+    Dim design(0 To entStates.State_Count - 1) As Long
+    Dim image(0 To entStates.State_Count - 1) As Long
+    Dim entCallBack(0 To entStates.State_Count - 1) As Long
     ' fill temp arrays
-    design(EntityStates.Normal) = design_norm
-    design(EntityStates.Hover) = design_hover
-    design(EntityStates.MouseDown) = design_mousedown
-    image(EntityStates.Normal) = image_norm
-    image(EntityStates.Hover) = image_hover
-    image(EntityStates.MouseDown) = image_mousedown
-    entCallBack(EntityStates.Normal) = entCallBack_norm
-    entCallBack(EntityStates.Hover) = entCallBack_hover
-    entCallBack(EntityStates.MouseDown) = entCallBack_mousedown
-    entCallBack(EntityStates.MouseMove) = entCallBack_mousemove
-    entCallBack(EntityStates.doubleClick) = entCallBack_doubleClick
-    entCallBack(EntityStates.Enter) = entCallBack_enter
+    design(entStates.Normal) = design_norm
+    design(entStates.Hover) = design_hover
+    design(entStates.MouseDown) = design_mousedown
+    image(entStates.Normal) = image_norm
+    image(entStates.Hover) = image_hover
+    image(entStates.MouseDown) = image_mousedown
+    entCallBack(entStates.Normal) = entCallBack_norm
+    entCallBack(entStates.Hover) = entCallBack_hover
+    entCallBack(entStates.MouseDown) = entCallBack_mousedown
+    entCallBack(entStates.MouseMove) = entCallBack_mousemove
+    entCallBack(entStates.DoubleClick) = entCallBack_DoubleClick
+    entCallBack(entStates.Enter) = entCallBack_enter
     ' create the textbox
-    CreateEntity winNum, zOrder_Con, Name, entityTextBox, design(), image(), entCallBack(), Left, Top, Width, Height, visible, , , , , text, align, font, textColour, alpha, , xOffset, yOffset, , , , isActive, isCensor
+    CreateEntity winNum, zOrder_Con, Name, EntityTextBox, design(), image(), entCallBack(), Left, Top, Width, Height, visible, , , , , text, align, font, textColour, alpha, , xOffset, yOffset, , , , isActive, isCensor
 End Sub
 
 Public Sub CreatePictureBox(winNum As Long, Name As String, Left As Long, Top As Long, Width As Long, Height As Long, Optional visible As Boolean = True, Optional canDrag As Boolean, _
                             Optional alpha As Long = 255, Optional clickThrough As Boolean, Optional image_norm As Long, Optional image_hover As Long, Optional image_mousedown As Long, Optional design_norm As Long, _
                             Optional design_hover As Long, Optional design_mousedown As Long, Optional entCallBack_norm As Long, Optional entCallBack_hover As Long, Optional entCallBack_mousedown As Long, _
-                            Optional entCallBack_mousemove As Long, Optional entCallBack_doubleClick As Long, Optional onDraw As Long)
-    Dim design(0 To EntityStates.enumCount - 1) As Long
-    Dim image(0 To EntityStates.enumCount - 1) As Long
-    Dim entCallBack(0 To EntityStates.enumCount - 1) As Long
+                            Optional entCallBack_mousemove As Long, Optional entCallBack_DoubleClick As Long, Optional onDraw As Long)
+    Dim design(0 To entStates.State_Count - 1) As Long
+    Dim image(0 To entStates.State_Count - 1) As Long
+    Dim entCallBack(0 To entStates.State_Count - 1) As Long
     ' fill temp arrays
-    design(EntityStates.Normal) = design_norm
-    design(EntityStates.Hover) = design_hover
-    design(EntityStates.MouseDown) = design_mousedown
-    image(EntityStates.Normal) = image_norm
-    image(EntityStates.Hover) = image_hover
-    image(EntityStates.MouseDown) = image_mousedown
-    entCallBack(EntityStates.Normal) = entCallBack_norm
-    entCallBack(EntityStates.Hover) = entCallBack_hover
-    entCallBack(EntityStates.MouseDown) = entCallBack_mousedown
-    entCallBack(EntityStates.MouseMove) = entCallBack_mousemove
-    entCallBack(EntityStates.doubleClick) = entCallBack_doubleClick
+    design(entStates.Normal) = design_norm
+    design(entStates.Hover) = design_hover
+    design(entStates.MouseDown) = design_mousedown
+    image(entStates.Normal) = image_norm
+    image(entStates.Hover) = image_hover
+    image(entStates.MouseDown) = image_mousedown
+    entCallBack(entStates.Normal) = entCallBack_norm
+    entCallBack(entStates.Hover) = entCallBack_hover
+    entCallBack(entStates.MouseDown) = entCallBack_mousedown
+    entCallBack(entStates.MouseMove) = entCallBack_mousemove
+    entCallBack(entStates.DoubleClick) = entCallBack_DoubleClick
     ' create the box
-    CreateEntity winNum, zOrder_Con, Name, entityPictureBox, design(), image(), entCallBack(), Left, Top, Width, Height, visible, canDrag, , , , , , , , alpha, clickThrough, , , , , onDraw
+    CreateEntity winNum, zOrder_Con, Name, EntityPictureBox, design(), image(), entCallBack(), Left, Top, Width, Height, visible, canDrag, , , , , , , , alpha, clickThrough, , , , , onDraw
+
 End Sub
 
 Public Sub CreateButton(winNum As Long, Name As String, Left As Long, Top As Long, Width As Long, Height As Long, Optional text As String, Optional font As Fonts = Fonts.georgia_16, _
                         Optional textColour As Long = White, Optional icon As Long, Optional visible As Boolean = True, Optional alpha As Long = 255, Optional image_norm As Long, Optional image_hover As Long, _
                         Optional image_mousedown As Long, Optional design_norm As Long, Optional design_hover As Long, Optional design_mousedown As Long, Optional entCallBack_norm As Long, _
-                        Optional entCallBack_hover As Long, Optional entCallBack_mousedown As Long, Optional entCallBack_mousemove As Long, Optional entCallBack_doubleClick As Long, Optional xOffset As Long, _
-                        Optional yOffset As Long, Optional textColourHover As Long = -1, Optional textColourClick As Long = -1, Optional tooltip As String)
-    Dim design(0 To EntityStates.enumCount - 1) As Long
-    Dim image(0 To EntityStates.enumCount - 1) As Long
-    Dim entCallBack(0 To EntityStates.enumCount - 1) As Long
+                        Optional entCallBack_hover As Long, Optional entCallBack_mousedown As Long, Optional entCallBack_mousemove As Long, Optional entCallBack_DoubleClick As Long, Optional xOffset As Long, _
+                        Optional yOffset As Long, Optional textColour_Hover As Long = -1, Optional textColour_Click As Long = -1, Optional tooltip As String)
+    Dim design(0 To entStates.State_Count - 1) As Long
+    Dim image(0 To entStates.State_Count - 1) As Long
+    Dim entCallBack(0 To entStates.State_Count - 1) As Long
+
     ' default the colours
     If textColourHover = -1 Then textColourHover = textColour
     If textColourClick = -1 Then textColourClick = textColour
     ' fill temp arrays
-    design(EntityStates.Normal) = design_norm
-    design(EntityStates.Hover) = design_hover
-    design(EntityStates.MouseDown) = design_mousedown
-    image(EntityStates.Normal) = image_norm
-    image(EntityStates.Hover) = image_hover
-    image(EntityStates.MouseDown) = image_mousedown
-    entCallBack(EntityStates.Normal) = entCallBack_norm
-    entCallBack(EntityStates.Hover) = entCallBack_hover
-    entCallBack(EntityStates.MouseDown) = entCallBack_mousedown
-    entCallBack(EntityStates.MouseMove) = entCallBack_mousemove
-    entCallBack(EntityStates.doubleClick) = entCallBack_doubleClick
+    design(entStates.Normal) = design_norm
+    design(entStates.Hover) = design_hover
+    design(entStates.MouseDown) = design_mousedown
+    image(entStates.Normal) = image_norm
+    image(entStates.Hover) = image_hover
+    image(entStates.MouseDown) = image_mousedown
+    entCallBack(entStates.Normal) = entCallBack_norm
+    entCallBack(entStates.Hover) = entCallBack_hover
+    entCallBack(entStates.MouseDown) = entCallBack_mousedown
+    entCallBack(entStates.MouseMove) = entCallBack_mousemove
+    entCallBack(entStates.DoubleClick) = entCallBack_DoubleClick
     ' create the box
-    CreateEntity winNum, zOrder_Con, Name, entityButton, design(), image(), entCallBack(), Left, Top, Width, Height, visible, , , , , text, , font, textColour, alpha, , xOffset, yOffset, , icon, , , , textColourHover, textColourClick, tooltip
+    CreateEntity winNum, zOrder_Con, Name, EntityButton, design(), image(), entCallBack(), Left, Top, Width, Height, visible, , , , , text, , font, textColour, alpha, , xOffset, yOffset, , icon, , , , textColour_Hover, textColour_Click, tooltip
 End Sub
 
 Public Sub CreateLabel(winNum As Long, Name As String, Left As Long, Top As Long, Width As Long, Optional Height As Long, Optional text As String, Optional font As Fonts = Fonts.georgia_16, _
                        Optional textColour As Long = White, Optional align As Byte = Alignment.alignLeft, Optional visible As Boolean = True, Optional alpha As Long = 255, Optional clickThrough As Boolean, _
-                       Optional entCallBack_norm As Long, Optional entCallBack_hover As Long, Optional entCallBack_mousedown As Long, Optional entCallBack_mousemove As Long, Optional entCallBack_doubleClick As Long)
-    Dim design(0 To EntityStates.enumCount - 1) As Long
-    Dim image(0 To EntityStates.enumCount - 1) As Long
-    Dim entCallBack(0 To EntityStates.enumCount - 1) As Long
+                       Optional entCallBack_norm As Long, Optional entCallBack_hover As Long, Optional entCallBack_mousedown As Long, Optional entCallBack_mousemove As Long, Optional entCallBack_DoubleClick As Long)
+    Dim design(0 To entStates.State_Count - 1) As Long
+    Dim image(0 To entStates.State_Count - 1) As Long
+    Dim entCallBack(0 To entStates.State_Count - 1) As Long
     ' fill temp arrays
-    entCallBack(EntityStates.Normal) = entCallBack_norm
-    entCallBack(EntityStates.Hover) = entCallBack_hover
-    entCallBack(EntityStates.MouseDown) = entCallBack_mousedown
-    entCallBack(EntityStates.MouseMove) = entCallBack_mousemove
-    entCallBack(EntityStates.doubleClick) = entCallBack_doubleClick
+    entCallBack(entStates.Normal) = entCallBack_norm
+    entCallBack(entStates.Hover) = entCallBack_hover
+    entCallBack(entStates.MouseDown) = entCallBack_mousedown
+    entCallBack(entStates.MouseMove) = entCallBack_mousemove
+    entCallBack(entStates.DoubleClick) = entCallBack_DoubleClick
     ' create the box
-    CreateEntity winNum, zOrder_Con, Name, entityLabel, design(), image(), entCallBack(), Left, Top, Width, Height, visible, , , , , text, align, font, textColour, alpha, clickThrough
+    CreateEntity winNum, zOrder_Con, Name, EntityLabel, design(), image(), entCallBack(), Left, Top, Width, Height, visible, , , , , text, align, font, textColour, alpha, clickThrough
 End Sub
 
 Public Sub CreateCheckbox(winNum As Long, Name As String, Left As Long, Top As Long, Width As Long, Optional Height As Long = 15, Optional Value As Long, Optional text As String, _
                           Optional font As Fonts = Fonts.georgia_16, Optional textColour As Long = White, Optional align As Byte = Alignment.alignLeft, Optional visible As Boolean = True, Optional alpha As Long = 255, _
                           Optional theDesign As Long, Optional entCallBack_norm As Long, Optional entCallBack_hover As Long, Optional entCallBack_mousedown As Long, Optional entCallBack_mousemove As Long, _
-                          Optional entCallBack_doubleClick As Long, Optional group As Long)
-    Dim design(0 To EntityStates.enumCount - 1) As Long
-    Dim image(0 To EntityStates.enumCount - 1) As Long
-    Dim entCallBack(0 To EntityStates.enumCount - 1) As Long
+                          Optional entCallBack_DoubleClick As Long, Optional group As Long)
+    Dim design(0 To entStates.State_Count - 1) As Long
+    Dim image(0 To entStates.State_Count - 1) As Long
+    Dim entCallBack(0 To entStates.State_Count - 1) As Long
     ' fill temp arrays
-    entCallBack(EntityStates.Normal) = entCallBack_norm
-    entCallBack(EntityStates.Hover) = entCallBack_hover
-    entCallBack(EntityStates.MouseDown) = entCallBack_mousedown
-    entCallBack(EntityStates.MouseMove) = entCallBack_mousemove
-    entCallBack(EntityStates.doubleClick) = entCallBack_doubleClick
+    entCallBack(entStates.Normal) = entCallBack_norm
+    entCallBack(entStates.Hover) = entCallBack_hover
+    entCallBack(entStates.MouseDown) = entCallBack_mousedown
+    entCallBack(entStates.MouseMove) = entCallBack_mousemove
+    entCallBack(entStates.DoubleClick) = entCallBack_DoubleClick
     ' fill temp array
     design(0) = theDesign
     ' create the box
-    CreateEntity winNum, zOrder_Con, Name, entityCheckbox, design(), image(), entCallBack(), Left, Top, Width, Height, visible, , , , Value, text, align, font, textColour, alpha, , , , , , , , , , , , group
+    CreateEntity winNum, zOrder_Con, Name, EntityCheckbox, design(), image(), entCallBack(), Left, Top, Width, Height, visible, , , , Value, text, align, font, textColour, alpha, , , , , , , , , , , , group
 End Sub
 
 Public Sub CreateComboBox(winNum As Long, Name As String, Left As Long, Top As Long, Width As Long, Height As Long, design As Long, Optional font As Fonts = Fonts.georgia_16)
-    Dim theDesign(0 To EntityStates.enumCount - 1) As Long
-    Dim image(0 To EntityStates.enumCount - 1) As Long
-    Dim entCallBack(0 To EntityStates.enumCount - 1) As Long
+    Dim theDesign(0 To entStates.State_Count - 1) As Long
+    Dim image(0 To entStates.State_Count - 1) As Long
+    Dim entCallBack(0 To entStates.State_Count - 1) As Long
     theDesign(0) = design
     ' create the box
     CreateEntity winNum, zOrder_Con, Name, entityCombo, theDesign(), image(), entCallBack(), Left, Top, Width, Height, , , , , , , , font
@@ -1062,7 +1055,8 @@ End Function
 Public Function SetActiveControl(curWindow As Long, curControl As Long) As Boolean
 ' make sure it's something which CAN be active
     Select Case Windows(curWindow).Controls(curControl).Type
-    Case EntityTypes.entityTextBox
+    Case EntityTypes.EntityTextBox
+
         Windows(curWindow).activeControl = curControl
         SetActiveControl = True
     End Select
@@ -1116,8 +1110,8 @@ End Sub
 
 ' Janela de Login
 Public Sub CreateWindow_Login()
-    CreateWindow "winLogin", "Acessar", zOrder_Win, 0, 0, 276, 212, TextureItem(45), , Fonts.rockwellDec_15, , 3, 5, DesignTypes.designWindowNormal, DesignTypes.designWindowNormal, DesignTypes.designWindowNormal
-    
+' Create the window
+    CreateWindow "winLogin", "Login", zOrder_Win, 0, 0, 276, 212, TextureItem(45), , Fonts.rockwellDec_15, , 3, 5, DesignTypes.DesignWindowNormal, DesignTypes.DesignWindowNormal, DesignTypes.DesignWindowNormal
     ' Centralise it
     CentraliseWindow WindowCount
 
@@ -1126,7 +1120,6 @@ Public Sub CreateWindow_Login()
 
     ' Close button
     CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.Width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf DestroyGame)
-
     ' Parchment
     CreatePictureBox WindowCount, "picParchment", 6, 26, 264, 180, , , , , , , , DesignTypes.designParchment, DesignTypes.designParchment, DesignTypes.designParchment
     ' Shadows
@@ -1142,8 +1135,7 @@ Public Sub CreateWindow_Login()
     CreateTextbox WindowCount, "txtUser", 67, 55, 142, 19, Options.Username, Fonts.rockwell_15, , Alignment.alignLeft, , , , , , DesignTypes.designTextInput, DesignTypes.designTextInput, DesignTypes.designTextInput, , , , , , , 5, 3
     CreateTextbox WindowCount, "txtPass", 67, 91, 142, 19, vbNullString, Fonts.rockwell_15, , Alignment.alignLeft, , , , , , DesignTypes.designTextInput, DesignTypes.designTextInput, DesignTypes.designTextInput, , , , , , , 5, 3, True, GetAddress(AddressOf btnLogin_Click)
     ' Checkbox
-    CreateCheckbox WindowCount, "chkSaveUser", 67, 114, 142, , Options.SaveUser, "Save Username?", rockwell_15, , , , , DesignTypes.designCheckbox, , , GetAddress(AddressOf chkSaveUser_Click)
-
+    CreateCheckbox WindowCount, "chkSaveUser", 67, 114, 142, , Options.SaveUser, "Save Username?", rockwell_15, , , , , DesignTypes.DesignCheckbox, , , GetAddress(AddressOf chkSaveUser_Click)
     ' Register Button
     CreateButton WindowCount, "btnRegister", 12, Windows(WindowCount).Window.Height - 35, 252, 22, "Create Account", rockwellDec_15, White, , , , , , , DesignTypes.designGreenNormal, DesignTypes.designGreenHover, DesignTypes.designGreenClick, , , GetAddress(AddressOf btnRegister_Click)
 
@@ -1157,8 +1149,9 @@ End Sub
 
 Public Sub CreateWindow_Register()
 
-    ' Create the window
-    CreateWindow "winRegister", "Register", zOrder_Win, 0, 0, 276, 302, TextureItem(45), , Fonts.rockwellDec_15, , 3, 5, DesignTypes.designWindowNormal, DesignTypes.designWindowNormal, DesignTypes.designWindowNormal
+' Create the window
+    CreateWindow "winRegister", "Register", zOrder_Win, 0, 0, 276, 302, TextureItem(45), , Fonts.rockwellDec_15, , 3, 5, DesignTypes.DesignWindowNormal, DesignTypes.DesignWindowNormal, DesignTypes.DesignWindowNormal
+
     ' Centralise it
     CentraliseWindow WindowCount
 
@@ -1202,7 +1195,7 @@ End Sub
 
 Public Sub CreateWindow_Characters()
 ' Create the window
-    CreateWindow "winCharacters", "Characters", zOrder_Win, 0, 0, 364, 229, TextureItem(62), False, Fonts.rockwellDec_15, , 3, 5, DesignTypes.designWindowNormal, DesignTypes.designWindowNormal, DesignTypes.designWindowNormal
+    CreateWindow "winCharacters", "Characters", zOrder_Win, 0, 0, 364, 229, TextureItem(62), False, Fonts.rockwellDec_15, , 3, 5, DesignTypes.DesignWindowNormal, DesignTypes.DesignWindowNormal, DesignTypes.DesignWindowNormal
     ' Centralise it
     CentraliseWindow WindowCount
 
@@ -1238,7 +1231,7 @@ End Sub
 
 Public Sub CreateWindow_Loading()
 ' Create the window
-    CreateWindow "winLoading", "Loading", zOrder_Win, 0, 0, 278, 79, TextureItem(104), True, Fonts.rockwellDec_15, , 2, 7, DesignTypes.designWindowNormal, DesignTypes.designWindowNormal, DesignTypes.designWindowNormal
+    CreateWindow "winLoading", "Loading", zOrder_Win, 0, 0, 278, 79, TextureItem(104), True, Fonts.rockwellDec_15, , 2, 7, DesignTypes.DesignWindowNormal, DesignTypes.DesignWindowNormal, DesignTypes.DesignWindowNormal
     ' Centralise it
     CentraliseWindow WindowCount
 
@@ -1255,9 +1248,9 @@ End Sub
 
 Public Sub CreateWindow_Dialogue()
 ' Create black background
-    CreateWindow "winBlank", "", zOrder_Win, 0, 0, 800, 600, 0, , , , , , DesignTypes.designWindowShadow, DesignTypes.designWindowShadow, DesignTypes.designWindowShadow, , , , , , , , , False, False
+    CreateWindow "winBlank", "", zOrder_Win, 0, 0, 800, 600, 0, , , , , , DesignTypes.designWindowDescription, DesignTypes.designWindowDescription, DesignTypes.designWindowDescription, , , , , , , , , False, False
     ' Create dialogue window
-    CreateWindow "winDialogue", "Warning", zOrder_Win, 0, 0, 348, 145, TextureItem(38), , Fonts.rockwellDec_15, , 3, 5, DesignTypes.designWindowNormal, DesignTypes.designWindowNormal, DesignTypes.designWindowNormal, , , , , , , , , , False
+    CreateWindow "winDialogue", "Warning", zOrder_Win, 0, 0, 348, 145, TextureItem(38), , Fonts.rockwellDec_15, , 3, 5, DesignTypes.DesignWindowNormal, DesignTypes.DesignWindowNormal, DesignTypes.DesignWindowNormal, , , , , , , , , , False
     ' Centralise it
     CentraliseWindow WindowCount
 
@@ -1266,7 +1259,7 @@ Public Sub CreateWindow_Dialogue()
 
     ' Close button
     CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.Width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnDialogue_Close)
-    
+
     ' Parchment
     CreatePictureBox WindowCount, "picParchment", 6, 26, 335, 113, , , , , , , , DesignTypes.designParchment, DesignTypes.designParchment, DesignTypes.designParchment
     ' Header
@@ -1287,7 +1280,8 @@ End Sub
 
 Public Sub CreateWindow_Classes()
 ' Create window
-    CreateWindow "winClasses", "Select Class", zOrder_Win, 0, 0, 364, 229, TextureItem(17), False, Fonts.rockwellDec_15, , 2, 6, DesignTypes.designWindowNormal, DesignTypes.designWindowNormal, DesignTypes.designWindowNormal
+    CreateWindow "winClasses", "Select Class", zOrder_Win, 0, 0, 364, 229, TextureItem(17), False, Fonts.rockwellDec_15, , 2, 6, DesignTypes.DesignWindowNormal, DesignTypes.DesignWindowNormal, DesignTypes.DesignWindowNormal
+
     ' Centralise it
     CentraliseWindow WindowCount
 
@@ -1314,7 +1308,8 @@ End Sub
 
 Public Sub CreateWindow_NewChar()
 ' Create window
-    CreateWindow "winNewChar", "Create Character", zOrder_Win, 0, 0, 291, 172, TextureItem(17), False, Fonts.rockwellDec_15, , 2, 6, DesignTypes.designWindowNormal, DesignTypes.designWindowNormal, DesignTypes.designWindowNormal
+    CreateWindow "winNewChar", "Create Character", zOrder_Win, 0, 0, 291, 172, TextureItem(17), False, Fonts.rockwellDec_15, , 2, 6, DesignTypes.DesignWindowNormal, DesignTypes.DesignWindowNormal, DesignTypes.DesignWindowNormal
+
     ' Centralise it
     CentraliseWindow WindowCount
 
@@ -1334,8 +1329,9 @@ Public Sub CreateWindow_NewChar()
     CreatePictureBox WindowCount, "picShadow_2", 29, 85, 124, 9, , , , , , , , DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment
     CreateLabel WindowCount, "lblGender", 29, 82, 124, , "Gender", rockwellDec_15, White, Alignment.alignCentre
     ' Checkboxes
-    CreateCheckbox WindowCount, "chkMale", 29, 103, 55, , 1, "Male", rockwell_15, , Alignment.alignCentre, , , DesignTypes.designCheckbox, , , GetAddress(AddressOf chkNewChar_Male), , , 1
-    CreateCheckbox WindowCount, "chkFemale", 90, 103, 62, , 0, "Female", rockwell_15, , Alignment.alignCentre, , , DesignTypes.designCheckbox, , , GetAddress(AddressOf chkNewChar_Female), , , 1
+    CreateCheckbox WindowCount, "chkMale", 29, 103, 55, , 1, "Male", rockwell_15, , Alignment.alignCentre, , , DesignTypes.DesignCheckbox, , , GetAddress(AddressOf chkNewChar_Male), , , 1
+    CreateCheckbox WindowCount, "chkFemale", 90, 103, 62, , 0, "Female", rockwell_15, , Alignment.alignCentre, , , DesignTypes.DesignCheckbox, , , GetAddress(AddressOf chkNewChar_Female), , , 1
+
     ' Buttons
     CreateButton WindowCount, "btnAccept", 29, 127, 60, 24, "Accept", rockwellDec_15, , , , , , , , DesignTypes.designGreenNormal, DesignTypes.designGreenHover, DesignTypes.designGreenClick, , , GetAddress(AddressOf btnNewChar_Accept)
     CreateButton WindowCount, "btnCancel", 93, 127, 60, 24, "Cancel", rockwellDec_15, , , , , , , , DesignTypes.designRedNormal, DesignTypes.designRedHover, DesignTypes.designRedClick, , , GetAddress(AddressOf btnNewChar_Cancel)
@@ -1354,7 +1350,7 @@ End Sub
 
 Public Sub CreateWindow_EscMenu()
 ' Create window
-    CreateWindow "winEscMenu", "", zOrder_Win, 0, 0, 210, 156, 0, , , , , , DesignTypes.designWindowWithoutBar, DesignTypes.designWindowWithoutBar, DesignTypes.designWindowWithoutBar, , , , , , , , , False, False
+    CreateWindow "winEscMenu", "", zOrder_Win, 0, 0, 210, 156, 0, , , , , , DesignTypes.DesignWindowWithoutBar, DesignTypes.DesignWindowWithoutBar, DesignTypes.DesignWindowWithoutBar, , , , , , , , , False, False
     ' Centralise it
     CentraliseWindow WindowCount
 
@@ -1372,7 +1368,7 @@ End Sub
 
 Public Sub CreateWindow_Bars()
 ' Create window
-    CreateWindow "winBars", "", zOrder_Win, 10, 10, 239, 77, 0, , , , , , DesignTypes.designWindowWithoutBar, DesignTypes.designWindowWithoutBar, DesignTypes.designWindowWithoutBar, , , , , , , , , False, False
+    CreateWindow "winBars", "", zOrder_Win, 10, 10, 239, 77, 0, , , , , , DesignTypes.DesignWindowWithoutBar, DesignTypes.DesignWindowWithoutBar, DesignTypes.DesignWindowWithoutBar, , , , , , , , , False, False
 
     ' Set the index for spawning controls
     zOrder_Con = 1
@@ -1385,10 +1381,6 @@ Public Sub CreateWindow_Bars()
     CreatePictureBox WindowCount, "picEXP_Blank", 15, 49, 209, 13, , , , , TextureGUI(28), TextureGUI(28), TextureGUI(28)
     ' Draw the bars
     CreatePictureBox WindowCount, "picBlank", 0, 0, 0, 0, , , , , , , , , , , , , , , , GetAddress(AddressOf Bars_OnDraw)
-    ' Bar Labels
-    '    CreatePictureBox WindowCount, "picHealth", 16, 11, 44, 14, , , , , TextureGUI(21), TextureGUI(21), TextureGUI(21)
-    '    CreatePictureBox WindowCount, "picSpirit", 16, 28, 44, 14, , , , , TextureGUI(22), TextureGUI(22), TextureGUI(22)
-    '    CreatePictureBox WindowCount, "picExperience", 16, 45, 74, 14, , , , , TextureGUI(23), TextureGUI(23), TextureGUI(23)
     ' Labels
     CreateLabel WindowCount, "lblHP", 15, 14, 209, 12, "999/999", rockwellDec_10, White, Alignment.alignCentre
     CreateLabel WindowCount, "lblMP", 15, 31, 209, 12, "999/999", rockwellDec_10, White, Alignment.alignCentre
@@ -1415,11 +1407,12 @@ End Sub
 
 Public Sub CreateWindow_Hotbar()
 ' Create window
-    CreateWindow "winHotbar", "", zOrder_Win, 372, 10, 418, 36, 0, , , , , , , , , , , , , GetAddress(AddressOf Hotbar_MouseMove), GetAddress(AddressOf Hotbar_MouseDown), GetAddress(AddressOf Hotbar_MouseMove), GetAddress(AddressOf Hotbar_doubleClick), False, False, GetAddress(AddressOf DrawHotbar)
+    CreateWindow "winHotbar", "", zOrder_Win, 372, 10, 418, 36, 0, , , , , , , , , , , , , GetAddress(AddressOf Hotbar_MouseMove), GetAddress(AddressOf Hotbar_MouseDown), GetAddress(AddressOf Hotbar_MouseMove), GetAddress(AddressOf Hotbar_DoubleClick), False, False, GetAddress(AddressOf DrawHotbar)
 End Sub
 
 Public Sub CreateWindow_Bank()
-    CreateWindow "winBank", "Bank", zOrder_Win, 0, 0, 391, 373, TextureItem(1), True, Fonts.verdana_13, , 2, 5, DesignTypes.designWindowClear, DesignTypes.designWindowClear, DesignTypes.designWindowClear, , , , , GetAddress(AddressOf Bank_MouseMove), GetAddress(AddressOf Bank_MouseDown), GetAddress(AddressOf Bank_MouseMove), 0, , , GetAddress(AddressOf DrawBank)
+    CreateWindow "winBank", "Bank", zOrder_Win, 0, 0, 391, 373, TextureItem(1), True, Fonts.verdana_13, , 2, 5, DesignTypes.DesignWindowClear, DesignTypes.DesignWindowClear, DesignTypes.DesignWindowClear, , , , , GetAddress(AddressOf Bank_MouseMove), GetAddress(AddressOf Bank_MouseDown), GetAddress(AddressOf Bank_MouseMove), 0, , , GetAddress(AddressOf DrawBank)
+
     ' Centralise it
     CentraliseWindow WindowCount
 
@@ -1432,7 +1425,8 @@ End Sub
 
 Public Sub CreateWindow_Inventory()
 ' Create window
-    CreateWindow "winInventory", "Inventory", zOrder_Win, 0, 0, 202, 319, TextureItem(1), False, Fonts.rockwellDec_15, , 2, 7, DesignTypes.designWindowClear, DesignTypes.designWindowClear, DesignTypes.designWindowClear, , , , , GetAddress(AddressOf Inventory_MouseMove), GetAddress(AddressOf Inventory_MouseDown), GetAddress(AddressOf Inventory_MouseMove), GetAddress(AddressOf Inventory_doubleClick), , , GetAddress(AddressOf DrawInventory)
+    CreateWindow "winInventory", "Inventory", zOrder_Win, 0, 0, 202, 319, TextureItem(1), False, Fonts.rockwellDec_15, , 2, 7, DesignTypes.DesignWindowClear, DesignTypes.DesignWindowClear, DesignTypes.DesignWindowClear, , , , , GetAddress(AddressOf Inventory_MouseMove), GetAddress(AddressOf Inventory_MouseDown), GetAddress(AddressOf Inventory_MouseMove), GetAddress(AddressOf Inventory_DoubleClick), , , GetAddress(AddressOf DrawInventory)
+
     ' Centralise it
     CentraliseWindow WindowCount
 
@@ -1441,13 +1435,13 @@ Public Sub CreateWindow_Inventory()
 
     ' Close button
     CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.Width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnMenu_Inv)
-    ' Gold amount
     CreateLabel WindowCount, "lblGold", 42, 296, 100, , "0g", verdana_12
 End Sub
 
 Public Sub CreateWindow_Character()
 ' Create window
-    CreateWindow "winCharacter", "Character Status", zOrder_Win, 0, 0, 214, 318, TextureItem(62), False, Fonts.rockwellDec_15, , 2, 6, DesignTypes.designWindowClear, DesignTypes.designWindowClear, DesignTypes.designWindowClear, , , , , GetAddress(AddressOf Character_MouseMove), GetAddress(AddressOf Character_MouseDown), GetAddress(AddressOf Character_MouseMove), GetAddress(AddressOf Character_MouseMove), , , GetAddress(AddressOf DrawCharacter)
+    CreateWindow "winCharacter", "Character Status", zOrder_Win, 0, 0, 214, 318, TextureItem(62), False, Fonts.rockwellDec_15, , 2, 6, DesignTypes.DesignWindowClear, DesignTypes.DesignWindowClear, DesignTypes.DesignWindowClear, , , , , GetAddress(AddressOf Character_MouseMove), GetAddress(AddressOf Character_MouseDown), GetAddress(AddressOf Character_MouseMove), GetAddress(AddressOf Character_MouseMove), , , GetAddress(AddressOf DrawCharacter)
+
     ' Centralise it
     CentraliseWindow WindowCount
 
@@ -1456,7 +1450,7 @@ Public Sub CreateWindow_Character()
 
     ' Close button
     CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.Width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnMenu_Char)
-    
+
     ' Parchment
     CreatePictureBox WindowCount, "picParchment", 6, 26, 162, 287, , , , , , , , DesignTypes.designParchment, DesignTypes.designParchment, DesignTypes.designParchment
     ' White boxes
@@ -1515,7 +1509,8 @@ End Sub
 
 Public Sub CreateWindow_PlayerQuest()
 ' Create window
-    CreateWindow "winPlayerQuests", "Quests", zOrder_Win, 0, 0, 450, 412, TextureItem(23), False, Fonts.rockwellDec_15, , 2, 7, DesignTypes.designWindowClear, DesignTypes.designWindowClear, DesignTypes.designWindowClear, , , , , GetAddress(AddressOf Inventory_MouseMove), GetAddress(AddressOf Inventory_MouseDown), GetAddress(AddressOf Inventory_MouseMove), GetAddress(AddressOf Inventory_doubleClick), , , GetAddress(AddressOf DrawWinQuest)
+    CreateWindow "winPlayerQuests", "Quests", zOrder_Win, 0, 0, 450, 412, TextureItem(23), False, Fonts.rockwellDec_15, , 2, 7, DesignTypes.DesignWindowClear, DesignTypes.DesignWindowClear, DesignTypes.DesignWindowClear, , , , , GetAddress(AddressOf Inventory_MouseMove), GetAddress(AddressOf Inventory_MouseDown), GetAddress(AddressOf Inventory_MouseMove), GetAddress(AddressOf Inventory_DoubleClick), , , GetAddress(AddressOf DrawWinQuest)
+
     ' Centralise it
     CentraliseWindow WindowCount
 
@@ -1525,18 +1520,18 @@ Public Sub CreateWindow_PlayerQuest()
     ' Close button
     CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.Width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnMenu_Quest)
 
-    CreateButton WindowCount, "btnMission1", 5, 24, 125, 30, "Quest 1", verdana_12, White, , False, , , , , DesignTypes.designMenuHover, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, , , GetAddress(AddressOf btnQuest1)
-    CreateButton WindowCount, "btnMission2", 5, 56, 125, 30, "Quest 2", verdana_12, White, , False, , , , , DesignTypes.designMenuHover, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, , , GetAddress(AddressOf btnQuest2)
-    CreateButton WindowCount, "btnMission3", 5, 88, 125, 30, "Quest 3", verdana_12, White, , False, , , , , DesignTypes.designMenuHover, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, , , GetAddress(AddressOf btnQuest3)
-    CreateButton WindowCount, "btnMission4", 5, 120, 125, 30, "Quest 4", verdana_12, White, , False, , , , , DesignTypes.designMenuHover, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, , , GetAddress(AddressOf btnQuest4)
-    CreateButton WindowCount, "btnMission5", 5, 152, 125, 30, "Quest 5", verdana_12, White, , False, , , , , DesignTypes.designMenuHover, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, , , GetAddress(AddressOf btnQuest5)
-    CreateButton WindowCount, "btnMission6", 5, 184, 125, 30, "Quest 6", verdana_12, White, , False, , , , , DesignTypes.designMenuHover, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, , , GetAddress(AddressOf btnQuest6)
-    CreateButton WindowCount, "btnMission7", 5, 216, 125, 30, "Quest 7", verdana_12, White, , False, , , , , DesignTypes.designMenuHover, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, , , GetAddress(AddressOf btnQuest7)
-    CreateButton WindowCount, "btnMission8", 5, 248, 125, 30, "Quest 8", verdana_12, White, , False, , , , , DesignTypes.designMenuHover, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, , , GetAddress(AddressOf btnQuest8)
-    CreateButton WindowCount, "btnMission9", 5, 280, 125, 30, "Quest 9", verdana_12, White, , False, , , , , DesignTypes.designMenuHover, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, , , GetAddress(AddressOf btnQuest9)
-    CreateButton WindowCount, "btnMission10", 5, 312, 125, 30, "Quest 10", verdana_12, White, , False, , , , , DesignTypes.designMenuHover, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, , , GetAddress(AddressOf btnQuest10)
-    CreateButton WindowCount, "btnMission11", 5, 344, 125, 30, "Quest 11", verdana_12, White, , False, , , , , DesignTypes.designMenuHover, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, , , GetAddress(AddressOf btnQuest11)
-    CreateButton WindowCount, "btnMission12", 5, 376, 125, 30, "Quest 12", verdana_12, White, , False, , , , , DesignTypes.designMenuHover, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, , , GetAddress(AddressOf btnQuest12)
+    CreateButton WindowCount, "btnMission1", 5, 24, 125, 30, "Quest 1", verdana_12, White, , False, , , , , DesignTypes.DesignMenuHover, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, , , GetAddress(AddressOf btnQuest1)
+    CreateButton WindowCount, "btnMission2", 5, 56, 125, 30, "Quest 2", verdana_12, White, , False, , , , , DesignTypes.DesignMenuHover, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, , , GetAddress(AddressOf btnQuest2)
+    CreateButton WindowCount, "btnMission3", 5, 88, 125, 30, "Quest 3", verdana_12, White, , False, , , , , DesignTypes.DesignMenuHover, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, , , GetAddress(AddressOf btnQuest3)
+    CreateButton WindowCount, "btnMission4", 5, 120, 125, 30, "Quest 4", verdana_12, White, , False, , , , , DesignTypes.DesignMenuHover, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, , , GetAddress(AddressOf btnQuest4)
+    CreateButton WindowCount, "btnMission5", 5, 152, 125, 30, "Quest 5", verdana_12, White, , False, , , , , DesignTypes.DesignMenuHover, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, , , GetAddress(AddressOf btnQuest5)
+    CreateButton WindowCount, "btnMission6", 5, 184, 125, 30, "Quest 6", verdana_12, White, , False, , , , , DesignTypes.DesignMenuHover, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, , , GetAddress(AddressOf btnQuest6)
+    CreateButton WindowCount, "btnMission7", 5, 216, 125, 30, "Quest 7", verdana_12, White, , False, , , , , DesignTypes.DesignMenuHover, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, , , GetAddress(AddressOf btnQuest7)
+    CreateButton WindowCount, "btnMission8", 5, 248, 125, 30, "Quest 8", verdana_12, White, , False, , , , , DesignTypes.DesignMenuHover, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, , , GetAddress(AddressOf btnQuest8)
+    CreateButton WindowCount, "btnMission9", 5, 280, 125, 30, "Quest 9", verdana_12, White, , False, , , , , DesignTypes.DesignMenuHover, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, , , GetAddress(AddressOf btnQuest9)
+    CreateButton WindowCount, "btnMission10", 5, 312, 125, 30, "Quest 10", verdana_12, White, , False, , , , , DesignTypes.DesignMenuHover, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, , , GetAddress(AddressOf btnQuest10)
+    CreateButton WindowCount, "btnMission11", 5, 344, 125, 30, "Quest 11", verdana_12, White, , False, , , , , DesignTypes.DesignMenuHover, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, , , GetAddress(AddressOf btnQuest11)
+    CreateButton WindowCount, "btnMission12", 5, 376, 125, 30, "Quest 12", verdana_12, White, , False, , , , , DesignTypes.DesignMenuHover, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, , , GetAddress(AddressOf btnQuest12)
 
     ' Description
     CreateLabel WindowCount, "lblDescrip", 142, 27, 150, 20, "Description:", Fonts.verdana_12, Grey, Alignment.alignLeft, True
@@ -1581,7 +1576,8 @@ End Sub
 
 Public Sub CreateWindow_Skills()
 ' Create window
-    CreateWindow "winSkills", "Skills", zOrder_Win, 0, 0, 202, 297, TextureItem(109), False, Fonts.rockwellDec_15, , 2, 7, DesignTypes.designWindowClear, DesignTypes.designWindowClear, DesignTypes.designWindowClear, , , , , GetAddress(AddressOf Skills_MouseMove), GetAddress(AddressOf Skills_MouseDown), GetAddress(AddressOf Skills_MouseMove), GetAddress(AddressOf Skills_doubleClick), , , GetAddress(AddressOf DrawSkills)
+    CreateWindow "winSkills", "Skills", zOrder_Win, 0, 0, 202, 297, TextureItem(109), False, Fonts.rockwellDec_15, , 2, 7, DesignTypes.DesignWindowClear, DesignTypes.DesignWindowClear, DesignTypes.DesignWindowClear, , , , , GetAddress(AddressOf Skills_MouseMove), GetAddress(AddressOf Skills_MouseDown), GetAddress(AddressOf Skills_MouseMove), GetAddress(AddressOf Skills_DoubleClick), , , GetAddress(AddressOf DrawSkills)
+
     ' Centralise it
     CentraliseWindow WindowCount
 
@@ -1600,12 +1596,13 @@ Public Sub CreateWindow_Chat()
     zOrder_Con = 1
 
     ' Channel boxes
-    CreateCheckbox WindowCount, "chkGame", 10, 2, 49, 23, 1, "Game", rockwellDec_10, , , , , DesignTypes.designCheckChat, , , GetAddress(AddressOf chkChat_Game)
-    CreateCheckbox WindowCount, "chkMap", 60, 2, 49, 23, 1, "Map", rockwellDec_10, , , , , DesignTypes.designCheckChat, , , GetAddress(AddressOf chkChat_Map)
-    CreateCheckbox WindowCount, "chkGlobal", 110, 2, 49, 23, 1, "Global", rockwellDec_10, , , , , DesignTypes.designCheckChat, , , GetAddress(AddressOf chkChat_Global)
-    CreateCheckbox WindowCount, "chkParty", 160, 2, 49, 23, 1, "Party", rockwellDec_10, , , , , DesignTypes.designCheckChat, , , GetAddress(AddressOf chkChat_Party)
-    CreateCheckbox WindowCount, "chkGuild", 210, 2, 49, 23, 1, "Guild", rockwellDec_10, , , , , DesignTypes.designCheckChat, , , GetAddress(AddressOf chkChat_Guild)
-    CreateCheckbox WindowCount, "chkPrivate", 260, 2, 49, 23, 1, "Private", rockwellDec_10, , , , , DesignTypes.designCheckChat, , , GetAddress(AddressOf chkChat_Private)
+    CreateCheckbox WindowCount, "chkGame", 10, 2, 49, 23, 1, "Game", rockwellDec_10, , , , , DesignTypes.DesignCheckChat, , , GetAddress(AddressOf chkChat_Game)
+    CreateCheckbox WindowCount, "chkMap", 60, 2, 49, 23, 1, "Map", rockwellDec_10, , , , , DesignTypes.DesignCheckChat, , , GetAddress(AddressOf chkChat_Map)
+    CreateCheckbox WindowCount, "chkGlobal", 110, 2, 49, 23, 1, "Global", rockwellDec_10, , , , , DesignTypes.DesignCheckChat, , , GetAddress(AddressOf chkChat_Global)
+    CreateCheckbox WindowCount, "chkParty", 160, 2, 49, 23, 1, "Party", rockwellDec_10, , , , , DesignTypes.DesignCheckChat, , , GetAddress(AddressOf chkChat_Party)
+    CreateCheckbox WindowCount, "chkGuild", 210, 2, 49, 23, 1, "Guild", rockwellDec_10, , , , , DesignTypes.DesignCheckChat, , , GetAddress(AddressOf chkChat_Guild)
+    CreateCheckbox WindowCount, "chkPrivate", 260, 2, 49, 23, 1, "Private", rockwellDec_10, , , , , DesignTypes.DesignCheckChat, , , GetAddress(AddressOf chkChat_Private)
+
     ' Blank picturebox - ondraw wrapper
     CreatePictureBox WindowCount, "picNull", 0, 0, 0, 0, , , , , , , , , , , , , , , , GetAddress(AddressOf OnDraw_Chat)
     ' Chat button
@@ -1647,7 +1644,8 @@ End Sub
 
 Public Sub CreateWindow_Options()
 ' Create window
-    CreateWindow "winOptions", "", zOrder_Win, 0, 0, 210, 212, 0, , , , , , DesignTypes.designWindowWithoutBar, DesignTypes.designWindowWithoutBar, DesignTypes.designWindowWithoutBar, , , , , , , , , False, False
+    CreateWindow "winOptions", "", zOrder_Win, 0, 0, 210, 212, 0, , , , , , DesignTypes.DesignWindowWithoutBar, DesignTypes.DesignWindowWithoutBar, DesignTypes.DesignWindowWithoutBar, , , , , , , , , False, False
+
     ' Centralise it
     CentraliseWindow WindowCount
 
@@ -1660,10 +1658,11 @@ Public Sub CreateWindow_Options()
     CreatePictureBox WindowCount, "picBlank", 35, 25, 140, 9, , , , , , , , DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment
     CreateLabel WindowCount, "lblBlank", 35, 22, 140, , "General Options", rockwellDec_15, White, Alignment.alignCentre
     ' Check boxes
-    CreateCheckbox WindowCount, "chkMusic", 35, 40, 80, , , "Music", rockwellDec_10, , , , , DesignTypes.designCheckbox
-    CreateCheckbox WindowCount, "chkSound", 115, 40, 80, , , "Sound", rockwellDec_10, , , , , DesignTypes.designCheckbox
-    CreateCheckbox WindowCount, "chkAutotiles", 35, 60, 80, , , "Autotiles", rockwellDec_10, , , , , DesignTypes.designCheckbox
-    CreateCheckbox WindowCount, "chkFullscreen", 115, 60, 80, , , "Fullscreen", rockwellDec_10, , , , , DesignTypes.designCheckbox
+    CreateCheckbox WindowCount, "chkMusic", 35, 40, 80, , , "Music", rockwellDec_10, , , , , DesignTypes.DesignCheckbox
+    CreateCheckbox WindowCount, "chkSound", 115, 40, 80, , , "Sound", rockwellDec_10, , , , , DesignTypes.DesignCheckbox
+    CreateCheckbox WindowCount, "chkAutotiles", 35, 60, 80, , , "Autotiles", rockwellDec_10, , , , , DesignTypes.DesignCheckbox
+    CreateCheckbox WindowCount, "chkFullscreen", 115, 60, 80, , , "Fullscreen", rockwellDec_10, , , , , DesignTypes.DesignCheckbox
+
     ' Resolution
     CreatePictureBox WindowCount, "picBlank", 35, 85, 140, 9, , , , , , , , DesignTypes.designBlackParchment, DesignTypes.designBlackParchment, DesignTypes.designBlackParchment
     CreateLabel WindowCount, "lblBlank", 35, 82, 140, , "Select Resolution", rockwellDec_15, White, Alignment.alignCentre
@@ -1683,7 +1682,8 @@ End Sub
 
 Public Sub CreateWindow_Shop()
 ' Create window
-    CreateWindow "winShop", "Shop", zOrder_Win, 0, 0, 278, 293, TextureItem(17), False, Fonts.rockwellDec_15, , 2, 5, DesignTypes.designWindowClear, DesignTypes.designWindowClear, DesignTypes.designWindowClear, , , , , GetAddress(AddressOf Shop_MouseMove), GetAddress(AddressOf Shop_MouseDown), GetAddress(AddressOf Shop_MouseMove), GetAddress(AddressOf Shop_MouseMove), , , GetAddress(AddressOf DrawShopBackground)
+    CreateWindow "winShop", "Shop", zOrder_Win, 0, 0, 278, 293, TextureItem(17), False, Fonts.rockwellDec_15, , 2, 5, DesignTypes.DesignWindowClear, DesignTypes.DesignWindowClear, DesignTypes.DesignWindowClear, , , , , GetAddress(AddressOf Shop_MouseMove), GetAddress(AddressOf Shop_MouseDown), GetAddress(AddressOf Shop_MouseMove), GetAddress(AddressOf Shop_MouseMove), , , GetAddress(AddressOf DrawShopBackground)
+
     ' additional mouse event
     Windows(WindowCount).Window.entCallBack(EntityStates.MouseUp) = GetAddress(AddressOf Shop_MouseMove)
     ' Centralise it
@@ -1699,11 +1699,10 @@ Public Sub CreateWindow_Shop()
     ' Buttons
     CreateButton WindowCount, "btnBuy", 190, 228, 70, 24, "Buy", rockwellDec_15, White, , , , , , , DesignTypes.designGreenNormal, DesignTypes.designGreenHover, DesignTypes.designGreenClick, , , GetAddress(AddressOf btnShopBuy)
     CreateButton WindowCount, "btnSell", 190, 228, 70, 24, "Sell", rockwellDec_15, White, , False, , , , , DesignTypes.designRedNormal, DesignTypes.designRedHover, DesignTypes.designRedClick, , , GetAddress(AddressOf btnShopSell)
-    ' Gold
-    '    CreatePictureBox WindowCount, "picBlank", 9, 266, 162, 18, , , , , TextureGUI(55), TextureGUI(55), TextureGUI(55)
     ' Buying/Selling
-    CreateCheckbox WindowCount, "chkBuying", 173, 265, 49, 20, 1, "Comprar", rockwellDec_10, , , , , DesignTypes.designCheckBuy, , , GetAddress(AddressOf chkShopBuying)
-    CreateCheckbox WindowCount, "chkSelling", 222, 265, 49, 20, 0, "Vender", rockwellDec_10, , , , , DesignTypes.designCheckSell, , , GetAddress(AddressOf chkShopSelling)
+    CreateCheckbox WindowCount, "chkBuying", 173, 265, 49, 20, 1, , , , , , , DesignTypes.DesignCheckBuy, , , GetAddress(AddressOf chkShopBuying)
+    CreateCheckbox WindowCount, "chkSelling", 222, 265, 49, 20, 0, , , , , , , DesignTypes.DesignCheckSell, , , GetAddress(AddressOf chkShopSelling)
+
     ' Labels
     CreateLabel WindowCount, "lblName", 56, 226, 300, , "Test Item", verdanaBold_12, Black, Alignment.alignLeft
     CreateLabel WindowCount, "lblCost", 56, 240, 300, , "1000g", verdana_12, Black, Alignment.alignLeft
@@ -1753,13 +1752,15 @@ End Sub
 
 Public Sub CreateWindow_NpcChat()
 ' Create window
-    CreateWindow "winNpcChat", "Conversation with [Name]", zOrder_Win, 0, 0, 480, 228, TextureItem(111), False, Fonts.rockwellDec_15, , 2, 11, DesignTypes.designWindowNormal, DesignTypes.designWindowNormal, DesignTypes.designWindowNormal
+
+    CreateWindow "winNpcChat", "Conversation with [Name]", zOrder_Win, 0, 0, 480, 228, TextureItem(111), False, Fonts.rockwellDec_15, , 2, 11, DesignTypes.DesignWindowNormal, DesignTypes.DesignWindowNormal, DesignTypes.DesignWindowNormal
+
     ' Centralise it
     CentraliseWindow WindowCount
 
     ' Close Button
     CreateButton WindowCount, "btnClose", Windows(WindowCount).Window.Width - 40, 4, 36, 36, , , , , , , TextureGUI(3), TextureGUI(4), TextureGUI(5), , , , , , GetAddress(AddressOf btnNpcChat_Close)
-    
+
     ' Parchment
     CreatePictureBox WindowCount, "picParchment", 6, 26, 468, 198, , , , , , , , DesignTypes.designParchment, DesignTypes.designParchment, DesignTypes.designParchment
     ' Face background
@@ -1798,12 +1799,13 @@ Public Sub CreateWindow_PlayerMenu()
     CentraliseWindow WindowCount
 
     ' Name
-    CreateButton WindowCount, "btnName", 8, 8, 94, 18, "[Name]", verdanaBold_12, White, , , , , , , DesignTypes.designMenuHeader, DesignTypes.designMenuHeader, DesignTypes.designMenuHeader, , , GetAddress(AddressOf RightClick_Close)
+    CreateButton WindowCount, "btnName", 8, 8, 94, 18, "[Name]", verdanaBold_12, White, , , , , , , DesignTypes.DesignMenuHeader, DesignTypes.DesignMenuHeader, DesignTypes.DesignMenuHeader, , , GetAddress(AddressOf RightClick_Close)
     ' Options
-    CreateButton WindowCount, "btnParty", 8, 26, 94, 18, "Invite to Party", verdana_12, White, , , , , , , , DesignTypes.designMenuHover, , , , GetAddress(AddressOf PlayerMenu_Party)
-    CreateButton WindowCount, "btnTrade", 8, 44, 94, 18, "Request Trade", verdana_12, White, , , , , , , , DesignTypes.designMenuHover, , , , GetAddress(AddressOf PlayerMenu_Trade)
-    CreateButton WindowCount, "btnGuild", 8, 62, 94, 18, "Invite to Guild", verdana_12, White, , , , , , , , DesignTypes.designMenuHover, , , , GetAddress(AddressOf PlayerMenu_Guild)
-    CreateButton WindowCount, "btnPM", 8, 80, 94, 18, "Private Message", verdana_12, White, , , , , , , , DesignTypes.designMenuHover, , , , GetAddress(AddressOf PlayerMenu_PM)
+    CreateButton WindowCount, "btnParty", 8, 26, 94, 18, "Invite to Party", verdana_12, White, , , , , , , , DesignTypes.DesignMenuHover, , , , GetAddress(AddressOf PlayerMenu_Party)
+    CreateButton WindowCount, "btnTrade", 8, 44, 94, 18, "Request Trade", verdana_12, White, , , , , , , , DesignTypes.DesignMenuHover, , , , GetAddress(AddressOf PlayerMenu_Trade)
+    CreateButton WindowCount, "btnGuild", 8, 62, 94, 18, "Invite to Guild", verdana_12, White, , , , , , , , DesignTypes.DesignMenuHover, , , , GetAddress(AddressOf PlayerMenu_Guild)
+    CreateButton WindowCount, "btnPM", 8, 80, 94, 18, "Private Message", verdana_12, White, , , , , , , , DesignTypes.DesignMenuHover, , , , GetAddress(AddressOf PlayerMenu_PM)
+
 End Sub
 
 Public Sub CreateWindow_Party()
@@ -1842,7 +1844,8 @@ End Sub
 
 Public Sub CreateWindow_Trade()
 ' Create window
-    CreateWindow "winTrade", "Trading with [Name]", zOrder_Win, 0, 0, 412, 386, TextureItem(112), False, Fonts.rockwellDec_15, , 2, 5, DesignTypes.designWindowClear, DesignTypes.designWindowClear, DesignTypes.designWindowClear, , , , , , , , , , , GetAddress(AddressOf DrawTrade)
+    CreateWindow "winTrade", "Trading with [Name]", zOrder_Win, 0, 0, 412, 386, TextureItem(112), False, Fonts.rockwellDec_15, , 2, 5, DesignTypes.DesignWindowClear, DesignTypes.DesignWindowClear, DesignTypes.DesignWindowClear, , , , , , , , , , , GetAddress(AddressOf DrawTrade)
+
     ' Centralise it
     CentraliseWindow WindowCount
 
@@ -1875,14 +1878,17 @@ Public Sub CreateWindow_Combobox()
     CreateWindow "winComboMenuBG", "ComboMenuBG", zOrder_Win, 0, 0, 800, 600, 0, , , , , , , , , , , , , , GetAddress(AddressOf CloseComboMenu), , , False, False
 
     ' window
-    CreateWindow "winComboMenu", "ComboMenu", zOrder_Win, 0, 0, 100, 100, 0, , Fonts.verdana_12, , , , DesignTypes.designComboBackground, , , , , , , , , , , False, False
+    CreateWindow "winComboMenu", "ComboMenu", zOrder_Win, 0, 0, 100, 100, 0, , Fonts.verdana_12, , , , DesignTypes.DesignComboBackground, , , , , , , , , , , False, False
+
     ' centralise it
     CentraliseWindow WindowCount
 End Sub
 
 Public Sub CreateWindow_Guild()
 ' Create window
-    CreateWindow "winGuild", "Guild", zOrder_Win, 0, 0, 174, 320, TextureItem(107), False, Fonts.rockwellDec_15, , 2, 6, DesignTypes.designWindowNormal, DesignTypes.designWindowNormal, DesignTypes.designWindowNormal
+
+    CreateWindow "winGuild", "Guild", zOrder_Win, 0, 0, 174, 320, TextureItem(107), False, Fonts.rockwellDec_15, , 2, 6, DesignTypes.DesignWindowNormal, DesignTypes.DesignWindowNormal, DesignTypes.DesignWindowNormal
+
     ' Centralise it
     CentraliseWindow WindowCount
 

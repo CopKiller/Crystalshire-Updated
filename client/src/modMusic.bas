@@ -14,8 +14,8 @@ Public lastNpcChatsound As Long
 
 Private Type SoundRec
     Handle As Long
-    x As Long
-    y As Long
+    X As Long
+    Y As Long
     Loop As Long
     Channel As Long
 End Type
@@ -33,13 +33,13 @@ Public ResetSounds As Boolean
 Public Function InitFmod() As Boolean
 Dim result As Boolean
 
-    On Error GoTo errorhandler
+    On Error GoTo ErrorHandler
     
     If App.LogMode = 0 Then Exit Function
     
     ' init music engine
     result = FSOUND_Init(44100, 32, FSOUND_INIT_USEDEFAULTMIDISYNTH)
-    If Not result Then GoTo errorhandler
+    If Not result Then GoTo ErrorHandler
     
     ' return positive
     InitFmod = True
@@ -48,7 +48,7 @@ Dim result As Boolean
     ReDim MapSounds(0)
     Exit Function
     
-errorhandler:
+ErrorHandler:
     InitFmod = False
     INIT_MUSIC = False
     INIT_SOUND = False
@@ -70,7 +70,7 @@ Public Sub Play_Music(ByVal song As String)
     If Options.Music = 0 Then Exit Sub
     
     ' does it exist?
-    If Not FileExist(App.path & MUSIC_PATH & song) Then Exit Sub
+    If Not FileExist(App.Path & MUSIC_PATH & song) Then Exit Sub
     
     ' don't re-start currently playing songs
     If curSong = song Then Exit Sub
@@ -82,7 +82,7 @@ Public Sub Play_Music(ByVal song As String)
     Select Case Right$(song, 4)
         Case ".mid", ".s3m", ".mod"
             ' open the song
-            songHandle = FMUSIC_LoadSong(App.path & MUSIC_PATH & song)
+            songHandle = FMUSIC_LoadSong(App.Path & MUSIC_PATH & song)
             ' play it
             FMUSIC_PlaySong songHandle
             ' set volume
@@ -90,7 +90,7 @@ Public Sub Play_Music(ByVal song As String)
             
         Case ".wav", ".mp3", ".ogg", ".wma"
             ' open the stream
-            streamHandle = FSOUND_Stream_Open(App.path & MUSIC_PATH & song, FSOUND_LOOP_NORMAL, 0, 0)
+            streamHandle = FSOUND_Stream_Open(App.Path & MUSIC_PATH & song, FSOUND_LOOP_normal, 0, 0)
             ' play it
             FSOUND_Stream_Play 0, streamHandle
             ' set volume
@@ -125,30 +125,30 @@ Public Sub Stop_Music()
 End Sub
 
 Public Sub StopAllSounds()
-    Dim I As Long
-    For I = 1 To Max_Sounds
-        If Sounds(I).Handle > 0 Then
-            FSOUND_StopSound Sounds(I).Channel
-            FSOUND_Sample_Free Sounds(I).Handle
+    Dim i As Long
+    For i = 1 To Max_Sounds
+        If Sounds(i).Handle > 0 Then
+            FSOUND_StopSound Sounds(i).Channel
+            FSOUND_Sample_Free Sounds(i).Handle
         End If
     Next
     
     RemoveAllMapSounds
 End Sub
 
-Public Sub Play_Sound(ByVal sound As String, x As Long, y As Long)
+Public Sub Play_Sound(ByVal sound As String, X As Long, Y As Long)
     Dim volume As Byte
     If Not INIT_SOUND Then Exit Sub
     If Options.sound = 0 Then Exit Sub
     
-    If Not FileExist(App.path & SOUND_PATH & sound) Then Exit Sub
+    If Not FileExist(App.Path & SOUND_PATH & sound) Then Exit Sub
     
     ' load the sound
     Sounds(CurrentSound).Handle = LoadSound(sound)
     If Sounds(CurrentSound).Handle > 0 Then
-        Sounds(CurrentSound).x = x
-        Sounds(CurrentSound).y = y
-        volume = CalculateSoundVolume(Sounds(CurrentSound).x, Sounds(CurrentSound).y)
+        Sounds(CurrentSound).X = X
+        Sounds(CurrentSound).Y = Y
+        volume = CalculateSoundVolume(Sounds(CurrentSound).X, Sounds(CurrentSound).Y)
         Sounds(CurrentSound).Channel = FSOUND_PlaySound(FSOUND_FREE, Sounds(CurrentSound).Handle)
         FSOUND_SetVolume Sounds(CurrentSound).Channel, volume
     Else
@@ -157,7 +157,7 @@ Public Sub Play_Sound(ByVal sound As String, x As Long, y As Long)
 End Sub
 
 Public Function LoadSound(ByVal sound As String, Optional MapSound As Boolean = False) As Long
-Dim I As Long
+Dim i As Long
     If INIT_SOUND = False Then Exit Function
     If Options.sound = 0 Then Exit Function
     
@@ -167,35 +167,35 @@ Dim I As Long
             FSOUND_Sample_Free Sounds(1).Handle
             CurrentSound = 1
             ResetSounds = True
-            For I = 2 To Max_Sounds
-                FSOUND_Sample_Free Sounds(I).Handle
-                Sounds(I).Handle = 0
+            For i = 2 To Max_Sounds
+                FSOUND_Sample_Free Sounds(i).Handle
+                Sounds(i).Handle = 0
             Next
         End If
     End If
     
     If MapSound Then
-        LoadSound = FSOUND_Sample_Load(FSOUND_FREE, App.path & SOUND_PATH & sound, FSOUND_LOOP_NORMAL, 0, 0)
+        LoadSound = FSOUND_Sample_Load(FSOUND_FREE, App.Path & SOUND_PATH & sound, FSOUND_LOOP_normal, 0, 0)
     Else
-        LoadSound = FSOUND_Sample_Load(FSOUND_FREE, App.path & SOUND_PATH & sound, FSOUND_NORMAL, 0, 0)
+        LoadSound = FSOUND_Sample_Load(FSOUND_FREE, App.Path & SOUND_PATH & sound, FSOUND_normal, 0, 0)
     End If
 End Function
 
 Function CalculateSoundVolume(SoundX As Long, SoundY As Long) As Byte
-Dim x1 As Long, x2 As Long, y1 As Long, y2 As Long, distance As Double, volume As Long
+Dim X1 As Long, X2 As Long, Y1 As Long, Y2 As Long, distance As Double, volume As Long
     If InGame = False Then CalculateSoundVolume = 150: Exit Function
     If INIT_SOUND = False Then Exit Function
     If Options.sound = 0 Then Exit Function
     
     If SoundX > -1 Or SoundY > -1 Then
-        x1 = (Player(MyIndex).x * 32) + Player(MyIndex).xOffset
-        y1 = (Player(MyIndex).y * 32) + Player(MyIndex).yOffset
-        x2 = (SoundX * 32) + 16
-        y2 = (SoundY * 32) + 16
-        If ((x1 - x2) ^ 2) + ((y1 - y2) ^ 2) < 0 Then
-            distance = Sqr(((x1 - x2) ^ 2) + ((y1 - y2) ^ 2) * -1)
+        X1 = (Player(MyIndex).X * 32) + Player(MyIndex).xOffset
+        Y1 = (Player(MyIndex).Y * 32) + Player(MyIndex).yOffset
+        X2 = (SoundX * 32) + 16
+        Y2 = (SoundY * 32) + 16
+        If ((X1 - X2) ^ 2) + ((Y1 - Y2) ^ 2) < 0 Then
+            distance = Sqr(((X1 - X2) ^ 2) + ((Y1 - Y2) ^ 2) * -1)
         Else
-            distance = Sqr(((x1 - x2) ^ 2) + ((y1 - y2) ^ 2))
+            distance = Sqr(((X1 - X2) ^ 2) + ((Y1 - Y2) ^ 2))
         End If
         If distance >= 256 Then
             CalculateSoundVolume = 0
@@ -214,12 +214,12 @@ Sub StopSound(soundindex As Long)
 End Sub
 
 Sub RemoveAllMapSounds()
-Dim I As Long
+Dim i As Long
     If MapSoundCount > 0 Then
-        For I = 1 To MapSoundCount
-            MapSounds(I).InUse = False
-            FSOUND_StopSound MapSounds(I).Channel
-            FSOUND_Sample_Free MapSounds(I).SoundHandle
+        For i = 1 To MapSoundCount
+            MapSounds(i).InUse = False
+            FSOUND_StopSound MapSounds(i).Channel
+            FSOUND_Sample_Free MapSounds(i).SoundHandle
         Next
         MapSoundCount = 0
         ReDim MapSounds(0)
@@ -229,15 +229,15 @@ End Sub
 Sub UpdateSounds()
 If INIT_SOUND = False Then Exit Sub
 If Options.sound = 0 Then Exit Sub
-Dim I As Long, x As Long
-    For I = 1 To Max_Sounds
-        If Sounds(I).Handle <> 0 Then
-            Call FSOUND_SetVolume(Sounds(I).Channel, CalculateSoundVolume(Sounds(I).x, Sounds(I).y))
+Dim i As Long, X As Long
+    For i = 1 To Max_Sounds
+        If Sounds(i).Handle <> 0 Then
+            Call FSOUND_SetVolume(Sounds(i).Channel, CalculateSoundVolume(Sounds(i).X, Sounds(i).Y))
         End If
     Next
     If MapSoundCount > 0 Then
-        For I = 1 To MapSoundCount
-            FSOUND_SetVolume MapSounds(I).Channel, CalculateSoundVolume(MapSounds(I).x, MapSounds(I).y)
+        For i = 1 To MapSoundCount
+            FSOUND_SetVolume MapSounds(i).Channel, CalculateSoundVolume(MapSounds(i).X, MapSounds(i).Y)
         Next
     End If
 End Sub
@@ -245,29 +245,29 @@ End Sub
 Sub CacheNewMapSounds()
 If INIT_SOUND = False Then Exit Sub
 If Options.sound = 0 Then Exit Sub
-    Dim I As Long, x As Long, y As Long
+    Dim i As Long, X As Long, Y As Long
     RemoveAllMapSounds
-    If Trim$(map.MapData.Music) <> Null Then
+    If Trim$(Map.MapData.Music) <> Null Then
         MapSoundCount = MapSoundCount + 1
         ReDim Preserve MapSounds(MapSoundCount)
-        MapSounds(MapSoundCount).SoundHandle = LoadSound(Trim$(map.MapData.Music), True)
-        FSOUND_SetLoopMode MapSounds(MapSoundCount).SoundHandle, FSOUND_LOOP_NORMAL
-        MapSounds(MapSoundCount).x = -1
-        MapSounds(MapSoundCount).y = -1
+        MapSounds(MapSoundCount).SoundHandle = LoadSound(Trim$(Map.MapData.Music), True)
+        FSOUND_SetLoopMode MapSounds(MapSoundCount).SoundHandle, FSOUND_LOOP_normal
+        MapSounds(MapSoundCount).X = -1
+        MapSounds(MapSoundCount).Y = -1
         MapSounds(MapSoundCount).Channel = FSOUND_PlaySound(FSOUND_FREE, MapSounds(MapSoundCount).SoundHandle)
-        FSOUND_SetVolume MapSounds(MapSoundCount).Channel, CalculateSoundVolume(MapSounds(MapSoundCount).x, MapSounds(MapSoundCount).y)
+        FSOUND_SetVolume MapSounds(MapSoundCount).Channel, CalculateSoundVolume(MapSounds(MapSoundCount).X, MapSounds(MapSoundCount).Y)
     End If
-    For x = 0 To map.MapData.MaxX
-        For y = 0 To map.MapData.MaxY
-            If map.TileData.Tile(x, y).Type = TILE_TYPE_SOUND Then
+    For X = 0 To Map.MapData.MaxX
+        For Y = 0 To Map.MapData.MaxY
+            If Map.TileData.Tile(X, Y).Type = TILE_TYPE_SOUND Then
                 MapSoundCount = MapSoundCount + 1
                 ReDim Preserve MapSounds(MapSoundCount)
-                MapSounds(MapSoundCount).SoundHandle = LoadSound(Trim$(map.TileData.Tile(x, y).Data4), True)
-                FSOUND_SetLoopMode MapSounds(MapSoundCount).SoundHandle, FSOUND_LOOP_NORMAL
-                MapSounds(MapSoundCount).x = x
-                MapSounds(MapSoundCount).y = y
+                MapSounds(MapSoundCount).SoundHandle = LoadSound(Trim$(Map.TileData.Tile(X, Y).Data4), True)
+                FSOUND_SetLoopMode MapSounds(MapSoundCount).SoundHandle, FSOUND_LOOP_normal
+                MapSounds(MapSoundCount).X = X
+                MapSounds(MapSoundCount).Y = Y
                 MapSounds(MapSoundCount).Channel = FSOUND_PlaySound(FSOUND_FREE, MapSounds(MapSoundCount).SoundHandle)
-                FSOUND_SetVolume MapSounds(MapSoundCount).Channel, CalculateSoundVolume(MapSounds(MapSoundCount).x, MapSounds(MapSoundCount).y)
+                FSOUND_SetVolume MapSounds(MapSoundCount).Channel, CalculateSoundVolume(MapSounds(MapSoundCount).X, MapSounds(MapSoundCount).Y)
             End If
         Next
     Next

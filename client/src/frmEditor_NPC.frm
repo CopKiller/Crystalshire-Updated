@@ -649,13 +649,14 @@ End Sub
 
 Private Sub scrlConv_Change()
 
-    If scrlConv.value > 0 Then
-        lblConv.caption = "Conv: " & Trim$(Conv(scrlConv.value).name)
+    If scrlConv.Value > 0 Then
+        lblConv.caption = "Conv: " & Trim$(Conv(scrlConv.Value).Name)
+
     Else
         lblConv.caption = "Conv: None"
     End If
 
-    Npc(EditorIndex).Conv = scrlConv.value
+    Npc(EditorIndex).Conv = scrlConv.Value
 End Sub
 
 Private Sub cmdSave_Click()
@@ -673,55 +674,58 @@ End Sub
 Private Sub scrlAnimation_Change()
     Dim sString As String
 
-    If scrlAnimation.value = 0 Then sString = "None" Else sString = Trim$(Animation(scrlAnimation.value).name)
+    If scrlAnimation.Value = 0 Then sString = "None" Else sString = Trim$(Animation(scrlAnimation.Value).Name)
+
     lblAnimation.caption = "Anim: " & sString
-    Npc(EditorIndex).Animation = scrlAnimation.value
+    Npc(EditorIndex).Animation = scrlAnimation.Value
 End Sub
 
 Private Sub scrlDrop_Change()
-    DropIndex = scrlDrop.value
+    DropIndex = scrlDrop.Value
     fraDrop.caption = "Drop - " & DropIndex
     txtChance.text = Npc(EditorIndex).DropChance(DropIndex)
-    scrlNum.value = Npc(EditorIndex).DropItem(DropIndex)
-    scrlValue.value = Npc(EditorIndex).DropItemValue(DropIndex)
+    scrlNum.Value = Npc(EditorIndex).DropItem(DropIndex)
+    scrlValue.Value = Npc(EditorIndex).DropItemValue(DropIndex)
 End Sub
 
 Private Sub scrlSpell_Change()
-    SpellIndex = scrlSpell.value
+    SpellIndex = scrlSpell.Value
     fraSpell.caption = "Spell - " & SpellIndex
-    scrlSpellNum.value = Npc(EditorIndex).Spell(SpellIndex)
+    scrlSpellNum.Value = Npc(EditorIndex).Spell(SpellIndex)
 End Sub
 
 Private Sub scrlSpellNum_Change()
-    lblSpellNum.caption = "Num: " & scrlSpellNum.value
+    lblSpellNum.caption = "Num: " & scrlSpellNum.Value
 
-    If scrlSpellNum.value > 0 Then
-        lblSpellName.caption = "Spell: " & Trim$(Spell(scrlSpellNum.value).name)
+    If scrlSpellNum.Value > 0 Then
+        lblSpellName.caption = "Spell: " & Trim$(Spell(scrlSpellNum.Value).Name)
+
     Else
         lblSpellName.caption = "Spell: None"
     End If
 
-    Npc(EditorIndex).Spell(SpellIndex) = scrlSpellNum.value
+    Npc(EditorIndex).Spell(SpellIndex) = scrlSpellNum.Value
 End Sub
 
 Private Sub scrlSprite_Change()
-    lblSprite.caption = "Sprite: " & scrlSprite.value
-    Npc(EditorIndex).sprite = scrlSprite.value
+    lblSprite.caption = "Sprite: " & scrlSprite.Value
+    Npc(EditorIndex).sprite = scrlSprite.Value
 End Sub
 
 Private Sub scrlRange_Change()
-    lblRange.caption = "Range: " & scrlRange.value
-    Npc(EditorIndex).Range = scrlRange.value
+    lblRange.caption = "Range: " & scrlRange.Value
+    Npc(EditorIndex).Range = scrlRange.Value
 End Sub
 
 Private Sub scrlNum_Change()
-    lblNum.caption = "Num: " & scrlNum.value
+    lblNum.caption = "Num: " & scrlNum.Value
 
-    If scrlNum.value > 0 Then
-        lblItemName.caption = "Item: " & Trim$(Item(scrlNum.value).name)
+    If scrlNum.Value > 0 Then
+        lblItemName.caption = "Item: " & Trim$(Item(scrlNum.Value).Name)
+
     End If
 
-    Npc(EditorIndex).DropItem(DropIndex) = scrlNum.value
+    Npc(EditorIndex).DropItem(DropIndex) = scrlNum.Value
 End Sub
 
 Private Sub scrlStat_Change(Index As Integer)
@@ -745,13 +749,13 @@ Private Sub scrlStat_Change(Index As Integer)
             prefix = "Will: "
     End Select
 
-    lblStat(Index).caption = prefix & scrlStat(Index).value
-    Npc(EditorIndex).Stat(Index) = scrlStat(Index).value
+    lblStat(Index).caption = prefix & scrlStat(Index).Value
+    Npc(EditorIndex).Stat(Index) = scrlStat(Index).Value
 End Sub
 
 Private Sub scrlValue_Change()
-    lblValue.caption = "Value: " & scrlValue.value
-    Npc(EditorIndex).DropItemValue(DropIndex) = scrlValue.value
+    lblValue.caption = "Value: " & scrlValue.Value
+    Npc(EditorIndex).DropItemValue(DropIndex) = scrlValue.Value
 End Sub
 
 Private Sub txtAttackSay_Change()

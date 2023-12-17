@@ -1231,7 +1231,8 @@ Public Function IsOffer(StartX As Long, StartY As Long) As Long
             End With
             
             If currMouseX >= tempRec.Left And currMouseX <= tempRec.Right Then
-                RenderTexture TextureDesign(4), ConvertMapX(OfferTop), ConvertMapY(OfferLeft), 0, 0, 32, 32, 32, 32
+                RenderTexture TextureDesign(7), ConvertMapX(OfferTop), ConvertMapY(OfferLeft), 0, 0, 32, 32, 32, 32
+
                 If currMouseY >= tempRec.Top And currMouseY <= tempRec.Bottom Then
                     IsOffer = i
                     Exit Function
@@ -2153,7 +2154,7 @@ Public Sub cacheRenderState(ByVal X As Long, ByVal Y As Long, ByVal layernum As 
         ' check if it needs to be rendered as an autotile
         If .Autotile(layernum) = AUTOTILE_NONE Or .Autotile(layernum) = AUTOTILE_FAKE Or Options.NoAuto = 1 Then
             ' default to... default
-            Autotile(X, Y).Layer(layernum).RenderState = RENDER_STATE_NORMAL
+            Autotile(X, Y).Layer(layernum).RenderState = RENDER_STATE_normal
         Else
             Autotile(X, Y).Layer(layernum).RenderState = RENDER_STATE_AUTOTILE
 
@@ -2184,16 +2185,16 @@ Public Sub calculateAutotile(ByVal X As Long, ByVal Y As Long, ByVal layernum As
     ' Okay, we have autotiling but which one?
     Select Case Map.TileData.Tile(X, Y).Autotile(layernum)
 
-            ' Normal or animated - same difference
-        Case AUTOTILE_NORMAL, AUTOTILE_ANIM
+            ' normal or animated - same difference
+        Case AUTOTILE_normal, AUTOTILE_ANIM
             ' North West Quarter
-            CalculateNW_Normal layernum, X, Y
+            CalculateNW_normal layernum, X, Y
             ' North East Quarter
-            CalculateNE_Normal layernum, X, Y
+            CalculateNE_normal layernum, X, Y
             ' South West Quarter
-            CalculateSW_Normal layernum, X, Y
+            CalculateSW_normal layernum, X, Y
             ' South East Quarter
-            CalculateSE_Normal layernum, X, Y
+            CalculateSE_normal layernum, X, Y
 
             ' Cliff
         Case AUTOTILE_CLIFF
@@ -2224,8 +2225,8 @@ Public Sub calculateAutotile(ByVal X As Long, ByVal Y As Long, ByVal layernum As
 
 End Sub
 
-' Normal autotiling
-Public Sub CalculateNW_Normal(ByVal layernum As Long, ByVal X As Long, ByVal Y As Long)
+' normal autotiling
+Public Sub CalculateNW_normal(ByVal layernum As Long, ByVal X As Long, ByVal Y As Long)
     Dim tmpTile(1 To 3) As Boolean
     Dim situation As Byte
 
@@ -2274,7 +2275,7 @@ Public Sub CalculateNW_Normal(ByVal layernum As Long, ByVal X As Long, ByVal Y A
 
 End Sub
 
-Public Sub CalculateNE_Normal(ByVal layernum As Long, ByVal X As Long, ByVal Y As Long)
+Public Sub CalculateNE_normal(ByVal layernum As Long, ByVal X As Long, ByVal Y As Long)
     Dim tmpTile(1 To 3) As Boolean
     Dim situation As Byte
 
@@ -2324,8 +2325,8 @@ Public Sub CalculateNE_Normal(ByVal layernum As Long, ByVal X As Long, ByVal Y A
 
 End Sub
 
+Public Sub CalculateSW_normal(ByVal layernum As Long, ByVal X As Long, ByVal Y As Long)
 
-Public Sub CalculateSW_Normal(ByVal layernum As Long, ByVal X As Long, ByVal Y As Long)
     Dim tmpTile(1 To 3) As Boolean
     Dim situation As Byte
 
@@ -2374,8 +2375,8 @@ Public Sub CalculateSW_Normal(ByVal layernum As Long, ByVal X As Long, ByVal Y A
 
 End Sub
 
+Public Sub CalculateSE_normal(ByVal layernum As Long, ByVal X As Long, ByVal Y As Long)
 
-Public Sub CalculateSE_Normal(ByVal layernum As Long, ByVal X As Long, ByVal Y As Long)
     Dim tmpTile(1 To 3) As Boolean
     Dim situation As Byte
 
