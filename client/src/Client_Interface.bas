@@ -59,6 +59,9 @@ Public Enum DesignTypes
     ' Right-click Menu
     DesignMenuHeader
     DesignMenuHover
+    
+    ' Color
+    DesignColor
 
     ' Comboboxes
     DesignCombo
@@ -276,11 +279,11 @@ End Sub
 
 Public Sub SortWindows()
     Dim tempWindow As WindowRec
-    Dim i As Long, X As Long
-    X = 1
+    Dim i As Long, x As Long
+    x = 1
 
-    While X <> 0
-        X = 0
+    While x <> 0
+        x = 0
 
         For i = 1 To WindowCount - 1
 
@@ -288,7 +291,7 @@ Public Sub SortWindows()
                 tempWindow = Windows(i)
                 Windows(i) = Windows(i + 1)
                 Windows(i + 1) = tempWindow
-                X = 1
+                x = 1
             End If
 
         Next
@@ -298,7 +301,7 @@ Public Sub SortWindows()
 End Sub
 
 Public Sub RenderEntities()
-    Dim i As Long, X As Long, curZOrder As Long
+    Dim i As Long, x As Long, curZOrder As Long
 
     ' don't render anything if we don't have any containers
     If WindowCount = 0 Then Exit Sub
@@ -316,8 +319,8 @@ Public Sub RenderEntities()
                     ' render container
                     RenderWindow i
                     ' render controls
-                    For X = 1 To Windows(i).ControlCount
-                        If Windows(i).Controls(X).visible Then RenderEntity i, X
+                    For x = 1 To Windows(i).ControlCount
+                        If Windows(i).Controls(x).visible Then RenderEntity i, x
                     Next
                 End If
             End If
@@ -327,7 +330,7 @@ End Sub
 
 Public Sub RenderEntity(winNum As Long, entNum As Long)
     Dim Xo As Long, Yo As Long, hor_centre As Long, ver_centre As Long, Height As Long, Width As Long, Left As Long, texNum As Long, xOffset As Long
-    Dim Callback As Long, taddText As String, Colour As Long, textArray() As String, Count As Long, yOffset As Long, i As Long, Y As Long, X As Long
+    Dim Callback As Long, taddText As String, Colour As Long, textArray() As String, Count As Long, yOffset As Long, i As Long, y As Long, x As Long
 
     ' check if the window exists
     If winNum <= 0 Or winNum > WindowCount Then
@@ -557,7 +560,7 @@ Public Sub RenderEntity(winNum As Long, entNum As Long)
 End Sub
 
 Public Sub RenderWindow(winNum As Long)
-    Dim Width As Long, Height As Long, Callback As Long, X As Long, Y As Long, i As Long, Left As Long
+    Dim Width As Long, Height As Long, Callback As Long, x As Long, y As Long, i As Long, Left As Long
 
     ' check if the window exists
     If winNum <= 0 Or winNum > WindowCount Then
@@ -574,20 +577,20 @@ Public Sub RenderWindow(winNum As Long)
 
             ' text
             If UBound(.list) > 0 Then
-                Y = .Top + 2
+                y = .Top + 2
 
-                X = .Left
+                x = .Left
                 For i = 1 To UBound(.list)
                     ' render select
-                    If i = .Value Or i = .group Then RenderDesign DesignTypes.DesignBlackParchment, X, Y - 1, .Width, 15
+                    If i = .Value Or i = .group Then RenderDesign DesignTypes.DesignBlackParchment, x, y - 1, .Width, 15
                     ' render text
-                    Left = X + (.Width \ 2) - (TextWidth(font(.font), .list(i)) \ 2)
+                    Left = x + (.Width \ 2) - (TextWidth(font(.font), .list(i)) \ 2)
                     If i = .Value Or i = .group Then
-                        RenderText font(.font), .list(i), Left, Y, Yellow
+                        RenderText font(.font), .list(i), Left, y, Yellow
                     Else
-                        RenderText font(.font), .list(i), Left, Y, White
+                        RenderText font(.font), .list(i), Left, y, White
                     End If
-                    Y = Y + 16
+                    y = y + 16
                 Next
             End If
             Exit Sub
@@ -636,11 +639,15 @@ Public Sub RenderWindow(winNum As Long)
 
 End Sub
 
-Public Sub RenderDesign(design As Long, Left As Long, Top As Long, Width As Long, Height As Long, Optional alpha As Long = 255)
+Public Sub RenderDesign(design As Long, Left As Long, Top As Long, Width As Long, Height As Long, Optional alpha As Long = 255, Optional ByVal Color As Long = -1)
     Dim bs As Long, Colour As Long
-    ' change colour for alpha
-    Colour = DX8Colour(White, alpha)
-
+    
+    If Color = -1 Then
+        Colour = DX8Colour(White, alpha)
+    Else
+        Colour = Color
+    End If
+    
     Select Case design
 
     Case DesignTypes.DesignMenuHeader
@@ -651,6 +658,11 @@ Public Sub RenderDesign(design As Long, Left As Long, Top As Long, Width As Long
 
         ' render the option
         RenderTexture TextureBlank, Left, Top, 0, 0, Width, Height, 32, 32, D3DColorARGB(200, 98, 98, 98)
+    
+    Case DesignTypes.DesignColor
+
+        ' render the option
+        RenderTexture TextureBlank, Left, Top, 0, 0, Width, Height, 32, 32, Colour
 
     Case DesignTypes.DesignWoodNormal
         bs = 2
@@ -789,30 +801,30 @@ Public Sub RenderDesign(design As Long, Left As Long, Top As Long, Width As Long
 
 End Sub
 
-Public Sub RenderEntity_Square(texNum As Long, X As Long, Y As Long, Width As Long, Height As Long, borderSize As Long, Optional alpha As Long = 255)
+Public Sub RenderEntity_Square(texNum As Long, x As Long, y As Long, Width As Long, Height As Long, borderSize As Long, Optional alpha As Long = 255)
     Dim bs As Long, Colour As Long
     ' change colour for alpha
     Colour = DX8Colour(White, alpha)
     ' Set the border size
     bs = borderSize
     ' Draw centre
-    RenderTexture texNum, X + bs, Y + bs, bs + 1, bs + 1, Width - (bs * 2), Height - (bs * 2), 1, 1, Colour
+    RenderTexture texNum, x + bs, y + bs, bs + 1, bs + 1, Width - (bs * 2), Height - (bs * 2), 1, 1, Colour
     ' Draw top side
-    RenderTexture texNum, X + bs, Y, bs, 0, Width - (bs * 2), bs, 1, bs, Colour
+    RenderTexture texNum, x + bs, y, bs, 0, Width - (bs * 2), bs, 1, bs, Colour
     ' Draw left side
-    RenderTexture texNum, X, Y + bs, 0, bs, bs, Height - (bs * 2), bs, 1, Colour
+    RenderTexture texNum, x, y + bs, 0, bs, bs, Height - (bs * 2), bs, 1, Colour
     ' Draw right side
-    RenderTexture texNum, X + Width - bs, Y + bs, bs + 3, bs, bs, Height - (bs * 2), bs, 1, Colour
+    RenderTexture texNum, x + Width - bs, y + bs, bs + 3, bs, bs, Height - (bs * 2), bs, 1, Colour
     ' Draw bottom side
-    RenderTexture texNum, X + bs, Y + Height - bs, bs, bs + 3, Width - (bs * 2), bs, 1, bs, Colour
+    RenderTexture texNum, x + bs, y + Height - bs, bs, bs + 3, Width - (bs * 2), bs, 1, bs, Colour
     ' Draw top left corner
-    RenderTexture texNum, X, Y, 0, 0, bs, bs, bs, bs, Colour
+    RenderTexture texNum, x, y, 0, 0, bs, bs, bs, bs, Colour
     ' Draw top right corner
-    RenderTexture texNum, X + Width - bs, Y, bs + 3, 0, bs, bs, bs, bs, Colour
+    RenderTexture texNum, x + Width - bs, y, bs + 3, 0, bs, bs, bs, bs, Colour
     ' Draw bottom left corner
-    RenderTexture texNum, X, Y + Height - bs, 0, bs + 3, bs, bs, bs, bs, Colour
+    RenderTexture texNum, x, y + Height - bs, 0, bs + 3, bs, bs, bs, bs, Colour
     ' Draw bottom right corner
-    RenderTexture texNum, X + Width - bs, Y + Height - bs, bs + 3, bs + 3, bs, bs, bs, bs, Colour
+    RenderTexture texNum, x + Width - bs, y + Height - bs, bs + 3, bs + 3, bs, bs, bs, bs, Colour
 End Sub
 
 Sub Combobox_AddItem(winIndex As Long, controlIndex As Long, text As String)
@@ -1145,6 +1157,24 @@ Public Sub CreateWindow_Login()
     End If
 End Sub
 
+Public Sub StrongPassword()
+Dim x, y, passwordLenght, Colour As Long
+    
+    x = Windows(GetWindowIndex("winRegister")).Window.Left
+    y = Windows(GetWindowIndex("winRegister")).Window.Top
+    passwordLenght = Len(Windows(GetWindowIndex("winRegister")).Controls(GetControlIndex("winRegister", "txtPass2")).text)
+    
+    If passwordLenght <= 6 Then
+        Colour = D3DColorARGB(200, 200, 60, 60)
+    ElseIf passwordLenght <= 10 Then
+        Colour = D3DColorARGB(200, 220, 200, 50)
+    ElseIf passwordLenght > 10 Then
+        Colour = D3DColorARGB(200, 80, 220, 50)
+    End If
+    
+    RenderDesign DesignTypes.DesignColor, x + 15, y + (WindowTopBar + 136), 242, 4, , Colour
+End Sub
+
 Public Sub CreateWindow_Register()
 
     ' Definição da Janela
@@ -1182,14 +1212,15 @@ Public Sub CreateWindow_Register()
     CreateTextbox WindowCount, "txtPass2", 15, WindowTopBar + 111, 242, 23, vbNullString, Fonts.Default, DarkGrey, Alignment.AlignLeft, , , , , , DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, , , , , , , 6, 4, True, GetAddress(AddressOf btnSendRegister_Click)
     CreateTextbox WindowCount, "txtCode", 15, WindowTopBar + 160, 242, 23, vbNullString, Fonts.Default, DarkGrey, Alignment.AlignLeft, , , , , , DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, , , , , , , 6, 4, False, GetAddress(AddressOf btnSendRegister_Click)
     CreateTextbox WindowCount, "txtCaptcha", 15, WindowTopBar + 235, 242, 23, vbNullString, Fonts.Default, DarkGrey, Alignment.AlignLeft, , , , , , DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, DesignTypes.DesignTextInput, , , , , , , 6, 4, False, GetAddress(AddressOf btnSendRegister_Click)
+    
 
     ' Captcha
     CreatePictureBox WindowCount, "picCaptcha", 15, WindowTopBar + 201, 242, 30, , , , , TextureCaptcha(GlobalCaptcha), TextureCaptcha(GlobalCaptcha), TextureCaptcha(GlobalCaptcha), DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment
     
     ' Botões
-    CreateButton WindowCount, "btnAccept", 15, WindowTopBar + 274, 242, 30, "Criar a Conta", Fonts.Default, White, , , , , , , DesignTypes.DesignGreenNormal, DesignTypes.DesignGreenHover, DesignTypes.DesignGreenClick, , , GetAddress(AddressOf btnSendRegister_Click)
-
-
+    'CreateButton WindowCount, "btnAccept", 15, WindowTopBar + 274, 242, 30, "Criar a Conta", Fonts.Default, White, , , , , , , DesignTypes.DesignGreenNormal, DesignTypes.DesignGreenHover, DesignTypes.DesignGreenClick, , , GetAddress(AddressOf btnSendRegister_Click)
+    CreatePictureBox WindowCount, "strongPassword", 15, WindowTopBar + 136, 242, 4, True, False, , , , , , DesignColor, DesignColor, DesignColor, , , , , , GetAddress(AddressOf StrongPassword)
+    
     SetActiveControl GetWindowIndex("winRegister"), GetControlIndex("winRegister", "txtAccount")
 End Sub
 
