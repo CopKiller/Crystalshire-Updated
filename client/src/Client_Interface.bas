@@ -1178,7 +1178,7 @@ End Sub
 Public Sub CreateWindow_Register()
 
     ' Definição da Janela
-    CreateWindow "winRegister", "Registras", zOrder_Win, 0, 0, 272, 359, TextureItem(45), , Fonts.Default, , 3, 5, DesignTypes.DesignWindowNormal, DesignTypes.DesignWindowNormal, DesignTypes.DesignWindowNormal
+    CreateWindow "winRegister", "Cadastrar uma nova conta", zOrder_Win, 0, 0, 272, 359, TextureItem(45), , Fonts.Default, , 3, 5, DesignTypes.DesignWindowNormal, DesignTypes.DesignWindowNormal, DesignTypes.DesignWindowNormal
 
     ' Centralizar a Janela
     CentraliseWindow WindowCount
@@ -1218,7 +1218,9 @@ Public Sub CreateWindow_Register()
     CreatePictureBox WindowCount, "picCaptcha", 15, WindowTopBar + 201, 242, 30, , , , , TextureCaptcha(GlobalCaptcha), TextureCaptcha(GlobalCaptcha), TextureCaptcha(GlobalCaptcha), DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment, DesignTypes.DesignBlackParchment
     
     ' Botões
-    'CreateButton WindowCount, "btnAccept", 15, WindowTopBar + 274, 242, 30, "Criar a Conta", Fonts.Default, White, , , , , , , DesignTypes.DesignGreenNormal, DesignTypes.DesignGreenHover, DesignTypes.DesignGreenClick, , , GetAddress(AddressOf btnSendRegister_Click)
+    CreateButton WindowCount, "btnAccept", 15, WindowTopBar + 274, 242, 30, "Criar a Conta", Fonts.Default, White, , , , , , , DesignTypes.DesignGreenNormal, DesignTypes.DesignGreenHover, DesignTypes.DesignGreenClick, , , GetAddress(AddressOf btnSendRegister_Click)
+    
+    ' Senha Forte
     CreatePictureBox WindowCount, "strongPassword", 15, WindowTopBar + 136, 242, 4, True, False, , , , , , DesignColor, DesignColor, DesignColor, , , , , , GetAddress(AddressOf StrongPassword)
     
     SetActiveControl GetWindowIndex("winRegister"), GetControlIndex("winRegister", "txtAccount")

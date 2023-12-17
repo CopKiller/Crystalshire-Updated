@@ -28,7 +28,7 @@ Public Sub HandleUpdateConv(ByVal Index As Long, ByRef Data() As Byte, ByVal Sta
     Dim Convnum As Long
     Dim buffer As clsBuffer
     Dim i As Long
-    Dim X As Long
+    Dim x As Long
     Set buffer = New clsBuffer
     buffer.WriteBytes Data()
     Convnum = buffer.ReadLong
@@ -36,14 +36,14 @@ Public Sub HandleUpdateConv(ByVal Index As Long, ByRef Data() As Byte, ByVal Sta
     With Conv(Convnum)
         .Name = buffer.ReadString
         .chatCount = buffer.ReadLong
-        ReDim Conv(Convnum).Conv(1 To .chatCount)
+        If .chatCount > 0 Then ReDim Conv(Convnum).Conv(1 To .chatCount)
 
         For i = 1 To .chatCount
             .Conv(i).Conv = buffer.ReadString
 
-            For X = 1 To 4
-                .Conv(i).rText(X) = buffer.ReadString
-                .Conv(i).rTarget(X) = buffer.ReadLong
+            For x = 1 To 4
+                .Conv(i).rText(x) = buffer.ReadString
+                .Conv(i).rTarget(x) = buffer.ReadLong
             Next
 
             .Conv(i).EventType = buffer.ReadLong
