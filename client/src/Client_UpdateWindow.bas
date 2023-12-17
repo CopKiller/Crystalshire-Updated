@@ -45,10 +45,10 @@ Public Sub Window_QuestButtonUpdate()
             End If
         Next
         If isActive Then
-            btnMissionActive = 1
+            Button_MissionActive = 1
             Window_QuestLabelUpdate
         Else
-            btnMissionActive = 0
+            Button_MissionActive = 0
             For X = 1 To MAX_PLAYER_MISSIONS
                 If Player(MyIndex).Mission(X).id = 0 Then
                     .Controls(GetControlIndex("winPlayerQuests", "btnMission" & X)).visible = False
@@ -60,18 +60,19 @@ End Sub
 
 Public Sub Window_QuestLabelUpdate()
     With Windows(GetWindowIndex("winPlayerQuests"))
-        If btnMissionActive <> 0 Then
-            .Controls(GetControlIndex("winPlayerQuests", "lblDescription")).text = Trim$(Mission(Player(MyIndex).Mission(btnMissionActive).id).Description)
-            Select Case Mission(Player(MyIndex).Mission(btnMissionActive).id).Type
-                Case MissionType.TypeCollect
-                    .Controls(GetControlIndex("winPlayerQuests", "lblGoal")).text = "You must collect " & Trim$(Item(Mission(Player(MyIndex).Mission(btnMissionActive).id).CollectItem).Name) & " (" & Player(MyIndex).Mission(btnMissionActive).count & "/" & Mission(Player(MyIndex).Mission(btnMissionActive).id).CollectItemAmount & ")"
-                Case MissionType.TypeKill
-                    .Controls(GetControlIndex("winPlayerQuests", "lblGoal")).text = "You must kill " & Trim$(Npc(Mission(Player(MyIndex).Mission(btnMissionActive).id).KillNPC).Name) & " (" & Player(MyIndex).Mission(btnMissionActive).count & "/" & Mission(Player(MyIndex).Mission(btnMissionActive).id).KillNPCAmount & ")"
-                Case MissionType.TypeTalk
-                    .Controls(GetControlIndex("winPlayerQuests", "lblGoal")).text = "You should talk to " & Trim$(Npc(Mission(Player(MyIndex).Mission(btnMissionActive).id).KillNPC).Name)
+        If Button_MissionActive <> 0 Then
+            If Player(MyIndex).Mission(Button_MissionActive).id <= 0 Then Exit Sub
+            .Controls(GetControlIndex("winPlayerQuests", "lblDescription")).text = Trim$(Mission(Player(MyIndex).Mission(Button_MissionActive).id).Description)
+            Select Case Mission(Player(MyIndex).Mission(Button_MissionActive).id).Type
+                Case MissionType.Mission_TypeCollect
+                    .Controls(GetControlIndex("winPlayerQuests", "lblGoal")).text = "You must collect " & Trim$(Item(Mission(Player(MyIndex).Mission(Button_MissionActive).id).CollectItem).Name) & " (" & Player(MyIndex).Mission(Button_MissionActive).count & "/" & Mission(Player(MyIndex).Mission(Button_MissionActive).id).CollectItemAmount & ")"
+                Case MissionType.Mission_TypeKill
+                    .Controls(GetControlIndex("winPlayerQuests", "lblGoal")).text = "You must kill " & Trim$(Npc(Mission(Player(MyIndex).Mission(Button_MissionActive).id).KillNPC).Name) & " (" & Player(MyIndex).Mission(Button_MissionActive).count & "/" & Mission(Player(MyIndex).Mission(Button_MissionActive).id).KillNPCAmount & ")"
+                Case MissionType.Mission_TypeTalk
+                    .Controls(GetControlIndex("winPlayerQuests", "lblGoal")).text = "You should talk to " & Trim$(Npc(Mission(Player(MyIndex).Mission(Button_MissionActive).id).TalkNPC).Name)
             End Select
             
-            .Controls(GetControlIndex("winPlayerQuests", "lblEXP")).text = Str(Mission(Player(MyIndex).Mission(btnMissionActive).id).RewardExperience) & " EXP"
+            .Controls(GetControlIndex("winPlayerQuests", "lblEXP")).text = Str(Mission(Player(MyIndex).Mission(Button_MissionActive).id).RewardExperience) & " EXP"
         Else
             For X = 1 To MAX_PLAYER_MISSIONS
                 .Controls(GetControlIndex("winPlayerQuests", "btnMission" & X)).visible = False

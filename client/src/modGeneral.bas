@@ -2,8 +2,6 @@ Attribute VB_Name = "modGeneral"
 Option Explicit
 ' halts thread of execution
 Public Declare Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
-' get system uptime in milliseconds
-Public Declare Function GetTickCount Lib "kernel32" () As Long
 'For Clear functions
 Public Declare Sub ZeroMemory Lib "kernel32.dll" Alias "RtlZeroMemory" (Destination As Any, ByVal length As Long)
 
@@ -11,21 +9,21 @@ Public Sub Main()
 Dim i As Long
     InitCRC32
     ' Check if the directory is there, if its not make it
-    ChkDir App.path & "\data files\", "graphics"
-    ChkDir App.path & "\data files\graphics\", "animations"
-    ChkDir App.path & "\data files\graphics\", "characters"
-    ChkDir App.path & "\data files\graphics\", "items"
-    ChkDir App.path & "\data files\graphics\", "paperdolls"
-    ChkDir App.path & "\data files\graphics\", "resources"
-    ChkDir App.path & "\data files\graphics\", "spellicons"
-    ChkDir App.path & "\data files\graphics\", "tilesets"
-    ChkDir App.path & "\data files\graphics\", "faces"
-    ChkDir App.path & "\data files\graphics\", "gui"
-    ChkDir App.path & "\data files\", "logs"
-    ChkDir App.path & "\data files\", "maps"
-    ChkDir App.path & "\data files\", "music"
-    ChkDir App.path & "\data files\", "sound"
-    ChkDir App.path & "\data files\", "video"
+    ChkDir App.Path & "\data files\", "graphics"
+    ChkDir App.Path & "\data files\graphics\", "animations"
+    ChkDir App.Path & "\data files\graphics\", "characters"
+    ChkDir App.Path & "\data files\graphics\", "items"
+    ChkDir App.Path & "\data files\graphics\", "paperdolls"
+    ChkDir App.Path & "\data files\graphics\", "resources"
+    ChkDir App.Path & "\data files\graphics\", "spellicons"
+    ChkDir App.Path & "\data files\graphics\", "tilesets"
+    ChkDir App.Path & "\data files\graphics\", "faces"
+    ChkDir App.Path & "\data files\graphics\", "gui"
+    ChkDir App.Path & "\data files\", "logs"
+    ChkDir App.Path & "\data files\", "maps"
+    ChkDir App.Path & "\data files\", "music"
+    ChkDir App.Path & "\data files\", "sound"
+    ChkDir App.Path & "\data files\", "video"
     ' load options
     LoadOptions
     ' check the resolution
@@ -36,8 +34,12 @@ Dim i As Long
         frmMain.caption = frmMain.caption
     End If
     frmMain.Show
-    InitDX8 frmMain.hwnd
+    InitDX8 frmMain.hWnd
     DoEvents
+    
+    Set GDIToken = New cGDIpToken
+    If GDIToken.Token = 0& Then MsgBox "GDI+ failed to load, exiting game!": DestroyGame
+    
     LoadTextures
     LoadFonts
     ' initialise the gui
@@ -95,7 +97,8 @@ Dim i As Long
         ' play the menu music
         If Len(Trim$(MenuMusic)) > 0 Then Play_Music Trim$(MenuMusic)
     End If
-    MenuLoop
+    Call InitTime
+    Call MenuLoop
 End Sub
 
 Public Sub SetPaperdollOrder(Optional ByVal Swap As Boolean = False)
@@ -114,11 +117,11 @@ Public Sub SetPaperdollOrder(Optional ByVal Swap As Boolean = False)
     'PaperdollOrder(10) = Equipment.Vest
 End Sub
 
-Public Sub AddChar(Name As String, Sex As Long, Class As Long, Sprite As Long)
+Public Sub AddChar(Name As String, Sex As Long, Class As Long, sprite As Long)
 
     If ConnectToServer Then
         Call SetStatus("Sending character information.")
-        Call SendAddChar(Name, Sex, Class, Sprite)
+        Call SendAddChar(Name, Sex, Class, sprite)
         Exit Sub
     Else
         ShowWindow GetWindowIndex("winLogin")
@@ -288,7 +291,7 @@ End Function
 Public Sub PopulateLists()
     Dim strLoad As String, i As Long
     ' Cache music list
-    strLoad = Dir$(App.path & MUSIC_PATH & "*.*")
+    strLoad = Dir$(App.Path & MUSIC_PATH & "*.*")
     i = 1
 
     Do While strLoad > vbNullString
@@ -299,7 +302,7 @@ Public Sub PopulateLists()
     Loop
 
     ' Cache sound list
-    strLoad = Dir$(App.path & SOUND_PATH & "*.*")
+    strLoad = Dir$(App.Path & SOUND_PATH & "*.*")
     i = 1
 
     Do While strLoad > vbNullString
@@ -310,3 +313,68 @@ Public Sub PopulateLists()
     Loop
 
 End Sub
+
+Public Function Engine_GetAngle(ByVal CenterX As Integer, ByVal CenterY As Integer, ByVal targetX As Integer, ByVal targetY As Integer) As Single
+'************************************************************
+'Gets the angle between two points in a 2d plane
+'************************************************************
+Dim SideA As Single
+Dim SideC As Single
+
+    On Error GoTo ErrOut
+
+    'Check for horizontal lines (90 or 270 degrees)
+    If CenterY = targetY Then
+        'Check for going right (90 degrees)
+        If CenterX < targetX Then
+            Engine_GetAngle = 90
+            'Check for going left (270 degrees)
+        Else
+            Engine_GetAngle = 270
+        End If
+        
+        'Exit the function
+        Exit Function
+    End If
+
+    'Check for horizontal lines (360 or 180 degrees)
+    If CenterX = targetX Then
+        'Check for going up (360 degrees)
+        If CenterY > targetY Then
+            Engine_GetAngle = 360
+
+            'Check for going down (180 degrees)
+        Else
+            Engine_GetAngle = 180
+        End If
+
+        'Exit the function
+        Exit Function
+    End If
+
+    'Calculate Side C
+    SideC = Sqr(Abs(targetX - CenterX) ^ 2 + Abs(targetY - CenterY) ^ 2)
+
+    'Side B = CenterY
+
+    'Calculate Side A
+    SideA = Sqr(Abs(targetX - CenterX) ^ 2 + targetY ^ 2)
+
+    'Calculate the angle
+    Engine_GetAngle = (SideA ^ 2 - CenterY ^ 2 - SideC ^ 2) / (CenterY * SideC * -2)
+    Engine_GetAngle = (Atn(-Engine_GetAngle / Sqr(-Engine_GetAngle * Engine_GetAngle + 1)) + 1.5708) * 57.29583
+
+    'If the angle is >180, subtract from 360
+    If targetX < CenterX Then Engine_GetAngle = 360 - Engine_GetAngle
+
+    'Exit function
+    Exit Function
+
+    'Check for error
+ErrOut:
+
+    'Return a 0 saying there was an error
+    Engine_GetAngle = 0
+
+    Exit Function
+End Function

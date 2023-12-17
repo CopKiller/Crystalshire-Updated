@@ -569,7 +569,7 @@ Public Sub HandleAcceptMissionRequest(ByVal index As Long, ByRef Data() As Byte,
             Player(index).Mission(i).ID = MissionID
             Player(index).Mission(i).Count = 0
             'Let's check for any existing items in their inventory and update their counter!
-            If Mission(MissionID).Type = MissionType.TypeCollect Then
+            If Mission(MissionID).Type = MissionType.Mission_TypeCollect Then
                 ItemNum = Mission(MissionID).CollectItem
                 ItemCount = HasItem(index, ItemNum)
                 If ItemCount > 0 Then

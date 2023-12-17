@@ -5,6 +5,10 @@ Public Declare Function Compress Lib "zlib.dll" Alias "compress" (dest As Any, d
 Public Declare Function uncompress Lib "zlib.dll" (dest As Any, destLen As Any, src As Any, ByVal srcLen As Long) As Long
 ' in development? [turn off music]
 Public Const inDevelopment As Boolean = True
+'Loop
+Public Const TICKS_PER_SECOND As Long = 60
+Public Const SKIP_TICKS = 1000 / TICKS_PER_SECOND
+Public Const MAX_FRAME_SKIP = 5
 ' Version constants
 Public Const CLIENT_MAJOR As Byte = 1
 Public Const CLIENT_MINOR As Byte = 8
@@ -66,7 +70,7 @@ Public Const TradeOffsetX As Long = 6
 Public Const TradeColumns As Long = 5
 ' API Declares
 Public Declare Sub CopyMemory Lib "kernel32.dll" Alias "RtlMoveMemory" (Destination As Any, Source As Any, ByVal length As Long)
-Public Declare Function CallWindowProc Lib "user32" Alias "CallWindowProcA" (ByVal lpPrevWndFunc As Long, ByVal hwnd As Long, ByRef Msg() As Byte, ByVal wParam As Long, ByVal lParam As Long) As Long
+Public Declare Function CallWindowProc Lib "user32" Alias "CallWindowProcA" (ByVal lpPrevWndFunc As Long, ByVal hWnd As Long, ByRef Msg() As Byte, ByVal wParam As Long, ByVal lParam As Long) As Long
 Public Declare Function GetForegroundWindow Lib "user32" () As Long
 ' Animation
 Public Const AnimColumns As Long = 5
@@ -136,6 +140,9 @@ Public Const MAX_NPC_DROPS As Byte = 30
 Public Const MAX_NPC_SPELLS As Byte = 10
 Public Const MAX_CHARS As Byte = 3
 Public Const MAX_WEATHER_PARTICLES As Byte = 250
+Public Const MAX_PROJECTILE_PLAYER As Byte = 25
+Public Const MAX_PROJECTILE_MAP As Byte = 125
+
 ' Website
 Public Const GAME_NAME As String = "Crystalshire"
 Public Const GAME_WEBSITE As String = "http://www.crystalshire.com"
@@ -214,6 +221,7 @@ Public Const SPELL_TYPE_DAMAGEMP As Byte = 1
 Public Const SPELL_TYPE_HEALHP As Byte = 2
 Public Const SPELL_TYPE_HEALMP As Byte = 3
 Public Const SPELL_TYPE_WARP As Byte = 4
+Public Const SPELL_TYPE_PROJECTILE As Byte = 5
 ' Game editor constants
 Public Const EDITOR_ITEM As Byte = 1
 Public Const EDITOR_NPC As Byte = 2

@@ -15,6 +15,24 @@ Public Sub SpellEditorPaste()
     frmEditor_Spell.txtName_Validate False
 End Sub
 
+Public Sub IsTrap()
+    If frmEditor_Spell.chkTrap.Value = 1 Then
+        frmEditor_Spell.scrlProjectileSpeed.enabled = False
+        frmEditor_Spell.scrlProjectileRange.enabled = False
+        frmEditor_Spell.scrlProjectileRotation.enabled = False
+        frmEditor_Spell.scrlDurationProjectile.enabled = True
+        Spell(EditorIndex).Projectile.speed = 5000
+        Spell(EditorIndex).Range = 1
+        Spell(EditorIndex).Projectile.Rotation = 0
+    Else
+        frmEditor_Spell.scrlProjectileSpeed.enabled = True
+        frmEditor_Spell.scrlProjectileRange.enabled = True
+        frmEditor_Spell.scrlProjectileRotation.enabled = True
+        frmEditor_Spell.scrlDurationProjectile.enabled = False
+        Spell(EditorIndex).Projectile.Despawn = 0
+    End If
+End Sub
+
 Public Sub SpellEditorInit()
     Dim i As Long
     Dim SoundSet As Boolean
@@ -40,52 +58,118 @@ Public Sub SpellEditorInit()
         ' set max values
         .scrlAnimCast.max = MAX_ANIMATIONS
         .scrlAnim.max = MAX_ANIMATIONS
-        .scrlAOE.max = MAX_BYTE
         .scrlRange.max = MAX_BYTE
         .scrlMap.max = MAX_MAPS
         .scrlNext.max = MAX_SPELLS
-        ' build class combo
-        .cmbClass.Clear
-        .cmbClass.AddItem "None"
-
-        For i = 1 To Max_Classes
-            .cmbClass.AddItem Trim$(Class(i).Name)
-        Next
-
-        .cmbClass.ListIndex = 0
         ' set values
         .txtName.text = Trim$(Spell(EditorIndex).Name)
-        .txtDesc.text = Trim$(Spell(EditorIndex).Desc)
         .cmbType.ListIndex = Spell(EditorIndex).Type
-        .scrlMP.value = Spell(EditorIndex).MPCost
-        .scrlLevel.value = Spell(EditorIndex).LevelReq
-        .scrlAccess.value = Spell(EditorIndex).AccessReq
-        .cmbClass.ListIndex = Spell(EditorIndex).ClassReq
-        .scrlCast.value = Spell(EditorIndex).CastTime
-        .scrlCool.value = Spell(EditorIndex).CDTime
-        .scrlIcon.value = Spell(EditorIndex).icon
-        .scrlMap.value = Spell(EditorIndex).Map
-        .scrlX.value = Spell(EditorIndex).x
-        .scrlY.value = Spell(EditorIndex).y
-        .scrlDir.value = Spell(EditorIndex).Dir
-        .scrlVital.value = Spell(EditorIndex).Vital
-        .scrlDuration.value = Spell(EditorIndex).Duration
-        .scrlInterval.value = Spell(EditorIndex).Interval
-        .scrlRange.value = Spell(EditorIndex).Range
-
-        If Spell(EditorIndex).IsAoE Then
-            .chkAOE.value = 1
+        .scrlMP.Value = Spell(EditorIndex).MPCost
+        .scrlLevel.Value = Spell(EditorIndex).LevelReq
+        .scrlAccess.Value = Spell(EditorIndex).AccessReq
+        ' build class combo
+            .cmbClass.Clear
+            .cmbClass.AddItem "None"
+    
+            For i = 1 To Max_Classes
+                .cmbClass.AddItem Trim$(Class(i).Name)
+            Next
+    
+            .cmbClass.ListIndex = 0
+            .cmbClass.ListIndex = Spell(EditorIndex).ClassReq
+        ' End build class combo
+        .scrlCast.Value = Spell(EditorIndex).CastTime
+        .scrlCool.Value = Spell(EditorIndex).CDTime
+        .scrlStun.Value = Spell(EditorIndex).StunDuration
+        .scrlIcon.Value = Spell(EditorIndex).icon
+        
+        If .cmbType.ListIndex = SPELL_TYPE_PROJECTILE Then
+            ' Definições
+            .scrlProjectilePic.max = Count_Projectile
+            .fraProjectile.visible = True
+            .fraSpellData.visible = False
+            ' Sets
+            .scrlProjectileSpeed.Value = Spell(EditorIndex).Projectile.speed
+            
+            If .scrlProjectileSpeed.Value = 5000 Then
+                .chkTrap.Value = 1
+            Else
+                .chkTrap.Value = 0
+            End If
+            
+            Call IsTrap
+            .scrlDamageProjectile.Value = Spell(EditorIndex).Vital
+            
+            If Spell(EditorIndex).IsAoE Then
+                .chkProjectileAoE.Value = 1
+            Else
+                .chkProjectileAoE.Value = 0
+            End If
+            
+            .scrlProjectilePic.Value = Spell(EditorIndex).Projectile.Graphic
+            
+            
+            If Spell(EditorIndex).IsDirectional Then
+                .chkDirectionalProjectile.Value = 1
+            Else
+                .chkDirectionalProjectile.Value = 0
+            End If
+            
+            .scrlProjectileRange.Value = Spell(EditorIndex).Range
+            .scrlProjectileRotation.Value = Spell(EditorIndex).Projectile.Rotation
+            .scrlProjectileAmmo.Value = Spell(EditorIndex).Projectile.Ammo
+            .scrlDurationProjectile.Value = Spell(EditorIndex).Projectile.Despawn
+            .scrlProjectileAnimOnHit.Value = Spell(EditorIndex).Projectile.AnimOnHit
+            
+            .lblX0.caption = "X Offset: 0"
+            .lblY0.caption = "Y Offset: 0"
+            .cmbDirection.ListIndex = 0
+            .scrlOffsetProjectileX = 0
+            .scrlOffsetProjectileY = 0
+            .scrlOffsetProjectileX.enabled = False
+            .scrlOffsetProjectileY.enabled = False
+            
+            .lblAoEProjectile.caption = "Sem configurações de dano AoE"
+            .scrlProjectileRadiusX = 0
+            .scrlProjectileRadiusY = 0
+            .scrlProjectileRadiusX.enabled = False
+            .scrlProjectileRadiusY.enabled = False
         Else
-            .chkAOE.value = 0
+            .fraSpellData.visible = True
+            .fraProjectile.visible = False
+            
+            .scrlMap.Value = Spell(EditorIndex).Map
+            .scrlX.Value = Spell(EditorIndex).X
+            .scrlY.Value = Spell(EditorIndex).Y
+            .scrlDir.Value = Spell(EditorIndex).Dir
+            .scrlVital.Value = Spell(EditorIndex).Vital
+            .scrlDuration.Value = Spell(EditorIndex).Duration
+            .scrlInterval.Value = Spell(EditorIndex).Interval
+            .scrlRange.Value = Spell(EditorIndex).Range
+            
+            If Spell(EditorIndex).IsAoE Then
+                .chkAOE.Value = 1
+            Else
+                .chkAOE.Value = 0
+            End If
+    
+            If Spell(EditorIndex).IsDirectional Then
+                .chkDirectional.Value = 1
+            Else
+                .chkDirectional.Value = 0
+            End If
+            
+            .cmbAoEDirection.ListIndex = 0
+            .scrlRadiusX.Value = Spell(EditorIndex).RadiusX
+            .scrlRadiusY.Value = Spell(EditorIndex).RadiusY
+            .scrlAnimCast.Value = Spell(EditorIndex).CastAnim
+            .scrlAnim.Value = Spell(EditorIndex).SpellAnim
         End If
 
-        .scrlAOE.value = Spell(EditorIndex).AoE
-        .scrlAnimCast.value = Spell(EditorIndex).CastAnim
-        .scrlAnim.value = Spell(EditorIndex).SpellAnim
-        .scrlStun.value = Spell(EditorIndex).StunDuration
-        .scrlNext.value = Spell(EditorIndex).NextRank
-        .scrlIndex.value = Spell(EditorIndex).UniqueIndex
-        .scrlUses.value = Spell(EditorIndex).NextUses
+        .txtDesc.text = Trim$(Spell(EditorIndex).Desc)
+        .scrlIndex.Value = Spell(EditorIndex).UniqueIndex
+        .scrlNext.Value = Spell(EditorIndex).NextRank
+        .scrlUses.Value = Spell(EditorIndex).NextUses
 
         ' find the sound we have set
         If .cmbSound.ListCount >= 0 Then

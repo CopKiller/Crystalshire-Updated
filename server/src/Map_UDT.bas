@@ -8,6 +8,9 @@ Public TempTile(1 To MAX_MAPS) As TempTileRec
 Public MapItem(1 To MAX_MAPS, 1 To MAX_MAP_ITEMS) As MapItemRec
 Public MapNpc(1 To MAX_MAPS) As MapNpcDataRec
 
+Public MapProjectile() As ProjectileRenderRec
+Public EmptyMapProjectile As ProjectileRenderRec
+
 Public EmptyMap As MapRec
 Public EmptyResourceCache As ResourceCacheRec
 Public EmptyMapItem As MapItemRec
@@ -57,8 +60,8 @@ Private Type MapDataRec
 End Type
 
 Private Type TileDataRec
-    x As Long
-    y As Long
+    X As Long
+    Y As Long
     Tileset As Long
 End Type
 
@@ -88,8 +91,8 @@ End Type
 Private Type MapItemRec
     Num As Long
     Value As Long
-    x As Byte
-    y As Byte
+    X As Byte
+    Y As Byte
     ' ownership + despawn
     playerName As String
     playerTimer As Long
@@ -100,11 +103,11 @@ End Type
 
 Private Type MapNpcRec
     Num As Long
-    target As Long
+    Target As Long
     targetType As Byte
     Vital(1 To Vitals.Vital_Count - 1) As Long
-    x As Byte
-    y As Byte
+    X As Byte
+    Y As Byte
     Dir As Byte
     ' For server use only
     SpawnWait As Long
@@ -136,8 +139,8 @@ End Type
 Private Type MapResourceRec
     ResourceState As Byte
     ResourceTimer As Long
-    x As Long
-    y As Long
+    X As Long
+    Y As Long
     cur_health As Long
 End Type
 
@@ -149,4 +152,40 @@ End Type
 Private Type TempTileRec
     DoorOpen() As Byte
     DoorTimer As Long
+End Type
+
+Private Type TempProjectileRec
+    Spell As Long
+    OwnerType As Long
+
+End Type
+
+Public Type XYRec
+    X As Double
+    Y As Double
+End Type
+
+Public Type ProjectileRenderRec
+    Owner As Long
+    OwnerType As Byte
+    Graphic As Long
+    Speed As Long
+    RotateSpeed As Byte
+    Rotate As Single
+    Duration As Long
+    ProjectileOffset(1 To 4) As XYRec
+    direction As Byte
+    X As Long
+    Y As Long
+    xOffset As Long
+    yOffset As Long
+    tX As Long
+    tY As Long
+    ' Servidor apenas
+    Range As Byte
+    Damage As Long
+    AnimOnHit As Long
+    spellNum As Long
+    xTargetAoE As Long
+    yTargetAoE As Long
 End Type

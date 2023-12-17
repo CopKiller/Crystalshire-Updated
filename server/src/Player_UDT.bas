@@ -71,8 +71,8 @@ Public Type PlayerRec
     
     ' Position
     Map As Long
-    x As Byte
-    y As Byte
+    X As Byte
+    Y As Byte
     Dir As Byte
     
     ' Variables
@@ -96,16 +96,35 @@ Public Type PartyRec
     MemberCount As Long
 End Type
 
+Private Type ProjectileRec
+
+    Owner As Long
+    TravelTime As Long
+    direction As Long
+    X As Double
+    Y As Double
+    StartX As Double
+    StartY As Double
+    pic As Long
+    Range As Long
+    Damage As Long
+    Speed As Long
+    ItemAmmo As Long
+
+End Type
+
 Public Type TempPlayerRec
     ' Non saved local vars
-    Buffer As clsBuffer
+    buffer As clsBuffer
     InGame As Boolean
     AttackTimer As Long
     DataTimer As Long
     DataBytes As Long
     DataPackets As Long
     targetType As Byte
-    target As Long
+    Target As Long
+    SpellCastType As Long
+    Projectile(1 To MAX_PROJECTILE_PLAYER) As ProjectileRec
     GettingMap As Byte
     SpellCD(1 To MAX_PLAYER_SPELLS) As Long
     InShop As Long

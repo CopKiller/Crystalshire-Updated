@@ -51,6 +51,8 @@ Public Const MAX_PARTY_MEMBERS As Long = 4
 Public Const MAX_CONVS As Byte = 255
 Public Const MAX_NPC_DROPS As Byte = 30
 Public Const MAX_NPC_SPELLS As Byte = 10
+Public Const MAX_PROJECTILE_PLAYER As Byte = 25
+Public Const MAX_PROJECTILE_MAP As Byte = 125
 
 ' server-side stuff
 Public Const ITEM_SPAWN_TIME As Long = 30000 ' 30 seconds
@@ -161,6 +163,10 @@ Public Const DIR_DOWN_RIGHT As Byte = 7
 Public Const MOVING_WALKING As Byte = 1
 Public Const MOVING_RUNNING As Byte = 2
 
+' Tile size constants
+Public Const PIC_X As Long = 32
+Public Const PIC_Y As Long = 32
+
 ' Admin constants
 Public Const ADMIN_MONITOR As Byte = 1
 Public Const ADMIN_MAPPER As Byte = 2
@@ -180,6 +186,7 @@ Public Const SPELL_TYPE_DAMAGEMP As Byte = 1
 Public Const SPELL_TYPE_HEALHP As Byte = 2
 Public Const SPELL_TYPE_HEALMP As Byte = 3
 Public Const SPELL_TYPE_WARP As Byte = 4
+Public Const SPELL_TYPE_PROJECTILE As Byte = 5
 
 ' Game editor constants
 Public Const EDITOR_ITEM As Byte = 1
@@ -239,3 +246,6 @@ Public Const MENU_MERGE As Byte = 8
 Public Const MAX_BYTE As Byte = 255
 Public Const MAX_INTEGER As Integer = 32767
 Public Const MAX_LONG As Long = 2147483647
+
+Public Const DegreeToRadian As Single = 0.0174532919296
+Public Const RadianToDegree As Single = 57.2958300962816

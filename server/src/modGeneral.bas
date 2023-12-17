@@ -115,13 +115,13 @@ End Sub
 
 Public Sub SetHighIndex()
     Dim i As Integer
-    Dim x As Integer
+    Dim X As Integer
 
     For i = 0 To MAX_PLAYERS
-        x = MAX_PLAYERS - i
+        X = MAX_PLAYERS - i
 
-        If IsConnected(x) = True Then
-            Player_HighIndex = x
+        If IsConnected(X) = True Then
+            Player_HighIndex = X
             Exit Sub
         End If
 
@@ -156,4 +156,69 @@ Public Function AryCount(ByRef Ary() As Byte) As Long
 On Error Resume Next
 
     AryCount = UBound(Ary) + 1
+End Function
+
+Public Function Engine_GetAngle(ByVal CenterX As Integer, ByVal CenterY As Integer, ByVal targetX As Integer, ByVal targetY As Integer) As Single
+'************************************************************
+'Gets the angle between two points in a 2d plane
+'************************************************************
+Dim SideA As Single
+Dim SideC As Single
+
+    On Error GoTo ErrOut
+
+    'Check for horizontal lines (90 or 270 degrees)
+    If CenterY = targetY Then
+        'Check for going right (90 degrees)
+        If CenterX < targetX Then
+            Engine_GetAngle = 90
+            'Check for going left (270 degrees)
+        Else
+            Engine_GetAngle = 270
+        End If
+        
+        'Exit the function
+        Exit Function
+    End If
+
+    'Check for horizontal lines (360 or 180 degrees)
+    If CenterX = targetX Then
+        'Check for going up (360 degrees)
+        If CenterY > targetY Then
+            Engine_GetAngle = 360
+
+            'Check for going down (180 degrees)
+        Else
+            Engine_GetAngle = 180
+        End If
+
+        'Exit the function
+        Exit Function
+    End If
+
+    'Calculate Side C
+    SideC = Sqr(Abs(targetX - CenterX) ^ 2 + Abs(targetY - CenterY) ^ 2)
+
+    'Side B = CenterY
+
+    'Calculate Side A
+    SideA = Sqr(Abs(targetX - CenterX) ^ 2 + targetY ^ 2)
+
+    'Calculate the angle
+    Engine_GetAngle = (SideA ^ 2 - CenterY ^ 2 - SideC ^ 2) / (CenterY * SideC * -2)
+    Engine_GetAngle = (Atn(-Engine_GetAngle / Sqr(-Engine_GetAngle * Engine_GetAngle + 1)) + 1.5708) * 57.29583
+
+    'If the angle is >180, subtract from 360
+    If targetX < CenterX Then Engine_GetAngle = 360 - Engine_GetAngle
+
+    'Exit function
+    Exit Function
+
+    'Check for error
+ErrOut:
+
+    'Return a 0 saying there was an error
+    Engine_GetAngle = 0
+
+    Exit Function
 End Function

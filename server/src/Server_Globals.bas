@@ -33,6 +33,19 @@ Public ElapsedTime As Long
 
 ' high indexing
 Public Player_HighIndex As Long
+Public MapProjectile_HighIndex As Integer
 
 ' lock the CPS?
 Public CPSUnlock As Boolean
+
+' Timers ServerLoop
+Public tick As Long
+Public TickCPS As Long
+Public CPS As Long
+Public FrameTime As Long
+Public tmr25 As Long
+Public tmr500 As Long
+Public tmr1000 As Long
+Public LastUpdateSavePlayers
+Public LastUpdateMapSpawnItems As Long
+Public LastUpdatePlayerVitals As Long

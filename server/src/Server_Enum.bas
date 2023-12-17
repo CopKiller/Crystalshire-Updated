@@ -94,6 +94,7 @@ Public Enum ServerPackets
     SPlayerMission
     SPlayerVariables
     SOfferMission ' = 90
+    SProjectileAttack
     ' Make sure SMSG_COUNT is below everything else
     SMSG_COUNT
 End Enum
@@ -235,9 +236,9 @@ End Enum
 
 ' Usando para eventos comuns
 Public Enum EventType
-    OpenShop = 1
-    OpenBank
-    OpenQuest
+    Event_OpenShop = 1
+    Event_OpenBank
+    Event_OpenQuest
     
     Event_Count
 End Enum

@@ -20,6 +20,10 @@ Public MapSounds() As MapSoundRec
 Public MapSoundCount As Long
 Public Options As OptionsRec
 
+' Cliente strutures
+Public MapProjectile() As ProjectileRenderRec
+Public EmptyMapProjectile As ProjectileRenderRec
+
 Public EmptyMap As MapRec
 Public EmptyPlayer As PlayerRec
 Public EmptyItem As ItemRec
@@ -43,10 +47,40 @@ Private Type OptionsRec
     Render As Byte
     Username As String
     SaveUser As Long
+    FPSLock As Boolean
     channelState(0 To Channel_Count - 1) As Byte
     PlayIntro As Byte
-    Resolution As Byte
+    resolution As Byte
     Fullscreen As Byte
+End Type
+
+Public Type XYRec
+    X As Double
+    Y As Double
+End Type
+
+Public Type ProjectileRenderRec
+    Owner As Long
+    OwnerType As Byte
+    Graphic As Long
+    
+    speed As Long
+    RotateSpeed As Byte
+    Rotate As Single
+    Duration As Long
+    ProjectileOffset(1 To 4) As XYRec
+    Direction As Byte
+    X As Long
+    Y As Long
+    xOffset As Long
+    yOffset As Long
+    tx As Long
+    ty As Long
+    'Cliente Apenas
+    IsAoE As Boolean
+    IsDirectional As Boolean
+    curAnim As Long
+    EndTime As Long
 End Type
 
 Public Type PartyRec
@@ -56,8 +90,8 @@ Public Type PartyRec
 End Type
 
 Public Type PlayerInvRec
-    num As Long
-    value As Long
+    Num As Long
+    Value As Long
     bound As Byte
 End Type
 
@@ -71,8 +105,8 @@ Private Type BankRec
 End Type
 
 Private Type PlayerMission
-    id As Long
-    count As Long
+    ID As Long
+    Count As Long
 End Type
 
 Private Type PlayerRec
@@ -92,10 +126,12 @@ Private Type PlayerRec
     POINTS As Long
     ' Worn equipment
     Equipment(1 To Equipment.Equipment_Count - 1) As Long
+    'Projectiles
+    Projectile(1 To MAX_PROJECTILE_PLAYER) As Long
     ' Position
     Map As Long
     X As Byte
-    y As Byte
+    Y As Byte
     Dir As Byte
     ' Variables
     Variable(1 To MAX_BYTE) As Long
@@ -122,7 +158,7 @@ Private Type EventCommandRec
     TargetType As Byte
     target As Long
     X As Long
-    y As Long
+    Y As Long
 End Type
 
 Public Type EventPageRec
@@ -160,7 +196,7 @@ End Type
 Public Type EventRec
     Name As String
     X As Long
-    y As Long
+    Y As Long
     pageCount As Long
     EventPage() As EventPageRec
 End Type
@@ -201,7 +237,7 @@ End Type
 
 Private Type TileDataRec
     X As Long
-    y As Long
+    Y As Long
     tileSet As Long
 End Type
 
@@ -242,7 +278,7 @@ Public Type ItemRec
     Name As String * NAME_LENGTH
     Desc As String * 255
     sound As String * NAME_LENGTH
-    Pic As Long
+    pic As Long
 
     Type As Byte
     Data1 As Long
@@ -278,22 +314,22 @@ End Type
 
 Private Type MapItemRec
     playerName As String
-    num As Long
-    value As Long
+    Num As Long
+    Value As Long
     Frame As Byte
     X As Byte
-    y As Byte
+    Y As Byte
     bound As Boolean
 End Type
 
 Private Type MapNpcRec
-    num As Long
+    Num As Long
     target As Long
     TargetType As Byte
     Vital(1 To Vitals.Vital_Count - 1) As Long
     Map As Long
     X As Byte
-    y As Byte
+    Y As Byte
     Dir As Byte
     ' Client use only
     xOffset As Long
@@ -321,7 +357,7 @@ End Type
 
 Public Type MapResourceRec
     X As Long
-    y As Long
+    Y As Long
     ResourceState As Byte
 End Type
 
@@ -333,7 +369,7 @@ Private Type ActionMsgRec
     Color As Long
     Scroll As Long
     X As Long
-    y As Long
+    Y As Long
     timer As Long
     alpha As Long
 End Type
@@ -342,7 +378,7 @@ Private Type BloodRec
     sprite As Long
     timer As Long
     X As Long
-    y As Long
+    Y As Long
 End Type
 
 Public Type HotbarRec
@@ -352,7 +388,7 @@ End Type
 
 Public Type PointRec
     X As Long
-    y As Long
+    Y As Long
 End Type
 
 Public Type QuarterTileRec
@@ -390,7 +426,7 @@ End Type
 Public Type WeatherParticleRec
     Type As Long
     X As Long
-    y As Long
+    Y As Long
     Velocity As Long
     InUse As Long
 End Type
@@ -398,7 +434,7 @@ End Type
 Public Type ParticulaRec
     Type As Long
     X As Long
-    y As Long
+    Y As Long
     Movimento As Long
     InUse As Long
     Dir As Byte
@@ -413,7 +449,7 @@ End Type
 
 Public Type MapSoundRec
     X As Long
-    y As Long
+    Y As Long
     SoundHandle As Long
     InUse As Boolean
     Channel As Long

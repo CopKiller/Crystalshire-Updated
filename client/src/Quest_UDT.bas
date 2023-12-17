@@ -5,9 +5,9 @@ Public Const MAX_MISSIONS As Long = 255
 
 ' Mission Type Const
 Public Enum MissionType
-    TypeKill = 0
-    TypeCollect
-    TypeTalk
+    Mission_TypeKill = 0
+    Mission_TypeCollect
+    Mission_TypeTalk
     ' MAX MissionType
     MissionType_Count
 End Enum
