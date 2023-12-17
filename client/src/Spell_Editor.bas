@@ -21,7 +21,7 @@ Public Sub IsTrap()
         frmEditor_Spell.scrlProjectileRange.enabled = False
         frmEditor_Spell.scrlProjectileRotation.enabled = False
         frmEditor_Spell.scrlDurationProjectile.enabled = True
-        Spell(EditorIndex).Projectile.speed = 5000
+        Spell(EditorIndex).Projectile.Speed = 5000
         Spell(EditorIndex).Range = 1
         Spell(EditorIndex).Projectile.Rotation = 0
     Else
@@ -85,11 +85,11 @@ Public Sub SpellEditorInit()
         
         If .cmbType.ListIndex = SPELL_TYPE_PROJECTILE Then
             ' Definições
-            .scrlProjectilePic.max = Count_Projectile
+            .scrlProjectilePic.max = CountProjectile
             .fraProjectile.visible = True
             .fraSpellData.visible = False
             ' Sets
-            .scrlProjectileSpeed.Value = Spell(EditorIndex).Projectile.speed
+            .scrlProjectileSpeed.Value = Spell(EditorIndex).Projectile.Speed
             
             If .scrlProjectileSpeed.Value = 5000 Then
                 .chkTrap.Value = 1

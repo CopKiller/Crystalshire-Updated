@@ -377,46 +377,46 @@ End Sub
 Private Sub scrlAnimation_Change()
     Dim sString As String
 
-    If scrlAnimation.value = 0 Then sString = "None" Else sString = Trim$(Animation(scrlAnimation.value).Name)
+    If scrlAnimation.Value = 0 Then sString = "None" Else sString = Trim$(Animation(scrlAnimation.Value).Name)
     lblAnim.caption = "Animation: " & sString
-    Resource(EditorIndex).Animation = scrlAnimation.value
+    Resource(EditorIndex).Animation = scrlAnimation.Value
 End Sub
 
 Private Sub scrlExhaustedPic_Change()
-    lblExhaustedPic.caption = "Exhausted Image: " & scrlExhaustedPic.value
-    Resource(EditorIndex).ExhaustedImage = scrlExhaustedPic.value
+    lblExhaustedPic.caption = "Exhausted Image: " & scrlExhaustedPic.Value
+    Resource(EditorIndex).ExhaustedImage = scrlExhaustedPic.Value
 End Sub
 
 Private Sub scrlHealth_Change()
-    lblHealth.caption = "Health: " & scrlHealth.value
-    Resource(EditorIndex).health = scrlHealth.value
+    lblHealth.caption = "Health: " & scrlHealth.Value
+    Resource(EditorIndex).health = scrlHealth.Value
 End Sub
 
 Private Sub scrlNormalPic_Change()
-    lblNormalPic.caption = "Normal Image: " & scrlNormalPic.value
-    Resource(EditorIndex).ResourceImage = scrlNormalPic.value
+    lblNormalPic.caption = "normal Image: " & scrlNormalPic.Value
+    Resource(EditorIndex).ResourceImage = scrlNormalPic.Value
 End Sub
 
 Private Sub scrlRespawn_Change()
-    lblRespawn.caption = "Respawn Time (Seconds): " & scrlRespawn.value
-    Resource(EditorIndex).RespawnTime = scrlRespawn.value
+    lblRespawn.caption = "Respawn Time (Seconds): " & scrlRespawn.Value
+    Resource(EditorIndex).RespawnTime = scrlRespawn.Value
 End Sub
 
 Private Sub scrlReward_Change()
 
-    If scrlReward.value > 0 Then
-        lblReward.caption = "Item Reward: " & Trim$(Item(scrlReward.value).Name)
+    If scrlReward.Value > 0 Then
+        lblReward.caption = "Item Reward: " & Trim$(Item(scrlReward.Value).Name)
     Else
         lblReward.caption = "Item Reward: None"
     End If
 
-    Resource(EditorIndex).ItemReward = scrlReward.value
+    Resource(EditorIndex).ItemReward = scrlReward.Value
 End Sub
 
 Private Sub scrlTool_Change()
     Dim Name As String
 
-    Select Case scrlTool.value
+    Select Case scrlTool.Value
 
         Case 0
             Name = "None"
@@ -432,7 +432,7 @@ Private Sub scrlTool_Change()
     End Select
 
     lblTool.caption = "Tool Required: " & Name
-    Resource(EditorIndex).ToolRequired = scrlTool.value
+    Resource(EditorIndex).ToolRequired = scrlTool.Value
 End Sub
 
 Private Sub txtMessage_Change()

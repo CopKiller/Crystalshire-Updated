@@ -93,7 +93,7 @@ End Sub
 Sub SetFont(ByVal fontNum As Long, ByVal texName As String, ByVal Size As Long, Optional ByVal xOffset As Long, Optional ByVal yOffset As Long)
 Dim Data() As Byte, f As Long, w As Long, h As Long, Path As String
     ' set the path
-    Path = App.Path & Path_Font & texName & GFX_EXT
+    Path = App.Path & PathFont & texName & GFX_EXT
     ' load the texture
     f = FreeFile
     Open Path For Binary As #f
@@ -205,7 +205,7 @@ Dim v As Single
 
     'Load the header information
     FileNum = FreeFile
-    Open App.Path & Path_Font & FileName For Binary As #FileNum
+    Open App.Path & PathFont & FileName For Binary As #FileNum
     Get #FileNum, , theFont.HeaderInfo
     Close #FileNum
     
@@ -685,8 +685,8 @@ Public Sub DrawPlayerName(ByVal Index As Long)
     textX = Player(Index).X * PIC_X + Player(Index).xOffset + (PIC_X \ 2) - (textSize \ 2)
     textY = Player(Index).Y * PIC_Y + Player(Index).yOffset - 32
 
-    If GetPlayerSprite(Index) >= 1 And GetPlayerSprite(Index) <= Count_Char Then
-        textY = GetPlayerY(Index) * PIC_Y + Player(Index).yOffset - (mTexture(Tex_Char(GetPlayerSprite(Index))).RealHeight / 4) + 12
+    If GetPlayerSprite(Index) >= 1 And GetPlayerSprite(Index) <= CountChar Then
+        textY = GetPlayerY(Index) * PIC_Y + Player(Index).yOffset - (mTexture(TextureChar(GetPlayerSprite(Index))).RealHeight / 4) + 12
     End If
 
     Call RenderText(font(Fonts.rockwell_15), text, ConvertMapX(textX), ConvertMapY(textY), Colour)
@@ -716,8 +716,8 @@ Public Sub DrawNpcName(ByVal Index As Long)
     textX = MapNpc(Index).X * PIC_X + MapNpc(Index).xOffset + (PIC_X \ 2) - (textSize \ 2)
     textY = MapNpc(Index).Y * PIC_Y + MapNpc(Index).yOffset - 32
 
-    If Npc(NpcNum).sprite >= 1 And Npc(NpcNum).sprite <= Count_Char Then
-        textY = MapNpc(Index).Y * PIC_Y + MapNpc(Index).yOffset - (mTexture(Tex_Char(Npc(NpcNum).sprite)).RealHeight / 4) + 12
+    If Npc(NpcNum).sprite >= 1 And Npc(NpcNum).sprite <= CountChar Then
+        textY = MapNpc(Index).Y * PIC_Y + MapNpc(Index).yOffset - (mTexture(TextureChar(Npc(NpcNum).sprite)).RealHeight / 4) + 12
     End If
 
     Call RenderText(font(Fonts.rockwell_15), text, ConvertMapX(textX), ConvertMapY(textY), Colour)

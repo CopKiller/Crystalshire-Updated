@@ -1066,8 +1066,8 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private Sub cmdAppearOkay_Click()
-    EditorAppearRange = scrlAppearRange.value
-    EditorAppearBottom = chkAppearBottom.value
+    EditorAppearRange = scrlAppearRange.Value
+    EditorAppearBottom = chkAppearBottom.Value
     picAttributes.visible = False
     fraAppear.visible = False
 End Sub
@@ -1079,39 +1079,39 @@ End Sub
 
 Private Sub cmdHeal_Click()
     MapEditorHealType = cmbHeal.ListIndex + 1
-    MapEditorHealAmount = scrlHeal.value
+    MapEditorHealAmount = scrlHeal.Value
     picAttributes.visible = False
     fraHeal.visible = False
 End Sub
 
 Private Sub cmdKeyOpen_Click()
-    KeyOpenEditorX = scrlKeyX.value
-    KeyOpenEditorY = scrlKeyY.value
+    KeyOpenEditorX = scrlKeyX.Value
+    KeyOpenEditorY = scrlKeyY.Value
     picAttributes.visible = False
     fraKeyOpen.visible = False
 End Sub
 
 Private Sub cmdMapItem_Click()
-    ItemEditorNum = scrlMapItem.value
-    ItemEditorValue = scrlMapItemValue.value
+    ItemEditorNum = scrlMapItem.Value
+    ItemEditorValue = scrlMapItemValue.Value
     picAttributes.visible = False
     fraMapItem.visible = False
 End Sub
 
 Private Sub cmdMapKey_Click()
-    KeyEditorNum = scrlMapKey.value
-    KeyEditorTake = chkMapKey.value
-    KeyEditorTime = scrlKeyTime.value
+    KeyEditorNum = scrlMapKey.Value
+    KeyEditorTake = chkMapKey.Value
+    KeyEditorTime = scrlKeyTime.Value
     If KeyEditorTime = 0 Then KeyEditorTime = -1
     picAttributes.visible = False
     fraMapKey.visible = False
 End Sub
 
 Private Sub cmdMapWarp_Click()
-    EditorWarpMap = scrlMapWarp.value
-    EditorWarpX = scrlMapWarpX.value
-    EditorWarpY = scrlMapWarpY.value
-    EditorWarpFall = chkWarpFall.value
+    EditorWarpMap = scrlMapWarp.Value
+    EditorWarpX = scrlMapWarpX.Value
+    EditorWarpY = scrlMapWarpY.Value
+    EditorWarpFall = chkWarpFall.Value
     picAttributes.visible = False
     fraMapWarp.visible = False
 End Sub
@@ -1135,7 +1135,7 @@ End Sub
 
 Private Sub cmdNpcSpawn_Click()
     SpawnNpcNum = lstNpc.ListIndex + 1
-    SpawnNpcDir = scrlNpcDir.value
+    SpawnNpcDir = scrlNpcDir.Value
     picAttributes.visible = False
     fraNpcSpawn.visible = False
 End Sub
@@ -1154,7 +1154,7 @@ Private Sub cmdNUp_Click()
 End Sub
 
 Private Sub cmdResourceOk_Click()
-    ResourceEditorNum = scrlResource.value
+    ResourceEditorNum = scrlResource.Value
     picAttributes.visible = False
     fraResource.visible = False
 End Sub
@@ -1172,7 +1172,7 @@ Private Sub cmdSlide_Click()
 End Sub
 
 Private Sub cmdTrap_Click()
-    MapEditorHealAmount = scrlTrap.value
+    MapEditorHealAmount = scrlTrap.Value
     picAttributes.visible = False
     fraTrap.visible = False
 End Sub
@@ -1206,7 +1206,7 @@ End Sub
 
 Private Sub optLayers_Click()
 
-    If optLayers.value Then
+    If optLayers.Value Then
         fraLayers.visible = True
         fraAttribs.visible = False
     End If
@@ -1215,7 +1215,7 @@ End Sub
 
 Private Sub optAttribs_Click()
 
-    If optAttribs.value Then
+    If optAttribs.Value Then
         fraLayers.visible = False
         fraAttribs.visible = True
     End If
@@ -1266,14 +1266,14 @@ Private Sub optTrap_Click()
     fraTrap.visible = True
 End Sub
 
-Private Sub picBackSelect_MouseDown(Button As Integer, Shift As Integer, X As Single, y As Single)
-    Call MapEditorChooseTile(Button, X, y)
+Private Sub picBackSelect_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
+    Call MapEditorChooseTile(Button, X, Y)
 End Sub
  
-Private Sub picBackSelect_MouseMove(Button As Integer, Shift As Integer, X As Single, y As Single)
-    shpLocTop = (y \ PIC_Y) * PIC_Y
+Private Sub picBackSelect_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
+    shpLocTop = (Y \ PIC_Y) * PIC_Y
     shpLocLeft = (X \ PIC_X) * PIC_X
-    Call MapEditorDrag(Button, X, y)
+    Call MapEditorDrag(Button, X, Y)
 End Sub
 
 Private Sub cmdSend_Click()
@@ -1304,7 +1304,7 @@ Private Sub optItem_Click()
     picAttributes.visible = True
     fraMapItem.visible = True
     scrlMapItem.max = MAX_ITEMS
-    lblMapItem.caption = Trim$(Item(scrlMapItem.value).Name) & " x" & scrlMapItemValue.value
+    lblMapItem.caption = Trim$(Item(scrlMapItem.Value).Name) & " x" & scrlMapItemValue.Value
 End Sub
 
 Private Sub optKey_Click()
@@ -1312,7 +1312,7 @@ Private Sub optKey_Click()
     picAttributes.visible = True
     fraMapKey.visible = True
     scrlMapKey.max = MAX_ITEMS
-    lblMapKey.caption = "Item: " & Trim$(Item(scrlMapKey.value).Name)
+    lblMapKey.caption = "Item: " & Trim$(Item(scrlMapKey.Value).Name)
 End Sub
 
 Private Sub optKeyOpen_Click()
@@ -1337,10 +1337,10 @@ End Sub
 
 Private Sub scrlAutotile_Change()
 
-    Select Case scrlAutotile.value
+    Select Case scrlAutotile.Value
 
         Case 0 ' normal
-            lblAutotile.caption = "Normal"
+            lblAutotile.caption = "normal"
 
         Case 1 ' autotile
             lblAutotile.caption = "Autotile"
@@ -1361,17 +1361,17 @@ Private Sub scrlAutotile_Change()
 End Sub
 
 Private Sub scrlHeal_Change()
-    lblHeal.caption = "Amount: " & scrlHeal.value
+    lblHeal.caption = "Amount: " & scrlHeal.Value
 End Sub
 
 
 
 Private Sub scrlKeyTime_Change()
-    lblKeyTime.caption = "Time: " & scrlKeyTime.value & "s"
+    lblKeyTime.caption = "Time: " & scrlKeyTime.Value & "s"
 End Sub
 
 Private Sub scrlKeyX_Change()
-    lblKeyX.caption = "X: " & scrlKeyX.value
+    lblKeyX.caption = "X: " & scrlKeyX.Value
 End Sub
 
 Private Sub scrlKeyX_Scroll()
@@ -1379,7 +1379,7 @@ Private Sub scrlKeyX_Scroll()
 End Sub
 
 Private Sub scrlKeyY_Change()
-    lblKeyY.caption = "Y: " & scrlKeyY.value
+    lblKeyY.caption = "Y: " & scrlKeyY.Value
 End Sub
 
 Private Sub scrlKeyY_Scroll()
@@ -1387,19 +1387,19 @@ Private Sub scrlKeyY_Scroll()
 End Sub
 
 Private Sub scrlTrap_Change()
-    lblTrap.caption = "Amount: " & scrlTrap.value
+    lblTrap.caption = "Amount: " & scrlTrap.Value
 End Sub
 
 Private Sub scrlMapItem_Change()
 
-    If Item(scrlMapItem.value).Type = ITEM_TYPE_CURRENCY Then
+    If Item(scrlMapItem.Value).Type = ITEM_TYPE_CURRENCY Then
         scrlMapItemValue.enabled = True
     Else
-        scrlMapItemValue.value = 1
+        scrlMapItemValue.Value = 1
         scrlMapItemValue.enabled = False
     End If
 
-    lblMapItem.caption = Trim$(Item(scrlMapItem.value).Name) & " x" & scrlMapItemValue.value
+    lblMapItem.caption = Trim$(Item(scrlMapItem.Value).Name) & " x" & scrlMapItemValue.Value
 End Sub
 
 Private Sub scrlMapItem_Scroll()
@@ -1407,7 +1407,7 @@ Private Sub scrlMapItem_Scroll()
 End Sub
 
 Private Sub scrlMapItemValue_Change()
-    lblMapItem.caption = Trim$(Item(scrlMapItem.value).Name) & " x" & scrlMapItemValue.value
+    lblMapItem.caption = Trim$(Item(scrlMapItem.Value).Name) & " x" & scrlMapItemValue.Value
 End Sub
 
 Private Sub scrlMapItemValue_Scroll()
@@ -1415,7 +1415,7 @@ Private Sub scrlMapItemValue_Scroll()
 End Sub
 
 Private Sub scrlMapKey_Change()
-    lblMapKey.caption = "Item: " & Trim$(Item(scrlMapKey.value).Name)
+    lblMapKey.caption = "Item: " & Trim$(Item(scrlMapKey.Value).Name)
 End Sub
 
 Private Sub scrlMapKey_Scroll()
@@ -1423,7 +1423,7 @@ Private Sub scrlMapKey_Scroll()
 End Sub
 
 Private Sub scrlMapWarp_Change()
-    lblMapWarp.caption = "Map: " & scrlMapWarp.value
+    lblMapWarp.caption = "Map: " & scrlMapWarp.Value
 End Sub
 
 Private Sub scrlMapWarp_Scroll()
@@ -1431,7 +1431,7 @@ Private Sub scrlMapWarp_Scroll()
 End Sub
 
 Private Sub scrlMapWarpX_Change()
-    lblMapWarpX.caption = "X: " & scrlMapWarpX.value
+    lblMapWarpX.caption = "X: " & scrlMapWarpX.Value
 End Sub
 
 Private Sub scrlMapWarpX_Scroll()
@@ -1439,7 +1439,7 @@ Private Sub scrlMapWarpX_Scroll()
 End Sub
 
 Private Sub scrlMapWarpY_Change()
-    lblMapWarpY.caption = "Y: " & scrlMapWarpY.value
+    lblMapWarpY.caption = "Y: " & scrlMapWarpY.Value
 End Sub
 
 Private Sub scrlMapWarpY_Scroll()
@@ -1448,7 +1448,7 @@ End Sub
 
 Private Sub scrlNpcDir_Change()
 
-    Select Case scrlNpcDir.value
+    Select Case scrlNpcDir.Value
 
         Case DIR_DOWN
             lblNpcDir = "Direction: Down"
@@ -1470,7 +1470,7 @@ Private Sub scrlNpcDir_Scroll()
 End Sub
 
 Private Sub scrlResource_Change()
-    lblResource.caption = "Resource: " & Resource(scrlResource.value).Name
+    lblResource.caption = "Resource: " & Resource(scrlResource.Value).Name
 End Sub
 
 Private Sub scrlResource_Scroll()
@@ -1494,9 +1494,9 @@ Private Sub scrlPictureY_Scroll()
 End Sub
 
 Private Sub scrlTileSet_Change()
-    fraTileSet.caption = "Tileset: " & scrlTileSet.value
-    frmEditor_Map.scrlPictureX.value = 0
-    frmEditor_Map.scrlPictureY.value = 0
+    fraTileSet.caption = "Tileset: " & scrlTileSet.Value
+    frmEditor_Map.scrlPictureX.Value = 0
+    frmEditor_Map.scrlPictureY.Value = 0
     frmEditor_Map.picBackSelect.Left = 0
     frmEditor_Map.picBackSelect.Top = 0
     GDIRenderTileset
@@ -1511,7 +1511,7 @@ End Sub
 
 Private Sub cmdChat_Click()
     MapEditorChatNpc = lstChat.ListIndex + 1
-    MapEditorChatDir = scrlChat.value
+    MapEditorChatDir = scrlChat.Value
     picAttributes.visible = False
     fraChat.visible = False
 End Sub
@@ -1527,7 +1527,7 @@ Private Sub optChat_Click()
                 lstChat.AddItem N & ": No Npc"
             End If
         Next N
-        scrlChat.value = 0
+        scrlChat.Value = 0
         lstChat.ListIndex = 0
     End If
     
@@ -1539,7 +1539,7 @@ End Sub
 Private Sub scrlChat_Change()
     Dim sAppend As String
 
-    Select Case scrlChat.value
+    Select Case scrlChat.Value
 
         Case DIR_UP
             sAppend = "Up"

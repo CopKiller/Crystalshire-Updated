@@ -341,7 +341,7 @@ Option Explicit
 Private Sub cmbSound_Click()
 
     If cmbSound.ListIndex >= 0 Then
-        Animation(EditorIndex).sound = cmbSound.List(cmbSound.ListIndex)
+        Animation(EditorIndex).sound = cmbSound.list(cmbSound.ListIndex)
     Else
         Animation(EditorIndex).sound = "None."
     End If
@@ -359,7 +359,7 @@ Private Sub cmdDelete_Click()
     ClearAnimation EditorIndex
     tmpIndex = lstIndex.ListIndex
     lstIndex.RemoveItem EditorIndex - 1
-    lstIndex.AddItem EditorIndex & ": " & Animation(EditorIndex).name, EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Animation(EditorIndex).Name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
     AnimationEditorInit
 End Sub
@@ -372,10 +372,10 @@ Private Sub Form_Load()
     Dim i As Long
 
     For i = 0 To 1
-        scrlSprite(i).Max = Count_Anim
-        scrlLoopCount(i).Max = 100
-        scrlFrameCount(i).Max = 100
-        scrlLoopTime(i).Max = 1000
+        scrlSprite(i).max = CountAnim
+        scrlLoopCount(i).max = 100
+        scrlFrameCount(i).max = 100
+        scrlLoopTime(i).max = 1000
     Next
 
 End Sub
@@ -384,40 +384,40 @@ Private Sub lstIndex_Click()
     AnimationEditorInit
 End Sub
 
-Private Sub scrlFrameCount_Change(index As Integer)
-    lblFrameCount(index).caption = "Frame Count: " & scrlFrameCount(index).value
-    Animation(EditorIndex).Frames(index) = scrlFrameCount(index).value
+Private Sub scrlFrameCountChange(Index As Integer)
+    lblFrameCount(Index).caption = "Frame Count: " & scrlFrameCount(Index).Value
+    Animation(EditorIndex).Frames(Index) = scrlFrameCount(Index).Value
 End Sub
 
-Private Sub scrlFrameCount_Scroll(index As Integer)
-    scrlFrameCount_Change index
+Private Sub scrlFrameCountScroll(Index As Integer)
+    scrlFrameCountChange Index
 End Sub
 
-Private Sub scrlLoopCount_Change(index As Integer)
-    lblLoopCount(index).caption = "Loop Count: " & scrlLoopCount(index).value
-    Animation(EditorIndex).LoopCount(index) = scrlLoopCount(index).value
+Private Sub scrlLoopCountChange(Index As Integer)
+    lblLoopCount(Index).caption = "Loop Count: " & scrlLoopCount(Index).Value
+    Animation(EditorIndex).LoopCount(Index) = scrlLoopCount(Index).Value
 End Sub
 
-Private Sub scrlLoopCount_Scroll(index As Integer)
-    scrlLoopCount_Change index
+Private Sub scrlLoopCountScroll(Index As Integer)
+    scrlLoopCountChange Index
 End Sub
 
-Private Sub scrlLoopTime_Change(index As Integer)
-    lblLoopTime(index).caption = "Loop Time: " & scrlLoopTime(index).value
-    Animation(EditorIndex).looptime(index) = scrlLoopTime(index).value
+Private Sub scrlLoopTime_Change(Index As Integer)
+    lblLoopTime(Index).caption = "Loop Time: " & scrlLoopTime(Index).Value
+    Animation(EditorIndex).looptime(Index) = scrlLoopTime(Index).Value
 End Sub
 
-Private Sub scrlLoopTime_Scroll(index As Integer)
-    scrlLoopTime_Change index
+Private Sub scrlLoopTime_Scroll(Index As Integer)
+    scrlLoopTime_Change Index
 End Sub
 
-Private Sub scrlSprite_Change(index As Integer)
-    lblSprite(index).caption = "Sprite: " & scrlSprite(index).value
-    Animation(EditorIndex).sprite(index) = scrlSprite(index).value
+Private Sub scrlSprite_Change(Index As Integer)
+    lblSprite(Index).caption = "Sprite: " & scrlSprite(Index).Value
+    Animation(EditorIndex).sprite(Index) = scrlSprite(Index).Value
 End Sub
 
-Private Sub scrlSprite_Scroll(index As Integer)
-    scrlSprite_Change index
+Private Sub scrlSprite_Scroll(Index As Integer)
+    scrlSprite_Change Index
 End Sub
 
 Private Sub txtName_Validate(Cancel As Boolean)
@@ -425,8 +425,8 @@ Private Sub txtName_Validate(Cancel As Boolean)
 
     If EditorIndex = 0 Or EditorIndex > MAX_ANIMATIONS Then Exit Sub
     tmpIndex = lstIndex.ListIndex
-    Animation(EditorIndex).name = Trim$(txtName.text)
+    Animation(EditorIndex).Name = Trim$(txtName.text)
     lstIndex.RemoveItem EditorIndex - 1
-    lstIndex.AddItem EditorIndex & ": " & Animation(EditorIndex).name, EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Animation(EditorIndex).Name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
 End Sub

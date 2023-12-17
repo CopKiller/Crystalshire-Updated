@@ -244,14 +244,14 @@ Public Const AUTO_VERTICAL As Byte = 4
 Public Const AUTO_FILL As Byte = 5
 ' Autotile types
 Public Const AUTOTILE_NONE As Byte = 0
-Public Const AUTOTILE_NORMAL As Byte = 1
+Public Const AUTOTILE_normal As Byte = 1
 Public Const AUTOTILE_FAKE As Byte = 2
 Public Const AUTOTILE_ANIM As Byte = 3
 Public Const AUTOTILE_CLIFF As Byte = 4
 Public Const AUTOTILE_WATERFALL As Byte = 5
 ' Rendering
 Public Const RENDER_STATE_NONE As Long = 0
-Public Const RENDER_STATE_NORMAL As Long = 1
+Public Const RENDER_STATE_normal As Long = 1
 Public Const RENDER_STATE_AUTOTILE As Long = 2
 Public Const RENDER_STATE_APPEAR As Long = 3
 ' Scrolling action message constants

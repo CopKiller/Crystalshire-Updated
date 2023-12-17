@@ -958,9 +958,9 @@ Private Sub cmdPaste_Click()
 End Sub
 
 Private Sub Form_Load()
-    scrlPic.max = Count_Item
+    scrlPic.max = CountItem
     scrlAnim.max = MAX_ANIMATIONS
-    scrlPaperdoll.max = Count_Paperdoll
+    scrlPaperdoll.max = CountPaperdoll
 End Sub
 
 Private Sub cmdSave_Click()
@@ -1024,93 +1024,93 @@ End Sub
 Private Sub scrlAccessReq_Change()
 
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
-    lblAccessReq.caption = "Access Req: " & scrlAccessReq.value
-    Item(EditorIndex).AccessReq = scrlAccessReq.value
+    lblAccessReq.caption = "Access Req: " & scrlAccessReq.Value
+    Item(EditorIndex).AccessReq = scrlAccessReq.Value
 End Sub
 
 Private Sub scrlAddHp_Change()
-    lblAddHP.caption = "Add HP: " & scrlAddHp.value
-    Item(EditorIndex).AddHP = scrlAddHp.value
+    lblAddHP.caption = "Add HP: " & scrlAddHp.Value
+    Item(EditorIndex).AddHP = scrlAddHp.Value
 End Sub
 
 Private Sub scrlAddMp_Change()
-    lblAddMP.caption = "Add MP: " & scrlAddMP.value
-    Item(EditorIndex).AddMP = scrlAddMP.value
+    lblAddMP.caption = "Add MP: " & scrlAddMP.Value
+    Item(EditorIndex).AddMP = scrlAddMP.Value
 End Sub
 
 Private Sub scrlAddExp_Change()
-    lblAddExp.caption = "Add Exp: " & scrlAddExp.value
-    Item(EditorIndex).AddEXP = scrlAddExp.value
+    lblAddExp.caption = "Add Exp: " & scrlAddExp.Value
+    Item(EditorIndex).AddEXP = scrlAddExp.Value
 End Sub
 
 Private Sub scrlAnim_Change()
     Dim sString As String
 
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
-    If scrlAnim.value = 0 Then
+    If scrlAnim.Value = 0 Then
         sString = "None"
     Else
-        sString = Trim$(Animation(scrlAnim.value).Name)
+        sString = Trim$(Animation(scrlAnim.Value).Name)
     End If
 
     lblAnim.caption = "Anim: " & sString
-    Item(EditorIndex).Animation = scrlAnim.value
+    Item(EditorIndex).Animation = scrlAnim.Value
 End Sub
 
 Private Sub scrlDamage_Change()
 
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
-    lblDamage.caption = "Damage: " & scrlDamage.value
-    Item(EditorIndex).Data2 = scrlDamage.value
+    lblDamage.caption = "Damage: " & scrlDamage.Value
+    Item(EditorIndex).Data2 = scrlDamage.Value
 End Sub
 
 Private Sub scrlFoodHeal_Change()
-    lblFoodHeal.caption = "Heal Per Tick: " & scrlFoodHeal.value
-    Item(EditorIndex).FoodPerTick = scrlFoodHeal.value
+    lblFoodHeal.caption = "Heal Per Tick: " & scrlFoodHeal.Value
+    Item(EditorIndex).FoodPerTick = scrlFoodHeal.Value
 End Sub
 
 Private Sub scrlFoodInterval_Change()
-    lblFoodInterval.caption = "Interval: " & scrlFoodInterval.value & "(ms)"
-    Item(EditorIndex).FoodInterval = scrlFoodInterval.value
+    lblFoodInterval.caption = "Interval: " & scrlFoodInterval.Value & "(ms)"
+    Item(EditorIndex).FoodInterval = scrlFoodInterval.Value
 End Sub
 
 Private Sub scrlFoodTick_Change()
-    lblFoodTick.caption = "Tick Count: " & scrlFoodTick.value
-    Item(EditorIndex).FoodTickCount = scrlFoodTick.value
+    lblFoodTick.caption = "Tick Count: " & scrlFoodTick.Value
+    Item(EditorIndex).FoodTickCount = scrlFoodTick.Value
 End Sub
 
 Private Sub scrlLevelReq_Change()
 
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
     lblLevelReq.caption = "Level req: " & scrlLevelReq
-    Item(EditorIndex).LevelReq = scrlLevelReq.value
+    Item(EditorIndex).LevelReq = scrlLevelReq.Value
 End Sub
 
 Private Sub scrlPaperdoll_Change()
 
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
-    lblPaperdoll.caption = "Paperdoll: " & scrlPaperdoll.value
-    Item(EditorIndex).Paperdoll = scrlPaperdoll.value
+    lblPaperdoll.caption = "Paperdoll: " & scrlPaperdoll.Value
+    Item(EditorIndex).Paperdoll = scrlPaperdoll.Value
 End Sub
 
 Private Sub scrlPic_Change()
 
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
-    lblPic.caption = "Pic: " & scrlPic.value
-    Item(EditorIndex).Pic = scrlPic.value
+    lblPic.caption = "Pic: " & scrlPic.Value
+    Item(EditorIndex).pic = scrlPic.Value
 End Sub
 
 Private Sub scrlPrice_Change()
 
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
-    lblPrice.caption = "Price: " & scrlPrice.value
-    Item(EditorIndex).Price = scrlPrice.value
+    lblPrice.caption = "Price: " & scrlPrice.Value
+    Item(EditorIndex).Price = scrlPrice.Value
 End Sub
 
 Private Sub scrlProf_Change()
     Dim theProf As String
 
-    Select Case scrlProf.value
+    Select Case scrlProf.Value
 
         Case 0 ' None
             theProf = "None"
@@ -1123,21 +1123,21 @@ Private Sub scrlProf_Change()
     End Select
 
     lblProf.caption = "Proficiency: " & theProf
-    Item(EditorIndex).proficiency = scrlProf.value
+    Item(EditorIndex).proficiency = scrlProf.Value
 End Sub
 
 Private Sub scrlRarity_Change()
 
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
-    lblRarity.caption = "Rarity: " & scrlRarity.value
-    Item(EditorIndex).Rarity = scrlRarity.value
+    lblRarity.caption = "Rarity: " & scrlRarity.Value
+    Item(EditorIndex).Rarity = scrlRarity.Value
 End Sub
 
 Private Sub scrlSpeed_Change()
 
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
-    lblSpeed.caption = "Speed: " & scrlSpeed.value / 1000 & " sec"
-    Item(EditorIndex).speed = scrlSpeed.value
+    lblSpeed.caption = "Speed: " & scrlSpeed.Value / 1000 & " sec"
+    Item(EditorIndex).Speed = scrlSpeed.Value
 End Sub
 
 Private Sub scrlStatBonus_Change(Index As Integer)
@@ -1161,8 +1161,8 @@ Private Sub scrlStatBonus_Change(Index As Integer)
             text = "+ Will: "
     End Select
 
-    lblStatBonus(Index).caption = text & scrlStatBonus(Index).value
-    Item(EditorIndex).Add_Stat(Index) = scrlStatBonus(Index).value
+    lblStatBonus(Index).caption = text & scrlStatBonus(Index).Value
+    Item(EditorIndex).Add_Stat(Index) = scrlStatBonus(Index).Value
 End Sub
 
 Private Sub scrlStatReq_Change(Index As Integer)
@@ -1186,26 +1186,26 @@ Private Sub scrlStatReq_Change(Index As Integer)
             text = "Will: "
     End Select
 
-    lblStatReq(Index).caption = text & scrlStatReq(Index).value
-    Item(EditorIndex).Stat_Req(Index) = scrlStatReq(Index).value
+    lblStatReq(Index).caption = text & scrlStatReq(Index).Value
+    Item(EditorIndex).Stat_Req(Index) = scrlStatReq(Index).Value
 End Sub
 
 Private Sub scrlSpell_Change()
 
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
-    If Len(Trim$(Spell(scrlSpell.value).Name)) > 0 Then
-        lblSpellName.caption = "Name: " & Trim$(Spell(scrlSpell.value).Name)
+    If Len(Trim$(Spell(scrlSpell.Value).Name)) > 0 Then
+        lblSpellName.caption = "Name: " & Trim$(Spell(scrlSpell.Value).Name)
     Else
         lblSpellName.caption = "Name: None"
     End If
 
-    lblSpell.caption = "Spell: " & scrlSpell.value
-    Item(EditorIndex).Data1 = scrlSpell.value
+    lblSpell.caption = "Spell: " & scrlSpell.Value
+    Item(EditorIndex).Data1 = scrlSpell.Value
 End Sub
 
 Private Sub scrlUnique_Change()
-    lblUnique.caption = "Num: " & scrlUnique.value
-    Item(EditorIndex).Data1 = scrlUnique.value
+    lblUnique.caption = "Num: " & scrlUnique.Value
+    Item(EditorIndex).Data1 = scrlUnique.Value
 End Sub
 
 Private Sub txtDesc_Change()

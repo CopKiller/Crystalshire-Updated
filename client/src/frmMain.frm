@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0"; "MSWINSCK.OCX"
+Object = "{248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0"; "mswinsck.ocx"
 Begin VB.Form frmMain 
    BackColor       =   &H00FFFFFF&
    BorderStyle     =   1  'Fixed Single
@@ -102,8 +102,8 @@ Private Sub Form_KeyUp(KeyCode As Integer, Shift As Integer)
     End Select
 End Sub
 
-Private Sub Form_DblClick()
-    HandleGuiMouse entStates.DblClick
+Private Sub Form_DoubleClick()
+    HandleGuiMouse entStates.DoubleClick
 End Sub
 
 ' Winsock event

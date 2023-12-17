@@ -966,7 +966,7 @@ Private Sub cmbType_Click()
     If Spell(EditorIndex).Type = SPELL_TYPE_PROJECTILE Then
         fraProjectile.visible = True
         fraSpellData.visible = False
-        scrlProjectilePic.max = Count_Projectile
+        scrlProjectilePic.max = CountProjectile
     Else
         fraProjectile.visible = False
         fraSpellData.visible = True
@@ -1244,7 +1244,7 @@ End Sub
 Private Sub scrlProjectileSpeed_Change()
     If EditorIndex = 0 Or EditorIndex > MAX_SPELLS Then Exit Sub
     
-    Spell(EditorIndex).Projectile.speed = scrlProjectileSpeed.Value
+    Spell(EditorIndex).Projectile.Speed = scrlProjectileSpeed.Value
 End Sub
 
 Private Sub scrlRadiusX_Change()

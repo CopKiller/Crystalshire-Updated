@@ -42,7 +42,7 @@ retry:
                 End If
     
                 ' check if we need to end the CD icon
-                If Count_Spellicon > 0 Then
+                If CountSpellicon > 0 Then
                     For i = 1 To MAX_PLAYER_SPELLS
                         If PlayerSpells(i).Spell > 0 Then
                             If SpellCD(i) > 0 Then
@@ -600,7 +600,7 @@ Public Sub CheckAttack()
 
         ' speed from weapon
         If GetPlayerEquipment(MyIndex, Weapon) > 0 Then
-            attackspeed = Item(GetPlayerEquipment(MyIndex, Weapon)).speed
+            attackspeed = Item(GetPlayerEquipment(MyIndex, Weapon)).Speed
         Else
             attackspeed = 1000
         End If
@@ -1228,7 +1228,7 @@ Public Function IsOffer(StartX As Long, StartY As Long) As Long
             End With
             
             If currMouseX >= tempRec.Left And currMouseX <= tempRec.Right Then
-                RenderTexture Tex_Design(4), ConvertMapX(OfferTop), ConvertMapY(OfferLeft), 0, 0, 32, 32, 32, 32
+                RenderTexture TextureDesign(7), ConvertMapX(OfferTop), ConvertMapY(OfferLeft), 0, 0, 32, 32, 32, 32
                 If currMouseY >= tempRec.Top And currMouseY <= tempRec.Bottom Then
                     IsOffer = i
                     Exit Function
@@ -2113,7 +2113,7 @@ Public Sub cacheRenderState(ByVal X As Long, ByVal Y As Long, ByVal layernum As 
     With Map.TileData.Tile(X, Y)
 
         ' check if the tile can be rendered
-        If .Layer(layernum).tileSet <= 0 Or .Layer(layernum).tileSet > Count_Tileset Then
+        If .Layer(layernum).tileSet <= 0 Or .Layer(layernum).tileSet > CountTileset Then
             Autotile(X, Y).Layer(layernum).RenderState = RENDER_STATE_NONE
             Exit Sub
         End If
@@ -2148,7 +2148,7 @@ Public Sub cacheRenderState(ByVal X As Long, ByVal Y As Long, ByVal layernum As 
         ' check if it needs to be rendered as an autotile
         If .Autotile(layernum) = AUTOTILE_NONE Or .Autotile(layernum) = AUTOTILE_FAKE Or Options.NoAuto = 1 Then
             ' default to... default
-            Autotile(X, Y).Layer(layernum).RenderState = RENDER_STATE_NORMAL
+            Autotile(X, Y).Layer(layernum).RenderState = RENDER_STATE_normal
         Else
             Autotile(X, Y).Layer(layernum).RenderState = RENDER_STATE_AUTOTILE
 
@@ -2179,16 +2179,16 @@ Public Sub calculateAutotile(ByVal X As Long, ByVal Y As Long, ByVal layernum As
     ' Okay, we have autotiling but which one?
     Select Case Map.TileData.Tile(X, Y).Autotile(layernum)
 
-            ' Normal or animated - same difference
-        Case AUTOTILE_NORMAL, AUTOTILE_ANIM
+            ' normal or animated - same difference
+        Case AUTOTILE_normal, AUTOTILE_ANIM
             ' North West Quarter
-            CalculateNW_Normal layernum, X, Y
+            CalculateNW_normal layernum, X, Y
             ' North East Quarter
-            CalculateNE_Normal layernum, X, Y
+            CalculateNE_normal layernum, X, Y
             ' South West Quarter
-            CalculateSW_Normal layernum, X, Y
+            CalculateSW_normal layernum, X, Y
             ' South East Quarter
-            CalculateSE_Normal layernum, X, Y
+            CalculateSE_normal layernum, X, Y
 
             ' Cliff
         Case AUTOTILE_CLIFF
@@ -2219,8 +2219,8 @@ Public Sub calculateAutotile(ByVal X As Long, ByVal Y As Long, ByVal layernum As
 
 End Sub
 
-' Normal autotiling
-Public Sub CalculateNW_Normal(ByVal layernum As Long, ByVal X As Long, ByVal Y As Long)
+' normal autotiling
+Public Sub CalculateNW_normal(ByVal layernum As Long, ByVal X As Long, ByVal Y As Long)
     Dim tmpTile(1 To 3) As Boolean
     Dim situation As Byte
 
@@ -2269,7 +2269,7 @@ Public Sub CalculateNW_Normal(ByVal layernum As Long, ByVal X As Long, ByVal Y A
 
 End Sub
 
-Public Sub CalculateNE_Normal(ByVal layernum As Long, ByVal X As Long, ByVal Y As Long)
+Public Sub CalculateNE_normal(ByVal layernum As Long, ByVal X As Long, ByVal Y As Long)
     Dim tmpTile(1 To 3) As Boolean
     Dim situation As Byte
 
@@ -2318,7 +2318,7 @@ Public Sub CalculateNE_Normal(ByVal layernum As Long, ByVal X As Long, ByVal Y A
 
 End Sub
 
-Public Sub CalculateSW_Normal(ByVal layernum As Long, ByVal X As Long, ByVal Y As Long)
+Public Sub CalculateSW_normal(ByVal layernum As Long, ByVal X As Long, ByVal Y As Long)
     Dim tmpTile(1 To 3) As Boolean
     Dim situation As Byte
 
@@ -2367,7 +2367,7 @@ Public Sub CalculateSW_Normal(ByVal layernum As Long, ByVal X As Long, ByVal Y A
 
 End Sub
 
-Public Sub CalculateSE_Normal(ByVal layernum As Long, ByVal X As Long, ByVal Y As Long)
+Public Sub CalculateSE_normal(ByVal layernum As Long, ByVal X As Long, ByVal Y As Long)
     Dim tmpTile(1 To 3) As Boolean
     Dim situation As Byte
 
@@ -2741,7 +2741,7 @@ Dim i As Long, X As Long
             X = X - 1
         Next
         For i = 0 To 5
-            .Controls(GetControlIndex("winNpcChat", "picFace")).Image(i) = Tex_Face(Npc(NpcNum).sprite)
+            .Controls(GetControlIndex("winNpcChat", "picFace")).image(i) = TextureFace(Npc(NpcNum).sprite)
         Next
     End With
     
@@ -3521,7 +3521,7 @@ Public Sub ShowItemDesc(X As Long, Y As Long, ItemNum As Long, soulBound As Bool
             If Item(ItemNum).Type = ITEM_TYPE_WEAPON Then
                 AddDescInfo "Damage: " & Item(ItemNum).Data2
                 ' speed
-                AddDescInfo "Speed: " & (Item(ItemNum).speed / 1000) & "s"
+                AddDescInfo "Speed: " & (Item(ItemNum).Speed / 1000) & "s"
             Else
                 If Item(ItemNum).Data2 > 0 Then
                     AddDescInfo "Defence: " & Item(ItemNum).Data2
@@ -3686,14 +3686,14 @@ Dim i As Long, CostValue As Long
                 End If
                 ' draw the item
                 For i = 0 To 5
-                    .Controls(GetControlIndex("winShop", "picItem")).Image(i) = Tex_Item(Item(shopSelectedItem).pic)
+                    .Controls(GetControlIndex("winShop", "picItem")).image(i) = TextureItem(Item(shopSelectedItem).pic)
                 Next
             Else
                 .Controls(GetControlIndex("winShop", "lblName")).text = "Empty Slot"
                 .Controls(GetControlIndex("winShop", "lblCost")).text = vbNullString
                 ' draw the item
                 For i = 0 To 5
-                    .Controls(GetControlIndex("winShop", "picItem")).Image(i) = 0
+                    .Controls(GetControlIndex("winShop", "picItem")).image(i) = 0
                 Next
             End If
         Else
@@ -3706,14 +3706,14 @@ Dim i As Long, CostValue As Long
                 .Controls(GetControlIndex("winShop", "lblCost")).text = CostValue & "g"
                 ' draw the item
                 For i = 0 To 5
-                    .Controls(GetControlIndex("winShop", "picItem")).Image(i) = Tex_Item(Item(shopSelectedItem).pic)
+                    .Controls(GetControlIndex("winShop", "picItem")).image(i) = TextureItem(Item(shopSelectedItem).pic)
                 Next
             Else
                 .Controls(GetControlIndex("winShop", "lblName")).text = "Empty Slot"
                 .Controls(GetControlIndex("winShop", "lblCost")).text = vbNullString
                 ' draw the item
                 For i = 0 To 5
-                    .Controls(GetControlIndex("winShop", "picItem")).Image(i) = 0
+                    .Controls(GetControlIndex("winShop", "picItem")).image(i) = 0
                 Next
             End If
         End If
@@ -3777,7 +3777,7 @@ Sub UpdateStats_UI()
 End Sub
 
 Sub UpdatePartyInterface()
-Dim i As Long, Image(0 To 5) As Long, X As Long, pIndex As Long, Height As Long, cIn As Long
+Dim i As Long, image(0 To 5) As Long, X As Long, pIndex As Long, Height As Long, cIn As Long
 
     ' unload it if we're not in a party
     If Party.Leader = 0 Then
@@ -3817,7 +3817,7 @@ Dim i As Long, Image(0 To 5) As Long, X As Long, pIndex As Long, Height As Long,
                         ' store the player's index as a value for later use
                         .Controls(GetControlIndex("winParty", "picChar" & cIn)).Value = pIndex
                         For X = 0 To 5
-                            .Controls(GetControlIndex("winParty", "picChar" & cIn)).Image(X) = Tex_Char(GetPlayerSprite(pIndex))
+                            .Controls(GetControlIndex("winParty", "picChar" & cIn)).image(X) = TextureChar(GetPlayerSprite(pIndex))
                         Next
                         ' bars
                         .Controls(GetControlIndex("winParty", "picEmptyBar_HP" & cIn)).visible = True

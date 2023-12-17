@@ -296,16 +296,16 @@ Private Sub lstIndex_Click()
     Call ConvEditorInit
 End Sub
 
-Private Sub scrlChatCount_Change()
+Private Sub scrlChatCountChange()
     Dim N As Long, i As Long
     
     If EditorIndex = 0 Or EditorIndex > MAX_CONVS Then Exit Sub
     If curConv <= 0 Then Exit Sub
     
-    lblChatCount.caption = "Chat Count: " & scrlChatCount.value
-    Conv(EditorIndex).chatCount = scrlChatCount.value
-    scrlConv.max = scrlChatCount.value
-    ReDim Preserve Conv(EditorIndex).Conv(1 To scrlChatCount.value) As ConvRec
+    lblChatCount.caption = "Chat Count: " & scrlChatCount.Value
+    Conv(EditorIndex).chatCount = scrlChatCount.Value
+    scrlConv.max = scrlChatCount.Value
+    ReDim Preserve Conv(EditorIndex).Conv(1 To scrlChatCount.Value) As ConvRec
     
     For N = 1 To 4
         cmbReply(N).Clear
@@ -331,7 +331,7 @@ Private Sub scrlConv_Change()
     Dim X As Long
     If EditorIndex = 0 Or EditorIndex > MAX_CONVS Then Exit Sub
     
-    curConv = scrlConv.value
+    curConv = scrlConv.Value
     fraConv.caption = "Conversation - " & curConv
 
     With Conv(EditorIndex).Conv(curConv)

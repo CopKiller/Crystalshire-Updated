@@ -23,9 +23,9 @@ Public Sub MapEditorInit()
     ' show the form
     frmEditor_Map.visible = True
     ' set the scrolly bars
-    frmEditor_Map.scrlTileSet.max = Count_Tileset
+    frmEditor_Map.scrlTileSet.max = CountTileset
     frmEditor_Map.fraTileSet.caption = "Tileset: " & 1
-    frmEditor_Map.scrlTileSet.value = 1
+    frmEditor_Map.scrlTileSet.Value = 1
     ' set the scrollbars
     frmEditor_Map.scrlPictureY.max = (frmEditor_Map.picBackSelect.Height \ PIC_Y) - (frmEditor_Map.picBack.Height \ PIC_Y)
     frmEditor_Map.scrlPictureX.max = (frmEditor_Map.picBackSelect.Width \ PIC_X) - (frmEditor_Map.picBack.Width \ PIC_X)
@@ -90,16 +90,16 @@ Public Sub MapEditorProperties()
         .txtBootX.text = CStr(Map.MapData.BootX)
         .txtBootY.text = CStr(Map.MapData.BootY)
         .CmbWeather.ListIndex = Map.MapData.Weather
-        .scrlWeatherIntensity.value = Map.MapData.WeatherIntensity
+        .scrlWeatherIntensity.Value = Map.MapData.WeatherIntensity
         
-        .ScrlFog.value = Map.MapData.Fog
-        .ScrlFogSpeed.value = Map.MapData.FogSpeed
-        .scrlFogOpacity.value = Map.MapData.FogOpacity
+        .ScrlFog.Value = Map.MapData.Fog
+        .ScrlFogSpeed.Value = Map.MapData.FogSpeed
+        .scrlFogOpacity.Value = Map.MapData.FogOpacity
         
-        .scrlRed.value = Map.MapData.Red
-        .scrlGreen.value = Map.MapData.Green
-        .scrlBlue.value = Map.MapData.Blue
-        .scrlAlpha.value = Map.MapData.alpha
+        .scrlRed.Value = Map.MapData.Red
+        .scrlGreen.Value = Map.MapData.Green
+        .scrlBlue.Value = Map.MapData.Blue
+        .scrlAlpha.Value = Map.MapData.alpha
         .scrlBoss = Map.MapData.BossNpc
         ' show the map npcs
         .lstNpcs.Clear
@@ -137,17 +137,17 @@ Public Sub MapEditorProperties()
 
 End Sub
 
-Public Sub MapEditorSetTile(ByVal X As Long, ByVal y As Long, ByVal CurLayer As Long, Optional ByVal multitile As Boolean = False, Optional ByVal theAutotile As Byte = 0)
-    Dim x2 As Long, y2 As Long
+Public Sub MapEditorSetTile(ByVal X As Long, ByVal Y As Long, ByVal CurLayer As Long, Optional ByVal multitile As Boolean = False, Optional ByVal theAutotile As Byte = 0)
+    Dim X2 As Long, Y2 As Long
 
     If theAutotile > 0 Then
-        With Map.TileData.Tile(X, y)
+        With Map.TileData.Tile(X, Y)
             ' set layer
             .Layer(CurLayer).X = EditorTileX
-            .Layer(CurLayer).y = EditorTileY
-            .Layer(CurLayer).tileSet = frmEditor_Map.scrlTileSet.value
+            .Layer(CurLayer).Y = EditorTileY
+            .Layer(CurLayer).tileSet = frmEditor_Map.scrlTileSet.Value
             .Autotile(CurLayer) = theAutotile
-            cacheRenderState X, y, CurLayer
+            cacheRenderState X, Y, CurLayer
         End With
         ' do a re-init so we can see our changes
         initAutotiles
@@ -155,46 +155,46 @@ Public Sub MapEditorSetTile(ByVal X As Long, ByVal y As Long, ByVal CurLayer As 
     End If
 
     If Not multitile Then ' single
-        With Map.TileData.Tile(X, y)
+        With Map.TileData.Tile(X, Y)
             ' set layer
             .Layer(CurLayer).X = EditorTileX
-            .Layer(CurLayer).y = EditorTileY
-            .Layer(CurLayer).tileSet = frmEditor_Map.scrlTileSet.value
+            .Layer(CurLayer).Y = EditorTileY
+            .Layer(CurLayer).tileSet = frmEditor_Map.scrlTileSet.Value
             .Autotile(CurLayer) = 0
-            cacheRenderState X, y, CurLayer
+            cacheRenderState X, Y, CurLayer
         End With
     Else ' multitile
-        y2 = 0 ' starting tile for y axis
-        For y = CurY To CurY + EditorTileHeight - 1
-            x2 = 0 ' re-set x count every y loop
+        Y2 = 0 ' starting tile for y axis
+        For Y = CurY To CurY + EditorTileHeight - 1
+            X2 = 0 ' re-set x count every y loop
             For X = CurX To CurX + EditorTileWidth - 1
                 If X >= 0 And X <= Map.MapData.MaxX Then
-                    If y >= 0 And y <= Map.MapData.MaxY Then
-                        With Map.TileData.Tile(X, y)
-                            .Layer(CurLayer).X = EditorTileX + x2
-                            .Layer(CurLayer).y = EditorTileY + y2
-                            .Layer(CurLayer).tileSet = frmEditor_Map.scrlTileSet.value
+                    If Y >= 0 And Y <= Map.MapData.MaxY Then
+                        With Map.TileData.Tile(X, Y)
+                            .Layer(CurLayer).X = EditorTileX + X2
+                            .Layer(CurLayer).Y = EditorTileY + Y2
+                            .Layer(CurLayer).tileSet = frmEditor_Map.scrlTileSet.Value
                             .Autotile(CurLayer) = 0
-                            cacheRenderState X, y, CurLayer
+                            cacheRenderState X, Y, CurLayer
                         End With
                     End If
                 End If
-                x2 = x2 + 1
+                X2 = X2 + 1
             Next
-            y2 = y2 + 1
+            Y2 = Y2 + 1
         Next
     End If
 
 End Sub
 
-Public Sub MapEditorMouseDown(ByVal Button As Integer, ByVal X As Long, ByVal y As Long, Optional ByVal movedMouse As Boolean = True)
+Public Sub MapEditorMouseDown(ByVal Button As Integer, ByVal X As Long, ByVal Y As Long, Optional ByVal movedMouse As Boolean = True)
     Dim i As Long
     Dim CurLayer As Long
 
     ' find which layer we're on
     For i = 1 To MapLayer.Layer_Count - 1
 
-        If frmEditor_Map.optLayer(i).value Then
+        If frmEditor_Map.optLayer(i).Value Then
             CurLayer = i
             Exit For
         End If
@@ -203,29 +203,29 @@ Public Sub MapEditorMouseDown(ByVal Button As Integer, ByVal X As Long, ByVal y 
 
     If Not isInBounds Then Exit Sub
     If Button = vbLeftButton Then
-        If frmEditor_Map.optLayers.value Then
+        If frmEditor_Map.optLayers.Value Then
 
             ' no autotiling
             If EditorTileWidth = 1 And EditorTileHeight = 1 Then 'single tile
-                MapEditorSetTile CurX, CurY, CurLayer, , frmEditor_Map.scrlAutotile.value
+                MapEditorSetTile CurX, CurY, CurLayer, , frmEditor_Map.scrlAutotile.Value
             Else ' multi tile!
 
-                If frmEditor_Map.scrlAutotile.value = 0 Then
+                If frmEditor_Map.scrlAutotile.Value = 0 Then
                     MapEditorSetTile CurX, CurY, CurLayer, True
                 Else
-                    MapEditorSetTile CurX, CurY, CurLayer, , frmEditor_Map.scrlAutotile.value
+                    MapEditorSetTile CurX, CurY, CurLayer, , frmEditor_Map.scrlAutotile.Value
                 End If
             End If
 
-        ElseIf frmEditor_Map.optAttribs.value Then
+        ElseIf frmEditor_Map.optAttribs.Value Then
 
             With Map.TileData.Tile(CurX, CurY)
 
                 ' blocked tile
-                If frmEditor_Map.optBlocked.value Then .Type = TILE_TYPE_BLOCKED
+                If frmEditor_Map.optBlocked.Value Then .Type = TILE_TYPE_BLOCKED
 
                 ' warp tile
-                If frmEditor_Map.optWarp.value Then
+                If frmEditor_Map.optWarp.Value Then
                     .Type = TILE_TYPE_WARP
                     .Data1 = EditorWarpMap
                     .Data2 = EditorWarpX
@@ -235,7 +235,7 @@ Public Sub MapEditorMouseDown(ByVal Button As Integer, ByVal X As Long, ByVal y 
                 End If
 
                 ' item spawn
-                If frmEditor_Map.optItem.value Then
+                If frmEditor_Map.optItem.Value Then
                     .Type = TILE_TYPE_ITEM
                     .Data1 = ItemEditorNum
                     .Data2 = ItemEditorValue
@@ -245,7 +245,7 @@ Public Sub MapEditorMouseDown(ByVal Button As Integer, ByVal X As Long, ByVal y 
                 End If
 
                 ' npc avoid
-                If frmEditor_Map.optNpcAvoid.value Then
+                If frmEditor_Map.optNpcAvoid.Value Then
                     .Type = TILE_TYPE_NPCAVOID
                     .Data1 = 0
                     .Data2 = 0
@@ -255,7 +255,7 @@ Public Sub MapEditorMouseDown(ByVal Button As Integer, ByVal X As Long, ByVal y 
                 End If
 
                 ' key
-                If frmEditor_Map.optKey.value Then
+                If frmEditor_Map.optKey.Value Then
                     .Type = TILE_TYPE_KEY
                     .Data1 = KeyEditorNum
                     .Data2 = KeyEditorTake
@@ -265,7 +265,7 @@ Public Sub MapEditorMouseDown(ByVal Button As Integer, ByVal X As Long, ByVal y 
                 End If
 
                 ' key open
-                If frmEditor_Map.optKeyOpen.value Then
+                If frmEditor_Map.optKeyOpen.Value Then
                     .Type = TILE_TYPE_KEYOPEN
                     .Data1 = KeyOpenEditorX
                     .Data2 = KeyOpenEditorY
@@ -275,7 +275,7 @@ Public Sub MapEditorMouseDown(ByVal Button As Integer, ByVal X As Long, ByVal y 
                 End If
 
                 ' resource
-                If frmEditor_Map.optResource.value Then
+                If frmEditor_Map.optResource.Value Then
                     .Type = TILE_TYPE_RESOURCE
                     .Data1 = ResourceEditorNum
                     .Data2 = 0
@@ -285,7 +285,7 @@ Public Sub MapEditorMouseDown(ByVal Button As Integer, ByVal X As Long, ByVal y 
                 End If
 
                 ' door
-                If frmEditor_Map.optDoor.value Then
+                If frmEditor_Map.optDoor.Value Then
                     .Type = TILE_TYPE_DOOR
                     .Data1 = EditorWarpMap
                     .Data2 = EditorWarpX
@@ -295,7 +295,7 @@ Public Sub MapEditorMouseDown(ByVal Button As Integer, ByVal X As Long, ByVal y 
                 End If
 
                 ' npc spawn
-                If frmEditor_Map.optNpcSpawn.value Then
+                If frmEditor_Map.optNpcSpawn.Value Then
                     .Type = TILE_TYPE_NPCSPAWN
                     .Data1 = SpawnNpcNum
                     .Data2 = SpawnNpcDir
@@ -305,7 +305,7 @@ Public Sub MapEditorMouseDown(ByVal Button As Integer, ByVal X As Long, ByVal y 
                 End If
 
                 ' shop
-                If frmEditor_Map.optShop.value Then
+                If frmEditor_Map.optShop.Value Then
                     .Type = TILE_TYPE_SHOP
                     .Data1 = EditorShop
                     .Data2 = 0
@@ -315,7 +315,7 @@ Public Sub MapEditorMouseDown(ByVal Button As Integer, ByVal X As Long, ByVal y 
                 End If
 
                 ' bank
-                If frmEditor_Map.optBank.value Then
+                If frmEditor_Map.optBank.Value Then
                     .Type = TILE_TYPE_BANK
                     .Data1 = 0
                     .Data2 = 0
@@ -325,7 +325,7 @@ Public Sub MapEditorMouseDown(ByVal Button As Integer, ByVal X As Long, ByVal y 
                 End If
 
                 ' heal
-                If frmEditor_Map.optHeal.value Then
+                If frmEditor_Map.optHeal.Value Then
                     .Type = TILE_TYPE_HEAL
                     .Data1 = MapEditorHealType
                     .Data2 = MapEditorHealAmount
@@ -335,7 +335,7 @@ Public Sub MapEditorMouseDown(ByVal Button As Integer, ByVal X As Long, ByVal y 
                 End If
 
                 ' trap
-                If frmEditor_Map.optTrap.value Then
+                If frmEditor_Map.optTrap.Value Then
                     .Type = TILE_TYPE_TRAP
                     .Data1 = MapEditorHealAmount
                     .Data2 = 0
@@ -345,7 +345,7 @@ Public Sub MapEditorMouseDown(ByVal Button As Integer, ByVal X As Long, ByVal y 
                 End If
 
                 ' slide
-                If frmEditor_Map.optSlide.value Then
+                If frmEditor_Map.optSlide.Value Then
                     .Type = TILE_TYPE_SLIDE
                     .Data1 = MapEditorSlideDir
                     .Data2 = 0
@@ -355,7 +355,7 @@ Public Sub MapEditorMouseDown(ByVal Button As Integer, ByVal X As Long, ByVal y 
                 End If
 
                 ' chat
-                If frmEditor_Map.optChat.value Then
+                If frmEditor_Map.optChat.Value Then
                     .Type = TILE_TYPE_CHAT
                     .Data1 = MapEditorChatNpc
                     .Data2 = MapEditorChatDir
@@ -365,7 +365,7 @@ Public Sub MapEditorMouseDown(ByVal Button As Integer, ByVal X As Long, ByVal y 
                 End If
                 
                 ' appear
-                If frmEditor_Map.optAppear.value Then
+                If frmEditor_Map.optAppear.Value Then
                     .Type = TILE_TYPE_APPEAR
                     .Data1 = EditorAppearRange
                     .Data2 = EditorAppearBottom
@@ -375,17 +375,17 @@ Public Sub MapEditorMouseDown(ByVal Button As Integer, ByVal X As Long, ByVal y 
                 End If
             End With
 
-        ElseIf frmEditor_Map.optBlock.value Then
+        ElseIf frmEditor_Map.optBlock.Value Then
 
             If movedMouse Then Exit Sub
             ' find what tile it is
             X = X - ((X \ 32) * 32)
-            y = y - ((y \ 32) * 32)
+            Y = Y - ((Y \ 32) * 32)
 
             ' see if it hits an arrow
             For i = 1 To 4
                 If X >= DirArrowX(i) And X <= DirArrowX(i) + 8 Then
-                    If y >= DirArrowY(i) And y <= DirArrowY(i) + 8 Then
+                    If Y >= DirArrowY(i) And Y <= DirArrowY(i) + 8 Then
                         ' flip the value.
                         setDirBlock Map.TileData.Tile(CurX, CurY).DirBlock, CByte(i), Not isDirBlocked(Map.TileData.Tile(CurX, CurY).DirBlock, CByte(i))
                         Exit Sub
@@ -396,12 +396,12 @@ Public Sub MapEditorMouseDown(ByVal Button As Integer, ByVal X As Long, ByVal y 
     End If
 
     If Button = vbRightButton Then
-        If frmEditor_Map.optLayers.value Then
+        If frmEditor_Map.optLayers.Value Then
 
             With Map.TileData.Tile(CurX, CurY)
                 ' clear layer
                 .Layer(CurLayer).X = 0
-                .Layer(CurLayer).y = 0
+                .Layer(CurLayer).Y = 0
                 .Layer(CurLayer).tileSet = 0
 
                 If .Autotile(CurLayer) > 0 Then
@@ -410,10 +410,10 @@ Public Sub MapEditorMouseDown(ByVal Button As Integer, ByVal X As Long, ByVal y 
                     initAutotiles
                 End If
 
-                cacheRenderState X, y, CurLayer
+                cacheRenderState X, Y, CurLayer
             End With
 
-        ElseIf frmEditor_Map.optAttribs.value Then
+        ElseIf frmEditor_Map.optAttribs.Value Then
 
             With Map.TileData.Tile(CurX, CurY)
                 ' clear attribute
@@ -431,13 +431,13 @@ Public Sub MapEditorMouseDown(ByVal Button As Integer, ByVal X As Long, ByVal y 
     CacheResources
 End Sub
 
-Public Sub MapEditorChooseTile(Button As Integer, X As Single, y As Single)
+Public Sub MapEditorChooseTile(Button As Integer, X As Single, Y As Single)
 
     If Button = vbLeftButton Then
         EditorTileWidth = 1
         EditorTileHeight = 1
         EditorTileX = X \ PIC_X
-        EditorTileY = y \ PIC_Y
+        EditorTileY = Y \ PIC_Y
         shpSelectedTop = EditorTileY * PIC_Y
         shpSelectedLeft = EditorTileX * PIC_X
         shpSelectedWidth = PIC_X
@@ -446,18 +446,18 @@ Public Sub MapEditorChooseTile(Button As Integer, X As Single, y As Single)
 
 End Sub
 
-Public Sub MapEditorDrag(Button As Integer, X As Single, y As Single)
+Public Sub MapEditorDrag(Button As Integer, X As Single, Y As Single)
 
     If Button = vbLeftButton Then
         ' convert the pixel number to tile number
         X = (X \ PIC_X) + 1
-        y = (y \ PIC_Y) + 1
+        Y = (Y \ PIC_Y) + 1
 
         ' check it's not out of bounds
         If X < 0 Then X = 0
         If X > frmEditor_Map.picBackSelect.Width / PIC_X Then X = frmEditor_Map.picBackSelect.Width / PIC_X
-        If y < 0 Then y = 0
-        If y > frmEditor_Map.picBackSelect.Height / PIC_Y Then y = frmEditor_Map.picBackSelect.Height / PIC_Y
+        If Y < 0 Then Y = 0
+        If Y > frmEditor_Map.picBackSelect.Height / PIC_Y Then Y = frmEditor_Map.picBackSelect.Height / PIC_Y
 
         ' find out what to set the width + height of map editor to
         If X > EditorTileX Then ' drag right
@@ -466,8 +466,8 @@ Public Sub MapEditorDrag(Button As Integer, X As Single, y As Single)
             ' TO DO
         End If
 
-        If y > EditorTileY Then ' drag down
-            EditorTileHeight = y - EditorTileY
+        If Y > EditorTileY Then ' drag down
+            EditorTileHeight = Y - EditorTileY
         Else ' drag up
             ' TO DO
         End If
@@ -479,32 +479,32 @@ Public Sub MapEditorDrag(Button As Integer, X As Single, y As Single)
 End Sub
 
 Public Sub NudgeMap(ByVal theDir As Byte)
-Dim X As Long, y As Long, i As Long
+Dim X As Long, Y As Long, i As Long
     
     ' if left or right
     If theDir = DIR_UP Or theDir = DIR_LEFT Then
-        For y = 0 To Map.MapData.MaxY
+        For Y = 0 To Map.MapData.MaxY
             For X = 0 To Map.MapData.MaxX
                 Select Case theDir
                     Case DIR_UP
                         ' move up all one
-                        If y > 0 Then CopyTile Map.TileData.Tile(X, y), Map.TileData.Tile(X, y - 1)
+                        If Y > 0 Then CopyTile Map.TileData.Tile(X, Y), Map.TileData.Tile(X, Y - 1)
                     Case DIR_LEFT
                         ' move left all one
-                        If X > 0 Then CopyTile Map.TileData.Tile(X, y), Map.TileData.Tile(X - 1, y)
+                        If X > 0 Then CopyTile Map.TileData.Tile(X, Y), Map.TileData.Tile(X - 1, Y)
                 End Select
             Next
         Next
     Else
-        For y = Map.MapData.MaxY To 0 Step -1
+        For Y = Map.MapData.MaxY To 0 Step -1
             For X = Map.MapData.MaxX To 0 Step -1
                 Select Case theDir
                     Case DIR_DOWN
                         ' move down all one
-                        If y < Map.MapData.MaxY Then CopyTile Map.TileData.Tile(X, y), Map.TileData.Tile(X, y + 1)
+                        If Y < Map.MapData.MaxY Then CopyTile Map.TileData.Tile(X, Y), Map.TileData.Tile(X, Y + 1)
                     Case DIR_RIGHT
                         ' move right all one
-                        If X < Map.MapData.MaxX Then CopyTile Map.TileData.Tile(X, y), Map.TileData.Tile(X + 1, y)
+                        If X < Map.MapData.MaxX Then CopyTile Map.TileData.Tile(X, Y), Map.TileData.Tile(X + 1, Y)
                 End Select
             Next
         Next
@@ -515,13 +515,13 @@ Dim X As Long, y As Long, i As Long
         For i = 1 To Map.TileData.EventCount
             Select Case theDir
                 Case DIR_UP
-                    Map.TileData.Events(i).y = Map.TileData.Events(i).y - 1
+                    Map.TileData.Events(i).Y = Map.TileData.Events(i).Y - 1
                 Case DIR_LEFT
                     Map.TileData.Events(i).X = Map.TileData.Events(i).X - 1
                 Case DIR_RIGHT
                     Map.TileData.Events(i).X = Map.TileData.Events(i).X + 1
                 Case DIR_DOWN
-                    Map.TileData.Events(i).y = Map.TileData.Events(i).y + 1
+                    Map.TileData.Events(i).Y = Map.TileData.Events(i).Y + 1
             End Select
         Next
     End If
@@ -543,7 +543,7 @@ Public Sub MapEditorTileScroll()
         frmEditor_Map.scrlPictureX.enabled = False
     Else
         frmEditor_Map.scrlPictureX.enabled = True
-        frmEditor_Map.picBackSelect.Left = (frmEditor_Map.scrlPictureX.value * PIC_X) * -1
+        frmEditor_Map.picBackSelect.Left = (frmEditor_Map.scrlPictureX.Value * PIC_X) * -1
     End If
 
     ' vertical scrolling
@@ -551,7 +551,7 @@ Public Sub MapEditorTileScroll()
         frmEditor_Map.scrlPictureY.enabled = False
     Else
         frmEditor_Map.scrlPictureY.enabled = True
-        frmEditor_Map.picBackSelect.Top = (frmEditor_Map.scrlPictureY.value * PIC_Y) * -1
+        frmEditor_Map.picBackSelect.Top = (frmEditor_Map.scrlPictureY.Value * PIC_Y) * -1
     End If
 
 End Sub
@@ -574,13 +574,13 @@ End Sub
 Public Sub MapEditorClearLayer()
     Dim i As Long
     Dim X As Long
-    Dim y As Long
+    Dim Y As Long
     Dim CurLayer As Long
 
     ' find which layer we're on
     For i = 1 To MapLayer.Layer_Count - 1
 
-        If frmEditor_Map.optLayer(i).value Then
+        If frmEditor_Map.optLayer(i).Value Then
             CurLayer = i
             Exit For
         End If
@@ -593,11 +593,11 @@ Public Sub MapEditorClearLayer()
     If MsgBox("Are you sure you wish to clear this layer?", vbYesNo, GAME_NAME) = vbYes Then
 
         For X = 0 To Map.MapData.MaxX
-            For y = 0 To Map.MapData.MaxY
-                Map.TileData.Tile(X, y).Layer(CurLayer).X = 0
-                Map.TileData.Tile(X, y).Layer(CurLayer).y = 0
-                Map.TileData.Tile(X, y).Layer(CurLayer).tileSet = 0
-                cacheRenderState X, y, CurLayer
+            For Y = 0 To Map.MapData.MaxY
+                Map.TileData.Tile(X, Y).Layer(CurLayer).X = 0
+                Map.TileData.Tile(X, Y).Layer(CurLayer).Y = 0
+                Map.TileData.Tile(X, Y).Layer(CurLayer).tileSet = 0
+                cacheRenderState X, Y, CurLayer
             Next
         Next
 
@@ -610,13 +610,13 @@ End Sub
 Public Sub MapEditorFillLayer()
     Dim i As Long
     Dim X As Long
-    Dim y As Long
+    Dim Y As Long
     Dim CurLayer As Long
 
     ' find which layer we're on
     For i = 1 To MapLayer.Layer_Count - 1
 
-        If frmEditor_Map.optLayer(i).value Then
+        If frmEditor_Map.optLayer(i).Value Then
             CurLayer = i
             Exit For
         End If
@@ -627,12 +627,12 @@ Public Sub MapEditorFillLayer()
     If MsgBox("Are you sure you wish to fill this layer?", vbYesNo, GAME_NAME) = vbYes Then
 
         For X = 0 To Map.MapData.MaxX
-            For y = 0 To Map.MapData.MaxY
-                Map.TileData.Tile(X, y).Layer(CurLayer).X = EditorTileX
-                Map.TileData.Tile(X, y).Layer(CurLayer).y = EditorTileY
-                Map.TileData.Tile(X, y).Layer(CurLayer).tileSet = frmEditor_Map.scrlTileSet.value
-                Map.TileData.Tile(X, y).Autotile(CurLayer) = frmEditor_Map.scrlAutotile.value
-                cacheRenderState X, y, CurLayer
+            For Y = 0 To Map.MapData.MaxY
+                Map.TileData.Tile(X, Y).Layer(CurLayer).X = EditorTileX
+                Map.TileData.Tile(X, Y).Layer(CurLayer).Y = EditorTileY
+                Map.TileData.Tile(X, Y).Layer(CurLayer).tileSet = frmEditor_Map.scrlTileSet.Value
+                Map.TileData.Tile(X, Y).Autotile(CurLayer) = frmEditor_Map.scrlAutotile.Value
+                cacheRenderState X, Y, CurLayer
             Next
         Next
 
@@ -644,13 +644,13 @@ End Sub
 
 Public Sub MapEditorClearAttribs()
     Dim X As Long
-    Dim y As Long
+    Dim Y As Long
 
     If MsgBox("Are you sure you wish to clear the attributes on this map?", vbYesNo, GAME_NAME) = vbYes Then
 
         For X = 0 To Map.MapData.MaxX
-            For y = 0 To Map.MapData.MaxY
-                Map.TileData.Tile(X, y).Type = 0
+            For Y = 0 To Map.MapData.MaxY
+                Map.TileData.Tile(X, Y).Type = 0
             Next
         Next
 
@@ -697,10 +697,10 @@ Public Sub ItemEditorInit()
     With Item(EditorIndex)
         frmEditor_Item.txtName.text = Trim$(.Name)
 
-        If .Pic > frmEditor_Item.scrlPic.max Then .Pic = 0
-        frmEditor_Item.scrlPic.value = .Pic
+        If .pic > frmEditor_Item.scrlPic.max Then .pic = 0
+        frmEditor_Item.scrlPic.Value = .pic
         frmEditor_Item.cmbType.ListIndex = .Type
-        frmEditor_Item.scrlAnim.value = .Animation
+        frmEditor_Item.scrlAnim.Value = .Animation
         frmEditor_Item.txtDesc.text = Trim$(.Desc)
 
         ' find the sound we have set
@@ -722,46 +722,46 @@ Public Sub ItemEditorInit()
         ' Type specific settings
         If (frmEditor_Item.cmbType.ListIndex >= ITEM_TYPE_WEAPON) And (frmEditor_Item.cmbType.ListIndex <= ITEM_TYPE_FEET) Then
             frmEditor_Item.fraEquipment.visible = True
-            frmEditor_Item.scrlDamage.value = .Data2
+            frmEditor_Item.scrlDamage.Value = .Data2
             frmEditor_Item.cmbTool.ListIndex = .Data3
 
-            If .speed < 100 Then .speed = 100
-            frmEditor_Item.scrlSpeed.value = .speed
+            If .Speed < 100 Then .Speed = 100
+            frmEditor_Item.scrlSpeed.Value = .Speed
 
             ' loop for stats
             For i = 1 To Stats.Stat_Count - 1
-                frmEditor_Item.scrlStatBonus(i).value = .Add_Stat(i)
+                frmEditor_Item.scrlStatBonus(i).Value = .Add_Stat(i)
             Next
 
-            If Not .Paperdoll > Count_Paperdoll Then frmEditor_Item.scrlPaperdoll = .Paperdoll
-            frmEditor_Item.scrlProf.value = .proficiency
+            If Not .Paperdoll > CountPaperdoll Then frmEditor_Item.scrlPaperdoll = .Paperdoll
+            frmEditor_Item.scrlProf.Value = .proficiency
         Else
             frmEditor_Item.fraEquipment.visible = False
         End If
 
         If frmEditor_Item.cmbType.ListIndex = ITEM_TYPE_CONSUME Then
             frmEditor_Item.fraVitals.visible = True
-            frmEditor_Item.scrlAddHp.value = .AddHP
-            frmEditor_Item.scrlAddMP.value = .AddMP
-            frmEditor_Item.scrlAddExp.value = .AddEXP
-            frmEditor_Item.scrlCastSpell.value = .CastSpell
-            frmEditor_Item.chkInstant.value = .instaCast
+            frmEditor_Item.scrlAddHp.Value = .AddHP
+            frmEditor_Item.scrlAddMP.Value = .AddMP
+            frmEditor_Item.scrlAddExp.Value = .AddEXP
+            frmEditor_Item.scrlCastSpell.Value = .CastSpell
+            frmEditor_Item.chkInstant.Value = .instaCast
         Else
             frmEditor_Item.fraVitals.visible = False
         End If
 
         If (frmEditor_Item.cmbType.ListIndex = ITEM_TYPE_SPELL) Then
             frmEditor_Item.fraSpell.visible = True
-            frmEditor_Item.scrlSpell.value = .Data1
+            frmEditor_Item.scrlSpell.Value = .Data1
         Else
             frmEditor_Item.fraSpell.visible = False
         End If
 
         If frmEditor_Item.cmbType.ListIndex = ITEM_TYPE_FOOD Then
             If .HPorSP = 2 Then
-                frmEditor_Item.optSP.value = True
+                frmEditor_Item.optSP.Value = True
             Else
-                frmEditor_Item.optHP.value = True
+                frmEditor_Item.optHP.Value = True
             End If
 
             frmEditor_Item.scrlFoodHeal = .FoodPerTick
@@ -773,12 +773,12 @@ Public Sub ItemEditorInit()
         End If
 
         ' Basic requirements
-        frmEditor_Item.scrlAccessReq.value = .AccessReq
-        frmEditor_Item.scrlLevelReq.value = .LevelReq
+        frmEditor_Item.scrlAccessReq.Value = .AccessReq
+        frmEditor_Item.scrlLevelReq.Value = .LevelReq
 
         ' loop for stats
         For i = 1 To Stats.Stat_Count - 1
-            frmEditor_Item.scrlStatReq(i).value = .Stat_Req(i)
+            frmEditor_Item.scrlStatReq(i).Value = .Stat_Req(i)
         Next
 
         ' Build cmbClassReq
@@ -791,9 +791,9 @@ Public Sub ItemEditorInit()
 
         frmEditor_Item.cmbClassReq.ListIndex = .ClassReq
         ' Info
-        frmEditor_Item.scrlPrice.value = .Price
+        frmEditor_Item.scrlPrice.Value = .Price
         frmEditor_Item.cmbBind.ListIndex = .BindType
-        frmEditor_Item.scrlRarity.value = .Rarity
+        frmEditor_Item.scrlRarity.Value = .Rarity
         EditorIndex = frmEditor_Item.lstIndex.ListIndex + 1
     End With
 

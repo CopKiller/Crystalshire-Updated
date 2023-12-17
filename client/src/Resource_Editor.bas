@@ -28,20 +28,20 @@ Public Sub ResourceEditorInit()
 
     ' finished populating
     With frmEditor_Resource
-        .scrlExhaustedPic.max = Count_Resource
-        .scrlNormalPic.max = Count_Resource
+        .scrlExhaustedPic.max = CountResource
+        .scrlNormalPic.max = CountResource
         .scrlAnimation.max = MAX_ANIMATIONS
         .txtName.text = Trim$(Resource(EditorIndex).Name)
         .txtMessage.text = Trim$(Resource(EditorIndex).SuccessMessage)
         .txtMessage2.text = Trim$(Resource(EditorIndex).EmptyMessage)
         .cmbType.ListIndex = Resource(EditorIndex).ResourceType
-        .scrlNormalPic.value = Resource(EditorIndex).ResourceImage
-        .scrlExhaustedPic.value = Resource(EditorIndex).ExhaustedImage
-        .scrlReward.value = Resource(EditorIndex).ItemReward
-        .scrlTool.value = Resource(EditorIndex).ToolRequired
-        .scrlHealth.value = Resource(EditorIndex).health
-        .scrlRespawn.value = Resource(EditorIndex).RespawnTime
-        .scrlAnimation.value = Resource(EditorIndex).Animation
+        .scrlNormalPic.Value = Resource(EditorIndex).ResourceImage
+        .scrlExhaustedPic.Value = Resource(EditorIndex).ExhaustedImage
+        .scrlReward.Value = Resource(EditorIndex).ItemReward
+        .scrlTool.Value = Resource(EditorIndex).ToolRequired
+        .scrlHealth.Value = Resource(EditorIndex).health
+        .scrlRespawn.Value = Resource(EditorIndex).RespawnTime
+        .scrlAnimation.Value = Resource(EditorIndex).Animation
 
         ' find the sound we have set
         If .cmbSound.ListCount >= 0 Then

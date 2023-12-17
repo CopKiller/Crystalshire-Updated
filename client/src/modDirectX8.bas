@@ -2,68 +2,68 @@ Attribute VB_Name = "modDirectX8"
 Option Explicit
 
 ' Texture paths
-Public Const Path_Anim As String = "\data files\graphics\animations\"
-Public Const Path_Char As String = "\data files\graphics\characters\"
-Public Const Path_Face As String = "\data files\graphics\faces\"
-Public Const Path_GUI As String = "\data files\graphics\gui\"
-Public Const Path_Design As String = "\data files\graphics\gui\designs\"
-Public Const Path_Gradient As String = "\data files\graphics\gui\gradients\"
-Public Const Path_Item As String = "\data files\graphics\items\"
-Public Const Path_Paperdoll As String = "\data files\graphics\paperdolls\"
-Public Const Path_Resource As String = "\data files\graphics\resources\"
-Public Const Path_Spellicon As String = "\data files\graphics\spellicons\"
-Public Const Path_Tileset As String = "\data files\graphics\tilesets\"
-Public Const Path_Font As String = "\data files\graphics\fonts\"
-Public Const Path_Graphics As String = "\data files\graphics\"
-Public Const Path_Projectile As String = "\data files\graphics\projectiles\"
-Public Const Path_Surface As String = "\data files\graphics\surfaces\"
-Public Const Path_Fog As String = "\data files\graphics\fog\"
-Public Const Path_Captcha As String = "\data files\graphics\captchas\"
+Public Const PathAnim As String = "\data files\graphics\animations\"
+Public Const PathChar As String = "\data files\graphics\characters\"
+Public Const PathFace As String = "\data files\graphics\faces\"
+Public Const PathGUI As String = "\data files\graphics\gui\"
+Public Const PathDesign As String = "\data files\graphics\gui\designs\"
+Public Const PathGradient As String = "\data files\graphics\gui\gradients\"
+Public Const PathItem As String = "\data files\graphics\items\"
+Public Const PathPaperdoll As String = "\data files\graphics\paperdolls\"
+Public Const PathResource As String = "\data files\graphics\resources\"
+Public Const PathSpellicon As String = "\data files\graphics\spellicons\"
+Public Const PathTileset As String = "\data files\graphics\tilesets\"
+Public Const PathFont As String = "\data files\graphics\fonts\"
+Public Const PathGraphics As String = "\data files\graphics\"
+Public Const PathProjectile As String = "\data files\graphics\projectiles\"
+Public Const PathSurface As String = "\data files\graphics\surfaces\"
+Public Const PathFog As String = "\data files\graphics\fog\"
+Public Const PathCaptcha As String = "\data files\graphics\captchas\"
 Public Const GFX_EXT As String = ".png"
 
 ' Texture wrapper
-Public Tex_Anim() As Long
-Public Tex_Char() As Long
-Public Tex_Face() As Long
-Public Tex_Item() As Long
-Public Tex_Paperdoll() As Long
-Public Tex_Resource() As Long
-Public Tex_Spellicon() As Long
-Public Tex_Projectile() As Long
-Public Tex_Tileset() As Long
-Public Tex_Fog() As Long
-Public Tex_GUI() As Long
-Public Tex_Design() As Long
-Public Tex_Gradient() As Long
-Public Tex_Surface() As Long
-Public Tex_Bars As Long
-Public Tex_Blood As Long
-Public Tex_Direction As Long
-Public Tex_Misc As Long
-Public Tex_Target As Long
-Public Tex_Shadow As Long
-Public Tex_Fader As Long
-Public Tex_Blank As Long
-Public Tex_Weather As Long
-Public Tex_White As Long
-Public Tex_Captcha() As Long
+Public TextureAnim() As Long
+Public TextureChar() As Long
+Public TextureFace() As Long
+Public TextureItem() As Long
+Public TexturePaperdoll() As Long
+Public TextureResource() As Long
+Public TextureSpellicon() As Long
+Public TextureProjectile() As Long
+Public TextureTileset() As Long
+Public TextureFog() As Long
+Public TextureGUI() As Long
+Public TextureDesign() As Long
+Public TextureGradient() As Long
+Public TextureSurface() As Long
+Public TextureBars As Long
+Public TextureBlood As Long
+Public TextureDirection As Long
+Public TextureMisc As Long
+Public TextureTarget As Long
+Public TextureShadow As Long
+Public TextureFader As Long
+Public TextureBlank As Long
+Public TextureWeather As Long
+Public TextureWhite As Long
+Public TextureCaptcha() As Long
 
 ' Texture count
-Public Count_Anim As Long
-Public Count_Char As Long
-Public Count_Face As Long
-Public Count_GUI As Long
-Public Count_Design As Long
-Public Count_Gradient As Long
-Public Count_Item As Long
-Public Count_Paperdoll As Long
-Public Count_Resource As Long
-Public Count_Spellicon As Long
-Public Count_Projectile As Long
-Public Count_Tileset As Long
-Public Count_Fog As Long
-Public Count_Surface As Long
-Public Count_Captcha As Long
+Public CountAnim As Long
+Public CountChar As Long
+Public CountFace As Long
+Public CountGUI As Long
+Public CountDesign As Long
+Public CountGradient As Long
+Public CountItem As Long
+Public CountPaperdoll As Long
+Public CountResource As Long
+Public CountSpellicon As Long
+Public CountProjectile As Long
+Public CountTileset As Long
+Public CountFog As Long
+Public CountSurface As Long
+Public CountCaptcha As Long
 
 ' Variables
 Public DX8 As DirectX8
@@ -241,32 +241,32 @@ End Sub
 Public Sub LoadTextures()
 Dim i As Long
     ' Arrays
-    Tex_Captcha = LoadTextureFiles(Count_Captcha, App.Path & Path_Captcha)
-    Tex_Tileset = LoadTextureFiles(Count_Tileset, App.Path & Path_Tileset)
-    Tex_Anim = LoadTextureFiles(Count_Anim, App.Path & Path_Anim)
-    Tex_Char = LoadTextureFiles(Count_Char, App.Path & Path_Char)
-    Tex_Face = LoadTextureFiles(Count_Face, App.Path & Path_Face)
-    Tex_Item = LoadTextureFiles(Count_Item, App.Path & Path_Item)
-    Tex_Paperdoll = LoadTextureFiles(Count_Paperdoll, App.Path & Path_Paperdoll)
-    Tex_Resource = LoadTextureFiles(Count_Resource, App.Path & Path_Resource)
-    Tex_Spellicon = LoadTextureFiles(Count_Spellicon, App.Path & Path_Spellicon)
-    Tex_Projectile = LoadTextureFiles(Count_Projectile, App.Path & Path_Projectile)
-    Tex_GUI = LoadTextureFiles(Count_GUI, App.Path & Path_GUI)
-    Tex_Design = LoadTextureFiles(Count_Design, App.Path & Path_Design)
-    Tex_Gradient = LoadTextureFiles(Count_Gradient, App.Path & Path_Gradient)
-    Tex_Surface = LoadTextureFiles(Count_Surface, App.Path & Path_Surface)
-    Tex_Fog = LoadTextureFiles(Count_Fog, App.Path & Path_Fog)
+    TextureCaptcha = LoadTextureFiles(CountCaptcha, App.Path & PathCaptcha)
+    TextureTileset = LoadTextureFiles(CountTileset, App.Path & PathTileset)
+    TextureAnim = LoadTextureFiles(CountAnim, App.Path & PathAnim)
+    TextureChar = LoadTextureFiles(CountChar, App.Path & PathChar)
+    TextureFace = LoadTextureFiles(CountFace, App.Path & PathFace)
+    TextureItem = LoadTextureFiles(CountItem, App.Path & PathItem)
+    TexturePaperdoll = LoadTextureFiles(CountPaperdoll, App.Path & PathPaperdoll)
+    TextureResource = LoadTextureFiles(CountResource, App.Path & PathResource)
+    TextureSpellicon = LoadTextureFiles(CountSpellicon, App.Path & PathSpellicon)
+    TextureProjectile = LoadTextureFiles(CountProjectile, App.Path & PathProjectile)
+    TextureGUI = LoadTextureFiles(CountGUI, App.Path & PathGUI)
+    TextureDesign = LoadTextureFiles(CountDesign, App.Path & PathDesign)
+    TextureGradient = LoadTextureFiles(CountGradient, App.Path & PathGradient)
+    TextureSurface = LoadTextureFiles(CountSurface, App.Path & PathSurface)
+    TextureFog = LoadTextureFiles(CountFog, App.Path & PathFog)
     ' Singles
-    Tex_Bars = LoadTextureFile(App.Path & Path_Graphics & "bars")
-    Tex_Blood = LoadTextureFile(App.Path & Path_Graphics & "blood")
-    Tex_Direction = LoadTextureFile(App.Path & Path_Graphics & "direction")
-    Tex_Misc = LoadTextureFile(App.Path & Path_Graphics & "misc")
-    Tex_Target = LoadTextureFile(App.Path & Path_Graphics & "target")
-    Tex_Shadow = LoadTextureFile(App.Path & Path_Graphics & "shadow")
-    Tex_Fader = LoadTextureFile(App.Path & Path_Graphics & "fader")
-    Tex_Blank = LoadTextureFile(App.Path & Path_Graphics & "blank")
-    Tex_Weather = LoadTextureFile(App.Path & Path_Graphics & "weather")
-    Tex_White = LoadTextureFile(App.Path & Path_Graphics & "white")
+    TextureBars = LoadTextureFile(App.Path & PathGraphics & "bars")
+    TextureBlood = LoadTextureFile(App.Path & PathGraphics & "blood")
+    TextureDirection = LoadTextureFile(App.Path & PathGraphics & "direction")
+    TextureMisc = LoadTextureFile(App.Path & PathGraphics & "misc")
+    TextureTarget = LoadTextureFile(App.Path & PathGraphics & "target")
+    TextureShadow = LoadTextureFile(App.Path & PathGraphics & "shadow")
+    TextureFader = LoadTextureFile(App.Path & PathGraphics & "fader")
+    TextureBlank = LoadTextureFile(App.Path & PathGraphics & "blank")
+    TextureWeather = LoadTextureFile(App.Path & PathGraphics & "weather")
+    TextureWhite = LoadTextureFile(App.Path & PathGraphics & "white")
 End Sub
 
 Public Function LoadTextureFiles(ByRef Counter As Long, ByVal Path As String) As Long()
@@ -414,12 +414,6 @@ Public Sub CheckGFX()
         Loop
         
         Call ResetGFX
-        
-        ' This is to fix chat buggy after device lost
-        If InGame Then
-            'ChatArrayUbound = 0
-            'UpdateChatArray ChatChannel
-        End If
     End If
 End Sub
 
@@ -501,7 +495,7 @@ Dim i As Long
     If SH = 0 Then Exit Sub
     
     If mClip.Right <> 0 Then
-        If mClip.top <> 0 Then
+        If mClip.Top <> 0 Then
             If mClip.Left > X Then
                 sX = sX + (mClip.Left - X) / (w / SW)
                 SW = SW - (mClip.Left - X) / (w / SW)
@@ -509,11 +503,11 @@ Dim i As Long
                 X = mClip.Left
             End If
             
-            If mClip.top > Y Then
-                sY = sY + (mClip.top - Y) / (h / SH)
-                SH = SH - (mClip.top - Y) / (h / SH)
-                h = h - (mClip.top - Y)
-                Y = mClip.top
+            If mClip.Top > Y Then
+                sY = sY + (mClip.Top - Y) / (h / SH)
+                SH = SH - (mClip.Top - Y) / (h / SH)
+                h = h - (mClip.Top - Y)
+                Y = mClip.Top
             End If
             
             If mClip.Right < X + w Then
@@ -595,7 +589,7 @@ End Function
 Public Sub GDIRenderAnimation()
     Dim i As Long, Animationnum As Long, ShouldRender As Boolean, Width As Long, Height As Long, looptime As Long, FrameCount As Long
     Dim sX As Long, sY As Long, sRECT As RECT
-    sRECT.top = 0
+    sRECT.Top = 0
     sRECT.Bottom = 192
     sRECT.Left = 0
     sRECT.Right = 192
@@ -603,7 +597,7 @@ Public Sub GDIRenderAnimation()
     For i = 0 To 1
         Animationnum = frmEditor_Animation.scrlSprite(i).Value
 
-        If Animationnum <= 0 Or Animationnum > Count_Anim Then
+        If Animationnum <= 0 Or Animationnum > CountAnim Then
             ' don't render lol
         Else
             looptime = frmEditor_Animation.scrlLoopTime(i)
@@ -635,8 +629,8 @@ Public Sub GDIRenderAnimation()
                     ' Start Rendering
                     Call D3DDevice.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1#, 0)
                     Call D3DDevice.BeginScene
-                    'EngineRenderRectangle Tex_Anim(Animationnum), 0, 0, sX, sY, width, height, width, height
-                    RenderTexture Tex_Anim(Animationnum), 0, 0, sX, sY, Width, Height, Width, Height
+                    'EngineRenderRectangle TextureAnim(Animationnum), 0, 0, sX, sY, width, height, width, height
+                    RenderTexture TextureAnim(Animationnum), 0, 0, sX, sY, Width, Height, Width, Height
                     ' Finish Rendering
                     Call D3DDevice.EndScene
                     Call D3DDevice.Present(sRECT, ByVal 0, frmEditor_Animation.picSprite(i).hWnd, ByVal 0)
@@ -652,17 +646,17 @@ Public Sub GDIRenderChar(ByRef picBox As PictureBox, ByVal sprite As Long)
     Dim Height As Long, Width As Long, sRECT As RECT
 
     ' exit out if doesn't exist
-    If sprite <= 0 Or sprite > Count_Char Then Exit Sub
+    If sprite <= 0 Or sprite > CountChar Then Exit Sub
     Height = 32
     Width = 32
-    sRECT.top = 0
-    sRECT.Bottom = sRECT.top + Height
+    sRECT.Top = 0
+    sRECT.Bottom = sRECT.Top + Height
     sRECT.Left = 0
     sRECT.Right = sRECT.Left + Width
     ' Start Rendering
     Call D3DDevice.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1#, 0)
     Call D3DDevice.BeginScene
-    RenderTexture Tex_Char(sprite), 0, 0, 0, 0, Width, Height, Width, Height
+    RenderTexture TextureChar(sprite), 0, 0, 0, 0, Width, Height, Width, Height
     ' Finish Rendering
     Call D3DDevice.EndScene
     Call D3DDevice.Present(sRECT, ByVal 0, picBox.hWnd, ByVal 0)
@@ -672,24 +666,24 @@ Public Sub GDIRenderFace(ByRef picBox As PictureBox, ByVal sprite As Long)
     Dim Height As Long, Width As Long, sRECT As RECT
 
     ' exit out if doesn't exist
-    If sprite <= 0 Or sprite > Count_Face Then Exit Sub
-    Height = mTexture(Tex_Face(sprite)).RealHeight
-    Width = mTexture(Tex_Face(sprite)).RealWidth
+    If sprite <= 0 Or sprite > CountFace Then Exit Sub
+    Height = mTexture(TextureFace(sprite)).RealHeight
+    Width = mTexture(TextureFace(sprite)).RealWidth
 
     If Height = 0 Or Width = 0 Then
         Height = 1
         Width = 1
     End If
 
-    sRECT.top = 0
-    sRECT.Bottom = sRECT.top + Height
+    sRECT.Top = 0
+    sRECT.Bottom = sRECT.Top + Height
     sRECT.Left = 0
     sRECT.Right = sRECT.Left + Width
     ' Start Rendering
     Call D3DDevice.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1#, 0)
     Call D3DDevice.BeginScene
-    'EngineRenderRectangle Tex_Face(sprite), 0, 0, 0, 0, width, height, width, height, width, height
-    RenderTexture Tex_Face(sprite), 0, 0, 0, 0, Width, Height, Width, Height
+    'EngineRenderRectangle TextureFace(sprite), 0, 0, 0, 0, width, height, width, height, width, height
+    RenderTexture TextureFace(sprite), 0, 0, 0, 0, Width, Height, Width, Height
     ' Finish Rendering
     Call D3DDevice.EndScene
     Call D3DDevice.Present(sRECT, ByVal 0, picBox.hWnd, ByVal 0)
@@ -701,9 +695,9 @@ Public Sub GDIRenderTileset()
     tileSet = frmEditor_Map.scrlTileSet.Value
 
     ' exit out if doesn't exist
-    If tileSet <= 0 Or tileSet > Count_Tileset Then Exit Sub
-    Height = mTexture(Tex_Tileset(tileSet)).RealHeight
-    Width = mTexture(Tex_Tileset(tileSet)).RealWidth
+    If tileSet <= 0 Or tileSet > CountTileset Then Exit Sub
+    Height = mTexture(TextureTileset(tileSet)).RealHeight
+    Width = mTexture(TextureTileset(tileSet)).RealWidth
 
     If Height = 0 Or Width = 0 Then
         Height = 1
@@ -712,7 +706,7 @@ Public Sub GDIRenderTileset()
 
     frmEditor_Map.picBackSelect.Width = Width
     frmEditor_Map.picBackSelect.Height = Height
-    sRECT.top = 0
+    sRECT.Top = 0
     sRECT.Bottom = Height
     sRECT.Left = 0
     sRECT.Right = Width
@@ -749,11 +743,11 @@ Public Sub GDIRenderTileset()
     Call D3DDevice.Clear(0, ByVal 0, D3DCLEAR_TARGET, DX8Colour(White, 255), 1#, 0)
     Call D3DDevice.BeginScene
 
-    'EngineRenderRectangle Tex_Tileset(Tileset), 0, 0, 0, 0, width, height, width, height, width, height
-    If Tex_Tileset(tileSet) <= 0 Then Exit Sub
-    RenderTexture Tex_Tileset(tileSet), 0, 0, 0, 0, Width, Height, Width, Height
+    'EngineRenderRectangle TextureTileset(Tileset), 0, 0, 0, 0, width, height, width, height, width, height
+    If TextureTileset(tileSet) <= 0 Then Exit Sub
+    RenderTexture TextureTileset(tileSet), 0, 0, 0, 0, Width, Height, Width, Height
     ' draw selection boxes
-    RenderDesign DesignTypes.desTileBox, shpSelectedLeft, shpSelectedTop, shpSelectedWidth, shpSelectedHeight
+    RenderDesign DesignTypes.designTilesetGrid, shpSelectedLeft, shpSelectedTop, shpSelectedWidth, shpSelectedHeight
     ' Finish Rendering
     Call D3DDevice.EndScene
     Call D3DDevice.Present(sRECT, ByVal 0, frmEditor_Map.picBackSelect.hWnd, ByVal 0)
@@ -763,18 +757,18 @@ Public Sub GDIRenderItem(ByRef picBox As PictureBox, ByVal sprite As Long)
     Dim Height As Long, Width As Long, sRECT As RECT
 
     ' exit out if doesn't exist
-    If sprite <= 0 Or sprite > Count_Item Then Exit Sub
-    Height = mTexture(Tex_Item(sprite)).RealHeight
-    Width = mTexture(Tex_Item(sprite)).RealWidth
-    sRECT.top = 0
+    If sprite <= 0 Or sprite > CountItem Then Exit Sub
+    Height = mTexture(TextureItem(sprite)).RealHeight
+    Width = mTexture(TextureItem(sprite)).RealWidth
+    sRECT.Top = 0
     sRECT.Bottom = 32
     sRECT.Left = 0
     sRECT.Right = 32
     ' Start Rendering
     Call D3DDevice.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1#, 0)
     Call D3DDevice.BeginScene
-    'EngineRenderRectangle Tex_Item(sprite), 0, 0, 0, 0, 32, 32, 32, 32, 32, 32
-    RenderTexture Tex_Item(sprite), 0, 0, 0, 0, 32, 32, 32, 32
+    'EngineRenderRectangle TextureItem(sprite), 0, 0, 0, 0, 32, 32, 32, 32, 32, 32
+    RenderTexture TextureItem(sprite), 0, 0, 0, 0, 32, 32, 32, 32
     ' Finish Rendering
     Call D3DDevice.EndScene
     Call D3DDevice.Present(sRECT, ByVal 0, picBox.hWnd, ByVal 0)
@@ -784,18 +778,18 @@ Public Sub GDIRenderItemPaperdoll(ByRef picBox As PictureBox, ByVal sprite As Lo
     Dim Height As Long, Width As Long, sRECT As RECT
 
     ' exit out if doesn't exist
-    If sprite <= 0 Or sprite > Count_Paperdoll Then Exit Sub
-    Height = mTexture(Tex_Paperdoll(sprite)).RealHeight
-    Width = mTexture(Tex_Paperdoll(sprite)).RealWidth
-    sRECT.top = 0
+    If sprite <= 0 Or sprite > CountPaperdoll Then Exit Sub
+    Height = mTexture(TexturePaperdoll(sprite)).RealHeight
+    Width = mTexture(TexturePaperdoll(sprite)).RealWidth
+    sRECT.Top = 0
     sRECT.Bottom = 72
     sRECT.Left = 0
     sRECT.Right = 144
     ' Start Rendering
     Call D3DDevice.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1#, 0)
     Call D3DDevice.BeginScene
-    'EngineRenderRectangle Tex_Item(sprite), 0, 0, 0, 0, 32, 32, 32, 32, 32, 32
-    RenderTexture Tex_Paperdoll(sprite), 0, 0, 0, 0, 144, 72, 144, 72
+    'EngineRenderRectangle TextureItem(sprite), 0, 0, 0, 0, 32, 32, 32, 32, 32, 32
+    RenderTexture TexturePaperdoll(sprite), 0, 0, 0, 0, 144, 72, 144, 72
     ' Finish Rendering
     Call D3DDevice.EndScene
     Call D3DDevice.Present(sRECT, ByVal 0, picBox.hWnd, ByVal 0)
@@ -805,17 +799,17 @@ Public Sub GDIRenderResource(ByRef picBox As PictureBox, ByVal sprite As Long)
     Dim Height As Long, Width As Long, sRECT As RECT
 
     ' exit out if doesn't exist
-    If sprite <= 0 Or sprite > Count_Resource Then Exit Sub
-    Height = mTexture(Tex_Resource(sprite)).RealHeight
-    Width = mTexture(Tex_Resource(sprite)).RealWidth
-    sRECT.top = 0
+    If sprite <= 0 Or sprite > CountResource Then Exit Sub
+    Height = mTexture(TextureResource(sprite)).RealHeight
+    Width = mTexture(TextureResource(sprite)).RealWidth
+    sRECT.Top = 0
     sRECT.Bottom = 152
     sRECT.Left = 0
     sRECT.Right = 152
     ' Start Rendering
     Call D3DDevice.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1#, 0)
     Call D3DDevice.BeginScene
-    RenderTexture Tex_Resource(sprite), 0, 0, 0, 0, Width, Height, Width, Height
+    RenderTexture TextureResource(sprite), 0, 0, 0, 0, Width, Height, Width, Height
     ' Finish Rendering
     Call D3DDevice.EndScene
     Call D3DDevice.Present(sRECT, ByVal 0, picBox.hWnd, ByVal 0)
@@ -826,24 +820,24 @@ Public Sub GDIRenderSpell(ByRef picBox As PictureBox, ByVal sprite As Long)
     Dim Height As Long, Width As Long, sRECT As RECT
 
     ' exit out if doesn't exist
-    If sprite <= 0 Or sprite > Count_Spellicon Then Exit Sub
-    Height = mTexture(Tex_Spellicon(sprite)).RealHeight
-    Width = mTexture(Tex_Spellicon(sprite)).RealWidth
+    If sprite <= 0 Or sprite > CountSpellicon Then Exit Sub
+    Height = mTexture(TextureSpellicon(sprite)).RealHeight
+    Width = mTexture(TextureSpellicon(sprite)).RealWidth
 
     If Height = 0 Or Width = 0 Then
         Height = 1
         Width = 1
     End If
 
-    sRECT.top = 0
+    sRECT.Top = 0
     sRECT.Bottom = Height
     sRECT.Left = 0
     sRECT.Right = Width
     ' Start Rendering
     Call D3DDevice.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1#, 0)
     Call D3DDevice.BeginScene
-    'EngineRenderRectangle Tex_Spellicon(sprite), 0, 0, 0, 0, 32, 32, 32, 32, 32, 32
-    RenderTexture Tex_Spellicon(sprite), 0, 0, 0, 0, 32, 32, 32, 32
+    'EngineRenderRectangle TextureSpellicon(sprite), 0, 0, 0, 0, 32, 32, 32, 32, 32, 32
+    RenderTexture TextureSpellicon(sprite), 0, 0, 0, 0, 32, 32, 32, 32
     ' Finish Rendering
     Call D3DDevice.EndScene
     Call D3DDevice.Present(sRECT, ByVal 0, picBox.hWnd, ByVal 0)
@@ -853,18 +847,18 @@ Public Sub GDIRenderSpellProjectile(ByRef picBox As PictureBox, ByVal sprite As 
     Dim Height As Long, Width As Long, sRECT As RECT
 
     ' exit out if doesn't exist
-    If sprite <= 0 Or sprite > Count_Projectile Then Exit Sub
-    Height = mTexture(Tex_Projectile(sprite)).RealHeight
-    Width = mTexture(Tex_Projectile(sprite)).RealWidth
-    sRECT.top = 0
+    If sprite <= 0 Or sprite > CountProjectile Then Exit Sub
+    Height = mTexture(TextureProjectile(sprite)).RealHeight
+    Width = mTexture(TextureProjectile(sprite)).RealWidth
+    sRECT.Top = 0
     sRECT.Bottom = 64
     sRECT.Left = 0
     sRECT.Right = 64
     ' Start Rendering
     Call D3DDevice.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1#, 0)
     Call D3DDevice.BeginScene
-    'EngineRenderRectangle Tex_Item(sprite), 0, 0, 0, 0, 32, 32, 32, 32, 32, 32
-    RenderTexture Tex_Projectile(sprite), 0, 0, 0, 0, 64, 64, 64, 64
+    'EngineRenderRectangle TextureItem(sprite), 0, 0, 0, 0, 32, 32, 32, 32, 32, 32
+    RenderTexture TextureProjectile(sprite), 0, 0, 0, 0, 64, 64, 64, 64
     ' Finish Rendering
     Call D3DDevice.EndScene
     Call D3DDevice.Present(sRECT, ByVal 0, picBox.hWnd, ByVal 0)
@@ -872,12 +866,12 @@ End Sub
 
 ' Directional blocking
 Public Sub DrawDirection(ByVal X As Long, ByVal Y As Long)
-    Dim i As Long, top As Long, Left As Long
+    Dim i As Long, Top As Long, Left As Long
     ' render grid
-    top = 24
+    Top = 24
     Left = 0
-    'EngineRenderRectangle Tex_Direction, ConvertMapX(x * PIC_X), ConvertMapY(y * PIC_Y), left, top, 32, 32, 32, 32, 32, 32
-    RenderTexture Tex_Direction, ConvertMapX(X * PIC_X), ConvertMapY(Y * PIC_Y), Left, top, 32, 32, 32, 32
+    'EngineRenderRectangle TextureDirection, ConvertMapX(x * PIC_X), ConvertMapY(y * PIC_Y), left, top, 32, 32, 32, 32, 32, 32
+    RenderTexture TextureDirection, ConvertMapX(X * PIC_X), ConvertMapY(Y * PIC_Y), Left, Top, 32, 32, 32, 32
 
     ' render dir blobs
     For i = 1 To 4
@@ -885,27 +879,27 @@ Public Sub DrawDirection(ByVal X As Long, ByVal Y As Long)
 
         ' find out whether render blocked or not
         If Not isDirBlocked(Map.TileData.Tile(X, Y).DirBlock, CByte(i)) Then
-            top = 8
+            Top = 8
         Else
-            top = 16
+            Top = 16
         End If
 
         'render!
-        'EngineRenderRectangle Tex_Direction, ConvertMapX(x * PIC_X) + DirArrowX(i), ConvertMapY(y * PIC_Y) + DirArrowY(i), left, top, 8, 8, 8, 8, 8, 8
-        RenderTexture Tex_Direction, ConvertMapX(X * PIC_X) + DirArrowX(i), ConvertMapY(Y * PIC_Y) + DirArrowY(i), Left, top, 8, 8, 8, 8
+        'EngineRenderRectangle TextureDirection, ConvertMapX(x * PIC_X) + DirArrowX(i), ConvertMapY(y * PIC_Y) + DirArrowY(i), left, top, 8, 8, 8, 8, 8, 8
+        RenderTexture TextureDirection, ConvertMapX(X * PIC_X) + DirArrowX(i), ConvertMapY(Y * PIC_Y) + DirArrowY(i), Left, Top, 8, 8, 8, 8
     Next
 
 End Sub
 
 Public Sub DrawFade()
-    RenderTexture Tex_Blank, 0, 0, 0, 0, ScreenWidth, ScreenHeight, 32, 32, DX8Colour(White, fadeAlpha)
+    RenderTexture TextureBlank, 0, 0, 0, 0, ScreenWidth, ScreenHeight, 32, 32, DX8Colour(White, fadeAlpha)
 End Sub
 
 Public Sub DrawFog()
     Dim fogNum As Long, Colour As Long, X As Long, Y As Long, RenderState As Long
     fogNum = CurrentFog
 
-    If fogNum <= 0 Or fogNum > Count_Fog Then Exit Sub
+    If fogNum <= 0 Or fogNum > CountFog Then Exit Sub
     Colour = D3DColorRGBA(255, 255, 255, 255 - CurrentFogOpacity)
     RenderState = 0
 
@@ -924,7 +918,7 @@ Public Sub DrawFog()
 
     For X = 0 To ((Map.MapData.MaxX * 32) / 256) + 1
         For Y = 0 To ((Map.MapData.MaxY * 32) / 256) + 1
-            RenderTexture Tex_Fog(fogNum), ConvertMapX((X * 256) + fogOffsetX), ConvertMapY((Y * 256) + fogOffsetY), 0, 0, 256, 256, 256, 256, Colour
+            RenderTexture TextureFog(fogNum), ConvertMapX((X * 256) + fogOffsetX), ConvertMapY((Y * 256) + fogOffsetY), 0, 0, 256, 256, 256, 256, Colour
         Next
     Next
 
@@ -940,7 +934,7 @@ End Sub
 Public Sub DrawTint()
     Dim Color As Long
     Color = D3DColorRGBA(CurrentTintR, CurrentTintG, CurrentTintB, CurrentTintA)
-    RenderTexture Tex_White, 0, 0, 0, 0, frmMain.ScaleWidth, frmMain.ScaleHeight, 32, 32, Color
+    RenderTexture TextureWhite, 0, 0, 0, 0, frmMain.ScaleWidth, frmMain.ScaleHeight, 32, 32, Color
 End Sub
 
 Public Sub DrawWeather()
@@ -952,7 +946,7 @@ Public Sub DrawWeather()
             Else
                 SpriteLeft = WeatherParticle(i).Type - 1
             End If
-            RenderTexture Tex_Weather, ConvertMapX(WeatherParticle(i).X), ConvertMapY(WeatherParticle(i).Y), SpriteLeft * 32, 0, 32, 32, 32, 32, -1
+            RenderTexture TextureWeather, ConvertMapX(WeatherParticle(i).X), ConvertMapY(WeatherParticle(i).Y), SpriteLeft * 32, 0, 32, 32, 32, 32, -1
         End If
     Next
 End Sub
@@ -974,7 +968,7 @@ Public Sub DrawAutoTile(ByVal layernum As Long, ByVal destX As Long, ByVal destY
     End Select
 
     ' Draw the quarter
-    RenderTexture Tex_Tileset(Map.TileData.Tile(X, Y).Layer(layernum).tileSet), destX, destY, Autotile(X, Y).Layer(layernum).srcX(quarterNum) + xOffset, Autotile(X, Y).Layer(layernum).srcY(quarterNum) + yOffset, 16, 16, 16, 16
+    RenderTexture TextureTileset(Map.TileData.Tile(X, Y).Layer(layernum).tileSet), destX, destY, Autotile(X, Y).Layer(layernum).srcX(quarterNum) + xOffset, Autotile(X, Y).Layer(layernum).srcY(quarterNum) + yOffset, 16, 16, 16, 16
 End Sub
 
 Sub DrawTileSelection()
@@ -983,12 +977,12 @@ Sub DrawTileSelection()
     tileSet = frmEditor_Map.scrlTileSet.Value
     
     ' exit out if doesn't exist
-    If tileSet <= 0 Or tileSet > Count_Tileset Then Exit Sub
+    If tileSet <= 0 Or tileSet > CountTileset Then Exit Sub
 
     If frmEditor_Map.scrlAutotile.Value > 0 Then
-        RenderTexture Tex_Tileset(tileSet), ConvertMapX(CurX * PIC_X), ConvertMapY(CurY * PIC_Y), shpSelectedLeft, shpSelectedTop, 32, 32, 32, 32, D3DColorRGBA(255, 255, 255, 200)
+        RenderTexture TextureTileset(tileSet), ConvertMapX(CurX * PIC_X), ConvertMapY(CurY * PIC_Y), shpSelectedLeft, shpSelectedTop, 32, 32, 32, 32, D3DColorRGBA(255, 255, 255, 200)
     Else
-        RenderTexture Tex_Tileset(tileSet), ConvertMapX(CurX * PIC_X), ConvertMapY(CurY * PIC_Y), shpSelectedLeft, shpSelectedTop, shpSelectedWidth, shpSelectedHeight, shpSelectedWidth, shpSelectedHeight
+        RenderTexture TextureTileset(tileSet), ConvertMapX(CurX * PIC_X), ConvertMapY(CurY * PIC_Y), shpSelectedLeft, shpSelectedTop, shpSelectedWidth, shpSelectedHeight, shpSelectedWidth, shpSelectedHeight
     End If
 End Sub
 
@@ -1000,9 +994,9 @@ Dim i As Long, tileSet As Long, sX As Long, sY As Long
         ' draw the map
         For i = MapLayer.Ground To MapLayer.Mask2
             ' skip tile if tileset isn't set
-            If Autotile(X, Y).Layer(i).RenderState = RENDER_STATE_NORMAL Then
+            If Autotile(X, Y).Layer(i).RenderState = RENDER_STATE_normal Then
                 ' Draw normally
-                RenderTexture Tex_Tileset(.Layer(i).tileSet), ConvertMapX(X * PIC_X), ConvertMapY(Y * PIC_Y), .Layer(i).X * 32, .Layer(i).Y * 32, 32, 32, 32, 32
+                RenderTexture TextureTileset(.Layer(i).tileSet), ConvertMapX(X * PIC_X), ConvertMapY(Y * PIC_Y), .Layer(i).X * 32, .Layer(i).Y * 32, 32, 32, 32, 32
             ElseIf Autotile(X, Y).Layer(i).RenderState = RENDER_STATE_AUTOTILE Then
                 ' Draw autotiles
                 DrawAutoTile i, ConvertMapX(X * PIC_X), ConvertMapY(Y * PIC_Y), 1, X, Y
@@ -1016,7 +1010,7 @@ Dim i As Long, tileSet As Long, sX As Long, sY As Long
                     tileSet = Map.TileData.Tile(X, Y).Layer(i).tileSet
                     sX = Map.TileData.Tile(X, Y).Layer(i).X
                     sY = Map.TileData.Tile(X, Y).Layer(i).Y
-                    RenderTexture Tex_Tileset(tileSet), ConvertMapX(X * 32), ConvertMapY(Y * 32), sX * 32, sY * 32, 32, 32, 32, 32, DX8Colour(White, TempTile(X, Y).fadeAlpha(i))
+                    RenderTexture TextureTileset(tileSet), ConvertMapX(X * 32), ConvertMapY(Y * 32), sX * 32, sY * 32, 32, 32, 32, 32, DX8Colour(White, TempTile(X, Y).fadeAlpha(i))
                 End If
             End If
         Next
@@ -1031,9 +1025,9 @@ Public Sub DrawMapFringeTile(ByVal X As Long, ByVal Y As Long)
         For i = MapLayer.Fringe To MapLayer.Fringe2
 
             ' skip tile if tileset isn't set
-            If Autotile(X, Y).Layer(i).RenderState = RENDER_STATE_NORMAL Then
+            If Autotile(X, Y).Layer(i).RenderState = RENDER_STATE_normal Then
                 ' Draw normally
-                RenderTexture Tex_Tileset(.Layer(i).tileSet), ConvertMapX(X * PIC_X), ConvertMapY(Y * PIC_Y), .Layer(i).X * 32, .Layer(i).Y * 32, 32, 32, 32, 32
+                RenderTexture TextureTileset(.Layer(i).tileSet), ConvertMapX(X * PIC_X), ConvertMapY(Y * PIC_Y), .Layer(i).X * 32, .Layer(i).Y * 32, 32, 32, 32, 32
             ElseIf Autotile(X, Y).Layer(i).RenderState = RENDER_STATE_AUTOTILE Then
                 ' Draw autotiles
                 DrawAutoTile i, ConvertMapX(X * PIC_X), ConvertMapY(Y * PIC_Y), 1, X, Y
@@ -1049,38 +1043,38 @@ Public Sub DrawHotbar()
     Dim Xo As Long, Yo As Long, Width As Long, Height As Long, i As Long, t As Long, sS As String
     
     Xo = Windows(GetWindowIndex("winHotbar")).Window.Left
-    Yo = Windows(GetWindowIndex("winHotbar")).Window.top
+    Yo = Windows(GetWindowIndex("winHotbar")).Window.Top
     
     ' render start + end wood
-    RenderTexture Tex_GUI(31), Xo - 1, Yo + 3, 0, 0, 11, 26, 11, 26
-    RenderTexture Tex_GUI(31), Xo + 407, Yo + 3, 0, 0, 11, 26, 11, 26
+    RenderTexture TextureGUI(40), Xo - 1, Yo + 3, 0, 0, 11, 26, 11, 26
+    RenderTexture TextureGUI(40), Xo + 407, Yo + 3, 0, 0, 11, 26, 11, 26
     
     For i = 1 To MAX_HOTBAR
         Xo = Windows(GetWindowIndex("winHotbar")).Window.Left + HotbarLeft + ((i - 1) * HotbarOffsetX)
-        Yo = Windows(GetWindowIndex("winHotbar")).Window.top + HotbarTop
+        Yo = Windows(GetWindowIndex("winHotbar")).Window.Top + HotbarTop
         Width = 36
         Height = 36
         ' don't render last one
         If i <> 10 Then
             ' render wood
-            RenderTexture Tex_GUI(32), Xo + 30, Yo + 3, 0, 0, 13, 26, 13, 26
+            RenderTexture TextureGUI(41), Xo + 30, Yo + 3, 0, 0, 13, 26, 13, 26
         End If
         ' render box
-        RenderTexture Tex_GUI(30), Xo - 2, Yo - 2, 0, 0, Width, Height, Width, Height
+        RenderTexture TextureGUI(35), Xo - 2, Yo - 2, 0, 0, Width, Height, Width, Height
         ' render icon
-        If Not (DragBox.Origin = origin_Hotbar And DragBox.Slot = i) Then
+        If Not (DragBox.Origin = OriginHotbar And DragBox.Slot = i) Then
             Select Case Hotbar(i).sType
                 Case 1 ' inventory
                     If Len(Item(Hotbar(i).Slot).Name) > 0 And Item(Hotbar(i).Slot).pic > 0 Then
-                        RenderTexture Tex_Item(Item(Hotbar(i).Slot).pic), Xo, Yo, 0, 0, 32, 32, 32, 32
+                        RenderTexture TextureItem(Item(Hotbar(i).Slot).pic), Xo, Yo, 0, 0, 32, 32, 32, 32
                     End If
                 Case 2 ' spell
                     If Len(Spell(Hotbar(i).Slot).Name) > 0 And Spell(Hotbar(i).Slot).icon > 0 Then
-                        RenderTexture Tex_Spellicon(Spell(Hotbar(i).Slot).icon), Xo, Yo, 0, 0, 32, 32, 32, 32
+                        RenderTexture TextureSpellicon(Spell(Hotbar(i).Slot).icon), Xo, Yo, 0, 0, 32, 32, 32, 32
                         For t = 1 To MAX_PLAYER_SPELLS
                             If PlayerSpells(t).Spell > 0 Then
                                 If PlayerSpells(t).Spell = Hotbar(i).Slot And SpellCD(t) > 0 Then
-                                    RenderTexture Tex_Spellicon(Spell(Hotbar(i).Slot).icon), Xo, Yo, 0, 0, 32, 32, 32, 32, D3DColorARGB(255, 100, 100, 100)
+                                    RenderTexture TextureSpellicon(Spell(Hotbar(i).Slot).icon), Xo, Yo, 0, 0, 32, 32, 32, 32, D3DColorARGB(255, 100, 100, 100)
                                 End If
                             End If
                         Next
@@ -1106,7 +1100,7 @@ Dim X As Long, Y As Long, tileSet As Long, sX As Long, sY As Long, layernum As L
                     tileSet = Map.TileData.Tile(X, Y).Layer(layernum).tileSet
                     sX = Map.TileData.Tile(X, Y).Layer(layernum).X
                     sY = Map.TileData.Tile(X, Y).Layer(layernum).Y
-                    RenderTexture Tex_Tileset(tileSet), ConvertMapX(X * 32), ConvertMapY(Y * 32), sX * 32, sY * 32, 32, 32, 32, 32, DX8Colour(White, TempTile(X, Y).fadeAlpha(layernum))
+                    RenderTexture TextureTileset(tileSet), ConvertMapX(X * 32), ConvertMapY(Y * 32), sX * 32, sY * 32, 32, 32, 32, 32, DX8Colour(White, TempTile(X, Y).fadeAlpha(layernum))
                 End If
             Next
         Next
@@ -1118,20 +1112,20 @@ Public Sub DrawCharacter()
     Dim xEquipBar As Long, yEquipBar As Long, yOffSetEquip As Long
     
     Xo = Windows(GetWindowIndex("winCharacter")).Window.Left
-    Yo = Windows(GetWindowIndex("winCharacter")).Window.top
+    Yo = Windows(GetWindowIndex("winCharacter")).Window.Top
     
     xEquipBar = Xo
     yEquipBar = Yo
     yOffSetEquip = EqTop
     
     For i = 1 To Equipment.Equipment_Count - 1
-        RenderTexture Tex_GUI(37), xEquipBar + 170, yEquipBar + yOffSetEquip, 0, 0, 40, 38, 40, 38
+        RenderTexture TextureGUI(37), xEquipBar + 170, yEquipBar + yOffSetEquip, 0, 0, 40, 38, 40, 38
         yOffSetEquip = yOffSetEquip + 38
     Next
     
     ' render top wood
-    RenderTexture Tex_GUI(1), Xo + 4, Yo + 23, 100, 100, 166, 291, 166, 291
-    RenderTexture Tex_GUI(1), Xo + 170, Yo + 23, 100, 100, 40, 63, 40, 63
+    RenderTexture TextureGUI(1), Xo + 4, Yo + 23, 100, 100, 166, 291, 166, 291
+    RenderTexture TextureGUI(1), Xo + 170, Yo + 23, 100, 100, 40, 63, 40, 63
     
     ' loop through equipment
     For i = 1 To Equipment.Equipment_Count - 1
@@ -1139,16 +1133,13 @@ Public Sub DrawCharacter()
 
         ' get the item sprite
         If ItemNum > 0 Then
-            ItemPic = Tex_Item(Item(ItemNum).pic)
+            ItemPic = TextureItem(Item(ItemNum).pic)
         Else
             ' no item equiped - use blank image
-            ItemPic = Tex_GUI(37 + i)
-            If i >= Equipment.Pants Then
-                ItemPic = Tex_GUI(73 + i)
-            End If
+            ItemPic = TextureGUI(45 + i)
         End If
         
-        Yo = Windows(GetWindowIndex("winCharacter")).Window.top + EqTop + ((EqOffsetX + 32) * (((i - 1) Mod EqColumns)))
+        Yo = Windows(GetWindowIndex("winCharacter")).Window.Top + EqTop + ((EqOffsetX + 32) * (((i - 1) Mod EqColumns)))
         Xo = Windows(GetWindowIndex("winCharacter")).Window.Left + EqLeft
 
         RenderTexture ItemPic, Xo, Yo, 0, 0, 32, 32, 32, 32
@@ -1156,16 +1147,16 @@ Public Sub DrawCharacter()
 End Sub
 
 Public Sub DrawSkills()
-    Dim Xo As Long, Yo As Long, Width As Long, Height As Long, i As Long, Y As Long, spellnum As Long, spellPic As Long, X As Long, top As Long, Left As Long
+    Dim Xo As Long, Yo As Long, Width As Long, Height As Long, i As Long, Y As Long, spellnum As Long, spellPic As Long, X As Long, Top As Long, Left As Long
     
     Xo = Windows(GetWindowIndex("winSkills")).Window.Left
-    Yo = Windows(GetWindowIndex("winSkills")).Window.top
+    Yo = Windows(GetWindowIndex("winSkills")).Window.Top
     
     Width = Windows(GetWindowIndex("winSkills")).Window.Width
     Height = Windows(GetWindowIndex("winSkills")).Window.Height
     
     ' render green
-    RenderTexture Tex_GUI(34), Xo + 4, Yo + 23, 0, 0, Width - 8, Height - 27, 4, 4
+    RenderTexture TextureGUI(34), Xo + 4, Yo + 23, 0, 0, Width - 8, Height - 27, 4, 4
     
     Width = 76
     Height = 76
@@ -1174,9 +1165,9 @@ Public Sub DrawSkills()
     ' render grid - row
     For i = 1 To 4
         If i = 4 Then Height = 42
-        RenderTexture Tex_GUI(35), Xo + 4, Y, 0, 0, Width, Height, Width, Height
-        RenderTexture Tex_GUI(35), Xo + 80, Y, 0, 0, Width, Height, Width, Height
-        RenderTexture Tex_GUI(35), Xo + 156, Y, 0, 0, 42, Height, 42, Height
+        RenderTexture TextureGUI(38), Xo + 4, Y, 0, 0, Width, Height, Width, Height
+        RenderTexture TextureGUI(38), Xo + 80, Y, 0, 0, Width, Height, Width, Height
+        RenderTexture TextureGUI(38), Xo + 156, Y, 0, 0, 42, Height, 42, Height
         Y = Y + 76
     Next
     
@@ -1185,14 +1176,14 @@ Public Sub DrawSkills()
         spellnum = PlayerSpells(i).Spell
         If spellnum > 0 And spellnum <= MAX_SPELLS Then
             ' not dragging?
-            If Not (DragBox.Origin = origin_Spells And DragBox.Slot = i) Then
+            If Not (DragBox.Origin = OriginSpells And DragBox.Slot = i) Then
                 spellPic = Spell(spellnum).icon
     
-                If spellPic > 0 And spellPic <= Count_Spellicon Then
-                    top = Yo + InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
+                If spellPic > 0 And spellPic <= CountSpellicon Then
+                    Top = Yo + InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
                     Left = Xo + InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
     
-                    RenderTexture Tex_Spellicon(spellPic), Left, top, 0, 0, 32, 32, 32, 32
+                    RenderTexture TextureSpellicon(spellPic), Left, Top, 0, 0, 32, 32, 32, 32
                 End If
             End If
         End If
@@ -1220,7 +1211,7 @@ Public Sub DrawInviteBackground()
     Dim Xo As Long, Yo As Long, Width As Long, Height As Long, i As Long, Y As Long
     
     Xo = Windows(GetWindowIndex("winOffer")).Window.Left + 475
-    Yo = Windows(GetWindowIndex("winOffer")).Window.top
+    Yo = Windows(GetWindowIndex("winOffer")).Window.Top
     
     Width = 45
     Height = 45
@@ -1229,7 +1220,7 @@ Public Sub DrawInviteBackground()
     
     For i = 1 To 3
         If inOffer(i) > 0 Then
-            RenderDesign DesignTypes.desWin_Desc, Xo, Y, Width, Height
+            RenderDesign DesignTypes.designWindowDescription, Xo, Y, Width, Height
             RenderText font(Fonts.georgia_16), "i", Xo + 21, Y + 15, Grey
             Y = Y + 37
         End If
@@ -1240,12 +1231,12 @@ Public Sub DrawShopBackground()
     Dim Xo As Long, Yo As Long, Width As Long, Height As Long, i As Long, Y As Long
     
     Xo = Windows(GetWindowIndex("winShop")).Window.Left
-    Yo = Windows(GetWindowIndex("winShop")).Window.top
+    Yo = Windows(GetWindowIndex("winShop")).Window.Top
     Width = Windows(GetWindowIndex("winShop")).Window.Width
     Height = Windows(GetWindowIndex("winShop")).Window.Height
     
     ' render green
-    RenderTexture Tex_GUI(34), Xo + 4, Yo + 23, 0, 0, Width - 8, Height - 27, 4, 4
+    RenderTexture TextureGUI(34), Xo + 4, Yo + 23, 0, 0, Width - 8, Height - 27, 4, 4
     
     Width = 76
     Height = 76
@@ -1254,23 +1245,23 @@ Public Sub DrawShopBackground()
     ' render grid - row
     For i = 1 To 3
         If i = 3 Then Height = 42
-        RenderTexture Tex_GUI(35), Xo + 4, Y, 0, 0, Width, Height, Width, Height
-        RenderTexture Tex_GUI(35), Xo + 80, Y, 0, 0, Width, Height, Width, Height
-        RenderTexture Tex_GUI(35), Xo + 156, Y, 0, 0, Width, Height, Width, Height
-        RenderTexture Tex_GUI(35), Xo + 232, Y, 0, 0, 42, Height, 42, Height
+        RenderTexture TextureGUI(38), Xo + 4, Y, 0, 0, Width, Height, Width, Height
+        RenderTexture TextureGUI(38), Xo + 80, Y, 0, 0, Width, Height, Width, Height
+        RenderTexture TextureGUI(38), Xo + 156, Y, 0, 0, Width, Height, Width, Height
+        RenderTexture TextureGUI(38), Xo + 232, Y, 0, 0, 42, Height, 42, Height
         Y = Y + 76
     Next
     ' render bottom wood
-    RenderTexture Tex_GUI(1), Xo + 4, Y - 34, 0, 0, 270, 72, 270, 72
+    RenderTexture TextureGUI(1), Xo + 4, Y - 34, 0, 0, 270, 72, 270, 72
 End Sub
 
 Public Sub DrawShop()
-Dim Xo As Long, Yo As Long, ItemPic As Long, ItemNum As Long, Amount As Long, i As Long, top As Long, Left As Long, Y As Long, X As Long, Colour As Long
+Dim Xo As Long, Yo As Long, ItemPic As Long, ItemNum As Long, Amount As Long, i As Long, Top As Long, Left As Long, Y As Long, X As Long, Colour As Long
 
     If InShop = 0 Then Exit Sub
     
     Xo = Windows(GetWindowIndex("winShop")).Window.Left
-    Yo = Windows(GetWindowIndex("winShop")).Window.top
+    Yo = Windows(GetWindowIndex("winShop")).Window.Top
     
     If Not shopIsSelling Then
         ' render the shop items
@@ -1278,16 +1269,16 @@ Dim Xo As Long, Yo As Long, ItemPic As Long, ItemNum As Long, Amount As Long, i 
             ItemNum = Shop(InShop).TradeItem(i).Item
             
             ' draw early
-            top = Yo + ShopTop + ((ShopOffsetY + 32) * ((i - 1) \ ShopColumns))
+            Top = Yo + ShopTop + ((ShopOffsetY + 32) * ((i - 1) \ ShopColumns))
             Left = Xo + ShopLeft + ((ShopOffsetX + 32) * (((i - 1) Mod ShopColumns)))
             ' draw selected square
-            If shopSelectedSlot = i Then RenderTexture Tex_GUI(61), Left, top, 0, 0, 32, 32, 32, 32
+            If shopSelectedSlot = i Then RenderTexture TextureGUI(35), Left, Top, 0, 0, 32, 32, 32, 32
             
             If ItemNum > 0 And ItemNum <= MAX_ITEMS Then
                 ItemPic = Item(ItemNum).pic
-                If ItemPic > 0 And ItemPic <= Count_Item Then
+                If ItemPic > 0 And ItemPic <= CountItem Then
                     ' draw item
-                    RenderTexture Tex_Item(ItemPic), Left, top, 0, 0, 32, 32, 32, 32
+                    RenderTexture TextureItem(ItemPic), Left, Top, 0, 0, 32, 32, 32, 32
                 End If
             End If
         Next
@@ -1297,21 +1288,21 @@ Dim Xo As Long, Yo As Long, ItemPic As Long, ItemNum As Long, Amount As Long, i 
             ItemNum = GetPlayerInvItemNum(MyIndex, i)
             
             ' draw early
-            top = Yo + ShopTop + ((ShopOffsetY + 32) * ((i - 1) \ ShopColumns))
+            Top = Yo + ShopTop + ((ShopOffsetY + 32) * ((i - 1) \ ShopColumns))
             Left = Xo + ShopLeft + ((ShopOffsetX + 32) * (((i - 1) Mod ShopColumns)))
             ' draw selected square
-            If shopSelectedSlot = i Then RenderTexture Tex_GUI(61), Left, top, 0, 0, 32, 32, 32, 32
+            If shopSelectedSlot = i Then RenderTexture TextureGUI(35), Left, Top, 0, 0, 32, 32, 32, 32
             
             If ItemNum > 0 And ItemNum <= MAX_ITEMS Then
                 ItemPic = Item(ItemNum).pic
-                If ItemPic > 0 And ItemPic <= Count_Item Then
+                If ItemPic > 0 And ItemPic <= CountItem Then
 
                     ' draw item
-                    RenderTexture Tex_Item(ItemPic), Left, top, 0, 0, 32, 32, 32, 32
+                    RenderTexture TextureItem(ItemPic), Left, Top, 0, 0, 32, 32, 32, 32
                     
                     ' If item is a stack - draw the amount you have
                     If GetPlayerInvItemValue(MyIndex, i) > 1 Then
-                        Y = top + 21
+                        Y = Top + 21
                         X = Left + 1
                         Amount = CStr(GetPlayerInvItemValue(MyIndex, i))
                         
@@ -1336,23 +1327,23 @@ Sub DrawTrade()
     Dim Xo As Long, Yo As Long, Width As Long, Height As Long, i As Long, Y As Long, X As Long
     
     Xo = Windows(GetWindowIndex("winTrade")).Window.Left
-    Yo = Windows(GetWindowIndex("winTrade")).Window.top
+    Yo = Windows(GetWindowIndex("winTrade")).Window.Top
     Width = Windows(GetWindowIndex("winTrade")).Window.Width
     Height = Windows(GetWindowIndex("winTrade")).Window.Height
     
     ' render green
-    RenderTexture Tex_GUI(34), Xo + 4, Yo + 23, 0, 0, Width - 8, Height - 27, 4, 4
+    RenderTexture TextureGUI(34), Xo + 4, Yo + 23, 0, 0, Width - 8, Height - 27, 4, 4
     
     ' top wood
-    RenderTexture Tex_GUI(1), Xo + 4, Yo + 23, 100, 100, Width - 8, 18, Width - 8, 18
+    RenderTexture TextureGUI(1), Xo + 4, Yo + 23, 100, 100, Width - 8, 18, Width - 8, 18
     ' left wood
-    RenderTexture Tex_GUI(1), Xo + 4, Yo + 41, 350, 0, 5, Height - 45, 5, Height - 45
+    RenderTexture TextureGUI(1), Xo + 4, Yo + 41, 350, 0, 5, Height - 45, 5, Height - 45
     ' right wood
-    RenderTexture Tex_GUI(1), Xo + Width - 9, Yo + 41, 350, 0, 5, Height - 45, 5, Height - 45
+    RenderTexture TextureGUI(1), Xo + Width - 9, Yo + 41, 350, 0, 5, Height - 45, 5, Height - 45
     ' centre wood
-    RenderTexture Tex_GUI(1), Xo + 203, Yo + 41, 350, 0, 6, Height - 45, 6, Height - 45
+    RenderTexture TextureGUI(1), Xo + 203, Yo + 41, 350, 0, 6, Height - 45, 6, Height - 45
     ' bottom wood
-    RenderTexture Tex_GUI(1), Xo + 4, Yo + 307, 100, 100, Width - 8, 75, Width - 8, 75
+    RenderTexture TextureGUI(1), Xo + 4, Yo + 307, 100, 100, Width - 8, 75, Width - 8, 75
     
     ' left
     Width = 76
@@ -1360,9 +1351,9 @@ Sub DrawTrade()
     Y = Yo + 41
     For i = 1 To 4
         If i = 4 Then Height = 38
-        RenderTexture Tex_GUI(35), Xo + 4 + 5, Y, 0, 0, Width, Height, Width, Height
-        RenderTexture Tex_GUI(35), Xo + 80 + 5, Y, 0, 0, Width, Height, Width, Height
-        RenderTexture Tex_GUI(35), Xo + 156 + 5, Y, 0, 0, 42, Height, 42, Height
+        RenderTexture TextureGUI(38), Xo + 4 + 5, Y, 0, 0, Width, Height, Width, Height
+        RenderTexture TextureGUI(38), Xo + 80 + 5, Y, 0, 0, Width, Height, Width, Height
+        RenderTexture TextureGUI(38), Xo + 156 + 5, Y, 0, 0, 42, Height, 42, Height
         Y = Y + 76
     Next
     
@@ -1372,35 +1363,35 @@ Sub DrawTrade()
     Y = Yo + 41
     For i = 1 To 4
         If i = 4 Then Height = 38
-        RenderTexture Tex_GUI(35), Xo + 4 + 205, Y, 0, 0, Width, Height, Width, Height
-        RenderTexture Tex_GUI(35), Xo + 80 + 205, Y, 0, 0, Width, Height, Width, Height
-        RenderTexture Tex_GUI(35), Xo + 156 + 205, Y, 0, 0, 42, Height, 42, Height
+        RenderTexture TextureGUI(38), Xo + 4 + 205, Y, 0, 0, Width, Height, Width, Height
+        RenderTexture TextureGUI(38), Xo + 80 + 205, Y, 0, 0, Width, Height, Width, Height
+        RenderTexture TextureGUI(38), Xo + 156 + 205, Y, 0, 0, 42, Height, 42, Height
         Y = Y + 76
     Next
 End Sub
 
 Sub DrawYourTrade()
-Dim i As Long, ItemNum As Long, ItemPic As Long, top As Long, Left As Long, Colour As Long, Amount As String, X As Long, Y As Long
+Dim i As Long, ItemNum As Long, ItemPic As Long, Top As Long, Left As Long, Colour As Long, Amount As String, X As Long, Y As Long
 Dim Xo As Long, Yo As Long
 
     Xo = Windows(GetWindowIndex("winTrade")).Window.Left + Windows(GetWindowIndex("winTrade")).Controls(GetControlIndex("winTrade", "picYour")).Left
-    Yo = Windows(GetWindowIndex("winTrade")).Window.top + Windows(GetWindowIndex("winTrade")).Controls(GetControlIndex("winTrade", "picYour")).top
+    Yo = Windows(GetWindowIndex("winTrade")).Window.Top + Windows(GetWindowIndex("winTrade")).Controls(GetControlIndex("winTrade", "picYour")).Top
     
     ' your items
     For i = 1 To MAX_INV
-        ItemNum = GetPlayerInvItemNum(MyIndex, TradeYourOffer(i).num)
+        ItemNum = GetPlayerInvItemNum(MyIndex, TradeYourOffer(i).Num)
         If ItemNum > 0 And ItemNum <= MAX_ITEMS Then
             ItemPic = Item(ItemNum).pic
-            If ItemPic > 0 And ItemPic <= Count_Item Then
-                top = Yo + TradeTop + ((TradeOffsetY + 32) * ((i - 1) \ TradeColumns))
+            If ItemPic > 0 And ItemPic <= CountItem Then
+                Top = Yo + TradeTop + ((TradeOffsetY + 32) * ((i - 1) \ TradeColumns))
                 Left = Xo + TradeLeft + ((TradeOffsetX + 32) * (((i - 1) Mod TradeColumns)))
 
                 ' draw icon
-                RenderTexture Tex_Item(ItemPic), Left, top, 0, 0, 32, 32, 32, 32
+                RenderTexture TextureItem(ItemPic), Left, Top, 0, 0, 32, 32, 32, 32
                 
                 ' If item is a stack - draw the amount you have
                 If TradeYourOffer(i).Value > 1 Then
-                    Y = top + 21
+                    Y = Top + 21
                     X = Left + 1
                     Amount = CStr(TradeYourOffer(i).Value)
                     
@@ -1421,27 +1412,27 @@ Dim Xo As Long, Yo As Long
 End Sub
 
 Sub DrawTheirTrade()
-Dim i As Long, ItemNum As Long, ItemPic As Long, top As Long, Left As Long, Colour As Long, Amount As String, X As Long, Y As Long
+Dim i As Long, ItemNum As Long, ItemPic As Long, Top As Long, Left As Long, Colour As Long, Amount As String, X As Long, Y As Long
 Dim Xo As Long, Yo As Long
 
     Xo = Windows(GetWindowIndex("winTrade")).Window.Left + Windows(GetWindowIndex("winTrade")).Controls(GetControlIndex("winTrade", "picTheir")).Left
-    Yo = Windows(GetWindowIndex("winTrade")).Window.top + Windows(GetWindowIndex("winTrade")).Controls(GetControlIndex("winTrade", "picTheir")).top
+    Yo = Windows(GetWindowIndex("winTrade")).Window.Top + Windows(GetWindowIndex("winTrade")).Controls(GetControlIndex("winTrade", "picTheir")).Top
 
     ' their items
     For i = 1 To MAX_INV
-        ItemNum = TradeTheirOffer(i).num
+        ItemNum = TradeTheirOffer(i).Num
         If ItemNum > 0 And ItemNum <= MAX_ITEMS Then
             ItemPic = Item(ItemNum).pic
-            If ItemPic > 0 And ItemPic <= Count_Item Then
-                top = Yo + TradeTop + ((TradeOffsetY + 32) * ((i - 1) \ TradeColumns))
+            If ItemPic > 0 And ItemPic <= CountItem Then
+                Top = Yo + TradeTop + ((TradeOffsetY + 32) * ((i - 1) \ TradeColumns))
                 Left = Xo + TradeLeft + ((TradeOffsetX + 32) * (((i - 1) Mod TradeColumns)))
 
                 ' draw icon
-                RenderTexture Tex_Item(ItemPic), Left, top, 0, 0, 32, 32, 32, 32
+                RenderTexture TextureItem(ItemPic), Left, Top, 0, 0, 32, 32, 32, 32
                 
                 ' If item is a stack - draw the amount you have
                 If TradeTheirOffer(i).Value > 1 Then
-                    Y = top + 21
+                    Y = Top + 21
                     X = Left + 1
                     Amount = CStr(TradeTheirOffer(i).Value)
                     
@@ -1465,16 +1456,16 @@ Public Sub DrawBank()
     Dim X As Long, Y As Long, Xo As Long, Yo As Long, Width As Long, Height As Long
     Dim i As Long, ItemNum As Long, ItemPic As Long
 
-    Dim Left As Long, top As Long
+    Dim Left As Long, Top As Long
     Dim Colour As Long, skipItem As Boolean, Amount As Long, tmpItem As Long
 
     Xo = Windows(GetWindowIndex("winBank")).Window.Left
-    Yo = Windows(GetWindowIndex("winBank")).Window.top
+    Yo = Windows(GetWindowIndex("winBank")).Window.Top
     Width = Windows(GetWindowIndex("winBank")).Window.Width
     Height = Windows(GetWindowIndex("winBank")).Window.Height
     
     ' render green
-    RenderTexture Tex_GUI(34), Xo + 4, Yo + 23, 0, 0, Width - 8, Height - 27, 4, 4
+    RenderTexture TextureGUI(34), Xo + 4, Yo + 23, 0, 0, Width - 8, Height - 27, 4, 4
 
     Width = 76
     Height = 76
@@ -1483,34 +1474,34 @@ Public Sub DrawBank()
     ' render grid - row
     For i = 1 To 5
         If i = 5 Then Height = 42
-        RenderTexture Tex_GUI(35), Xo + 4, Y, 0, 0, Width, Height, Width, Height
-        RenderTexture Tex_GUI(35), Xo + 80, Y, 0, 0, Width, Height, Width, Height
-        RenderTexture Tex_GUI(35), Xo + 156, Y, 0, 0, Width, Height, Width, Height
-        RenderTexture Tex_GUI(35), Xo + 232, Y, 0, 0, Width, Height, Width, Height
-        RenderTexture Tex_GUI(35), Xo + 308, Y, 0, 0, 79, Height, 79, Height
+        RenderTexture TextureGUI(38), Xo + 4, Y, 0, 0, Width, Height, Width, Height
+        RenderTexture TextureGUI(38), Xo + 80, Y, 0, 0, Width, Height, Width, Height
+        RenderTexture TextureGUI(38), Xo + 156, Y, 0, 0, Width, Height, Width, Height
+        RenderTexture TextureGUI(38), Xo + 232, Y, 0, 0, Width, Height, Width, Height
+        RenderTexture TextureGUI(38), Xo + 308, Y, 0, 0, 79, Height, 79, Height
         Y = Y + 76
     Next
 
     ' actually draw the icons
     For i = 1 To MAX_BANK
-        ItemNum = Bank.Item(i).num
+        ItemNum = Bank.Item(i).Num
 
         If ItemNum > 0 And ItemNum <= MAX_ITEMS Then
             ' not dragging?
-            If Not (DragBox.Origin = origin_Bank And DragBox.Slot = i) Then
+            If Not (DragBox.Origin = OriginBank And DragBox.Slot = i) Then
                 ItemPic = Item(ItemNum).pic
 
 
-                If ItemPic > 0 And ItemPic <= Count_Item Then
-                    top = Yo + BankTop + ((BankOffsetY + 32) * ((i - 1) \ BankColumns))
+                If ItemPic > 0 And ItemPic <= CountItem Then
+                    Top = Yo + BankTop + ((BankOffsetY + 32) * ((i - 1) \ BankColumns))
                     Left = Xo + BankLeft + ((BankOffsetX + 32) * (((i - 1) Mod BankColumns)))
 
                     ' draw icon
-                    RenderTexture Tex_Item(ItemPic), Left, top, 0, 0, 32, 32, 32, 32
+                    RenderTexture TextureItem(ItemPic), Left, Top, 0, 0, 32, 32, 32, 32
 
                     ' If item is a stack - draw the amount you have
                     If Bank.Item(i).Value > 1 Then
-                        Y = top + 21
+                        Y = Top + 21
                         X = Left + 1
                         Amount = Bank.Item(i).Value
 
@@ -1533,16 +1524,16 @@ Public Sub DrawBank()
 End Sub
 
 Public Sub DrawInventory()
-    Dim Xo As Long, Yo As Long, Width As Long, Height As Long, i As Long, Y As Long, ItemNum As Long, ItemPic As Long, X As Long, top As Long, Left As Long, Amount As String
+    Dim Xo As Long, Yo As Long, Width As Long, Height As Long, i As Long, Y As Long, ItemNum As Long, ItemPic As Long, X As Long, Top As Long, Left As Long, Amount As String
     Dim Colour As Long, skipItem As Boolean, amountModifier  As Long, tmpItem As Long
     
     Xo = Windows(GetWindowIndex("winInventory")).Window.Left
-    Yo = Windows(GetWindowIndex("winInventory")).Window.top
+    Yo = Windows(GetWindowIndex("winInventory")).Window.Top
     Width = Windows(GetWindowIndex("winInventory")).Window.Width
     Height = Windows(GetWindowIndex("winInventory")).Window.Height
     
     ' render green
-    RenderTexture Tex_GUI(34), Xo + 4, Yo + 23, 0, 0, Width - 8, Height - 27, 4, 4
+    RenderTexture TextureGUI(34), Xo + 4, Yo + 23, 0, 0, Width - 8, Height - 27, 4, 4
     
     Width = 76
     Height = 76
@@ -1551,28 +1542,28 @@ Public Sub DrawInventory()
     ' render grid - row
     For i = 1 To 4
         If i = 4 Then Height = 38
-        RenderTexture Tex_GUI(35), Xo + 4, Y, 0, 0, Width, Height, Width, Height
-        RenderTexture Tex_GUI(35), Xo + 80, Y, 0, 0, Width, Height, Width, Height
-        RenderTexture Tex_GUI(35), Xo + 156, Y, 0, 0, 42, Height, 42, Height
+        RenderTexture TextureGUI(38), Xo + 4, Y, 0, 0, Width, Height, Width, Height
+        RenderTexture TextureGUI(38), Xo + 80, Y, 0, 0, Width, Height, Width, Height
+        RenderTexture TextureGUI(38), Xo + 156, Y, 0, 0, 42, Height, 42, Height
         Y = Y + 76
     Next
     ' render bottom wood
-    RenderTexture Tex_GUI(1), Xo + 4, Yo + 289, 100, 100, 194, 26, 194, 26
+    RenderTexture TextureGUI(1), Xo + 4, Yo + 289, 100, 100, 194, 26, 194, 26
     
     ' actually draw the icons
     For i = 1 To MAX_INV
         ItemNum = GetPlayerInvItemNum(MyIndex, i)
         If ItemNum > 0 And ItemNum <= MAX_ITEMS Then
             ' not dragging?
-            If Not (DragBox.Origin = origin_Inventory And DragBox.Slot = i) Then
+            If Not (DragBox.Origin = OriginInventory And DragBox.Slot = i) Then
                 ItemPic = Item(ItemNum).pic
                 
                 ' exit out if we're offering item in a trade.
                 amountModifier = 0
                 If InTrade > 0 Then
                     For X = 1 To MAX_INV
-                        tmpItem = GetPlayerInvItemNum(MyIndex, TradeYourOffer(X).num)
-                        If TradeYourOffer(X).num = i Then
+                        tmpItem = GetPlayerInvItemNum(MyIndex, TradeYourOffer(X).Num)
+                        If TradeYourOffer(X).Num = i Then
                             ' check if currency
                             If Not Item(tmpItem).Type = ITEM_TYPE_CURRENCY Then
                                 ' normal item, exit out
@@ -1591,16 +1582,16 @@ Public Sub DrawInventory()
                 End If
                 
                 If Not skipItem Then
-                    If ItemPic > 0 And ItemPic <= Count_Item Then
-                        top = Yo + InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
+                    If ItemPic > 0 And ItemPic <= CountItem Then
+                        Top = Yo + InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
                         Left = Xo + InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
         
                         ' draw icon
-                        RenderTexture Tex_Item(ItemPic), Left, top, 0, 0, 32, 32, 32, 32
+                        RenderTexture TextureItem(ItemPic), Left, Top, 0, 0, 32, 32, 32, 32
         
                         ' If item is a stack - draw the amount you have
                         If GetPlayerInvItemValue(MyIndex, i) > 1 Then
-                            Y = top + 21
+                            Y = Top + 21
                             X = Left + 1
                             Amount = GetPlayerInvItemValue(MyIndex, i) - amountModifier
                             
@@ -1625,16 +1616,16 @@ Public Sub DrawInventory()
 End Sub
 
 Public Sub DrawWinQuest()
-    Dim Xo As Long, Yo As Long, Width As Long, Height As Long, i As Long, X As Long, Y As Long, ItemNum As Long, ItemPic As Long, top As Long, Left As Long, Amount As String
+    Dim Xo As Long, Yo As Long, Width As Long, Height As Long, i As Long, X As Long, Y As Long, ItemNum As Long, ItemPic As Long, Top As Long, Left As Long, Amount As String
     Dim Colour As Long, skipItem As Boolean, amountModifier  As Long, tmpItem As Long
     
     Xo = Windows(GetWindowIndex("winPlayerQuests")).Window.Left
-    Yo = Windows(GetWindowIndex("winPlayerQuests")).Window.top
+    Yo = Windows(GetWindowIndex("winPlayerQuests")).Window.Top
     Width = Windows(GetWindowIndex("winPlayerQuests")).Window.Width
     Height = Windows(GetWindowIndex("winPlayerQuests")).Window.Height
     
     ' render green
-    RenderTexture Tex_Design(5), Xo + 4, Yo + 23, 3, 3, Width - 8, Height - 27, 4, 4
+    RenderTexture TextureDesign(5), Xo + 4, Yo + 23, 3, 3, Width - 8, Height - 27, 4, 4
     
     Width = 42
     Height = 42
@@ -1642,23 +1633,23 @@ Public Sub DrawWinQuest()
     X = Xo + 132
     
     ' render div vertical
-    RenderTexture Tex_GUI(1), Xo + 132, Yo + 23, 100, 100, 4, 385, 4, 385
+    RenderTexture TextureGUI(1), Xo + 132, Yo + 23, 100, 100, 4, 385, 4, 385
     
     ' render bottom wood
-    RenderTexture Tex_GUI(1), Xo + 325, Yo + 366, 100, 100, 121, 42, 121, 42
+    RenderTexture TextureGUI(1), Xo + 325, Yo + 366, 100, 100, 121, 42, 121, 42
     ' render grid - row
     For i = 1 To 5
-        RenderTexture Tex_GUI(35), X, Yo + 366, 0, 0, Width, Height, Width, Height
+        RenderTexture TextureGUI(38), X, Yo + 366, 0, 0, Width, Height, Width, Height
         
         If Button_MissionActive <> 0 Then
             If Player(MyIndex).Mission(Button_MissionActive).ID <= 0 Then Exit Sub
             ItemNum = Mission(Player(MyIndex).Mission(Button_MissionActive).ID).RewardItem(i).ItemNum
             If ItemNum > 0 And ItemNum <= MAX_ITEMS Then
                 ItemPic = Item(ItemNum).pic
-                If ItemPic > 0 And ItemPic <= Count_Item Then
+                If ItemPic > 0 And ItemPic <= CountItem Then
 
                     ' draw icon
-                    RenderTexture Tex_Item(ItemPic), X + 4, Yo + 370, 0, 0, 32, 32, 32, 32
+                    RenderTexture TextureItem(ItemPic), X + 4, Yo + 370, 0, 0, 32, 32, 32, 32
 
                     ' If item is a stack - draw the amount you have
                     If Mission(Player(MyIndex).Mission(Button_MissionActive).ID).RewardItem(i).ItemAmount > 1 Then
@@ -1723,27 +1714,27 @@ Public Sub DrawChatBubble(ByVal Index As Long)
         X2 = X - (MaxWidth \ 2)
         Y2 = Y - (UBound(theArray) * 12)
         ' render bubble - top left
-        RenderTexture Tex_GUI(33), X2 - 9, Y2 - 5, 0, 0, 9, 5, 9, 5
+        RenderTexture TextureGUI(39), X2 - 9, Y2 - 5, 0, 0, 9, 5, 9, 5
         ' top right
-        RenderTexture Tex_GUI(33), X2 + MaxWidth, Y2 - 5, 119, 0, 9, 5, 9, 5
+        RenderTexture TextureGUI(39), X2 + MaxWidth, Y2 - 5, 119, 0, 9, 5, 9, 5
         ' top
-        RenderTexture Tex_GUI(33), X2, Y2 - 5, 9, 0, MaxWidth, 5, 5, 5
+        RenderTexture TextureGUI(39), X2, Y2 - 5, 9, 0, MaxWidth, 5, 5, 5
         ' bottom left
-        RenderTexture Tex_GUI(33), X2 - 9, Y, 0, 19, 9, 6, 9, 6
+        RenderTexture TextureGUI(39), X2 - 9, Y, 0, 19, 9, 6, 9, 6
         ' bottom right
-        RenderTexture Tex_GUI(33), X2 + MaxWidth, Y, 119, 19, 9, 6, 9, 6
+        RenderTexture TextureGUI(39), X2 + MaxWidth, Y, 119, 19, 9, 6, 9, 6
         ' bottom - left half
-        RenderTexture Tex_GUI(33), X2, Y, 9, 19, (MaxWidth \ 2) - 5, 6, 9, 6
+        RenderTexture TextureGUI(39), X2, Y, 9, 19, (MaxWidth \ 2) - 5, 6, 9, 6
         ' bottom - right half
-        RenderTexture Tex_GUI(33), X2 + (MaxWidth \ 2) + 6, Y, 9, 19, (MaxWidth \ 2) - 5, 6, 9, 6
+        RenderTexture TextureGUI(39), X2 + (MaxWidth \ 2) + 6, Y, 9, 19, (MaxWidth \ 2) - 5, 6, 9, 6
         ' left
-        RenderTexture Tex_GUI(33), X2 - 9, Y2, 0, 6, 9, (UBound(theArray) * 12), 9, 1
+        RenderTexture TextureGUI(39), X2 - 9, Y2, 0, 6, 9, (UBound(theArray) * 12), 9, 1
         ' right
-        RenderTexture Tex_GUI(33), X2 + MaxWidth, Y2, 119, 6, 9, (UBound(theArray) * 12), 9, 1
+        RenderTexture TextureGUI(39), X2 + MaxWidth, Y2, 119, 6, 9, (UBound(theArray) * 12), 9, 1
         ' center
-        RenderTexture Tex_GUI(33), X2, Y2, 9, 5, MaxWidth, (UBound(theArray) * 12), 1, 1
+        RenderTexture TextureGUI(39), X2, Y2, 9, 5, MaxWidth, (UBound(theArray) * 12), 1, 1
         ' little pointy bit
-        RenderTexture Tex_GUI(33), X - 5, Y, 58, 19, 11, 11, 11, 11
+        RenderTexture TextureGUI(39), X - 5, Y, 58, 19, 11, 11, 11, 11
         ' render each line centralised
         tmpNum = UBound(theArray)
 
@@ -1792,12 +1783,12 @@ Public Sub DrawPlayer(ByVal Index As Long)
     ' pre-load sprite for calculations
     sprite = GetPlayerSprite(Index)
 
-    'SetTexture Tex_Char(Sprite)
-    If sprite < 1 Or sprite > Count_Char Then Exit Sub
+    'SetTexture TextureChar(Sprite)
+    If sprite < 1 Or sprite > CountChar Then Exit Sub
 
     ' speed from weapon
     If GetPlayerEquipment(Index, Weapon) > 0 Then
-        attackspeed = Item(GetPlayerEquipment(Index, Weapon)).speed
+        attackspeed = Item(GetPlayerEquipment(Index, Weapon)).Speed
     Else
         attackspeed = 1000
     End If
@@ -1879,25 +1870,25 @@ Public Sub DrawPlayer(ByVal Index As Long)
     End Select
 
     With rec
-        .top = SpriteTop * (mTexture(Tex_Char(sprite)).RealHeight / 4)
-        .Height = (mTexture(Tex_Char(sprite)).RealHeight / 4)
-        .Left = Anim * (mTexture(Tex_Char(sprite)).RealWidth / 4)
-        .Width = (mTexture(Tex_Char(sprite)).RealWidth / 4)
+        .Top = SpriteTop * (mTexture(TextureChar(sprite)).RealHeight / 4)
+        .Height = (mTexture(TextureChar(sprite)).RealHeight / 4)
+        .Left = Anim * (mTexture(TextureChar(sprite)).RealWidth / 4)
+        .Width = (mTexture(TextureChar(sprite)).RealWidth / 4)
     End With
 
     ' Calculate the X
-    X = GetPlayerX(Index) * PIC_X + Player(Index).xOffset - ((mTexture(Tex_Char(sprite)).RealWidth / 4 - 32) / 2)
+    X = GetPlayerX(Index) * PIC_X + Player(Index).xOffset - ((mTexture(TextureChar(sprite)).RealWidth / 4 - 32) / 2)
 
     ' Is the player's height more than 32..?
-    If (mTexture(Tex_Char(sprite)).RealHeight) > 32 Then
+    If (mTexture(TextureChar(sprite)).RealHeight) > 32 Then
         ' Create a 32 pixel offset for larger sprites
-        Y = GetPlayerY(Index) * PIC_Y + Player(Index).yOffset - ((mTexture(Tex_Char(sprite)).RealHeight / 4) - 32) - 4
+        Y = GetPlayerY(Index) * PIC_Y + Player(Index).yOffset - ((mTexture(TextureChar(sprite)).RealHeight / 4) - 32) - 4
     Else
         ' Proceed as normal
         Y = GetPlayerY(Index) * PIC_Y + Player(Index).yOffset - 4
     End If
 
-    RenderTexture Tex_Char(sprite), ConvertMapX(X), ConvertMapY(Y), rec.Left, rec.top, rec.Width, rec.Height, rec.Width, rec.Height
+    RenderTexture TextureChar(sprite), ConvertMapX(X), ConvertMapY(Y), rec.Left, rec.Top, rec.Width, rec.Height, rec.Width, rec.Height
     
     ' check for paperdolling
     For i = 1 To UBound(PaperdollOrder)
@@ -1913,12 +1904,12 @@ Public Sub DrawPaperdoll(ByVal Index As Long, ByVal sprite As Long, ByVal X2 As 
     Dim X As Long, Y As Long
     Dim Width As Long, Height As Long
 
-    If sprite < 1 Or sprite > Count_Paperdoll Then Exit Sub
+    If sprite < 1 Or sprite > CountPaperdoll Then Exit Sub
 
     Width = (rec.Width - rec.Left)
-    Height = (rec.Height - rec.top)
+    Height = (rec.Height - rec.Top)
     
-    RenderTexture Tex_Paperdoll(sprite), ConvertMapX(X2), ConvertMapY(Y2), rec.Left, rec.top, rec.Width, rec.Height, rec.Width, rec.Height, D3DColorRGBA(255, 255, 255, 255)
+    RenderTexture TexturePaperdoll(sprite), ConvertMapX(X2), ConvertMapY(Y2), rec.Left, rec.Top, rec.Width, rec.Height, rec.Width, rec.Height, D3DColorRGBA(255, 255, 255, 255)
 End Sub
 
 Public Sub DrawProjectile(ByVal i As Long)
@@ -1931,12 +1922,12 @@ Public Sub DrawProjectile(ByVal i As Long)
     ' ****** Create Particle ******
     With MapProjectile(i)
         If .Graphic > 0 Then
-            If .speed < 5000 Then
+            If .Speed < 5000 Then
         
                 ' ****** Update Position ******
                 Angle = DegreeToRadian * Engine_GetAngle(.X, .Y, .tx, .ty)
-                .X = .X + (Sin(Angle) * ElapsedTime * (.speed / 1000))
-                .Y = .Y - (Cos(Angle) * ElapsedTime * (.speed / 1000))
+                .X = .X + (Sin(Angle) * ElapsedTime * (.Speed / 1000))
+                .Y = .Y - (Cos(Angle) * ElapsedTime * (.Speed / 1000))
                 
                 ' ****** Update Rotation ******
                 If .RotateSpeed > 0 Then
@@ -1978,14 +1969,14 @@ Public Sub DrawProjectile(ByVal i As Long)
                             SpriteTop = 3
                     End Select
                     
-                    .top = SpriteTop * (mTexture(Tex_Projectile(MapProjectile(i).Graphic)).RealHeight / 4)
-                    .Bottom = .top + (mTexture(Tex_Projectile(MapProjectile(i).Graphic)).RealHeight / 4)
+                    .Top = SpriteTop * (mTexture(TextureProjectile(MapProjectile(i).Graphic)).RealHeight / 4)
+                    .Bottom = .Top + (mTexture(TextureProjectile(MapProjectile(i).Graphic)).RealHeight / 4)
                 Else
-                    .top = 0
-                    .Bottom = .top + (mTexture(Tex_Projectile(MapProjectile(i).Graphic)).RealHeight)
+                    .Top = 0
+                    .Bottom = .Top + (mTexture(TextureProjectile(MapProjectile(i).Graphic)).RealHeight)
                 End If
-                .Left = Anim * (mTexture(Tex_Projectile(MapProjectile(i).Graphic)).RealWidth / 12)
-                .Right = .Left + (mTexture(Tex_Projectile(MapProjectile(i).Graphic)).RealWidth / 12)
+                .Left = Anim * (mTexture(TextureProjectile(MapProjectile(i).Graphic)).RealWidth / 12)
+                .Right = .Left + (mTexture(TextureProjectile(MapProjectile(i).Graphic)).RealWidth / 12)
             End With
             
             Select Case .Direction
@@ -2013,9 +2004,9 @@ Public Sub DrawProjectile(ByVal i As Long)
 
             ' ****** Render Projectile ******
             If .Rotate = 0 Then
-                Call RenderTexture(Tex_Projectile(.Graphic), ConvertMapX(Xo), ConvertMapY(Yo), sRECT.Left, sRECT.top, sRECT.Right - sRECT.Left, sRECT.Bottom - sRECT.top, sRECT.Right - sRECT.Left, sRECT.Bottom - sRECT.top)
+                Call RenderTexture(TextureProjectile(.Graphic), ConvertMapX(Xo), ConvertMapY(Yo), sRECT.Left, sRECT.Top, sRECT.Right - sRECT.Left, sRECT.Bottom - sRECT.Top, sRECT.Right - sRECT.Left, sRECT.Bottom - sRECT.Top)
             Else
-                Call RenderTexture(Tex_Projectile(.Graphic), ConvertMapX(Xo), ConvertMapY(Yo), sRECT.Left, sRECT.top, sRECT.Right - sRECT.Left, sRECT.Bottom - sRECT.top, sRECT.Right - sRECT.Left, sRECT.Bottom - sRECT.top, , , .Rotate)
+                Call RenderTexture(TextureProjectile(.Graphic), ConvertMapX(Xo), ConvertMapY(Yo), sRECT.Left, sRECT.Top, sRECT.Right - sRECT.Left, sRECT.Bottom - sRECT.Top, sRECT.Right - sRECT.Left, sRECT.Bottom - sRECT.Top, , , .Rotate)
             End If
             
         End If
@@ -2043,7 +2034,7 @@ Public Sub DrawProjectile(ByVal i As Long)
                 If IsPlaying(N) Then
                     If Abs(MapProjectile(i).X - (GetPlayerX(N) * PIC_X)) < 20 Then
                         If Abs(MapProjectile(i).Y - (GetPlayerY(N) * PIC_Y)) < 20 Then
-                            If MapProjectile(i).speed <> 6000 Then
+                            If MapProjectile(i).Speed <> 6000 Then
                                 Call SendTarget(N, TARGET_TYPE_PLAYER)
                                 If Not MapProjectile(i).IsAoE Then
                                     Call ClearProjectile(i)
@@ -2058,10 +2049,10 @@ Public Sub DrawProjectile(ByVal i As Long)
     
         ' VERIFICA NPC NO CAMINHO
         For N = 1 To Npc_HighIndex
-            If MapNpc(N).num <> 0 Then
+            If MapNpc(N).Num <> 0 Then
                 If Abs(MapProjectile(i).X - (MapNpc(N).X * PIC_X)) < 20 Then
                     If Abs(MapProjectile(i).Y - (MapNpc(N).Y * PIC_Y)) < 20 Then
-                        If MapProjectile(i).speed <> 6000 Then
+                        If MapProjectile(i).Speed <> 6000 Then
                             Call SendTarget(N, TARGET_TYPE_NPC)
                             If Not MapProjectile(i).IsAoE Then
                                 Call ClearProjectile(i)
@@ -2076,7 +2067,7 @@ Public Sub DrawProjectile(ByVal i As Long)
         ' VERIFICA SE CHEGOU AO ALVO
         If Abs(MapProjectile(i).X - MapProjectile(i).tx) < 20 Then
             If Abs(MapProjectile(i).Y - MapProjectile(i).ty) < 20 Then
-                If MapProjectile(i).speed <> 6000 Then
+                If MapProjectile(i).Speed <> 6000 Then
                     Call ClearProjectile(i)
                     Exit Sub
                 End If
@@ -2084,7 +2075,7 @@ Public Sub DrawProjectile(ByVal i As Long)
         End If
         
         ' VERIFICAR SE É UMA TRAP E O TEMPO DE SPAWN ACABOU
-        If MapProjectile(i).speed >= 5000 Then
+        If MapProjectile(i).Speed >= 5000 Then
             If Tick >= MapProjectile(i).Duration Then
                 Call ClearProjectile(i)
                 Exit Sub
@@ -2101,15 +2092,15 @@ Public Sub DrawNpc(ByVal MapNpcNum As Long)
     Dim rec As GeomRec
     Dim attackspeed As Long
 
-    If MapNpc(MapNpcNum).num = 0 Then Exit Sub ' no npc set
+    If MapNpc(MapNpcNum).Num = 0 Then Exit Sub ' no npc set
     ' pre-load texture for calculations
-    sprite = Npc(MapNpc(MapNpcNum).num).sprite
+    sprite = Npc(MapNpc(MapNpcNum).Num).sprite
 
-    'SetTexture Tex_Char(Sprite)
-    If sprite < 1 Or sprite > Count_Char Then Exit Sub
+    'SetTexture TextureChar(Sprite)
+    If sprite < 1 Or sprite > CountChar Then Exit Sub
     attackspeed = 1000
 
-    If Not isConstAnimated(Npc(MapNpc(MapNpcNum).num).sprite) Then
+    If Not isConstAnimated(Npc(MapNpc(MapNpcNum).Num).sprite) Then
         ' Reset frame
         Anim = 1
 
@@ -2191,50 +2182,50 @@ Public Sub DrawNpc(ByVal MapNpcNum As Long)
     End Select
 
     With rec
-        .top = (mTexture(Tex_Char(sprite)).RealHeight / 4) * SpriteTop
-        .Height = mTexture(Tex_Char(sprite)).RealHeight / 4
-        .Left = Anim * (mTexture(Tex_Char(sprite)).RealWidth / 4)
-        .Width = (mTexture(Tex_Char(sprite)).RealWidth / 4)
+        .Top = (mTexture(TextureChar(sprite)).RealHeight / 4) * SpriteTop
+        .Height = mTexture(TextureChar(sprite)).RealHeight / 4
+        .Left = Anim * (mTexture(TextureChar(sprite)).RealWidth / 4)
+        .Width = (mTexture(TextureChar(sprite)).RealWidth / 4)
     End With
 
     ' Calculate the X
-    X = MapNpc(MapNpcNum).X * PIC_X + MapNpc(MapNpcNum).xOffset - ((mTexture(Tex_Char(sprite)).RealWidth / 4 - 32) / 2)
+    X = MapNpc(MapNpcNum).X * PIC_X + MapNpc(MapNpcNum).xOffset - ((mTexture(TextureChar(sprite)).RealWidth / 4 - 32) / 2)
 
     ' Is the player's height more than 32..?
-    If (mTexture(Tex_Char(sprite)).RealHeight / 4) > 32 Then
+    If (mTexture(TextureChar(sprite)).RealHeight / 4) > 32 Then
         ' Create a 32 pixel offset for larger sprites
-        Y = MapNpc(MapNpcNum).Y * PIC_Y + MapNpc(MapNpcNum).yOffset - ((mTexture(Tex_Char(sprite)).RealHeight / 4) - 32) - 4
+        Y = MapNpc(MapNpcNum).Y * PIC_Y + MapNpc(MapNpcNum).yOffset - ((mTexture(TextureChar(sprite)).RealHeight / 4) - 32) - 4
     Else
         ' Proceed as normal
         Y = MapNpc(MapNpcNum).Y * PIC_Y + MapNpc(MapNpcNum).yOffset - 4
     End If
 
-    RenderTexture Tex_Char(sprite), ConvertMapX(X), ConvertMapY(Y), rec.Left, rec.top, rec.Width, rec.Height, rec.Width, rec.Height
+    RenderTexture TextureChar(sprite), ConvertMapX(X), ConvertMapY(Y), rec.Left, rec.Top, rec.Width, rec.Height, rec.Width, rec.Height
 End Sub
 
 Public Sub DrawShadow(ByVal sprite As Long, ByVal X As Long, ByVal Y As Long)
-    If hasSpriteShadow(sprite) Then RenderTexture Tex_Shadow, ConvertMapX(X), ConvertMapY(Y), 0, 0, 32, 32, 32, 32
+    If hasSpriteShadow(sprite) Then RenderTexture TextureShadow, ConvertMapX(X), ConvertMapY(Y), 0, 0, 32, 32, 32, 32
 End Sub
 
 Public Sub DrawTarget(ByVal X As Long, ByVal Y As Long)
     Dim Width As Long, Height As Long
     ' calculations
-    Width = mTexture(Tex_Target).RealWidth / 2
-    Height = mTexture(Tex_Target).RealHeight
+    Width = mTexture(TextureTarget).RealWidth / 2
+    Height = mTexture(TextureTarget).RealHeight
     X = X - ((Width - 32) / 2)
     Y = Y - (Height / 2) + 16
     X = ConvertMapX(X)
     Y = ConvertMapY(Y)
-    'EngineRenderRectangle Tex_Target, x, y, 0, 0, width, height, width, height, width, height
-    RenderTexture Tex_Target, X, Y, 0, 0, Width, Height, Width, Height
+    'EngineRenderRectangle TextureTarget, x, y, 0, 0, width, height, width, height, width, height
+    RenderTexture TextureTarget, X, Y, 0, 0, Width, Height, Width, Height
 End Sub
 
 Public Sub DrawTargetHover()
     Dim i As Long, X As Long, Y As Long, Width As Long, Height As Long
 
     If diaIndex > 0 Then Exit Sub
-    Width = mTexture(Tex_Target).RealWidth / 2
-    Height = mTexture(Tex_Target).RealHeight
+    Width = mTexture(TextureTarget).RealWidth / 2
+    Height = mTexture(TextureTarget).RealHeight
 
     If Width <= 0 Then Width = 1
     If Height <= 0 Then Height = 1
@@ -2249,7 +2240,7 @@ Public Sub DrawTargetHover()
                 If Y >= GlobalY_Map And Y <= GlobalY_Map + 32 Then
                     X = ConvertMapX(X)
                     Y = ConvertMapY(Y)
-                    RenderTexture Tex_Target, X - 16 - (Width / 2), Y - 16 - (Height / 2), Width, 0, Width, Height, Width, Height
+                    RenderTexture TextureTarget, X - 16 - (Width / 2), Y - 16 - (Height / 2), Width, 0, Width, Height, Width, Height
                 End If
             End If
         End If
@@ -2258,7 +2249,7 @@ Public Sub DrawTargetHover()
 
     For i = 1 To MAX_MAP_NPCS
 
-        If MapNpc(i).num > 0 Then
+        If MapNpc(i).Num > 0 Then
             X = (MapNpc(i).X * 32) + MapNpc(i).xOffset + 32
             Y = (MapNpc(i).Y * 32) + MapNpc(i).yOffset + 32
 
@@ -2266,7 +2257,7 @@ Public Sub DrawTargetHover()
                 If Y >= GlobalY_Map And Y <= GlobalY_Map + 32 Then
                     X = ConvertMapX(X)
                     Y = ConvertMapY(Y)
-                    RenderTexture Tex_Target, X - 16 - (Width / 2), Y - 16 - (Height / 2), Width, 0, Width, Height, Width, Height
+                    RenderTexture TextureTarget, X - 16 - (Width / 2), Y - 16 - (Height / 2), Width, 0, Width, Height, Width, Height
                 End If
             End If
         End If
@@ -2302,29 +2293,29 @@ Public Sub DrawResource(ByVal Resource_num As Long)
     End If
 
     ' pre-load texture for calculations
-    'SetTexture Tex_Resource(Resource_sprite)
+    'SetTexture TextureResource(Resource_sprite)
     ' src rect
     With rec
-        .top = 0
-        .Bottom = mTexture(Tex_Resource(Resource_sprite)).RealHeight
+        .Top = 0
+        .Bottom = mTexture(TextureResource(Resource_sprite)).RealHeight
         .Left = 0
-        .Right = mTexture(Tex_Resource(Resource_sprite)).RealWidth
+        .Right = mTexture(TextureResource(Resource_sprite)).RealWidth
     End With
 
     ' Set base x + y, then the offset due to size
-    X = (MapResource(Resource_num).X * PIC_X) - (mTexture(Tex_Resource(Resource_sprite)).RealWidth / 2) + 16
-    Y = (MapResource(Resource_num).Y * PIC_Y) - mTexture(Tex_Resource(Resource_sprite)).RealHeight + 32
+    X = (MapResource(Resource_num).X * PIC_X) - (mTexture(TextureResource(Resource_sprite)).RealWidth / 2) + 16
+    Y = (MapResource(Resource_num).Y * PIC_Y) - mTexture(TextureResource(Resource_sprite)).RealHeight + 32
     Width = rec.Right - rec.Left
-    Height = rec.Bottom - rec.top
-    'EngineRenderRectangle Tex_Resource(Resource_sprite), ConvertMapX(x), ConvertMapY(y), 0, 0, width, height, width, height, width, height
-    RenderTexture Tex_Resource(Resource_sprite), ConvertMapX(X), ConvertMapY(Y), 0, 0, Width, Height, Width, Height
+    Height = rec.Bottom - rec.Top
+    'EngineRenderRectangle TextureResource(Resource_sprite), ConvertMapX(x), ConvertMapY(y), 0, 0, width, height, width, height, width, height
+    RenderTexture TextureResource(Resource_sprite), ConvertMapX(X), ConvertMapY(Y), 0, 0, Width, Height, Width, Height
 End Sub
 
 Public Sub DrawItem(ByVal ItemNum As Long)
     Dim Picnum As Integer, dontRender As Boolean, i As Long, tmpIndex As Long
-    Picnum = Item(MapItem(ItemNum).num).pic
+    Picnum = Item(MapItem(ItemNum).Num).pic
 
-    If Picnum < 1 Or Picnum > Count_Item Then Exit Sub
+    If Picnum < 1 Or Picnum > CountItem Then Exit Sub
 
     ' if it's not us then don't render
     If MapItem(ItemNum).playerName <> vbNullString Then
@@ -2353,25 +2344,25 @@ Public Sub DrawItem(ByVal ItemNum As Long)
         End If
     End If
 
-    'If Not dontRender Then EngineRenderRectangle Tex_Item(PicNum), ConvertMapX(MapItem(itemnum).x * PIC_X), ConvertMapY(MapItem(itemnum).y * PIC_Y), 0, 0, 32, 32, 32, 32, 32, 32
+    'If Not dontRender Then EngineRenderRectangle TextureItem(PicNum), ConvertMapX(MapItem(itemnum).x * PIC_X), ConvertMapY(MapItem(itemnum).y * PIC_Y), 0, 0, 32, 32, 32, 32, 32, 32
     If Not dontRender Then
-        RenderTexture Tex_Item(Picnum), ConvertMapX(MapItem(ItemNum).X * PIC_X), ConvertMapY(MapItem(ItemNum).Y * PIC_Y), 0, 0, 32, 32, 32, 32
+        RenderTexture TextureItem(Picnum), ConvertMapX(MapItem(ItemNum).X * PIC_X), ConvertMapY(MapItem(ItemNum).Y * PIC_Y), 0, 0, 32, 32, 32, 32
     End If
 
 End Sub
 
 Public Sub DrawBars()
-Dim Left As Long, top As Long, Width As Long, Height As Long
+Dim Left As Long, Top As Long, Width As Long, Height As Long
 Dim tmpX As Long, tmpY As Long, barWidth As Long, i As Long, NpcNum As Long
 Dim partyIndex As Long
 
     ' dynamic bar calculations
-    Width = mTexture(Tex_Bars).RealWidth
-    Height = mTexture(Tex_Bars).RealHeight / 4
+    Width = mTexture(TextureBars).RealWidth
+    Height = mTexture(TextureBars).RealHeight / 4
     
     ' render npc health bars
     For i = 1 To MAX_MAP_NPCS
-        NpcNum = MapNpc(i).num
+        NpcNum = MapNpc(i).Num
         ' exists?
         If NpcNum > 0 Then
             ' alive?
@@ -2384,14 +2375,14 @@ Dim partyIndex As Long
                 If Width > 0 Then BarWidth_NpcHP_Max(i) = ((MapNpc(i).Vital(Vitals.HP) / Width) / (Npc(NpcNum).HP / Width)) * Width
                 
                 ' draw bar background
-                top = Height * 1 ' HP bar background
+                Top = Height * 1 ' HP bar background
                 Left = 0
-                RenderTexture Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), Left, top, Width, Height, Width, Height
+                RenderTexture TextureBars, ConvertMapX(tmpX), ConvertMapY(tmpY), Left, Top, Width, Height, Width, Height
                 
                 ' draw the bar proper
-                top = 0 ' HP bar
+                Top = 0 ' HP bar
                 Left = 0
-                RenderTexture Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), Left, top, BarWidth_NpcHP(i), Height, BarWidth_NpcHP(i), Height
+                RenderTexture TextureBars, ConvertMapX(tmpX), ConvertMapY(tmpY), Left, Top, BarWidth_NpcHP(i), Height, BarWidth_NpcHP(i), Height
             End If
         End If
     Next
@@ -2407,14 +2398,14 @@ Dim partyIndex As Long
             If Width > 0 Then barWidth = (getTime - SpellBufferTimer) / ((Spell(PlayerSpells(SpellBuffer).Spell).CastTime * 1000)) * Width
             
             ' draw bar background
-            top = Height * 3 ' cooldown bar background
+            Top = Height * 3 ' cooldown bar background
             Left = 0
-            RenderTexture Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), Left, top, Width, Height, Width, Height
+            RenderTexture TextureBars, ConvertMapX(tmpX), ConvertMapY(tmpY), Left, Top, Width, Height, Width, Height
              
             ' draw the bar proper
-            top = Height * 2 ' cooldown bar
+            Top = Height * 2 ' cooldown bar
             Left = 0
-            RenderTexture Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), Left, top, barWidth, Height, barWidth, Height
+            RenderTexture TextureBars, ConvertMapX(tmpX), ConvertMapY(tmpY), Left, Top, barWidth, Height, barWidth, Height
         End If
     End If
     
@@ -2428,33 +2419,33 @@ Dim partyIndex As Long
         If Width > 0 Then BarWidth_PlayerHP_Max(MyIndex) = ((GetPlayerVital(MyIndex, Vitals.HP) / Width) / (GetPlayerMaxVital(MyIndex, Vitals.HP) / Width)) * Width
        
         ' draw bar background
-        top = Height * 1 ' HP bar background
+        Top = Height * 1 ' HP bar background
         Left = 0
-        RenderTexture Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), Left, top, Width, Height, Width, Height
+        RenderTexture TextureBars, ConvertMapX(tmpX), ConvertMapY(tmpY), Left, Top, Width, Height, Width, Height
        
         ' draw the bar proper
-        top = 0 ' HP bar
+        Top = 0 ' HP bar
         Left = 0
-        RenderTexture Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), Left, top, BarWidth_PlayerHP(MyIndex), Height, BarWidth_PlayerHP(MyIndex), Height
+        RenderTexture TextureBars, ConvertMapX(tmpX), ConvertMapY(tmpY), Left, Top, BarWidth_PlayerHP(MyIndex), Height, BarWidth_PlayerHP(MyIndex), Height
     End If
 End Sub
 
 Public Sub DrawMenuBG()
     ' row 1
-    RenderTexture Tex_Surface(1), ScreenWidth - 512, ScreenHeight - 512, 0, 0, 512, 512, 512, 512
-    RenderTexture Tex_Surface(2), ScreenWidth - 1024, ScreenHeight - 512, 0, 0, 512, 512, 512, 512
-    RenderTexture Tex_Surface(3), ScreenWidth - 1536, ScreenHeight - 512, 0, 0, 512, 512, 512, 512
-    RenderTexture Tex_Surface(4), ScreenWidth - 2048, ScreenHeight - 512, 0, 0, 512, 512, 512, 512
+    RenderTexture TextureSurface(1), ScreenWidth - 512, ScreenHeight - 512, 0, 0, 512, 512, 512, 512
+    RenderTexture TextureSurface(2), ScreenWidth - 1024, ScreenHeight - 512, 0, 0, 512, 512, 512, 512
+    RenderTexture TextureSurface(3), ScreenWidth - 1536, ScreenHeight - 512, 0, 0, 512, 512, 512, 512
+    RenderTexture TextureSurface(4), ScreenWidth - 2048, ScreenHeight - 512, 0, 0, 512, 512, 512, 512
     ' row 2
-    RenderTexture Tex_Surface(5), ScreenWidth - 512, ScreenHeight - 1024, 0, 0, 512, 512, 512, 512
-    RenderTexture Tex_Surface(6), ScreenWidth - 1024, ScreenHeight - 1024, 0, 0, 512, 512, 512, 512
-    RenderTexture Tex_Surface(7), ScreenWidth - 1536, ScreenHeight - 1024, 0, 0, 512, 512, 512, 512
-    RenderTexture Tex_Surface(8), ScreenWidth - 2048, ScreenHeight - 1024, 0, 0, 512, 512, 512, 512
+    RenderTexture TextureSurface(5), ScreenWidth - 512, ScreenHeight - 1024, 0, 0, 512, 512, 512, 512
+    RenderTexture TextureSurface(6), ScreenWidth - 1024, ScreenHeight - 1024, 0, 0, 512, 512, 512, 512
+    RenderTexture TextureSurface(7), ScreenWidth - 1536, ScreenHeight - 1024, 0, 0, 512, 512, 512, 512
+    RenderTexture TextureSurface(8), ScreenWidth - 2048, ScreenHeight - 1024, 0, 0, 512, 512, 512, 512
     ' row 3
-    RenderTexture Tex_Surface(9), ScreenWidth - 512, ScreenHeight - 1088, 0, 0, 512, 64, 512, 64
-    RenderTexture Tex_Surface(10), ScreenWidth - 1024, ScreenHeight - 1088, 0, 0, 512, 64, 512, 64
-    RenderTexture Tex_Surface(11), ScreenWidth - 1536, ScreenHeight - 1088, 0, 0, 512, 64, 512, 64
-    RenderTexture Tex_Surface(12), ScreenWidth - 2048, ScreenHeight - 1088, 0, 0, 512, 64, 512, 64
+    RenderTexture TextureSurface(9), ScreenWidth - 512, ScreenHeight - 1088, 0, 0, 512, 64, 512, 64
+    RenderTexture TextureSurface(10), ScreenWidth - 1024, ScreenHeight - 1088, 0, 0, 512, 64, 512, 64
+    RenderTexture TextureSurface(11), ScreenWidth - 1536, ScreenHeight - 1088, 0, 0, 512, 64, 512, 64
+    RenderTexture TextureSurface(12), ScreenWidth - 2048, ScreenHeight - 1088, 0, 0, 512, 64, 512, 64
 End Sub
 
 Public Sub DrawAnimation(ByVal Index As Long, ByVal Layer As Long)
@@ -2468,16 +2459,16 @@ Public Sub DrawAnimation(ByVal Index As Long, ByVal Layer As Long)
 
     sprite = Animation(AnimInstance(Index).Animation).sprite(Layer)
 
-    If sprite < 1 Or sprite > Count_Anim Then Exit Sub
+    If sprite < 1 Or sprite > CountAnim Then Exit Sub
     ' pre-load texture for calculations
-    'SetTexture Tex_Anim(Sprite)
+    'SetTexture TextureAnim(Sprite)
     FrameCount = Animation(AnimInstance(Index).Animation).Frames(Layer)
     ' total width divided by frame count
-    Width = 192 'mTexture(Tex_Anim(Sprite)).width / frameCount
-    Height = 192 'mTexture(Tex_Anim(Sprite)).height
+    Width = 192 'mTexture(TextureAnim(Sprite)).width / frameCount
+    Height = 192 'mTexture(TextureAnim(Sprite)).height
 
     With sRECT
-        .top = (Height * ((AnimInstance(Index).frameIndex(Layer) - 1) \ AnimColumns))
+        .Top = (Height * ((AnimInstance(Index).frameIndex(Layer) - 1) \ AnimColumns))
         .Height = Height
         .Left = (Width * (((AnimInstance(Index).frameIndex(Layer) - 1) Mod AnimColumns)))
         .Width = Width
@@ -2507,7 +2498,7 @@ Public Sub DrawAnimation(ByVal Index As Long, ByVal Layer As Long)
             lockindex = AnimInstance(Index).lockindex
 
             ' check if NPC exists
-            If MapNpc(lockindex).num > 0 Then
+            If MapNpc(lockindex).Num > 0 Then
 
                 ' check if alive
                 If MapNpc(lockindex).Vital(Vitals.HP) > 0 Then
@@ -2535,8 +2526,8 @@ Public Sub DrawAnimation(ByVal Index As Long, ByVal Layer As Long)
 
     X = ConvertMapX(X)
     Y = ConvertMapY(Y)
-    'EngineRenderRectangle Tex_Anim(sprite), x, y, sRECT.left, sRECT.top, sRECT.width, sRECT.height, sRECT.width, sRECT.height, sRECT.width, sRECT.height
-    RenderTexture Tex_Anim(sprite), X, Y, sRECT.Left, sRECT.top, sRECT.Width, sRECT.Height, sRECT.Width, sRECT.Height
+    'EngineRenderRectangle TextureAnim(sprite), x, y, sRECT.left, sRECT.top, sRECT.width, sRECT.height, sRECT.width, sRECT.height, sRECT.width, sRECT.height
+    RenderTexture TextureAnim(sprite), X, Y, sRECT.Left, sRECT.Top, sRECT.Width, sRECT.Height, sRECT.Width, sRECT.Height
 End Sub
 
 Public Sub DrawGDI()
@@ -2586,18 +2577,18 @@ Public Sub Render_Graphics()
     ' render black if map
     If InMapEditor Then
         For X = TileView.Left To TileView.Right
-            For Y = TileView.top To TileView.Bottom
+            For Y = TileView.Top To TileView.Bottom
                 If IsValidMapPoint(X, Y) Then
-                    RenderTexture Tex_Fader, ConvertMapX(X * 32), ConvertMapY(Y * 32), 0, 0, 32, 32, 32, 32
+                    RenderTexture TextureFader, ConvertMapX(X * 32), ConvertMapY(Y * 32), 0, 0, 32, 32, 32, 32
                 End If
             Next
         Next
     End If
 
     ' render lower tiles
-    If Count_Tileset > 0 Then
+    If CountTileset > 0 Then
         For X = TileView.Left To TileView.Right
-            For Y = TileView.top To TileView.Bottom
+            For Y = TileView.Top To TileView.Bottom
                 If IsValidMapPoint(X, Y) Then
                     Call DrawMapTile(X, Y)
                 End If
@@ -2606,16 +2597,16 @@ Public Sub Render_Graphics()
     End If
 
     ' render the items
-    If Count_Item > 0 Then
+    If CountItem > 0 Then
         For i = 1 To MAX_MAP_ITEMS
-            If MapItem(i).num > 0 Then
+            If MapItem(i).Num > 0 Then
                 Call DrawItem(i)
             End If
         Next
     End If
 
     ' draw animations
-    If Count_Anim > 0 Then
+    If CountAnim > 0 Then
         For i = 1 To MAX_BYTE
             If AnimInstance(i).Used(0) Then
                 DrawAnimation i, 0
@@ -2624,9 +2615,9 @@ Public Sub Render_Graphics()
     End If
 
     ' Y-based render. Renders Players, Npcs and Resources based on Y-axis.
-    For Y = TileView.top To TileView.Bottom + 5
+    For Y = TileView.Top To TileView.Bottom + 5
         ' Resources
-        If Count_Resource > 0 Then
+        If CountResource > 0 Then
             If Resources_Init Then
                 If Resource_Index > 0 Then
                     For i = 1 To Resource_Index
@@ -2638,7 +2629,7 @@ Public Sub Render_Graphics()
             End If
         End If
 
-        If Count_Char > 0 Then
+        If CountChar > 0 Then
             ' shadows - Players
             For i = 1 To Player_HighIndex
                 If IsPlaying(i) And GetPlayerMap(i) = GetPlayerMap(MyIndex) Then
@@ -2650,9 +2641,9 @@ Public Sub Render_Graphics()
 
             ' shadows - npcs
             For i = 1 To MAX_MAP_NPCS
-                If MapNpc(i).num > 0 Then
+                If MapNpc(i).Num > 0 Then
                     If MapNpc(i).Y = Y Then
-                        Call DrawShadow(Npc(MapNpc(i).num).sprite, (MapNpc(i).X * 32) + MapNpc(i).xOffset, (MapNpc(i).Y * 32) + MapNpc(i).yOffset)
+                        Call DrawShadow(Npc(MapNpc(i).Num).sprite, (MapNpc(i).X * 32) + MapNpc(i).xOffset, (MapNpc(i).Y * 32) + MapNpc(i).yOffset)
                     End If
                 End If
             Next
@@ -2677,7 +2668,7 @@ Public Sub Render_Graphics()
         ' draw projectiles on map
         For i = 1 To LastProjectile
             If MapProjectile(i).Owner > 0 Then
-                If MapProjectile(i).speed < 5000 Then
+                If MapProjectile(i).Speed < 5000 Then
                     If Int(MapProjectile(i).Y / PIC_Y) = Y Then
                         Call DrawProjectile(i)
                     End If
@@ -2688,7 +2679,7 @@ Public Sub Render_Graphics()
         ' draw traps on map
         For i = 1 To LastProjectile
             If MapProjectile(i).Owner > 0 Then
-                If MapProjectile(i).speed >= 5000 Then
+                If MapProjectile(i).Speed >= 5000 Then
                     If Int(MapProjectile(i).Y / PIC_Y) = Y Then
                         Call DrawProjectile(i)
                     End If
@@ -2700,9 +2691,9 @@ Public Sub Render_Graphics()
     
 
     ' render out upper tiles
-    If Count_Tileset > 0 Then
+    If CountTileset > 0 Then
         For X = TileView.Left To TileView.Right
-            For Y = TileView.top To TileView.Bottom
+            For Y = TileView.Top To TileView.Bottom
                 If IsValidMapPoint(X, Y) Then
                     Call DrawMapFringeTile(X, Y)
                 End If
@@ -2716,7 +2707,7 @@ Public Sub Render_Graphics()
     DrawTint
 
     ' render animations
-    If Count_Anim > 0 Then
+    If CountAnim > 0 Then
         For i = 1 To MAX_BYTE
             If AnimInstance(i).Used(1) Then
                 DrawAnimation i, 1
@@ -2756,7 +2747,7 @@ Public Sub Render_Graphics()
     ' draw npc names
     If Not screenshotMode Then
         For i = 1 To MAX_MAP_NPCS
-            If MapNpc(i).num > 0 Then
+            If MapNpc(i).Num > 0 Then
                 Call DrawNpcName(i)
             End If
         Next
@@ -2770,7 +2761,7 @@ Public Sub Render_Graphics()
     If InMapEditor Then
         If frmEditor_Map.optBlock.Value = True Then
             For X = TileView.Left To TileView.Right
-                For Y = TileView.top To TileView.Bottom
+                For Y = TileView.Top To TileView.Bottom
                     If IsValidMapPoint(X, Y) Then
                         Call DrawDirection(X, Y)
                     End If
@@ -2786,12 +2777,12 @@ Public Sub Render_Graphics()
         End If
     Next
     
-    If DrawThunder > 0 Then RenderTexture Tex_White, 0, 0, 0, 0, frmMain.ScaleWidth, frmMain.ScaleHeight, 32, 32, D3DColorRGBA(255, 255, 255, 160): DrawThunder = DrawThunder - 1
+    If DrawThunder > 0 Then RenderTexture TextureWhite, 0, 0, 0, 0, frmMain.ScaleWidth, frmMain.ScaleHeight, 32, 32, D3DColorRGBA(255, 255, 255, 160): DrawThunder = DrawThunder - 1
     
     ' draw shadow
     If Not screenshotMode Then
-        RenderTexture Tex_GUI(43), 0, 0, 0, 0, ScreenWidth, 64, 1, 64
-        RenderTexture Tex_GUI(42), 0, ScreenHeight - 64, 0, 0, ScreenWidth, 64, 1, 64
+        RenderTexture TextureGUI(43), 0, 0, 0, 0, ScreenWidth, 64, 1, 64
+        RenderTexture TextureGUI(42), 0, ScreenHeight - 64, 0, 0, ScreenWidth, 64, 1, 64
     End If
     
     ' Render entities
