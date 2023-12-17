@@ -75,7 +75,7 @@ Public Sub SetMoveDirection()
 End Sub
 
 Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)
-    Dim chatText As String, Name As String, i As Long, N As Long, Command() As String, buffer As clsBuffer, tmpNum As Long
+    Dim chatText As String, name As String, i As Long, N As Long, Command() As String, buffer As clsBuffer, tmpNum As Long
     
     ' check if we're skipping video
     If KeyAscii = vbKeyEscape Then
@@ -119,12 +119,12 @@ Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)
                     Select Case KeyAscii
                         Case vbKeyBack
                             If LenB(.text) > 0 Then
-                                .text = Left$(.text, Len(.text) - 1)
+                                .text = left$(.text, Len(.text) - 1)
                             End If
                         Case vbKeyReturn
                             ' override for function callbacks
-                            If .entCallBack(entStates.Enter) > 0 Then
-                                entCallBack .entCallBack(entStates.Enter), activeWindow, Windows(activeWindow).activeControl, 0, 0
+                            If .entCallBack(EntityStates.Enter) > 0 Then
+                                entCallBack .entCallBack(EntityStates.Enter), activeWindow, Windows(activeWindow).activeControl, 0, 0
                                 Exit Sub
                             Else
                                 N = 0
@@ -155,7 +155,7 @@ Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)
                             .text = .text & ChrW$(KeyAscii)
                     End Select
                     ' exit out early - if not chatting
-                    If Windows(activeWindow).Window.Name <> "winChat" Then Exit Sub
+                    If Windows(activeWindow).Window.name <> "winChat" Then Exit Sub
                 End With
             End If
         End If
@@ -218,7 +218,7 @@ Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)
         End If
     
         ' Broadcast message
-        If Left$(chatText, 1) = "'" Then
+        If left$(chatText, 1) = "'" Then
             chatText = Mid$(chatText, 2, Len(chatText) - 1)
 
             If Len(chatText) > 0 Then
@@ -231,7 +231,7 @@ Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)
         End If
 
         ' Emote message
-        If Left$(chatText, 1) = "-" Then
+        If left$(chatText, 1) = "-" Then
             chatText = Mid$(chatText, 2, Len(chatText) - 1)
 
             If Len(chatText) > 0 Then
@@ -244,17 +244,17 @@ Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)
         End If
 
         ' Player message
-        If Left$(chatText, 1) = "!" Then
+        If left$(chatText, 1) = "!" Then
             Exit Sub
             chatText = Mid$(chatText, 2, Len(chatText) - 1)
-            Name = vbNullString
+            name = vbNullString
             ' Get the desired player from the user text
             tmpNum = Len(chatText)
 
             For i = 1 To tmpNum
 
                 If Mid$(chatText, i, 1) <> Space$(1) Then
-                    Name = Name & Mid$(chatText, i, 1)
+                    name = name & Mid$(chatText, i, 1)
                 Else
                     Exit For
                 End If
@@ -267,7 +267,7 @@ Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)
             If Len(chatText) - i > 0 Then
                 chatText = Mid$(chatText, i + 1, Len(chatText) - i)
                 ' Send the message to the player
-                Call PlayerMsg(chatText, Name)
+                Call PlayerMsg(chatText, name)
             Else
                 Call AddText("Usage: !playername (message)", AlertColor)
             End If
@@ -277,7 +277,7 @@ Public Sub HandleKeyPresses(ByVal KeyAscii As Integer)
             Exit Sub
         End If
 
-        If Left$(chatText, 1) = "/" Then
+        If left$(chatText, 1) = "/" Then
             Command = Split(chatText, Space$(1))
 
             Select Case Command(0)

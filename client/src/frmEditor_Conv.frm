@@ -351,6 +351,7 @@ End Sub
 Private Sub cmbEvent_Click()
     Dim i As Long
     If EditorIndex = 0 Or EditorIndex > MAX_CONVS Then Exit Sub
+    
     If (cmbEvent.ListIndex = EventType.Event_OpenShop) Then
         cmbEventNum.visible = True
         ' build EventNum combo

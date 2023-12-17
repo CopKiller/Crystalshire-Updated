@@ -83,7 +83,6 @@ Dim i As Long
     inMenu = True
     ' show login window
     ShowWindow GetWindowIndex("winLogin")
-    'ShowWindow GetWindowIndex("winGuild")
     inSmallChat = True
     ' Set the loop going
     fadeAlpha = 255
@@ -114,11 +113,11 @@ Public Sub SetPaperdollOrder(Optional ByVal Swap As Boolean = False)
     'PaperdollOrder(10) = Equipment.Vest
 End Sub
 
-Public Sub AddChar(Name As String, Sex As Long, Class As Long, Sprite As Long)
+Public Sub AddChar(Name As String, Sex As Long, Class As Long, sprite As Long)
 
     If ConnectToServer Then
         Call SetStatus("Sending character information.")
-        Call SendAddChar(Name, Sex, Class, Sprite)
+        Call SendAddChar(Name, Sex, Class, sprite)
         Exit Sub
     Else
         ShowWindow GetWindowIndex("winLogin")

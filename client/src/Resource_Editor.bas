@@ -28,10 +28,10 @@ Public Sub ResourceEditorInit()
 
     ' finished populating
     With frmEditor_Resource
-        .scrlExhaustedPic.max = Count_Resource
-        .scrlNormalPic.max = Count_Resource
+        .scrlExhaustedPic.max = CountResource
+        .scrlNormalPic.max = CountResource
         .scrlAnimation.max = MAX_ANIMATIONS
-        .txtName.text = Trim$(Resource(EditorIndex).Name)
+        .txtName.text = Trim$(Resource(EditorIndex).name)
         .txtMessage.text = Trim$(Resource(EditorIndex).SuccessMessage)
         .txtMessage2.text = Trim$(Resource(EditorIndex).EmptyMessage)
         .cmbType.ListIndex = Resource(EditorIndex).ResourceType

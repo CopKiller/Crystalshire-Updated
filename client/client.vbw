@@ -1,4 +1,4 @@
-frmMain = 52, 52, 917, 504, , 78, 78, 965, 520, C
+frmMain = 52, 52, 917, 504, Z, 78, 78, 965, 520, C
 modText = 52, 52, 1056, 574, 
 modTypes = 78, 78, 1082, 600, C
 modGameLogic = 52, 52, 939, 494, 
@@ -62,6 +62,6 @@ Animation_Database = 182, 182, 1022, 634, C
 Client_UpdateWindow = 182, 182, 1022, 634, C
 Conv_Database = 182, 182, 1022, 634, C
 Conv_Editor = 208, 208, 1048, 660, 
-Conv_Handle = 0, 0, 840, 452, Z
+Conv_Handle = 0, 0, 840, 452, 
 Conv_TCP = 26, 26, 866, 478, 
 Conv_UDT = 52, 52, 892, 504, C
