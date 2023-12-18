@@ -774,6 +774,8 @@ Dim curWindow As Long
 End Sub
 
 Public Sub btnMenu_Map()
+    ResetGFX
+    InitGUI
     'Windows(GetWindowIndex("winCharacter")).Window.visible = Not Windows(GetWindowIndex("winCharacter")).Window.visible
 End Sub
 
@@ -1163,12 +1165,12 @@ Public Sub Description_OnDraw()
                     
                     Select Case Mission(inOffer(descItem)).Type
                         Case MissionType.Mission_TypeCollect
-                            texNum = TextureItem(Item(Mission(inOffer(descItem)).CollectItem).pic)
+                            If Mission(inOffer(descItem)).CollectItem > 0 Then texNum = TextureItem(Item(Mission(inOffer(descItem)).CollectItem).pic)
 
                         Case MissionType.Mission_TypeKill
-                            texNum = TextureChar(Npc(Mission(inOffer(descItem)).KillNPC).sprite)
+                            If Mission(inOffer(descItem)).KillNPC > 0 Then texNum = TextureChar(Npc(Mission(inOffer(descItem)).KillNPC).sprite)
                         Case MissionType.Mission_TypeTalk
-                            texNum = TextureChar(Npc(Mission(inOffer(descItem)).TalkNPC).sprite)
+                            If Mission(inOffer(descItem)).TalkNPC > 0 Then texNum = TextureChar(Npc(Mission(inOffer(descItem)).TalkNPC).sprite)
                     End Select
                     
                     Width = 42

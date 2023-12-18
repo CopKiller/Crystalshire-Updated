@@ -100,6 +100,12 @@ Public Sub SpellEditorInit()
             Call IsTrap
             .scrlDamageProjectile.Value = Spell(EditorIndex).Vital
             
+            If Spell(EditorIndex).Projectile.RecuringDamage Then
+                .chkRecuringDamage.Value = 1
+            Else
+                .chkRecuringDamage.Value = 0
+            End If
+            
             If Spell(EditorIndex).IsAoE Then
                 .chkProjectileAoE.Value = 1
             Else

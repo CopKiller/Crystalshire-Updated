@@ -1433,7 +1433,7 @@ Public Sub CreateWindow_Menu()
     CreateButton WindowCount, "btnChar", 8, 1, 29, 29, , , , TextureItem(108), , , , , , DesignTypes.DesignGreenNormal, DesignTypes.DesignGreenHover, DesignTypes.DesignGreenClick, , , GetAddress(AddressOf btnMenu_Char), , , -1, -2, , , "Character (C)"
     CreateButton WindowCount, "btnInv", 44, 1, 29, 29, , , , TextureItem(1), , , , , , DesignTypes.DesignGreenNormal, DesignTypes.DesignGreenHover, DesignTypes.DesignGreenClick, , , GetAddress(AddressOf btnMenu_Inv), , , -1, -2, , , "Inventory (I)"
     CreateButton WindowCount, "btnSkills", 82, 1, 29, 29, , , , TextureItem(109), , , , , , DesignTypes.DesignGreenNormal, DesignTypes.DesignGreenHover, DesignTypes.DesignGreenClick, , , GetAddress(AddressOf btnMenu_Skills), , , -1, -2, , , "Skills (M)"
-    CreateButton WindowCount, "btnMap", 119, 1, 29, 29, , , , TextureItem(106), , , , , , DesignTypes.DesignGrey, DesignTypes.DesignGrey, DesignTypes.DesignGrey, , , GetAddress(AddressOf btnMenu_Map), , , -1, -2
+    CreateButton WindowCount, "btnMap", 119, 1, 29, 29, , , , TextureItem(106), , , , , , DesignTypes.DesignGreenNormal, DesignTypes.DesignGreenHover, DesignTypes.DesignGreenClick, , , GetAddress(AddressOf btnMenu_Map), , , -1, -2
     CreateButton WindowCount, "btnGuild", 155, 1, 29, 29, , , , TextureItem(107), , , , , , DesignTypes.DesignGrey, DesignTypes.DesignGrey, DesignTypes.DesignGrey, , , GetAddress(AddressOf btnMenu_Guild), , , -1, -1
     CreateButton WindowCount, "btnQuest", 191, 1, 29, 29, , , , TextureItem(23), , , , , , DesignTypes.DesignGreenNormal, DesignTypes.DesignGreenHover, DesignTypes.DesignGreenClick, , , GetAddress(AddressOf btnMenu_Quest), , , -1, -2
 End Sub

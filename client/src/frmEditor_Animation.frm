@@ -402,6 +402,16 @@ Private Sub scrlLoopCountScroll(Index As Integer)
     scrlLoopCountChange Index
 End Sub
 
+Private Sub scrlFrameCount_Change(Index As Integer)
+    lblFrameCount(Index).caption = "Frame Count: " & scrlFrameCount(Index).Value
+    Animation(EditorIndex).Frames(Index) = scrlFrameCount(Index).Value
+End Sub
+
+Private Sub scrlLoopCount_Change(Index As Integer)
+    lblLoopCount(Index).caption = "Loop Count: " & scrlLoopCount(Index).Value
+    Animation(EditorIndex).LoopCount(Index) = scrlLoopCount(Index).Value
+End Sub
+
 Private Sub scrlLoopTime_Change(Index As Integer)
     lblLoopTime(Index).caption = "Loop Time: " & scrlLoopTime(Index).Value
     Animation(EditorIndex).looptime(Index) = scrlLoopTime(Index).Value

@@ -3228,17 +3228,21 @@ Public Sub ShowOfferDesc(X As Long, Y As Long, OfferNum As Long)
                 
                 Select Case Mission(inOffer(OfferNum)).Type
                     Case MissionType.Mission_TypeCollect
+                        If Mission(inOffer(OfferNum)).CollectItem = 0 Then Exit Sub
                         .Controls(GetControlIndex("winDescription", "lblClass")).text = "Collect: " + Trim$(Item(Mission(inOffer(OfferNum)).CollectItem).Name)
                         .Controls(GetControlIndex("winDescription", "lblLevel")).text = "Amount: " + Trim$(Mission(inOffer(OfferNum)).CollectItemAmount)
                         .Controls(GetControlIndex("winDescription", "lblLevel")).textColour = Red
                         .Controls(GetControlIndex("winDescription", "lblDescription")).text = Trim$(Mission(inOffer(OfferNum)).Description)
                     Case MissionType.Mission_TypeKill
+                        If Mission(inOffer(OfferNum)).KillNPC = 0 Then Exit Sub
                         .Controls(GetControlIndex("winDescription", "lblClass")).text = "Kill: " + Trim$(Item(Mission(inOffer(OfferNum)).KillNPC).Name)
                         .Controls(GetControlIndex("winDescription", "lblLevel")).text = "Amount: " + Trim$(Mission(inOffer(OfferNum)).KillNPCAmount)
                         .Controls(GetControlIndex("winDescription", "lblLevel")).textColour = Red
                         .Controls(GetControlIndex("winDescription", "lblDescription")).text = Trim$(Mission(inOffer(OfferNum)).Description)
                     Case MissionType.Mission_TypeTalk
-                
+                        If Mission(inOffer(OfferNum)).TalkNPC = 0 Then Exit Sub
+                        .Controls(GetControlIndex("winDescription", "lblClass")).text = "Talk: " + Trim$(Npc(Mission(inOffer(OfferNum)).TalkNPC).Name)
+                        .Controls(GetControlIndex("winDescription", "lblDescription")).text = Trim$(Mission(inOffer(OfferNum)).Description)
                 End Select
                 
                 '.Controls(GetControlIndex("winDescription", "lblLevel")).textColour = Colour

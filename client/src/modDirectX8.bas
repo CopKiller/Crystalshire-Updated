@@ -240,7 +240,7 @@ Public Sub DestroyDX8()
 End Sub
 
 Public Sub LoadTextures()
-Dim i As Long
+    Dim i As Long
     ' Arrays
     TextureCaptcha = LoadTextureFiles(CountCaptcha, App.Path & PathCaptcha)
     TextureTileset = LoadTextureFiles(CountTileset, App.Path & PathTileset)
