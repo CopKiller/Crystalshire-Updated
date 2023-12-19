@@ -4019,6 +4019,10 @@ Sub Resize(ByVal Width As Long, ByVal Height As Long)
     frmMain.Height = (frmMain.Height \ 15 - frmMain.ScaleHeight + Height) * 15
     frmMain.Left = (Screen.Width - frmMain.Width) \ 2
     frmMain.Top = (Screen.Height - frmMain.Height) \ 2
+    
+    '//Inicializar opções administrativas
+    Call HandleDeveloperOptions
+    
     DoEvents
 End Sub
 

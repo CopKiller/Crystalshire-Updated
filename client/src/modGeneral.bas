@@ -97,7 +97,20 @@ Dim i As Long
         If Len(Trim$(MenuMusic)) > 0 Then Play_Music Trim$(MenuMusic)
     End If
     Call InitTime
+    
     Call MenuLoop
+End Sub
+
+Public Sub HandleDeveloperOptions()
+'//-> Verifica se está no modo desenvolvimento, então deixa o botão de atualizar janelas visivel <--
+    With frmMain
+        If App.LogMode = 0 Then
+            .cmdAttWindow.visible = True
+            .cmdAttWindow.Left = (.ScaleWidth / 2) - (.cmdAttWindow.Width / 2)
+        Else
+            .cmdAttWindow.visible = False
+        End If
+    End With
 End Sub
 
 Public Sub SetPaperdollOrder(Optional ByVal Swap As Boolean = False)
