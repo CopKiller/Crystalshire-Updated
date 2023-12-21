@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0"; "mswinsck.ocx"
+Object = "{248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0"; "Mswinsck.ocx"
 Begin VB.Form frmMain 
    BackColor       =   &H00FFFFFF&
    BorderStyle     =   1  'Fixed Single
@@ -27,6 +27,14 @@ Begin VB.Form frmMain
    ScaleWidth      =   1280
    StartUpPosition =   2  'CenterScreen
    Visible         =   0   'False
+   Begin VB.CommandButton cmdAttWindow 
+      Caption         =   "Atualizar Janela"
+      Height          =   195
+      Left            =   6360
+      TabIndex        =   1
+      Top             =   0
+      Width           =   2055
+   End
    Begin MSWinsockLib.Winsock Socket 
       Left            =   120
       Top             =   120
@@ -59,6 +67,47 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
+
+Private Sub cmdAttWindow_Click()
+    Dim tempWindow_Count As Long
+    Dim tempzOrder_Win As Long
+    Dim windowName As String
+    Dim callProcedure As Long
+    Dim bytes() As Byte
+    
+    Dim windowIndex As Long
+    
+    'Nome da janela para obter o índice da janela no processamento
+    windowName = "winLogin"
+    'Nome da sub de criação da janela
+    callProcedure = GetAddress(AddressOf CreateWindow_Login)
+    
+    'Obtem o indice da janela
+    windowIndex = GetWindowIndex(windowName)
+    
+    ' Notifica que está atualizando uma janela em um método de processamento, para não acrescentar mais redimensionamento
+    windowUpdated = True
+    controlUpdated = True
+    
+    With Windows(windowIndex).Window
+        'Dados temporários
+        tempWindow_Count = windowCount
+        tempzOrder_Win = .zOrder
+        
+        windowCount = windowIndex
+        '//Método elaborado para alterar uma variavel privada no modulo de processamento
+        Call SetzOrder_Win(.zOrder)
+        
+        CallWindowProc callProcedure, 1, bytes, 0, 0
+        '//Método elaborado para alterar uma variavel privada no modulo de processamento
+        Call SetzOrder_Win(tempzOrder_Win)
+        
+        windowCount = tempWindow_Count
+    End With
+    
+    ' Desativa a abordagem de evitar uma sobrecarga de redimensionamento
+    windowUpdated = False
+End Sub
 
 ' Form
 Private Sub Form_Unload(Cancel As Integer)
@@ -104,7 +153,6 @@ End Sub
 
 Private Sub Form_DblClick()
     HandleGuiMouse EntityStates.DoubleClick
-
 End Sub
 
 ' Winsock event

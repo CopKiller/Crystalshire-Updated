@@ -71,7 +71,7 @@ Function FindPlayer(ByVal Name As String) As Long
     FindPlayer = 0
 End Function
 
-Sub SpawnItem(ByVal ItemNum As Long, ByVal ItemVal As Long, ByVal mapnum As Long, ByVal x As Long, ByVal Y As Long, Optional ByVal playerName As String = vbNullString)
+Sub SpawnItem(ByVal ItemNum As Long, ByVal ItemVal As Long, ByVal mapnum As Long, ByVal x As Long, ByVal y As Long, Optional ByVal playerName As String = vbNullString)
     Dim i As Long
 
     ' Check for subscript out of range
@@ -81,10 +81,10 @@ Sub SpawnItem(ByVal ItemNum As Long, ByVal ItemVal As Long, ByVal mapnum As Long
 
     ' Find open map item slot
     i = FindOpenMapItemSlot(mapnum)
-    Call SpawnItemSlot(i, ItemNum, ItemVal, mapnum, x, Y, playerName)
+    Call SpawnItemSlot(i, ItemNum, ItemVal, mapnum, x, y, playerName)
 End Sub
 
-Sub SpawnItemSlot(ByVal MapItemSlot As Long, ByVal ItemNum As Long, ByVal ItemVal As Long, ByVal mapnum As Long, ByVal x As Long, ByVal Y As Long, Optional ByVal playerName As String = vbNullString, Optional ByVal canDespawn As Boolean = True, Optional ByVal isSB As Boolean = False)
+Sub SpawnItemSlot(ByVal MapItemSlot As Long, ByVal ItemNum As Long, ByVal ItemVal As Long, ByVal mapnum As Long, ByVal x As Long, ByVal y As Long, Optional ByVal playerName As String = vbNullString, Optional ByVal canDespawn As Boolean = True, Optional ByVal isSB As Boolean = False)
     Dim packet As String
     Dim i As Long
     Dim Buffer As clsBuffer
@@ -105,7 +105,7 @@ Sub SpawnItemSlot(ByVal MapItemSlot As Long, ByVal ItemNum As Long, ByVal ItemVa
             MapItem(mapnum, i).Num = ItemNum
             MapItem(mapnum, i).Value = ItemVal
             MapItem(mapnum, i).x = x
-            MapItem(mapnum, i).Y = Y
+            MapItem(mapnum, i).y = y
             MapItem(mapnum, i).Bound = isSB
             ' send to map
             SendSpawnItemToMap mapnum, i
@@ -125,7 +125,7 @@ End Sub
 
 Sub SpawnMapItems(ByVal mapnum As Long)
     Dim x As Long
-    Dim Y As Long
+    Dim y As Long
 
     ' Check for subscript out of range
     If mapnum <= 0 Or mapnum > MAX_MAPS Then
@@ -134,16 +134,16 @@ Sub SpawnMapItems(ByVal mapnum As Long)
 
     ' Spawn what we have
     For x = 0 To Map(mapnum).MapData.MaxX
-        For Y = 0 To Map(mapnum).MapData.MaxY
+        For y = 0 To Map(mapnum).MapData.MaxY
 
             ' Check if the tile type is an item or a saved tile incase someone drops something
-            If (Map(mapnum).TileData.Tile(x, Y).Type = TILE_TYPE_ITEM) Then
+            If (Map(mapnum).TileData.Tile(x, y).Type = TILE_TYPE_ITEM) Then
 
                 ' Check to see if its a currency and if they set the value to 0 set it to 1 automatically
-                If Item(Map(mapnum).TileData.Tile(x, Y).Data1).Type = ITEM_TYPE_CURRENCY And Map(mapnum).TileData.Tile(x, Y).Data2 <= 0 Then
-                    Call SpawnItem(Map(mapnum).TileData.Tile(x, Y).Data1, 1, mapnum, x, Y)
+                If Item(Map(mapnum).TileData.Tile(x, y).Data1).Type = ITEM_TYPE_CURRENCY And Map(mapnum).TileData.Tile(x, y).Data2 <= 0 Then
+                    Call SpawnItem(Map(mapnum).TileData.Tile(x, y).Data1, 1, mapnum, x, y)
                 Else
-                    Call SpawnItem(Map(mapnum).TileData.Tile(x, Y).Data1, Map(mapnum).TileData.Tile(x, Y).Data2, mapnum, x, Y)
+                    Call SpawnItem(Map(mapnum).TileData.Tile(x, y).Data1, Map(mapnum).TileData.Tile(x, y).Data2, mapnum, x, y)
                 End If
             End If
 
@@ -158,24 +158,24 @@ End Function
 
 Public Sub SpawnNpc(ByVal mapNpcNum As Long, ByVal mapnum As Long)
     Dim Buffer As clsBuffer
-    Dim npcNum As Long
+    Dim NpcNum As Long
     Dim i As Long
     Dim x As Long
-    Dim Y As Long
+    Dim y As Long
     Dim Spawned As Boolean
 
     ' Check for subscript out of range
     If mapNpcNum <= 0 Or mapNpcNum > MAX_MAP_NPCS Or mapnum <= 0 Or mapnum > MAX_MAPS Then Exit Sub
-    npcNum = Map(mapnum).MapData.Npc(mapNpcNum)
+    NpcNum = Map(mapnum).MapData.Npc(mapNpcNum)
 
-    If npcNum > 0 Then
+    If NpcNum > 0 Then
     
         With MapNpc(mapnum).Npc(mapNpcNum)
-            .Num = npcNum
+            .Num = NpcNum
             .Target = 0
             .targetType = 0 ' clear
-            .Vital(Vitals.HP) = GetNpcMaxVital(npcNum, Vitals.HP)
-            .Vital(Vitals.MP) = GetNpcMaxVital(npcNum, Vitals.MP)
+            .Vital(Vitals.HP) = GetNpcMaxVital(NpcNum, Vitals.HP)
+            .Vital(Vitals.MP) = GetNpcMaxVital(NpcNum, Vitals.MP)
             .Dir = Int(Rnd * 4)
             .spellBuffer.Spell = 0
             .spellBuffer.Timer = 0
@@ -184,17 +184,17 @@ Public Sub SpawnNpc(ByVal mapNpcNum As Long, ByVal mapnum As Long)
         
             'Check if theres a spawn tile for the specific npc
             For x = 0 To Map(mapnum).MapData.MaxX
-                For Y = 0 To Map(mapnum).MapData.MaxY
-                    If Map(mapnum).TileData.Tile(x, Y).Type = TILE_TYPE_NPCSPAWN Then
-                        If Map(mapnum).TileData.Tile(x, Y).Data1 = mapNpcNum Then
+                For y = 0 To Map(mapnum).MapData.MaxY
+                    If Map(mapnum).TileData.Tile(x, y).Type = TILE_TYPE_NPCSPAWN Then
+                        If Map(mapnum).TileData.Tile(x, y).Data1 = mapNpcNum Then
                             .x = x
-                            .Y = Y
-                            .Dir = Map(mapnum).TileData.Tile(x, Y).Data2
+                            .y = y
+                            .Dir = Map(mapnum).TileData.Tile(x, y).Data2
                             Spawned = True
                             Exit For
                         End If
                     End If
-                Next Y
+                Next y
             Next x
             
             If Not Spawned Then
@@ -202,15 +202,15 @@ Public Sub SpawnNpc(ByVal mapNpcNum As Long, ByVal mapnum As Long)
                 ' Well try 100 times to randomly place the sprite
                 For i = 1 To 100
                     x = Random(0, Map(mapnum).MapData.MaxX)
-                    Y = Random(0, Map(mapnum).MapData.MaxY)
+                    y = Random(0, Map(mapnum).MapData.MaxY)
         
                     If x > Map(mapnum).MapData.MaxX Then x = Map(mapnum).MapData.MaxX
-                    If Y > Map(mapnum).MapData.MaxY Then Y = Map(mapnum).MapData.MaxY
+                    If y > Map(mapnum).MapData.MaxY Then y = Map(mapnum).MapData.MaxY
         
                     ' Check if the tile is walkable
-                    If NpcTileIsOpen(mapnum, x, Y) Then
+                    If NpcTileIsOpen(mapnum, x, y) Then
                         .x = x
-                        .Y = Y
+                        .y = y
                         Spawned = True
                         Exit For
                     End If
@@ -223,11 +223,11 @@ Public Sub SpawnNpc(ByVal mapNpcNum As Long, ByVal mapnum As Long)
             If Not Spawned Then
     
                 For x = 0 To Map(mapnum).MapData.MaxX
-                    For Y = 0 To Map(mapnum).MapData.MaxY
+                    For y = 0 To Map(mapnum).MapData.MaxY
     
-                        If NpcTileIsOpen(mapnum, x, Y) Then
+                        If NpcTileIsOpen(mapnum, x, y) Then
                             .x = x
-                            .Y = Y
+                            .y = y
                             Spawned = True
                         End If
     
@@ -243,7 +243,7 @@ Public Sub SpawnNpc(ByVal mapNpcNum As Long, ByVal mapnum As Long)
                 Buffer.WriteLong mapNpcNum
                 Buffer.WriteLong .Num
                 Buffer.WriteLong .x
-                Buffer.WriteLong .Y
+                Buffer.WriteLong .y
                 Buffer.WriteLong .Dir
                 
                 SendDataToMap mapnum, Buffer.ToArray()
@@ -255,7 +255,7 @@ Public Sub SpawnNpc(ByVal mapNpcNum As Long, ByVal mapnum As Long)
     End If
 End Sub
 
-Public Function NpcTileIsOpen(ByVal mapnum As Long, ByVal x As Long, ByVal Y As Long) As Boolean
+Public Function NpcTileIsOpen(ByVal mapnum As Long, ByVal x As Long, ByVal y As Long) As Boolean
     Dim LoopI As Long
     NpcTileIsOpen = True
 
@@ -265,7 +265,7 @@ Public Function NpcTileIsOpen(ByVal mapnum As Long, ByVal x As Long, ByVal Y As 
 
             If GetPlayerMap(LoopI) = mapnum Then
                 If GetPlayerX(LoopI) = x Then
-                    If GetPlayerY(LoopI) = Y Then
+                    If GetPlayerY(LoopI) = y Then
                         NpcTileIsOpen = False
                         Exit Function
                     End If
@@ -280,7 +280,7 @@ Public Function NpcTileIsOpen(ByVal mapnum As Long, ByVal x As Long, ByVal Y As 
 
         If MapNpc(mapnum).Npc(LoopI).Num > 0 Then
             If MapNpc(mapnum).Npc(LoopI).x = x Then
-                If MapNpc(mapnum).Npc(LoopI).Y = Y Then
+                If MapNpc(mapnum).Npc(LoopI).y = y Then
                     NpcTileIsOpen = False
                     Exit Function
                 End If
@@ -289,9 +289,9 @@ Public Function NpcTileIsOpen(ByVal mapnum As Long, ByVal x As Long, ByVal Y As 
 
     Next
 
-    If Map(mapnum).TileData.Tile(x, Y).Type <> TILE_TYPE_WALKABLE Then
-        If Map(mapnum).TileData.Tile(x, Y).Type <> TILE_TYPE_NPCSPAWN Then
-            If Map(mapnum).TileData.Tile(x, Y).Type <> TILE_TYPE_ITEM Then
+    If Map(mapnum).TileData.Tile(x, y).Type <> TILE_TYPE_WALKABLE Then
+        If Map(mapnum).TileData.Tile(x, y).Type <> TILE_TYPE_NPCSPAWN Then
+            If Map(mapnum).TileData.Tile(x, y).Type <> TILE_TYPE_ITEM Then
                 NpcTileIsOpen = False
             End If
         End If
@@ -320,7 +320,7 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
     Dim i As Long
     Dim N As Long
     Dim x As Long
-    Dim Y As Long
+    Dim y As Long
 
     ' Check for subscript out of range
     If mapnum <= 0 Or mapnum > MAX_MAPS Or mapNpcNum <= 0 Or mapNpcNum > MAX_MAP_NPCS Or Dir < DIR_UP Or Dir > DIR_DOWN_RIGHT Then
@@ -328,15 +328,15 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
     End If
 
     x = MapNpc(mapnum).Npc(mapNpcNum).x
-    Y = MapNpc(mapnum).Npc(mapNpcNum).Y
+    y = MapNpc(mapnum).Npc(mapNpcNum).y
     CanNpcMove = True
 
     Select Case Dir
         Case DIR_UP
 
             ' Check to make sure not outside of boundries
-            If Y > 0 Then
-                N = Map(mapnum).TileData.Tile(x, Y - 1).Type
+            If y > 0 Then
+                N = Map(mapnum).TileData.Tile(x, y - 1).Type
 
                 ' Check to make sure that the tile is walkable
                 If N <> TILE_TYPE_WALKABLE And N <> TILE_TYPE_ITEM And N <> TILE_TYPE_NPCSPAWN Then
@@ -347,7 +347,7 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
                 ' Check to make sure that there is not a player in the way
                 For i = 1 To Player_HighIndex
                     If IsPlaying(i) Then
-                        If (GetPlayerMap(i) = mapnum) And (GetPlayerX(i) = MapNpc(mapnum).Npc(mapNpcNum).x) And (GetPlayerY(i) = MapNpc(mapnum).Npc(mapNpcNum).Y - 1) Then
+                        If (GetPlayerMap(i) = mapnum) And (GetPlayerX(i) = MapNpc(mapnum).Npc(mapNpcNum).x) And (GetPlayerY(i) = MapNpc(mapnum).Npc(mapNpcNum).y - 1) Then
                             CanNpcMove = False
                             Exit Function
                         End If
@@ -356,14 +356,14 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
 
                 ' Check to make sure that there is not another npc in the way
                 For i = 1 To MAX_MAP_NPCS
-                    If (i <> mapNpcNum) And (MapNpc(mapnum).Npc(i).Num > 0) And (MapNpc(mapnum).Npc(i).x = MapNpc(mapnum).Npc(mapNpcNum).x) And (MapNpc(mapnum).Npc(i).Y = MapNpc(mapnum).Npc(mapNpcNum).Y - 1) Then
+                    If (i <> mapNpcNum) And (MapNpc(mapnum).Npc(i).Num > 0) And (MapNpc(mapnum).Npc(i).x = MapNpc(mapnum).Npc(mapNpcNum).x) And (MapNpc(mapnum).Npc(i).y = MapNpc(mapnum).Npc(mapNpcNum).y - 1) Then
                         CanNpcMove = False
                         Exit Function
                     End If
                 Next
                 
                 ' Directional blocking
-                If isDirBlocked(Map(mapnum).TileData.Tile(MapNpc(mapnum).Npc(mapNpcNum).x, MapNpc(mapnum).Npc(mapNpcNum).Y).DirBlock, DIR_UP + 1) Then
+                If isDirBlocked(Map(mapnum).TileData.Tile(MapNpc(mapnum).Npc(mapNpcNum).x, MapNpc(mapnum).Npc(mapNpcNum).y).DirBlock, DIR_UP + 1) Then
                     CanNpcMove = False
                     Exit Function
                 End If
@@ -374,8 +374,8 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
         Case DIR_DOWN
 
             ' Check to make sure not outside of boundries
-            If Y < Map(mapnum).MapData.MaxY Then
-                N = Map(mapnum).TileData.Tile(x, Y + 1).Type
+            If y < Map(mapnum).MapData.MaxY Then
+                N = Map(mapnum).TileData.Tile(x, y + 1).Type
 
                 ' Check to make sure that the tile is walkable
                 If N <> TILE_TYPE_WALKABLE And N <> TILE_TYPE_ITEM And N <> TILE_TYPE_NPCSPAWN Then
@@ -386,7 +386,7 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
                 ' Check to make sure that there is not a player in the way
                 For i = 1 To Player_HighIndex
                     If IsPlaying(i) Then
-                        If (GetPlayerMap(i) = mapnum) And (GetPlayerX(i) = MapNpc(mapnum).Npc(mapNpcNum).x) And (GetPlayerY(i) = MapNpc(mapnum).Npc(mapNpcNum).Y + 1) Then
+                        If (GetPlayerMap(i) = mapnum) And (GetPlayerX(i) = MapNpc(mapnum).Npc(mapNpcNum).x) And (GetPlayerY(i) = MapNpc(mapnum).Npc(mapNpcNum).y + 1) Then
                             CanNpcMove = False
                             Exit Function
                         End If
@@ -395,14 +395,14 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
 
                 ' Check to make sure that there is not another npc in the way
                 For i = 1 To MAX_MAP_NPCS
-                    If (i <> mapNpcNum) And (MapNpc(mapnum).Npc(i).Num > 0) And (MapNpc(mapnum).Npc(i).x = MapNpc(mapnum).Npc(mapNpcNum).x) And (MapNpc(mapnum).Npc(i).Y = MapNpc(mapnum).Npc(mapNpcNum).Y + 1) Then
+                    If (i <> mapNpcNum) And (MapNpc(mapnum).Npc(i).Num > 0) And (MapNpc(mapnum).Npc(i).x = MapNpc(mapnum).Npc(mapNpcNum).x) And (MapNpc(mapnum).Npc(i).y = MapNpc(mapnum).Npc(mapNpcNum).y + 1) Then
                         CanNpcMove = False
                         Exit Function
                     End If
                 Next
                 
                 ' Directional blocking
-                If isDirBlocked(Map(mapnum).TileData.Tile(MapNpc(mapnum).Npc(mapNpcNum).x, MapNpc(mapnum).Npc(mapNpcNum).Y).DirBlock, DIR_DOWN + 1) Then
+                If isDirBlocked(Map(mapnum).TileData.Tile(MapNpc(mapnum).Npc(mapNpcNum).x, MapNpc(mapnum).Npc(mapNpcNum).y).DirBlock, DIR_DOWN + 1) Then
                     CanNpcMove = False
                     Exit Function
                 End If
@@ -414,7 +414,7 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
 
             ' Check to make sure not outside of boundries
             If x > 0 Then
-                N = Map(mapnum).TileData.Tile(x - 1, Y).Type
+                N = Map(mapnum).TileData.Tile(x - 1, y).Type
 
                 ' Check to make sure that the tile is walkable
                 If N <> TILE_TYPE_WALKABLE And N <> TILE_TYPE_ITEM And N <> TILE_TYPE_NPCSPAWN Then
@@ -425,7 +425,7 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
                 ' Check to make sure that there is not a player in the way
                 For i = 1 To Player_HighIndex
                     If IsPlaying(i) Then
-                        If (GetPlayerMap(i) = mapnum) And (GetPlayerX(i) = MapNpc(mapnum).Npc(mapNpcNum).x - 1) And (GetPlayerY(i) = MapNpc(mapnum).Npc(mapNpcNum).Y) Then
+                        If (GetPlayerMap(i) = mapnum) And (GetPlayerX(i) = MapNpc(mapnum).Npc(mapNpcNum).x - 1) And (GetPlayerY(i) = MapNpc(mapnum).Npc(mapNpcNum).y) Then
                             CanNpcMove = False
                             Exit Function
                         End If
@@ -434,14 +434,14 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
 
                 ' Check to make sure that there is not another npc in the way
                 For i = 1 To MAX_MAP_NPCS
-                    If (i <> mapNpcNum) And (MapNpc(mapnum).Npc(i).Num > 0) And (MapNpc(mapnum).Npc(i).x = MapNpc(mapnum).Npc(mapNpcNum).x - 1) And (MapNpc(mapnum).Npc(i).Y = MapNpc(mapnum).Npc(mapNpcNum).Y) Then
+                    If (i <> mapNpcNum) And (MapNpc(mapnum).Npc(i).Num > 0) And (MapNpc(mapnum).Npc(i).x = MapNpc(mapnum).Npc(mapNpcNum).x - 1) And (MapNpc(mapnum).Npc(i).y = MapNpc(mapnum).Npc(mapNpcNum).y) Then
                         CanNpcMove = False
                         Exit Function
                     End If
                 Next
                 
                 ' Directional blocking
-                If isDirBlocked(Map(mapnum).TileData.Tile(MapNpc(mapnum).Npc(mapNpcNum).x, MapNpc(mapnum).Npc(mapNpcNum).Y).DirBlock, DIR_LEFT + 1) Then
+                If isDirBlocked(Map(mapnum).TileData.Tile(MapNpc(mapnum).Npc(mapNpcNum).x, MapNpc(mapnum).Npc(mapNpcNum).y).DirBlock, DIR_LEFT + 1) Then
                     CanNpcMove = False
                     Exit Function
                 End If
@@ -453,7 +453,7 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
 
             ' Check to make sure not outside of boundries
             If x < Map(mapnum).MapData.MaxX Then
-                N = Map(mapnum).TileData.Tile(x + 1, Y).Type
+                N = Map(mapnum).TileData.Tile(x + 1, y).Type
 
                 ' Check to make sure that the tile is walkable
                 If N <> TILE_TYPE_WALKABLE And N <> TILE_TYPE_ITEM And N <> TILE_TYPE_NPCSPAWN Then
@@ -464,7 +464,7 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
                 ' Check to make sure that there is not a player in the way
                 For i = 1 To Player_HighIndex
                     If IsPlaying(i) Then
-                        If (GetPlayerMap(i) = mapnum) And (GetPlayerX(i) = MapNpc(mapnum).Npc(mapNpcNum).x + 1) And (GetPlayerY(i) = MapNpc(mapnum).Npc(mapNpcNum).Y) Then
+                        If (GetPlayerMap(i) = mapnum) And (GetPlayerX(i) = MapNpc(mapnum).Npc(mapNpcNum).x + 1) And (GetPlayerY(i) = MapNpc(mapnum).Npc(mapNpcNum).y) Then
                             CanNpcMove = False
                             Exit Function
                         End If
@@ -473,14 +473,14 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
 
                 ' Check to make sure that there is not another npc in the way
                 For i = 1 To MAX_MAP_NPCS
-                    If (i <> mapNpcNum) And (MapNpc(mapnum).Npc(i).Num > 0) And (MapNpc(mapnum).Npc(i).x = MapNpc(mapnum).Npc(mapNpcNum).x + 1) And (MapNpc(mapnum).Npc(i).Y = MapNpc(mapnum).Npc(mapNpcNum).Y) Then
+                    If (i <> mapNpcNum) And (MapNpc(mapnum).Npc(i).Num > 0) And (MapNpc(mapnum).Npc(i).x = MapNpc(mapnum).Npc(mapNpcNum).x + 1) And (MapNpc(mapnum).Npc(i).y = MapNpc(mapnum).Npc(mapNpcNum).y) Then
                         CanNpcMove = False
                         Exit Function
                     End If
                 Next
                 
                 ' Directional blocking
-                If isDirBlocked(Map(mapnum).TileData.Tile(MapNpc(mapnum).Npc(mapNpcNum).x, MapNpc(mapnum).Npc(mapNpcNum).Y).DirBlock, DIR_RIGHT + 1) Then
+                If isDirBlocked(Map(mapnum).TileData.Tile(MapNpc(mapnum).Npc(mapNpcNum).x, MapNpc(mapnum).Npc(mapNpcNum).y).DirBlock, DIR_RIGHT + 1) Then
                     CanNpcMove = False
                     Exit Function
                 End If
@@ -491,8 +491,8 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
 '#######################################################################################################################
         Case DIR_UP_LEFT
             ' Check to make sure not outside of boundries
-            If Y > 0 And x > 0 Then
-                N = Map(mapnum).TileData.Tile(x - 1, Y - 1).Type
+            If y > 0 And x > 0 Then
+                N = Map(mapnum).TileData.Tile(x - 1, y - 1).Type
 
                 ' Check to make sure that the tile is walkable
                 If N <> TILE_TYPE_WALKABLE And N <> TILE_TYPE_ITEM And N <> TILE_TYPE_NPCSPAWN Then
@@ -503,7 +503,7 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
                 ' Check to make sure that there is not a player in the way
                 For i = 1 To Player_HighIndex
                     If IsPlaying(i) Then
-                        If (GetPlayerMap(i) = mapnum) And (GetPlayerX(i) = MapNpc(mapnum).Npc(mapNpcNum).x - 1) And (GetPlayerY(i) = MapNpc(mapnum).Npc(mapNpcNum).Y - 1) Then
+                        If (GetPlayerMap(i) = mapnum) And (GetPlayerX(i) = MapNpc(mapnum).Npc(mapNpcNum).x - 1) And (GetPlayerY(i) = MapNpc(mapnum).Npc(mapNpcNum).y - 1) Then
                             CanNpcMove = False
                             Exit Function
                         End If
@@ -512,14 +512,14 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
 
                 ' Check to make sure that there is not another npc in the way
                 For i = 1 To MAX_MAP_NPCS
-                    If (i <> mapNpcNum) And (MapNpc(mapnum).Npc(i).Num > 0) And (MapNpc(mapnum).Npc(i).x = MapNpc(mapnum).Npc(mapNpcNum).x - 1) And (MapNpc(mapnum).Npc(i).Y = MapNpc(mapnum).Npc(mapNpcNum).Y - 1) Then
+                    If (i <> mapNpcNum) And (MapNpc(mapnum).Npc(i).Num > 0) And (MapNpc(mapnum).Npc(i).x = MapNpc(mapnum).Npc(mapNpcNum).x - 1) And (MapNpc(mapnum).Npc(i).y = MapNpc(mapnum).Npc(mapNpcNum).y - 1) Then
                         CanNpcMove = False
                         Exit Function
                     End If
                 Next
                 
                 ' Directional blocking
-                If isDirBlocked(Map(mapnum).TileData.Tile(MapNpc(mapnum).Npc(mapNpcNum).x, MapNpc(mapnum).Npc(mapNpcNum).Y).DirBlock, DIR_LEFT + 1) Then
+                If isDirBlocked(Map(mapnum).TileData.Tile(MapNpc(mapnum).Npc(mapNpcNum).x, MapNpc(mapnum).Npc(mapNpcNum).y).DirBlock, DIR_LEFT + 1) Then
                     CanNpcMove = False
                     Exit Function
                 End If
@@ -530,8 +530,8 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
 '#######################################################################################################################
         Case DIR_UP_RIGHT
             ' Check to make sure not outside of boundries
-            If Y > 0 And x < Map(mapnum).MapData.MaxX Then
-                N = Map(mapnum).TileData.Tile(x + 1, Y - 1).Type
+            If y > 0 And x < Map(mapnum).MapData.MaxX Then
+                N = Map(mapnum).TileData.Tile(x + 1, y - 1).Type
 
                 ' Check to make sure that the tile is walkable
                 If N <> TILE_TYPE_WALKABLE And N <> TILE_TYPE_ITEM And N <> TILE_TYPE_NPCSPAWN Then
@@ -542,7 +542,7 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
                 ' Check to make sure that there is not a player in the way
                 For i = 1 To Player_HighIndex
                     If IsPlaying(i) Then
-                        If (GetPlayerMap(i) = mapnum) And (GetPlayerX(i) = MapNpc(mapnum).Npc(mapNpcNum).x + 1) And (GetPlayerY(i) = MapNpc(mapnum).Npc(mapNpcNum).Y - 1) Then
+                        If (GetPlayerMap(i) = mapnum) And (GetPlayerX(i) = MapNpc(mapnum).Npc(mapNpcNum).x + 1) And (GetPlayerY(i) = MapNpc(mapnum).Npc(mapNpcNum).y - 1) Then
                             CanNpcMove = False
                             Exit Function
                         End If
@@ -551,14 +551,14 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
 
                 ' Check to make sure that there is not another npc in the way
                 For i = 1 To MAX_MAP_NPCS
-                    If (i <> mapNpcNum) And (MapNpc(mapnum).Npc(i).Num > 0) And (MapNpc(mapnum).Npc(i).x = MapNpc(mapnum).Npc(mapNpcNum).x + 1) And (MapNpc(mapnum).Npc(i).Y = MapNpc(mapnum).Npc(mapNpcNum).Y - 1) Then
+                    If (i <> mapNpcNum) And (MapNpc(mapnum).Npc(i).Num > 0) And (MapNpc(mapnum).Npc(i).x = MapNpc(mapnum).Npc(mapNpcNum).x + 1) And (MapNpc(mapnum).Npc(i).y = MapNpc(mapnum).Npc(mapNpcNum).y - 1) Then
                         CanNpcMove = False
                         Exit Function
                     End If
                 Next
                 
                 ' Directional blocking
-                If isDirBlocked(Map(mapnum).TileData.Tile(MapNpc(mapnum).Npc(mapNpcNum).x, MapNpc(mapnum).Npc(mapNpcNum).Y).DirBlock, DIR_RIGHT + 1) Then
+                If isDirBlocked(Map(mapnum).TileData.Tile(MapNpc(mapnum).Npc(mapNpcNum).x, MapNpc(mapnum).Npc(mapNpcNum).y).DirBlock, DIR_RIGHT + 1) Then
                     CanNpcMove = False
                     Exit Function
                 End If
@@ -570,8 +570,8 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
         Case DIR_DOWN_LEFT
 
             ' Check to make sure not outside of boundries
-            If Y < Map(mapnum).MapData.MaxY And x > 0 Then
-                N = Map(mapnum).TileData.Tile(x - 1, Y + 1).Type
+            If y < Map(mapnum).MapData.MaxY And x > 0 Then
+                N = Map(mapnum).TileData.Tile(x - 1, y + 1).Type
 
                 ' Check to make sure that the tile is walkable
                 If N <> TILE_TYPE_WALKABLE And N <> TILE_TYPE_ITEM And N <> TILE_TYPE_NPCSPAWN Then
@@ -582,7 +582,7 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
                 ' Check to make sure that there is not a player in the way
                 For i = 1 To Player_HighIndex
                     If IsPlaying(i) Then
-                        If (GetPlayerMap(i) = mapnum) And (GetPlayerX(i) = MapNpc(mapnum).Npc(mapNpcNum).x - 1) And (GetPlayerY(i) = MapNpc(mapnum).Npc(mapNpcNum).Y + 1) Then
+                        If (GetPlayerMap(i) = mapnum) And (GetPlayerX(i) = MapNpc(mapnum).Npc(mapNpcNum).x - 1) And (GetPlayerY(i) = MapNpc(mapnum).Npc(mapNpcNum).y + 1) Then
                             CanNpcMove = False
                             Exit Function
                         End If
@@ -591,14 +591,14 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
 
                 ' Check to make sure that there is not another npc in the way
                 For i = 1 To MAX_MAP_NPCS
-                    If (i <> mapNpcNum) And (MapNpc(mapnum).Npc(i).Num > 0) And (MapNpc(mapnum).Npc(i).x = MapNpc(mapnum).Npc(mapNpcNum).x - 1) And (MapNpc(mapnum).Npc(i).Y = MapNpc(mapnum).Npc(mapNpcNum).Y + 1) Then
+                    If (i <> mapNpcNum) And (MapNpc(mapnum).Npc(i).Num > 0) And (MapNpc(mapnum).Npc(i).x = MapNpc(mapnum).Npc(mapNpcNum).x - 1) And (MapNpc(mapnum).Npc(i).y = MapNpc(mapnum).Npc(mapNpcNum).y + 1) Then
                         CanNpcMove = False
                         Exit Function
                     End If
                 Next
                 
                 ' Directional blocking
-                If isDirBlocked(Map(mapnum).TileData.Tile(MapNpc(mapnum).Npc(mapNpcNum).x, MapNpc(mapnum).Npc(mapNpcNum).Y).DirBlock, DIR_LEFT + 1) Then
+                If isDirBlocked(Map(mapnum).TileData.Tile(MapNpc(mapnum).Npc(mapNpcNum).x, MapNpc(mapnum).Npc(mapNpcNum).y).DirBlock, DIR_LEFT + 1) Then
                     CanNpcMove = False
                     Exit Function
                 End If
@@ -610,8 +610,8 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
         Case DIR_DOWN_RIGHT
 
             ' Check to make sure not outside of boundries
-            If Y < Map(mapnum).MapData.MaxY And x < Map(mapnum).MapData.MaxX Then
-                N = Map(mapnum).TileData.Tile(x + 1, Y + 1).Type
+            If y < Map(mapnum).MapData.MaxY And x < Map(mapnum).MapData.MaxX Then
+                N = Map(mapnum).TileData.Tile(x + 1, y + 1).Type
 
                 ' Check to make sure that the tile is walkable
                 If N <> TILE_TYPE_WALKABLE And N <> TILE_TYPE_ITEM And N <> TILE_TYPE_NPCSPAWN Then
@@ -622,7 +622,7 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
                 ' Check to make sure that there is not a player in the way
                 For i = 1 To Player_HighIndex
                     If IsPlaying(i) Then
-                        If (GetPlayerMap(i) = mapnum) And (GetPlayerX(i) = MapNpc(mapnum).Npc(mapNpcNum).x + 1) And (GetPlayerY(i) = MapNpc(mapnum).Npc(mapNpcNum).Y + 1) Then
+                        If (GetPlayerMap(i) = mapnum) And (GetPlayerX(i) = MapNpc(mapnum).Npc(mapNpcNum).x + 1) And (GetPlayerY(i) = MapNpc(mapnum).Npc(mapNpcNum).y + 1) Then
                             CanNpcMove = False
                             Exit Function
                         End If
@@ -631,14 +631,14 @@ Function CanNpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
 
                 ' Check to make sure that there is not another npc in the way
                 For i = 1 To MAX_MAP_NPCS
-                    If (i <> mapNpcNum) And (MapNpc(mapnum).Npc(i).Num > 0) And (MapNpc(mapnum).Npc(i).x = MapNpc(mapnum).Npc(mapNpcNum).x + 1) And (MapNpc(mapnum).Npc(i).Y = MapNpc(mapnum).Npc(mapNpcNum).Y + 1) Then
+                    If (i <> mapNpcNum) And (MapNpc(mapnum).Npc(i).Num > 0) And (MapNpc(mapnum).Npc(i).x = MapNpc(mapnum).Npc(mapNpcNum).x + 1) And (MapNpc(mapnum).Npc(i).y = MapNpc(mapnum).Npc(mapNpcNum).y + 1) Then
                         CanNpcMove = False
                         Exit Function
                     End If
                 Next
                 
                 ' Directional blocking
-                If isDirBlocked(Map(mapnum).TileData.Tile(MapNpc(mapnum).Npc(mapNpcNum).x, MapNpc(mapnum).Npc(mapNpcNum).Y).DirBlock, DIR_RIGHT + 1) Then
+                If isDirBlocked(Map(mapnum).TileData.Tile(MapNpc(mapnum).Npc(mapNpcNum).x, MapNpc(mapnum).Npc(mapNpcNum).y).DirBlock, DIR_RIGHT + 1) Then
                     CanNpcMove = False
                     Exit Function
                 End If
@@ -663,28 +663,28 @@ Sub NpcMove(ByVal mapnum As Long, ByVal mapNpcNum As Long, ByVal Dir As Long, By
 
     Select Case Dir
         Case DIR_UP
-            MapNpc(mapnum).Npc(mapNpcNum).Y = MapNpc(mapnum).Npc(mapNpcNum).Y - 1
+            MapNpc(mapnum).Npc(mapNpcNum).y = MapNpc(mapnum).Npc(mapNpcNum).y - 1
         Case DIR_DOWN
-            MapNpc(mapnum).Npc(mapNpcNum).Y = MapNpc(mapnum).Npc(mapNpcNum).Y + 1
+            MapNpc(mapnum).Npc(mapNpcNum).y = MapNpc(mapnum).Npc(mapNpcNum).y + 1
         Case DIR_LEFT
             MapNpc(mapnum).Npc(mapNpcNum).x = MapNpc(mapnum).Npc(mapNpcNum).x - 1
         Case DIR_RIGHT
             MapNpc(mapnum).Npc(mapNpcNum).x = MapNpc(mapnum).Npc(mapNpcNum).x + 1
         Case DIR_UP_LEFT
-            MapNpc(mapnum).Npc(mapNpcNum).Y = MapNpc(mapnum).Npc(mapNpcNum).Y - 1: MapNpc(mapnum).Npc(mapNpcNum).x = MapNpc(mapnum).Npc(mapNpcNum).x - 1
+            MapNpc(mapnum).Npc(mapNpcNum).y = MapNpc(mapnum).Npc(mapNpcNum).y - 1: MapNpc(mapnum).Npc(mapNpcNum).x = MapNpc(mapnum).Npc(mapNpcNum).x - 1
         Case DIR_UP_RIGHT
-            MapNpc(mapnum).Npc(mapNpcNum).Y = MapNpc(mapnum).Npc(mapNpcNum).Y - 1: MapNpc(mapnum).Npc(mapNpcNum).x = MapNpc(mapnum).Npc(mapNpcNum).x + 1
+            MapNpc(mapnum).Npc(mapNpcNum).y = MapNpc(mapnum).Npc(mapNpcNum).y - 1: MapNpc(mapnum).Npc(mapNpcNum).x = MapNpc(mapnum).Npc(mapNpcNum).x + 1
         Case DIR_DOWN_LEFT
-            MapNpc(mapnum).Npc(mapNpcNum).Y = MapNpc(mapnum).Npc(mapNpcNum).Y + 1: MapNpc(mapnum).Npc(mapNpcNum).x = MapNpc(mapnum).Npc(mapNpcNum).x - 1
+            MapNpc(mapnum).Npc(mapNpcNum).y = MapNpc(mapnum).Npc(mapNpcNum).y + 1: MapNpc(mapnum).Npc(mapNpcNum).x = MapNpc(mapnum).Npc(mapNpcNum).x - 1
         Case DIR_DOWN_RIGHT
-            MapNpc(mapnum).Npc(mapNpcNum).Y = MapNpc(mapnum).Npc(mapNpcNum).Y + 1: MapNpc(mapnum).Npc(mapNpcNum).x = MapNpc(mapnum).Npc(mapNpcNum).x + 1
+            MapNpc(mapnum).Npc(mapNpcNum).y = MapNpc(mapnum).Npc(mapNpcNum).y + 1: MapNpc(mapnum).Npc(mapNpcNum).x = MapNpc(mapnum).Npc(mapNpcNum).x + 1
     End Select
 
     Set Buffer = New clsBuffer
     Buffer.WriteLong SNpcMove
     Buffer.WriteLong mapNpcNum
     Buffer.WriteLong MapNpc(mapnum).Npc(mapNpcNum).x
-    Buffer.WriteLong MapNpc(mapnum).Npc(mapNpcNum).Y
+    Buffer.WriteLong MapNpc(mapnum).Npc(mapNpcNum).y
     Buffer.WriteLong MapNpc(mapnum).Npc(mapNpcNum).Dir
     Buffer.WriteLong movement
     
@@ -738,32 +738,32 @@ Sub ClearTempTiles()
 End Sub
 
 Sub ClearTempTile(ByVal mapnum As Long)
-    Dim Y As Long
+    Dim y As Long
     Dim x As Long
     TempTile(mapnum).DoorTimer = 0
     ReDim TempTile(mapnum).DoorOpen(0 To Map(mapnum).MapData.MaxX, 0 To Map(mapnum).MapData.MaxY)
 
     For x = 0 To Map(mapnum).MapData.MaxX
-        For Y = 0 To Map(mapnum).MapData.MaxY
-            TempTile(mapnum).DoorOpen(x, Y) = NO
+        For y = 0 To Map(mapnum).MapData.MaxY
+            TempTile(mapnum).DoorOpen(x, y) = NO
         Next
     Next
 
 End Sub
 
 Public Sub CacheResources(ByVal mapnum As Long)
-    Dim x As Long, Y As Long, Resource_Count As Long
+    Dim x As Long, y As Long, Resource_Count As Long
     Resource_Count = 0
 
     For x = 0 To Map(mapnum).MapData.MaxX
-        For Y = 0 To Map(mapnum).MapData.MaxY
+        For y = 0 To Map(mapnum).MapData.MaxY
 
-            If Map(mapnum).TileData.Tile(x, Y).Type = TILE_TYPE_RESOURCE Then
+            If Map(mapnum).TileData.Tile(x, y).Type = TILE_TYPE_RESOURCE Then
                 Resource_Count = Resource_Count + 1
                 ReDim Preserve ResourceCache(mapnum).ResourceData(0 To Resource_Count)
                 ResourceCache(mapnum).ResourceData(Resource_Count).x = x
-                ResourceCache(mapnum).ResourceData(Resource_Count).Y = Y
-                ResourceCache(mapnum).ResourceData(Resource_Count).cur_health = Resource(Map(mapnum).TileData.Tile(x, Y).Data1).health
+                ResourceCache(mapnum).ResourceData(Resource_Count).y = y
+                ResourceCache(mapnum).ResourceData(Resource_Count).cur_health = Resource(Map(mapnum).TileData.Tile(x, y).Data1).health
             End If
 
         Next
@@ -1299,7 +1299,7 @@ Public Function hasProficiency(ByVal index As Long, ByVal proficiency As Long) A
 End Function
 
 Public Sub CheckProjectile(ByVal i As Long)
-    Dim Angle As Long, x As Long, Y As Long, N As Long
+    Dim Angle As Long, x As Long, y As Long, N As Long
     Dim Attacker As Long, spellNum As Long
     Dim BaseDamage As Long, Damage As Long
     
@@ -1317,24 +1317,24 @@ Public Sub CheckProjectile(ByVal i As Long)
             If .Speed < 5000 Then
         
                 ' ****** Update Position ******
-                Angle = DegreeToRadian * Engine_GetAngle(.x, .Y, .tX, .tY)
+                Angle = DegreeToRadian * Engine_GetAngle(.x, .y, .tX, .tY)
                 .x = .x + (Sin(Angle) * ElapsedTime * (.Speed / 1000))
-                .Y = .Y - (Cos(Angle) * ElapsedTime * (.Speed / 1000))
+                .y = .y - (Cos(Angle) * ElapsedTime * (.Speed / 1000))
                 
                 If Spell(spellNum).IsAoE Then
                     Select Case MapProjectile(i).direction
                         Case DIR_UP
                             .xTargetAoE = .x - (Int(Spell(MapProjectile(i).spellNum).DirectionAoE(DIR_UP + 1).x / 2) * PIC_X)
-                            .yTargetAoE = .Y
+                            .yTargetAoE = .y
                         Case DIR_DOWN
                             .xTargetAoE = .x - (Int(Spell(MapProjectile(i).spellNum).DirectionAoE(DIR_DOWN + 1).x / 2) * PIC_X)
-                            .yTargetAoE = .Y
+                            .yTargetAoE = .y
                         Case DIR_LEFT, DIR_UP_LEFT, DIR_DOWN_LEFT
                             .xTargetAoE = .x
-                            .yTargetAoE = .Y - (Int(Spell(MapProjectile(i).spellNum).DirectionAoE(DIR_LEFT + 1).Y / 2) * PIC_Y)
+                            .yTargetAoE = .y - (Int(Spell(MapProjectile(i).spellNum).DirectionAoE(DIR_LEFT + 1).y / 2) * PIC_Y)
                         Case DIR_RIGHT, DIR_UP_RIGHT, DIR_DOWN_RIGHT
                             .xTargetAoE = .x
-                            .yTargetAoE = .Y - (Int(Spell(MapProjectile(i).spellNum).DirectionAoE(DIR_RIGHT + 1).Y / 2) * PIC_Y)
+                            .yTargetAoE = .y - (Int(Spell(MapProjectile(i).spellNum).DirectionAoE(DIR_RIGHT + 1).y / 2) * PIC_Y)
                     End Select
                 End If
             End If
@@ -1345,16 +1345,16 @@ Public Sub CheckProjectile(ByVal i As Long)
     If MapProjectile(i).OwnerType = TARGET_TYPE_PLAYER Then
         ' VERIFICA TYLE_BLOCK e TYLE_RESOURCE
         For x = 0 To Map(GetPlayerMap(Attacker)).MapData.MaxX
-            For Y = 0 To Map(GetPlayerMap(Attacker)).MapData.MaxY
-                If Map(GetPlayerMap(Attacker)).TileData.Tile(x, Y).Type = TILE_TYPE_BLOCKED Or Map(GetPlayerMap(Attacker)).TileData.Tile(x, Y).Type = TILE_TYPE_RESOURCE Then
+            For y = 0 To Map(GetPlayerMap(Attacker)).MapData.MaxY
+                If Map(GetPlayerMap(Attacker)).TileData.Tile(x, y).Type = TILE_TYPE_BLOCKED Or Map(GetPlayerMap(Attacker)).TileData.Tile(x, y).Type = TILE_TYPE_RESOURCE Then
                     If Abs(MapProjectile(i).x - (x * PIC_X)) < 20 Then
-                        If Abs(MapProjectile(i).Y - (Y * PIC_Y)) < 20 Then
+                        If Abs(MapProjectile(i).y - (y * PIC_Y)) < 20 Then
                             Call ClearProjectile(i)
                             Exit Sub
                         End If
                     End If
                 End If
-            Next Y
+            Next y
         Next x
         
         If Not Spell(MapProjectile(i).spellNum).IsAoE Then
@@ -1363,7 +1363,7 @@ Public Sub CheckProjectile(ByVal i As Long)
                 If IsPlaying(N) Then
                     If N <> Attacker Then
                         If Abs(MapProjectile(i).x - (GetPlayerX(N) * PIC_X)) < 20 Then
-                            If Abs(MapProjectile(i).Y - (GetPlayerY(N) * PIC_Y)) < 20 Then
+                            If Abs(MapProjectile(i).y - (GetPlayerY(N) * PIC_Y)) < 20 Then
                                 If CanPlayerAttackPlayer(Attacker, N, True) Then
                                     If MapProjectile(i).Speed <> 6000 Then
                                         PlayerAttackPlayer Attacker, N, Damage, spellNum
@@ -1391,7 +1391,7 @@ Public Sub CheckProjectile(ByVal i As Long)
             For N = 1 To MAX_MAP_NPCS
                 If MapNpc(GetPlayerMap(Attacker)).Npc(N).Num <> 0 Then
                     If Abs(MapProjectile(i).x - (MapNpc(GetPlayerMap(Attacker)).Npc(N).x * PIC_X)) < 20 Then
-                        If Abs(MapProjectile(i).Y - (MapNpc(GetPlayerMap(Attacker)).Npc(N).Y * PIC_Y)) < 20 Then
+                        If Abs(MapProjectile(i).y - (MapNpc(GetPlayerMap(Attacker)).Npc(N).y * PIC_Y)) < 20 Then
                             If CanPlayerAttackNpc(Attacker, N, True) Then
                                 If MapProjectile(i).Speed <> 6000 Then
                                     PlayerAttackNpc Attacker, N, Damage, spellNum
@@ -1420,18 +1420,18 @@ Public Sub CheckProjectile(ByVal i As Long)
                     For N = 1 To MAX_MAP_NPCS
                         If MapNpc(GetPlayerMap(Attacker)).Npc(N).Num <> 0 Then
                             If Abs(MapNpc(GetPlayerMap(Attacker)).Npc(N).x * PIC_X) >= MapProjectile(i).xTargetAoE And Abs(MapNpc(GetPlayerMap(Attacker)).Npc(N).x * PIC_X) < Abs(MapProjectile(i).xTargetAoE + (Spell(MapProjectile(i).spellNum).DirectionAoE(DIR_UP + 1).x * PIC_X)) Then
-                                If Abs(MapNpc(GetPlayerMap(Attacker)).Npc(N).Y * PIC_Y) <= MapProjectile(i).yTargetAoE And Abs(MapNpc(GetPlayerMap(Attacker)).Npc(N).Y * PIC_Y) > Abs(MapProjectile(i).yTargetAoE - ((Spell(MapProjectile(i).spellNum).DirectionAoE(DIR_UP + 1).Y - 1) * PIC_Y)) Then
+                                If Abs(MapNpc(GetPlayerMap(Attacker)).Npc(N).y * PIC_Y) <= MapProjectile(i).yTargetAoE And Abs(MapNpc(GetPlayerMap(Attacker)).Npc(N).y * PIC_Y) > Abs(MapProjectile(i).yTargetAoE - ((Spell(MapProjectile(i).spellNum).DirectionAoE(DIR_UP + 1).y - 1) * PIC_Y)) Then
                                     If CanPlayerAttackNpc(Attacker, N, True) Then
-                                        If Not Spell(MapProjectile(i).spellNum).IsAoE Then
-                                            If tick >= MapProjectile(i).Duration Then
-                                                PlayerAttackNpc Attacker, N, Damage, spellNum
-                                                MapProjectile(i).Duration = tick + 1000
+                                        If Spell(MapProjectile(i).spellNum).Projectile.RecuringDamage Then
+                                            If MapProjectile(i).Duration > 0 Then
+                                                If tick > tmrTrapResist Then
+                                                    PlayerAttackNpc Attacker, N, Damage, spellNum
+                                                    MapProjectile(i).Duration = MapProjectile(i).Duration - 1
+                                                    tmrTrapResist = tick + MapProjectile(i).Speed
+                                                End If
                                             End If
                                         Else
-                                            If MapProjectile(i).Duration > 0 Then
-                                                PlayerAttackNpc Attacker, N, Damage, spellNum
-                                                MapProjectile(i).Duration = MapProjectile(i).Duration - 1
-                                            End If
+                                        
                                         End If
                                     End If
                                 End If
@@ -1443,18 +1443,18 @@ Public Sub CheckProjectile(ByVal i As Long)
                     For N = 1 To Player_HighIndex
                         If N <> Attacker Then
                             If Abs(GetPlayerX(N) * PIC_X) >= MapProjectile(i).xTargetAoE And Abs(GetPlayerX(N) * PIC_X) < Abs(MapProjectile(i).xTargetAoE + (Spell(MapProjectile(i).spellNum).DirectionAoE(DIR_UP + 1).x * PIC_X)) Then
-                                If Abs(GetPlayerY(N) * PIC_Y) <= MapProjectile(i).yTargetAoE And Abs(GetPlayerY(N) * PIC_Y) > Abs(MapProjectile(i).yTargetAoE - ((Spell(MapProjectile(i).spellNum).DirectionAoE(DIR_UP + 1).Y - 1) * PIC_Y)) Then
+                                If Abs(GetPlayerY(N) * PIC_Y) <= MapProjectile(i).yTargetAoE And Abs(GetPlayerY(N) * PIC_Y) > Abs(MapProjectile(i).yTargetAoE - ((Spell(MapProjectile(i).spellNum).DirectionAoE(DIR_UP + 1).y - 1) * PIC_Y)) Then
                                     If CanPlayerAttackPlayer(Attacker, N, True) Then
-                                        If Not Spell(MapProjectile(i).spellNum).IsAoE Then
-                                            If tick >= MapProjectile(i).Duration Then
-                                                PlayerAttackPlayer Attacker, N, Damage, spellNum
-                                                MapProjectile(i).Duration = tick + 1000
+                                        If Spell(MapProjectile(i).spellNum).Projectile.RecuringDamage Then
+                                            If MapProjectile(i).Duration > 0 Then
+                                                If tick > tmrTrapResist Then
+                                                    PlayerAttackNpc Attacker, N, Damage, spellNum
+                                                    MapProjectile(i).Duration = MapProjectile(i).Duration - 1
+                                                    tmrTrapResist = tick + MapProjectile(i).Speed
+                                                End If
                                             End If
                                         Else
-                                            If MapProjectile(i).Duration > 0 Then
-                                                PlayerAttackPlayer Attacker, N, Damage, spellNum
-                                                MapProjectile(i).Duration = MapProjectile(i).Duration - 1
-                                            End If
+                                        
                                         End If
                                     End If
                                 End If
@@ -1466,18 +1466,18 @@ Public Sub CheckProjectile(ByVal i As Long)
                     For N = 1 To MAX_MAP_NPCS
                         If MapNpc(GetPlayerMap(Attacker)).Npc(N).Num <> 0 Then
                             If Abs(MapNpc(GetPlayerMap(Attacker)).Npc(N).x * PIC_X) >= MapProjectile(i).xTargetAoE And Abs(MapNpc(GetPlayerMap(Attacker)).Npc(N).x * PIC_X) < Abs(MapProjectile(i).xTargetAoE + (Spell(MapProjectile(i).spellNum).DirectionAoE(DIR_DOWN + 1).x * PIC_X)) Then
-                                If Abs(MapNpc(GetPlayerMap(Attacker)).Npc(N).Y * PIC_Y) >= MapProjectile(i).yTargetAoE And Abs(MapNpc(GetPlayerMap(Attacker)).Npc(N).Y * PIC_Y) < Abs(MapProjectile(i).yTargetAoE + ((Spell(MapProjectile(i).spellNum).DirectionAoE(DIR_DOWN + 1).Y - 1) * PIC_Y)) Then
+                                If Abs(MapNpc(GetPlayerMap(Attacker)).Npc(N).y * PIC_Y) >= MapProjectile(i).yTargetAoE And Abs(MapNpc(GetPlayerMap(Attacker)).Npc(N).y * PIC_Y) < Abs(MapProjectile(i).yTargetAoE + ((Spell(MapProjectile(i).spellNum).DirectionAoE(DIR_DOWN + 1).y - 1) * PIC_Y)) Then
                                     If CanPlayerAttackNpc(Attacker, N, True) Then
-                                        If Not Spell(MapProjectile(i).spellNum).IsAoE Then
-                                            If tick >= MapProjectile(i).Duration Then
-                                                PlayerAttackNpc Attacker, N, Damage, spellNum
-                                                MapProjectile(i).Duration = tick + 1000
+                                        If Spell(MapProjectile(i).spellNum).Projectile.RecuringDamage Then
+                                            If MapProjectile(i).Duration > 0 Then
+                                                If tick > tmrTrapResist Then
+                                                    PlayerAttackNpc Attacker, N, Damage, spellNum
+                                                    MapProjectile(i).Duration = MapProjectile(i).Duration - 1
+                                                    tmrTrapResist = tick + MapProjectile(i).Speed
+                                                End If
                                             End If
                                         Else
-                                            If MapProjectile(i).Duration > 0 Then
-                                                PlayerAttackNpc Attacker, N, Damage, spellNum
-                                                MapProjectile(i).Duration = MapProjectile(i).Duration - 1
-                                            End If
+                                        
                                         End If
                                     End If
                                 End If
@@ -1489,18 +1489,18 @@ Public Sub CheckProjectile(ByVal i As Long)
                     For N = 1 To Player_HighIndex
                         If N <> Attacker Then
                             If Abs(GetPlayerX(N) * PIC_X) >= MapProjectile(i).xTargetAoE And Abs(GetPlayerX(N) * PIC_X) < Abs(MapProjectile(i).xTargetAoE + (Spell(MapProjectile(i).spellNum).DirectionAoE(DIR_DOWN + 1).x * PIC_X)) Then
-                                If Abs(GetPlayerY(N) * PIC_Y) >= MapProjectile(i).yTargetAoE And Abs(GetPlayerY(N) * PIC_Y) < Abs(MapProjectile(i).yTargetAoE + ((Spell(MapProjectile(i).spellNum).DirectionAoE(DIR_DOWN + 1).Y - 1) * PIC_Y)) Then
+                                If Abs(GetPlayerY(N) * PIC_Y) >= MapProjectile(i).yTargetAoE And Abs(GetPlayerY(N) * PIC_Y) < Abs(MapProjectile(i).yTargetAoE + ((Spell(MapProjectile(i).spellNum).DirectionAoE(DIR_DOWN + 1).y - 1) * PIC_Y)) Then
                                     If CanPlayerAttackPlayer(Attacker, N, True) Then
-                                        If Not Spell(MapProjectile(i).spellNum).IsAoE Then
-                                            If tick >= MapProjectile(i).Duration Then
-                                                PlayerAttackPlayer Attacker, N, Damage, spellNum
-                                                MapProjectile(i).Duration = tick + 1000
+                                        If Spell(MapProjectile(i).spellNum).Projectile.RecuringDamage Then
+                                            If MapProjectile(i).Duration > 0 Then
+                                                If tick > tmrTrapResist Then
+                                                    PlayerAttackNpc Attacker, N, Damage, spellNum
+                                                    MapProjectile(i).Duration = MapProjectile(i).Duration - 1
+                                                    tmrTrapResist = tick + MapProjectile(i).Speed
+                                                End If
                                             End If
                                         Else
-                                            If MapProjectile(i).Duration > 0 Then
-                                                PlayerAttackPlayer Attacker, N, Damage, spellNum
-                                                MapProjectile(i).Duration = MapProjectile(i).Duration - 1
-                                            End If
+                                        
                                         End If
                                     End If
                                 End If
@@ -1511,19 +1511,19 @@ Public Sub CheckProjectile(ByVal i As Long)
                     ' VERIFICA NPC NO CAMINHO
                     For N = 1 To MAX_MAP_NPCS
                         If MapNpc(GetPlayerMap(Attacker)).Npc(N).Num <> 0 Then
-                            If Abs(MapNpc(GetPlayerMap(Attacker)).Npc(N).Y * PIC_Y) >= MapProjectile(i).yTargetAoE And Abs(MapNpc(GetPlayerMap(Attacker)).Npc(N).Y * PIC_Y) < Abs(MapProjectile(i).yTargetAoE + (Spell(MapProjectile(i).spellNum).DirectionAoE(DIR_LEFT + 1).Y * PIC_Y)) Then
+                            If Abs(MapNpc(GetPlayerMap(Attacker)).Npc(N).y * PIC_Y) >= MapProjectile(i).yTargetAoE And Abs(MapNpc(GetPlayerMap(Attacker)).Npc(N).y * PIC_Y) < Abs(MapProjectile(i).yTargetAoE + (Spell(MapProjectile(i).spellNum).DirectionAoE(DIR_LEFT + 1).y * PIC_Y)) Then
                                 If Abs(MapNpc(GetPlayerMap(Attacker)).Npc(N).x * PIC_X) <= MapProjectile(i).xTargetAoE And Abs(MapNpc(GetPlayerMap(Attacker)).Npc(N).x * PIC_X) > Abs(MapProjectile(i).xTargetAoE - ((Spell(MapProjectile(i).spellNum).DirectionAoE(DIR_LEFT + 1).x - 1) * PIC_X)) Then
                                     If CanPlayerAttackNpc(Attacker, N, True) Then
-                                        If Not Spell(MapProjectile(i).spellNum).IsAoE Then
-                                            If tick >= MapProjectile(i).Duration Then
-                                                PlayerAttackNpc Attacker, N, Damage, spellNum
-                                                MapProjectile(i).Duration = tick + 1000
+                                        If Spell(MapProjectile(i).spellNum).Projectile.RecuringDamage Then
+                                            If MapProjectile(i).Duration > 0 Then
+                                                If tick > tmrTrapResist Then
+                                                    PlayerAttackNpc Attacker, N, Damage, spellNum
+                                                    MapProjectile(i).Duration = MapProjectile(i).Duration - 1
+                                                    tmrTrapResist = tick + MapProjectile(i).Speed
+                                                End If
                                             End If
                                         Else
-                                            If MapProjectile(i).Duration > 0 Then
-                                                PlayerAttackNpc Attacker, N, Damage, spellNum
-                                                MapProjectile(i).Duration = MapProjectile(i).Duration - 1
-                                            End If
+                                        
                                         End If
                                     End If
                                 End If
@@ -1534,19 +1534,19 @@ Public Sub CheckProjectile(ByVal i As Long)
                     ' VERIFICAR SE HÁ PLAYER NO CAMINHO
                     For N = 1 To Player_HighIndex
                         If N <> Attacker Then
-                            If Abs(GetPlayerY(N) * PIC_Y) >= MapProjectile(i).yTargetAoE And Abs(GetPlayerY(N) * PIC_Y) < Abs(MapProjectile(i).yTargetAoE + (Spell(MapProjectile(i).spellNum).DirectionAoE(DIR_LEFT + 1).Y * PIC_Y)) Then
+                            If Abs(GetPlayerY(N) * PIC_Y) >= MapProjectile(i).yTargetAoE And Abs(GetPlayerY(N) * PIC_Y) < Abs(MapProjectile(i).yTargetAoE + (Spell(MapProjectile(i).spellNum).DirectionAoE(DIR_LEFT + 1).y * PIC_Y)) Then
                                 If Abs(GetPlayerX(N) * PIC_X) <= MapProjectile(i).xTargetAoE And Abs(GetPlayerX(N) * PIC_X) > Abs(MapProjectile(i).xTargetAoE - ((Spell(MapProjectile(i).spellNum).DirectionAoE(DIR_LEFT + 1).x - 1) * PIC_X)) Then
                                     If CanPlayerAttackPlayer(Attacker, N, True) Then
-                                        If Not Spell(MapProjectile(i).spellNum).IsAoE Then
-                                            If tick >= MapProjectile(i).Duration Then
-                                                PlayerAttackPlayer Attacker, N, Damage, spellNum
-                                                MapProjectile(i).Duration = tick + 1000
+                                        If Spell(MapProjectile(i).spellNum).Projectile.RecuringDamage Then
+                                            If MapProjectile(i).Duration > 0 Then
+                                                If tick > tmrTrapResist Then
+                                                    PlayerAttackNpc Attacker, N, Damage, spellNum
+                                                    MapProjectile(i).Duration = MapProjectile(i).Duration - 1
+                                                    tmrTrapResist = tick + MapProjectile(i).Speed
+                                                End If
                                             End If
                                         Else
-                                            If MapProjectile(i).Duration > 0 Then
-                                                PlayerAttackPlayer Attacker, N, Damage, spellNum
-                                                MapProjectile(i).Duration = MapProjectile(i).Duration - 1
-                                            End If
+                                        
                                         End If
                                     End If
                                 End If
@@ -1557,19 +1557,19 @@ Public Sub CheckProjectile(ByVal i As Long)
                     ' VERIFICA NPC NO CAMINHO
                     For N = 1 To MAX_MAP_NPCS
                         If MapNpc(GetPlayerMap(Attacker)).Npc(N).Num <> 0 Then
-                            If Abs(MapNpc(GetPlayerMap(Attacker)).Npc(N).Y * PIC_Y) >= MapProjectile(i).yTargetAoE And Abs(MapNpc(GetPlayerMap(Attacker)).Npc(N).Y * PIC_Y) < Abs(MapProjectile(i).yTargetAoE + (Spell(MapProjectile(i).spellNum).DirectionAoE(DIR_RIGHT + 1).Y * PIC_Y)) Then
+                            If Abs(MapNpc(GetPlayerMap(Attacker)).Npc(N).y * PIC_Y) >= MapProjectile(i).yTargetAoE And Abs(MapNpc(GetPlayerMap(Attacker)).Npc(N).y * PIC_Y) < Abs(MapProjectile(i).yTargetAoE + (Spell(MapProjectile(i).spellNum).DirectionAoE(DIR_RIGHT + 1).y * PIC_Y)) Then
                                 If Abs(MapNpc(GetPlayerMap(Attacker)).Npc(N).x * PIC_X) >= MapProjectile(i).xTargetAoE And Abs(MapNpc(GetPlayerMap(Attacker)).Npc(N).x * PIC_X) < Abs(MapProjectile(i).xTargetAoE + ((Spell(MapProjectile(i).spellNum).DirectionAoE(DIR_RIGHT + 1).x - 1) * PIC_X)) Then
                                     If CanPlayerAttackNpc(Attacker, N, True) Then
-                                        If Not Spell(MapProjectile(i).spellNum).IsAoE Then
-                                            If tick >= MapProjectile(i).Duration Then
-                                                PlayerAttackNpc Attacker, N, Damage, spellNum
-                                                MapProjectile(i).Duration = tick + 1000
+                                        If Spell(MapProjectile(i).spellNum).Projectile.RecuringDamage Then
+                                            If MapProjectile(i).Duration > 0 Then
+                                                If tick > tmrTrapResist Then
+                                                    PlayerAttackNpc Attacker, N, Damage, spellNum
+                                                    MapProjectile(i).Duration = MapProjectile(i).Duration - 1
+                                                    tmrTrapResist = tick + MapProjectile(i).Speed
+                                                End If
                                             End If
                                         Else
-                                            If MapProjectile(i).Duration > 0 Then
-                                                PlayerAttackNpc Attacker, N, Damage, spellNum
-                                                MapProjectile(i).Duration = MapProjectile(i).Duration - 1
-                                            End If
+                                        
                                         End If
                                     End If
                                 End If
@@ -1580,19 +1580,19 @@ Public Sub CheckProjectile(ByVal i As Long)
                     ' VERIFICAR SE HÁ PLAYER NO CAMINHO
                     For N = 1 To Player_HighIndex
                         If N <> Attacker Then
-                            If Abs(GetPlayerY(N) * PIC_Y) >= MapProjectile(i).yTargetAoE And Abs(GetPlayerY(N) * PIC_Y) < Abs(MapProjectile(i).yTargetAoE + (Spell(MapProjectile(i).spellNum).DirectionAoE(DIR_RIGHT + 1).Y * PIC_Y)) Then
+                            If Abs(GetPlayerY(N) * PIC_Y) >= MapProjectile(i).yTargetAoE And Abs(GetPlayerY(N) * PIC_Y) < Abs(MapProjectile(i).yTargetAoE + (Spell(MapProjectile(i).spellNum).DirectionAoE(DIR_RIGHT + 1).y * PIC_Y)) Then
                                 If Abs(GetPlayerX(N) * PIC_X) >= MapProjectile(i).xTargetAoE And Abs(GetPlayerX(N) * PIC_X) < Abs(MapProjectile(i).xTargetAoE + ((Spell(MapProjectile(i).spellNum).DirectionAoE(DIR_RIGHT + 1).x - 1) * PIC_X)) Then
                                     If CanPlayerAttackPlayer(Attacker, N, True) Then
-                                        If Not Spell(MapProjectile(i).spellNum).IsAoE Then
-                                            If tick >= MapProjectile(i).Duration Then
-                                                PlayerAttackPlayer Attacker, N, Damage, spellNum
-                                                MapProjectile(i).Duration = tick + 1000
+                                        If Spell(MapProjectile(i).spellNum).Projectile.RecuringDamage Then
+                                            If MapProjectile(i).Duration > 0 Then
+                                                If tick > tmrTrapResist Then
+                                                    PlayerAttackNpc Attacker, N, Damage, spellNum
+                                                    MapProjectile(i).Duration = MapProjectile(i).Duration - 1
+                                                    tmrTrapResist = tick + MapProjectile(i).Speed
+                                                End If
                                             End If
                                         Else
-                                            If MapProjectile(i).Duration > 0 Then
-                                                PlayerAttackPlayer Attacker, N, Damage, spellNum
-                                                MapProjectile(i).Duration = MapProjectile(i).Duration - 1
-                                            End If
+                                        
                                         End If
                                     End If
                                 End If
@@ -1604,10 +1604,10 @@ Public Sub CheckProjectile(ByVal i As Long)
         
         ' VERIFICA SE CHEGOU AO ALVO
         If Abs(MapProjectile(i).x - MapProjectile(i).tX) < 20 Then
-            If Abs(MapProjectile(i).Y - MapProjectile(i).tY) < 20 Then
+            If Abs(MapProjectile(i).y - MapProjectile(i).tY) < 20 Then
                 If MapProjectile(i).Speed <> 6000 Then
-                        Call ClearProjectile(i)
-                        Exit Sub
+                    Call ClearProjectile(i)
+                    Exit Sub
                 End If
             End If
         End If
