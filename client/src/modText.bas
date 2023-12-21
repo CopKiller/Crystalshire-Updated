@@ -175,7 +175,7 @@ Public Function DX8Colour(ByVal colourNum As Long, ByVal alpha As Long) As Long
         Case 7 ' Grey
             DX8Colour = D3DColorARGB(alpha, 192, 192, 192)
         Case 8 ' DarkGrey
-            DX8Colour = D3DColorARGB(alpha, 128, 128, 128)
+            DX8Colour = D3DColorARGB(alpha, 82, 82, 82)
         Case 9 ' BrightBlue
             DX8Colour = D3DColorARGB(alpha, 126, 182, 240)
         Case 10 ' BrightGreen
