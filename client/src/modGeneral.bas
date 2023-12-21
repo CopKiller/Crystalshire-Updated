@@ -85,6 +85,7 @@ Dim i As Long
     inMenu = True
     ' show login window
     ShowWindow GetWindowIndex("winLogin")
+    ShowWindow GetWindowIndex("winDialogue")
     inSmallChat = True
     ' Set the loop going
     fadeAlpha = 255
